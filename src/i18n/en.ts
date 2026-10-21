@@ -1,0 +1,300 @@
+// English copy. zh.ts must have exactly the same shape (enforced by the Dict type).
+export const en = {
+  langName: 'English',
+  meta: {
+    title: 'Folio Browser',
+    description: 'Run dozens of stores, ad accounts and social profiles from one computer without getting them linked. Each account gets its own browser profile, fingerprint and proxy.'
+  },
+  nav: { who: 'Who it’s for', inside: 'Inside a profile', teams: 'Teams', automation: 'Automation', pricing: 'Pricing', faq: 'FAQ', login: 'Log in', start: 'Start free', account: 'Account', menu: 'Menu' },
+  plans: { free: 'Free', studio: 'Studio', company: 'Company' },
+  periods: { monthly: 'monthly', yearly: 'yearly' },
+
+  hero: {
+    eyebrow: 'Multi-account browser for e-commerce, ads and social teams',
+    h1a: 'One account flagged.', h1b: 'The other 99 ', h1em: 'keep selling.',
+    lead: 'Folio gives every account its own browser profile, with its own fingerprint, cookies and proxy IP. To the platform, they look like a hundred different computers.',
+    ctaStart: 'Start free with 5 profiles', ctaDownload: 'Download the app',
+    fine: 'Windows 10 and later, macOS 12 and later · No credit card',
+    reroll: 'Open another profile',
+    rerollHint: 'Each click builds a complete new fingerprint. Time zone and language follow the exit IP.',
+    card: { title: 'FOLIO · BROWSER PROFILE', exitIp: 'Exit IP', tz: 'Time zone', lang: 'Language', os: 'OS', engine: 'Engine', screen: 'Screen', gpu: 'WebGL GPU', canvas: 'Canvas hash', fonts: 'Fonts', fontsUnit: 'installed', stamp: 'ISOLATED' },
+    spec: [
+      ['Chromium 150 · Firefox 156', 'two engines, chosen per profile'],
+      ['Canvas, WebGL, audio, fonts', 'unique to each profile'],
+      ['HTTP · HTTPS · SOCKS5', 'proxies, checked before use'],
+      ['CDP', 'local API for your scripts']
+    ],
+    cities: [
+      { city: 'Seattle', region: 'Washington, United States' }, { city: 'London', region: 'England, United Kingdom' },
+      { city: 'Tokyo', region: 'Tokyo, Japan' }, { city: 'Frankfurt', region: 'Hesse, Germany' },
+      { city: 'São Paulo', region: 'São Paulo, Brazil' }, { city: 'Toronto', region: 'Ontario, Canada' },
+      { city: 'Singapore', region: 'Singapore' }, { city: 'Sydney', region: 'New South Wales, Australia' },
+      { city: 'Seoul', region: 'Seoul, South Korea' }, { city: 'Miami', region: 'Florida, United States' }
+    ]
+  },
+
+  who: {
+    eyebrow: 'Who it’s for',
+    title: 'When you run many accounts, the real risk is getting linked',
+    lead: 'Platforms check more than your IP to decide whether two accounts belong to one person. A browser hands over dozens of device details, and a single overlap can tie your accounts together.',
+    items: [
+      { tag: 'E-commerce sellers', title: 'Ten stores. One gets reviewed, nine keep selling.', body: 'Each store gets a fixed profile and its own proxy line. Same location, same device, month after month. To the platform that looks like a steady, long-standing seller.', fit: 'For teams running five or more stores' },
+      { tag: 'Ad agencies', title: 'One client, one set of profiles.', body: 'When a colleague takes over, hand them the whole set. They open it already signed in, without asking the client for another verification code.', fit: 'For agencies managing ad accounts for many clients' },
+      { tag: 'Social teams', title: 'Fifty accounts, one person, a normal workday.', body: 'Window sync repeats one action across many windows at once. Scheduled tasks take over the daily sign-in checks.', fit: 'For teams where one person runs dozens of accounts' }
+    ]
+  },
+
+  inside: {
+    eyebrow: 'Inside a profile',
+    title: 'The signals platforms check, handled for each profile',
+    groups: [
+      ['Device', ['User-Agent', 'Client hints', 'CPU cores', 'Device memory', 'Touch support']],
+      ['Rendering', ['Canvas', 'WebGL image', 'WebGL renderer', 'AudioContext', 'Font list']],
+      ['Network', ['Proxy IP', 'WebRTC', 'DNS']],
+      ['Region', ['Time zone', 'Language', 'Geolocation']],
+      ['Storage', ['Cookies', 'LocalStorage', 'IndexedDB', 'Cache', 'Extensions']]
+    ] as [string, string[]][],
+    note: 'Fingerprints come from real device combinations, so the system, GPU and fonts fit together. You won’t find a MacBook with an NVIDIA card in Folio.',
+    compareTitle: 'One Seattle proxy, used two ways',
+    compareHint: 'Each cross on the left is a clue that links your accounts.',
+    cols: ['Check', 'Regular browser with a proxy', 'Folio profile'],
+    rows: [
+      ['Exit IP', 'Seattle', 'Seattle', false],
+      ['Time zone', 'Asia/Shanghai', 'America/Los_Angeles', true],
+      ['Language', 'zh-CN', 'en-US', true],
+      ['WebRTC', 'Leaks your real IP', 'Never shows your real IP', true],
+      ['Geolocation', 'Reads where you really are', 'Near Seattle', true],
+      ['Canvas hash', 'Identical on all your accounts', 'Unique to this profile', true],
+      ['Cookies', 'Shared by every account', 'Kept per profile', true]
+    ] as [string, string, string, boolean][],
+    leak: 'Leaks', match: 'Matches'
+  },
+
+  team: {
+    eyebrow: 'Teams',
+    title: 'When people leave, the accounts stay with you',
+    lead: 'Accounts belong to the company, not to whichever laptop they were set up on.',
+    points: [
+      ['Assign profiles by person', 'Store managers see their stores. Media buyers see their ad accounts. Nobody sees the rest.'],
+      ['Use an account without seeing its password', 'Members open a profile already signed in. Passwords never pass through their hands.'],
+      ['Take access back the same day', 'Remove a member and their profiles move to whoever you choose. No late-night password resets.'],
+      ['Every action on record', 'Who opened which profile, when, and what they changed, all on one page.']
+    ],
+    panelTitle: 'US operations', panelMeta: '3 active · 46 profiles', active: 'Active', left: 'Left',
+    members: [
+      ['MC', 'Maya Chen', 'Stores and social · 24 profiles', false],
+      ['DO', 'Daniel Okafor', 'Media buyer · 12 profiles', false],
+      ['SR', 'Sofia Ruiz', 'EU stores · 10 profiles', false],
+      ['JP', 'Jonah Park', 'Stores · 18 profiles reassigned', true]
+    ] as [string, string, string, boolean][],
+    logTitle: 'Activity',
+    log: [
+      ['10-21 09:12', 'Maya Chen opened US-Store-07'],
+      ['10-21 08:55', 'Daniel Okafor changed the proxy on Ads-Client-03'],
+      ['10-20 18:40', 'Admin removed Jonah Park and moved 18 profiles to Maya Chen']
+    ],
+    example: 'Example'
+  },
+
+  auto: {
+    eyebrow: 'Automation',
+    title: 'Repetitive work: click once, or script it once',
+    noCode: 'No code',
+    noCodePoints: [
+      ['Window sync', 'Click, type and scroll in one window. Every window you picked does the same.'],
+      ['Bulk actions', 'Import hundreds of profiles from a spreadsheet. Swap proxies or load cookies for all of them at once.'],
+      ['Scheduled tasks', 'Open chosen profiles at a set time each day, confirm they’re still signed in, and get an alert when one isn’t.']
+    ],
+    withCode: 'With code',
+    withCodeBody: 'The local API starts any profile and returns a debugging address. Your existing automation framework takes it from there, with no rewrite.',
+    libs: ['Playwright', 'Puppeteer', 'Selenium', 'Any CDP client'],
+    codeComment: '// Start profile 0042 in Folio'
+  },
+
+  trust: {
+    eyebrow: 'Try it first',
+    title: 'Don’t take our word for it. Test it.',
+    items: [
+      ['5 profiles, free for good', 'No card and no time limit. Enough to run one store end to end, from sign-in to listing.'],
+      ['Pick your own checker', 'Open any fingerprint test site you trust inside a profile and read the results yourself.'],
+      ['Refund within 7 days', 'Ask within a week of paying and get the full amount back. No questions asked.'],
+      ['Your data leaves with you', 'Export every profile and cookie in one file. If you stop using Folio, your accounts aren’t locked in.']
+    ]
+  },
+
+  pricing: {
+    eyebrow: 'Pricing',
+    title: 'Pay per profile. Add people for free.',
+    monthly: 'Monthly', yearly: 'Yearly', save: 'save 20%',
+    perMonth: '/ month', forever: 'free forever',
+    perProfile: (amount: string) => `${amount} per profile a month`,
+    billedMonthly: 'Billed monthly, cancel anytime',
+    billedYearly: (total: string) => `Billed yearly, ${total} in total`,
+    noCard: 'No card needed',
+    profilesMembers: (p: number, m: string) => `${p} profiles · ${m}`,
+    oneMember: '1 member', unlimitedMembers: 'unlimited members',
+    flag: 'For teams of 3–20',
+    for: { free: 'See whether it fits', studio: 'Day-to-day work for one team', company: 'Several teams and business lines' },
+    cta: { free: 'Start free', studio: 'Try free for 7 days', company: 'Talk to sales' },
+    features: {
+      free: ['Both engines, full fingerprint settings', 'Proxy check with automatic time zone and language', 'Local API', 'Docs and community support'],
+      studio: ['Unlimited members', 'Window sync and bulk actions', 'Team permissions and profile handover', '30-day activity log', 'Live chat on weekdays'],
+      company: ['Everything in Studio', 'Profiles grouped by department', '1-year activity log you can export', 'Dedicated support channel, 12 hours a day', 'Unthrottled API']
+    },
+    buy: 'Buy now',
+    foot: (pack: string) => `Need more room? Add 100 profiles for ${pack} a month. For more than 2,000 profiles, we’ll quote you directly. Prices exclude local taxes, and every plan comes with invoices.`
+  },
+
+  faq: {
+    eyebrow: 'FAQ', title: 'What people ask before they buy', lead: 'Didn’t find your question?', contact: 'Ask us',
+    items: [
+      ['Does Folio guarantee my accounts won’t get banned?', 'No. Folio solves one problem: several accounts being recognized as the same device. If an account breaks platform rules, or its proxy IP has already been used by many people, it can still get flagged. We recommend one dedicated residential or ISP proxy per profile.'],
+      ['Do I need my own proxies?', 'Yes. Folio supports HTTP, HTTPS and SOCKS5. Add them one at a time or import a spreadsheet. Each proxy is checked for connectivity and exit location, and the profile’s time zone and language are set to match.'],
+      ['Chromium or Firefox: which engine should I pick?', 'Chromium for most accounts. Each Chromium profile keeps a stable fingerprint of its own. Firefox profiles suit sites where you want a Firefox user; on one computer, Firefox profiles share more of their fingerprint, so don’t rely on them for many accounts of the same platform.'],
+      ['Where is my profile data stored?', 'By default it’s encrypted and synced to the cloud, so you can sign in on another computer and carry on. You can also keep a profile on one machine only. You can export everything at any time.'],
+      ['How are the engines updated?', 'Folio uses open-source fingerprint engines and ships each new release after we test it. Existing profiles keep their engine version until you choose to upgrade them.']
+    ] as [string, string][]
+  },
+
+  band: {
+    title: 'Open 5 profiles. Decide in a week.',
+    body: 'Create an account, download the app, and your first profile is ready in a few minutes.',
+    windows: 'Download for Windows', mac: 'Download for macOS',
+    fine: 'Beta · Chromium 150 and Firefox 156 engines'
+  },
+
+  footer: { docs: 'Docs', api: 'API reference', changelog: 'Changelog', privacy: 'Privacy', terms: 'Terms', sales: 'Contact sales', rights: '© 2026 Folio' },
+
+  auth: {
+    signupTitle: 'Create your Folio account', signupLead: 'Five profiles free, no card needed.',
+    loginTitle: 'Log in to Folio', email: 'Email', password: 'Password', passwordHint: 'At least 8 characters',
+    signup: 'Create account', login: 'Log in', haveAccount: 'Already have an account?', noAccount: 'New to Folio?',
+    forgot: 'Forgot your password?',
+    verifyTitle: 'Check your email', verifyLead: (email: string) => `We sent a 6-digit code to ${email}. It expires in 15 minutes.`,
+    code: 'Code', verify: 'Verify email', resend: 'Send a new code', resent: 'A new code is on its way.',
+    verified: 'Email verified.',
+    forgotTitle: 'Reset your password', forgotLead: 'Enter your account email and we’ll send a code.',
+    sendCode: 'Send code', resetTitle: 'Choose a new password', newPassword: 'New password', reset: 'Set new password',
+    resetDone: 'Password updated. Log in with the new one.',
+    devNotice: 'Development build: emails aren’t sent. The code is in the server log.',
+    logout: 'Log out'
+  },
+
+  checkout: {
+    title: 'Choose your plan', workspace: 'Workspace', plan: 'Plan', billing: 'Billing',
+    packs: 'Extra profiles', packsHint: 'Packs of 100 profiles', total: 'Due today',
+    current: (plan: string) => `Current plan: ${plan}`,
+    currentTrial: (plan: string) => `Current plan: ${plan}, free trial`,
+    lines: {
+      plan: (plan: string, period: string) => `${plan}, ${period}`,
+      addon: (qty: number, prorated: boolean) => `${qty} × 100 extra profiles${prorated ? ', prorated for the rest of this period' : ''}`,
+      credit: (plan: string) => `Credit for unused ${plan} time`
+    },
+    change: {
+      new: 'Starts today.', upgrade: 'Starts today; unused time on your current plan is credited.', addon: 'Added right away.',
+      'reduce-addon': 'Removed right away. Profiles above the new limit will need to be archived; no refund for this period.',
+      downgrade: 'Takes effect at the end of the current period. Nothing to pay now.'
+    },
+    card: 'Card', cardNumber: 'Card number', expiry: 'Expiry (MM/YY)', cvc: 'CVC', name: 'Name on card',
+    pay: (amount: string) => `Pay ${amount}`, confirm: 'Confirm change',
+    trial: 'Or try Studio free for 7 days', trialCta: 'Start free trial',
+    mockTitle: 'Test payments', mockBody: 'No real money moves yet. Use 4242 4242 4242 4242 with any future date. 4000 0000 0000 0002 is declined.',
+    success: 'Payment received. Your plan is active.', applied: 'Change saved.', trialStarted: 'Trial started. Studio is yours for 7 days.',
+    toAccount: 'Go to your account', noManage: 'Only owners and admins can change this workspace’s plan.'
+  },
+
+  account: {
+    title: 'Account', profile: 'Profile', language: 'Language', emailStatus: 'Verification',
+    verified: 'Verified', unverified: 'Not verified', verifyNow: 'Verify now',
+    workspaces: 'Workspaces', newWorkspace: 'New workspace', create: 'Create', rename: 'Rename', save: 'Save', cancel: 'Cancel',
+    roles: { owner: 'Owner', admin: 'Admin', member: 'Member' },
+    plan: 'Plan', usage: (used: number, limit: number) => `${used} of ${limit} profiles`,
+    unlimited: 'Unlimited members',
+    renews: (date: string) => `Renews on ${date}`, ends: (date: string) => `Ends on ${date}`,
+    trialEnds: (date: string) => `Trial ends on ${date}`,
+    scheduled: (plan: string, date: string) => `Changes to ${plan} on ${date}`,
+    changePlan: 'Change plan', addProfiles: 'Add profiles', startTrial: 'Try Studio free for 7 days',
+    cancelPlan: 'Cancel at period end', resume: 'Keep my plan',
+    cancelConfirm: 'Cancel your plan? You keep it until the end of the current period.', confirmCancel: 'Yes, cancel',
+    payments: 'Payments and invoices', noPayments: 'No payments yet.',
+    cols: ['Date', 'Invoice', 'Amount', 'Status', ''],
+    paid: 'Paid', refunded: 'Refunded', invoice: 'Invoice', refund: 'Refund',
+    refundConfirm: 'Refund this payment? Your plan goes back to what it was before it.', confirmRefund: 'Yes, refund',
+    download: 'Get the app', downloadBody: 'Log in to the desktop app with this same account. Your plan and workspaces are already there.',
+    downloadCta: 'Download'
+  },
+
+  invoice: {
+    title: 'Invoice', number: 'Invoice number', date: 'Date', billedTo: 'Billed to', workspace: 'Workspace',
+    period: 'Service period', item: 'Description', amount: 'Amount', total: 'Total', paidWith: (brand: string, last4: string) => `Paid with ${brand} ending ${last4}`,
+    refunded: (date: string) => `Refunded on ${date}`, print: 'Print or save as PDF', back: 'Back to account',
+    seller: 'Folio', sellerNote: 'Test invoice. No real payment was made.'
+  },
+
+  sales: {
+    title: 'Talk to sales', lead: 'More than 500 profiles, several departments, or something custom? Tell us a little and we’ll reply within one working day.',
+    name: 'Your name', email: 'Work email', company: 'Company', teamSize: 'Team size', message: 'What do you need?',
+    send: 'Send', sent: 'Thanks. We’ll get back to you within one working day.'
+  },
+
+  download: {
+    title: 'Download Folio', lead: 'The desktop app is in private beta. Installers for Windows and macOS will appear here when it opens.',
+    windows: 'Windows 10 and later', mac: 'macOS 12 and later', soon: 'Coming soon',
+    already: 'Already have an account? Your plan carries over the moment you log in to the app.'
+  },
+
+  docs: {
+    title: 'Docs', lead: 'Guides for setting up profiles, proxies and your team will live here as the app opens up.',
+    apiTitle: 'API reference', apiLead: 'Folio’s local API lets your scripts start a profile and take control of it through the Chrome DevTools Protocol. The full reference ships with the automation release.',
+    changelogTitle: 'Changelog',
+    changelog: [['0.1 · October 2026', 'Accounts, workspaces, plans and the first build of the desktop workbench.']] as [string, string][]
+  },
+
+  legal: {
+    privacyTitle: 'Privacy policy', termsTitle: 'Terms of service',
+    draft: 'Draft. The final text is being prepared and will replace this page before launch.',
+    privacyBody: [
+      'We collect the email address and password you register with, the workspaces you create and the plan you choose.',
+      'Browser profile data you choose to sync is encrypted before it is stored.',
+      'We do not sell your data.'
+    ],
+    termsBody: [
+      'Folio is a tool for managing many browser profiles. You are responsible for following the rules of the platforms you use it with.',
+      'Paid plans renew until cancelled. The most recent payment can be refunded within 7 days.'
+    ]
+  },
+
+  errors: {
+    email_taken: 'An account with this email already exists. Log in instead.',
+    invalid_credentials: 'The email or password is not right.',
+    unauthenticated: 'Log in to continue.',
+    code_invalid: 'That code is not right. Check the email and try again.',
+    code_expired: 'That code has expired. Request a new one.',
+    too_many_attempts: 'Too many wrong codes. Request a new one.',
+    already_verified: 'This email is already verified.',
+    email_not_verified: 'Verify your email before changing the plan.',
+    card_invalid: 'Check the card number and security code.',
+    card_expired: 'The card has expired.',
+    card_declined: 'The card was declined. Try another card.',
+    insufficient_funds: 'The card has insufficient funds.',
+    checkout_expired: 'This checkout expired. Start again.',
+    checkout_closed: 'This checkout is closed. Start again.',
+    quote_stale: 'Your plan changed in the meantime. Review the new total and try again.',
+    no_change: 'This is already your plan.',
+    change_packs_separately: 'Change extra profiles and the plan in two steps.',
+    profile_cap: 'Plans go up to 2,000 profiles. Talk to sales for more.',
+    trial_used: 'The free trial was already used for this workspace.',
+    already_subscribed: 'This workspace already has a plan.',
+    not_subscribed: 'This workspace has no paid plan.',
+    refund_window_passed: 'Refunds are available for 7 days after payment.',
+    refund_latest_only: 'Only the most recent payment can be refunded.',
+    already_refunded: 'This payment was already refunded.',
+    payments_unavailable: 'Payments are not available right now.',
+    rate_limited: 'Too many attempts. Wait a minute and try again.',
+    forbidden: 'You don’t have access to this.',
+    not_found: 'We couldn’t find that.',
+    validation: 'Some fields are missing or not valid.',
+    network: 'Can’t reach Folio right now. Check your connection and try again.',
+    internal: 'Something went wrong on our side. Try again.'
+  } as Record<string, string>
+};

@@ -1,0 +1,40 @@
+---
+import { link, otherLang, t, type Lang } from '../lib/i18n';
+
+interface Props { lang: Lang; path: string }
+const { lang, path } = Astro.props;
+const d = t(lang);
+const other = otherLang(lang);
+---
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href={link(lang)} aria-label="Folio"><span class="seal" aria-hidden="true">F</span><span class="brand-word">Folio</span></a>
+    <nav class="nav" aria-label={d.nav.menu}>
+      <a href={`${link(lang)}#who`}>{d.nav.who}</a>
+      <a href={`${link(lang)}#inside`}>{d.nav.inside}</a>
+      <a href={`${link(lang)}#team`}>{d.nav.teams}</a>
+      <a href={`${link(lang)}#auto`}>{d.nav.automation}</a>
+      <a href={`${link(lang)}#price`}>{d.nav.pricing}</a>
+      <a href={`${link(lang)}#faq`}>{d.nav.faq}</a>
+    </nav>
+    <div class="top-act">
+      <a class="lang-switch" href={`/${other}/${path}`} hreflang={other} data-lang-switch>{other === 'zh' ? '中文' : 'EN'}</a>
+      <span class="row" data-auth="out">
+        <a class="quiet" href={link(lang, 'login/')}>{d.nav.login}</a>
+        <a class="btn btn-stamp btn-sm" href={link(lang, 'signup/')}>{d.nav.start}</a>
+      </span>
+      <span data-auth="in" hidden><a class="btn btn-line btn-sm" href={link(lang, 'account/')}>{d.nav.account}</a></span>
+    </div>
+  </div>
+</header>
+<script>
+  import { api } from '../lib/api';
+  // Keep the query string when switching language, so checkout and invoice links survive.
+  document.querySelectorAll<HTMLAnchorElement>('[data-lang-switch]').forEach(a => {
+    a.addEventListener('click', () => { a.href = a.href.split(/[?#]/)[0] + location.search + location.hash; });
+  });
+  api('GET', '/me').then(() => {
+    document.querySelectorAll('[data-auth="out"]').forEach(e => e.setAttribute('hidden', ''));
+    document.querySelectorAll('[data-auth="in"]').forEach(e => e.removeAttribute('hidden'));
+  }).catch(() => {});
+</script>

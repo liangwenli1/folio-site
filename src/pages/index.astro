@@ -1,0 +1,15 @@
+---
+// Sends visitors to /zh/ or /en/ based on their browser language.
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Folio Browser</title>
+    <link rel="alternate" hreflang="en" href="/en/" />
+    <link rel="alternate" hreflang="zh" href="/zh/" />
+    <script is:inline>location.replace((navigator.languages || [navigator.language]).some(l => /^zh/i.test(l)) ? '/zh/' : '/en/');</script>
+  </head>
+  <body><p><a href="/en/">English</a> · <a href="/zh/">中文</a></p></body>
+</html>

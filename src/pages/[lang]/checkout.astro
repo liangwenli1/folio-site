@@ -1,0 +1,201 @@
+---
+import Base from '../../layouts/Base.astro';
+import '../../styles/app.css';
+import { langPaths, link, t, type Lang } from '../../lib/i18n';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const d = t(lang);
+const c = d.checkout;
+---
+<Base lang={lang} path="checkout/" title={c.title} noindex>
+  <section class="wrap page">
+    <div class="page-head"><h1>{c.title}</h1><p id="current"></p></div>
+    <div class="notice error" id="err" role="alert" hidden></div>
+    <div class="notice" id="no-manage" hidden>{c.noManage}</div>
+    <div class="panel" id="done" hidden>
+      <p class="notice ok" id="done-text"></p>
+      <p style="margin-top:16px"><a class="btn btn-stamp" href={link(lang, 'account/')}>{c.toAccount}</a></p>
+    </div>
+    <div class="co-grid" id="co" hidden>
+      <div class="panel">
+        <div class="field" id="ws-field" hidden style="margin-bottom:22px">
+          <label for="ws">{c.workspace}</label>
+          <select id="ws"></select>
+        </div>
+        <fieldset class="opts">
+          <legend>{c.plan}</legend>
+          {(['studio', 'company'] as const).map(id => (
+            <label class="opt"><input type="radio" name="plan" value={id} /><b>{d.plans[id]}</b><span data-price={id}></span></label>
+          ))}
+        </fieldset>
+        <fieldset class="opts">
+          <legend>{c.billing}</legend>
+          <div class="seg" role="group">
+            <button type="button" data-period="monthly" aria-pressed="true">{d.pricing.monthly}</button>
+            <button type="button" data-period="yearly" aria-pressed="false">{d.pricing.yearly}<em>{d.pricing.save}</em></button>
+          </div>
+        </fieldset>
+        <div class="field">
+          <label id="packs-label">{c.packs}</label>
+          <div class="row">
+            <div class="stepper" role="group" aria-labelledby="packs-label">
+              <button type="button" id="packs-minus" aria-label="−">−</button>
+              <output id="packs">0</output>
+              <button type="button" id="packs-plus" aria-label="+">+</button>
+            </div>
+            <span class="hint" id="packs-hint">{c.packsHint}</span>
+          </div>
+        </div>
+        <div class="trial" id="trial-box" hidden>
+          <p>{c.trial}</p>
+          <button class="btn btn-line btn-sm" type="button" id="trial-btn">{c.trialCta}</button>
+        </div>
+      </div>
+
+      <div class="panel summary">
+        <h2>{c.total}</h2>
+        <ul class="lines" id="lines"></ul>
+        <p class="total"><span>{c.total}</span><b id="total">–</b></p>
+        <p class="fine" id="effect" style="margin-top:8px"></p>
+        <form class="form" id="card-form" novalidate>
+          <div class="notice dev"><b>{c.mockTitle}.</b> {c.mockBody}</div>
+          <div class="field"><label for="number">{c.cardNumber}</label><input id="number" inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242" required /></div>
+          <div class="field-row">
+            <div class="field"><label for="exp">{c.expiry}</label><input id="exp" inputmode="numeric" autocomplete="cc-exp" placeholder="12/30" required /></div>
+            <div class="field"><label for="cvc">{c.cvc}</label><input id="cvc" inputmode="numeric" autocomplete="cc-csc" maxlength="4" placeholder="123" required /></div>
+          </div>
+          <div class="field"><label for="name">{c.name}</label><input id="name" autocomplete="cc-name" /></div>
+          <button class="btn btn-stamp full" type="submit" id="pay" disabled>{c.confirm}</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</Base>
+<script>
+  import { api, type CheckoutStarted, type Paid, type Plans, type Quote, type Workspace } from '../../lib/api';
+  import { lineLabel, money } from '../../lib/format';
+  import { $, d, here, lang, param, requireMe, showError, to, withNext } from '../../scripts/session';
+
+  type PlanId = 'studio' | 'company'; type Period = 'monthly' | 'yearly';
+  const c = d.checkout;
+  const me = await requireMe();
+  if (!me.user.emailVerified) location.replace(withNext(to('verify/'), here()));
+  const managed = me.workspaces.filter(w => w.role !== 'member');
+  if (!managed.length){ $('no-manage').hidden = false; throw new Error('no managed workspace'); }
+
+  const plans = await api<Plans>('GET', '/plans');
+  const priceOf = (id: PlanId, period: Period) => plans.plans.find(p => p.id === id)!.price[period];
+  let ws: Workspace;
+  const sel = {
+    plan: (param('plan') === 'company' ? 'company' : 'studio') as PlanId,
+    period: (param('period') === 'yearly' ? 'yearly' : 'monthly') as Period,
+    packs: 0
+  };
+  let quote: Quote | null = null;
+
+  const select = $<HTMLSelectElement>('ws');
+  select.innerHTML = managed.map(w => `<option value="${w.id}">${w.name.replace(/</g, '&lt;')} · ${d.plans[w.plan]}</option>`).join('');
+  select.value = managed.some(w => w.id === param('ws')) ? param('ws')! : managed[0].id;
+  $('ws-field').hidden = managed.length < 2;
+
+  async function loadWorkspace(){
+    ws = await api<Workspace>('GET', `/workspaces/${select.value}`);
+    const s = ws.subscription;
+    const paid = s.status === 'active' && s.plan !== 'free';
+    if (paid){
+      if (!param('plan')) sel.plan = s.plan as PlanId;
+      if (!param('period')) sel.period = s.period as Period;
+      sel.packs = s.addonPacks;
+    }
+    $('current').textContent = (s.status === 'trialing' ? c.currentTrial : c.current)(d.plans[s.plan]);
+    $('trial-box').hidden = !s.trialAvailable;
+    $('trial-box').classList.toggle('highlight', param('trial') === '1');
+    render();
+  }
+
+  function render(){
+    document.querySelectorAll<HTMLInputElement>('input[name="plan"]').forEach(i => { i.checked = i.value === sel.plan; });
+    document.querySelectorAll('[data-period]').forEach(b => b.setAttribute('aria-pressed', String(b.getAttribute('data-period') === sel.period)));
+    (['studio', 'company'] as PlanId[]).forEach(id => {
+      const p = sel.period === 'monthly' ? priceOf(id, 'monthly') : Math.round(priceOf(id, 'yearly') / 12);
+      document.querySelector(`[data-price="${id}"]`)!.textContent = `${money(p, lang)} ${d.pricing.perMonth}`;
+    });
+    $('packs').textContent = String(sel.packs);
+    const base = plans.plans.find(p => p.id === sel.plan)!.profiles;
+    $<HTMLButtonElement>('packs-minus').disabled = sel.packs === 0;
+    $<HTMLButtonElement>('packs-plus').disabled = base + (sel.packs + 1) * plans.addon.profiles > plans.maxProfiles;
+    $('packs-hint').textContent = `${c.packsHint} · ${base + sel.packs * plans.addon.profiles}`;
+    requote();
+  }
+
+  let seq = 0;
+  async function requote(){
+    const mine = ++seq;
+    $('err').hidden = true;
+    $<HTMLButtonElement>('pay').disabled = true;
+    try {
+      const q = await api<Quote>('POST', `/workspaces/${ws.id}/billing/quote`, { plan: sel.plan, period: sel.period, addonPacks: sel.packs });
+      if (mine !== seq) return;
+      quote = q;
+      $('lines').innerHTML = '';
+      for (const l of q.lines){
+        const li = document.createElement('li');
+        if (l.kind === 'credit') li.className = 'credit';
+        li.innerHTML = '<span></span><span></span>';
+        li.children[0].textContent = lineLabel(d, l);
+        li.children[1].textContent = money(l.amountCents, lang);
+        $('lines').append(li);
+      }
+      $('total').textContent = money(q.totalCents, lang);
+      $('effect').textContent = c.change[q.change];
+      const needsCard = q.totalCents > 0;
+      $('card-form').querySelectorAll<HTMLElement>('.field, .field-row, .notice').forEach(el => { el.hidden = !needsCard; });
+      $('pay').textContent = needsCard ? c.pay(money(q.totalCents, lang)) : c.confirm;
+      $<HTMLButtonElement>('pay').disabled = false;
+    } catch (e){
+      if (mine !== seq) return;
+      quote = null;
+      $('lines').innerHTML = ''; $('total').textContent = '–'; $('effect').textContent = '';
+      showError($('err'), e);
+    }
+  }
+
+  function finish(text: string){
+    $('co').hidden = true;
+    $('done-text').textContent = text;
+    $('done').hidden = false;
+    scrollTo({ top: 0 });
+  }
+
+  document.querySelectorAll<HTMLInputElement>('input[name="plan"]').forEach(i => i.addEventListener('change', () => { sel.plan = i.value as PlanId; render(); }));
+  document.querySelectorAll<HTMLButtonElement>('[data-period]').forEach(b => b.addEventListener('click', () => { sel.period = b.dataset.period as Period; render(); }));
+  $('packs-minus').addEventListener('click', () => { sel.packs = Math.max(0, sel.packs - 1); render(); });
+  $('packs-plus').addEventListener('click', () => { sel.packs += 1; render(); });
+  select.addEventListener('change', () => loadWorkspace().catch(e => showError($('err'), e)));
+
+  $('trial-btn').addEventListener('click', async () => {
+    try { await api('POST', `/workspaces/${ws.id}/billing/trial`); finish(c.trialStarted); }
+    catch (e){ showError($('err'), e); }
+  });
+
+  $('card-form').addEventListener('submit', async ev => {
+    ev.preventDefault();
+    if (!quote) return;
+    $('err').hidden = true;
+    const btn = $<HTMLButtonElement>('pay'); btn.disabled = true;
+    try {
+      const started = await api<CheckoutStarted>('POST', `/workspaces/${ws.id}/billing/checkout`, { plan: sel.plan, period: sel.period, addonPacks: sel.packs });
+      if (!started.checkoutId) return finish(c.applied);
+      const [mm, yy] = $<HTMLInputElement>('exp').value.split('/').map(s => s.trim());
+      const card = { number: $<HTMLInputElement>('number').value, expMonth: Number(mm), expYear: 2000 + Number(yy), cvc: $<HTMLInputElement>('cvc').value.trim() };
+      await api<Paid>('POST', `/billing/checkouts/${started.checkoutId}/pay`, { card });
+      finish(c.success);
+    } catch (e){
+      showError($('err'), e);
+    } finally { btn.disabled = false; }
+  });
+
+  await loadWorkspace();
+  $('co').hidden = false;
+</script>

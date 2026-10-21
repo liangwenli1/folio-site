@@ -1,0 +1,26 @@
+{
+  "name": "folio-site",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "astro dev --host 0.0.0.0 --port 47120",
+    "build": "astro build",
+    "preview": "astro preview --host 0.0.0.0 --port 47120",
+    "check": "astro check",
+    "api:types": "openapi-typescript ${API_URL:-http://localhost:47110}/openapi.json -o src/lib/api-schema.d.ts",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "astro": "^7.4.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.11",
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^24.19.2",
+    "openapi-typescript": "^7.13.0",
+    "typescript": "5.9"
+  }
+}

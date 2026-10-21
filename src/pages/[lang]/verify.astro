@@ -1,0 +1,46 @@
+---
+import Base from '../../layouts/Base.astro';
+import { langPaths, t, type Lang } from '../../lib/i18n';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const d = t(lang);
+---
+<Base lang={lang} path="verify/" title={d.auth.verifyTitle} noindex>
+  <section class="wrap page">
+    <div class="page-narrow">
+      <div class="page-head"><h1>{d.auth.verifyTitle}</h1><p id="lead"></p></div>
+      <form class="panel form" id="form" novalidate>
+        <div class="notice dev" id="dev" hidden>{d.auth.devNotice}</div>
+        <div class="notice ok" id="ok" hidden></div>
+        <div class="notice error" id="err" role="alert" hidden></div>
+        <div class="field">
+          <label for="code">{d.auth.code}</label>
+          <input class="code-input" id="code" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required />
+        </div>
+        <button class="btn btn-stamp full" type="submit">{d.auth.verify}</button>
+        <button class="linkish fine" id="resend" type="button">{d.auth.resend}</button>
+      </form>
+    </div>
+  </section>
+</Base>
+<script>
+  import { api } from '../../lib/api';
+  import { $, d, devBuild, nextPath, onSubmit, requireMe, showError, to } from '../../scripts/session';
+  const done = () => location.replace(nextPath() ?? to('account/'));
+  const me = await requireMe();
+  if (me.user.emailVerified) done();
+  $('lead').textContent = d.auth.verifyLead(me.user.email);
+  $('dev').hidden = !devBuild;
+  onSubmit($<HTMLFormElement>('form'), $('err'), async () => {
+    await api('POST', '/auth/verify-email', { code: $<HTMLInputElement>('code').value });
+    done();
+  });
+  $('resend').addEventListener('click', async () => {
+    $('err').hidden = true;
+    try {
+      await api('POST', '/auth/resend-code');
+      $('ok').textContent = d.auth.resent; $('ok').hidden = false;
+    } catch (e){ showError($('err'), e); }
+  });
+</script>

@@ -1,0 +1,11 @@
+---
+import DocPage from '../../components/DocPage.astro';
+import { langPaths, t, type Lang } from '../../lib/i18n';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const l = t(lang).legal;
+---
+<DocPage lang={lang} path="privacy/" title={l.privacyTitle} draft={l.draft}>
+  {l.privacyBody.map(p => <p>{p}</p>)}
+</DocPage>

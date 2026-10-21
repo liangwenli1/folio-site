@@ -1,0 +1,228 @@
+---
+import Base from '../../layouts/Base.astro';
+import '../../styles/landing.css';
+import { langPaths, link, t, type Lang } from '../../lib/i18n';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const d = t(lang);
+const h = d.hero;
+const first = h.cities[0];
+---
+<Base lang={lang} path="">
+  <section class="hero" id="top">
+    <canvas class="gl" data-kind="hero" aria-hidden="true"></canvas>
+    <div class="wrap hero-in">
+      <div class="hero-copy">
+        <p class="eyebrow">{h.eyebrow}</p>
+        <h1>{h.h1a}<br />{h.h1b}<em>{h.h1em}</em></h1>
+        <p class="lead">{h.lead}</p>
+        <div class="cta-row">
+          <a class="btn btn-stamp" href={link(lang, 'signup/')}>{h.ctaStart}</a>
+          <a class="btn btn-line" href={link(lang, 'download/')}>{h.ctaDownload}</a>
+        </div>
+        <p class="fine">{h.fine}</p>
+      </div>
+      <div class="hero-stage">
+        <div class="stack">
+          {[['back2', 'b2', '0040', h.cities[2], 'Asia/Tokyo', 'macOS 15'], ['back1', 'b1', '0041', h.cities[1], 'Europe/London', 'Windows 10']].map(([id, cls, no, c, tz, os]) => (
+            <article class={`idcard back ${cls}`} id={id as string} aria-hidden="true">
+              <header class="id-head"><span>{h.card.title}</span><span class="id-no">No. <b data-b="no">{no}</b></span></header>
+              <div class="id-city"><span class="city" data-b="city">{(c as typeof first).city}</span><span class="region" data-b="region">{(c as typeof first).region}</span></div>
+              <dl class="id-fields">
+                <div><dt>{h.card.tz}</dt><dd data-b="tz">{tz}</dd></div>
+                <div><dt>{h.card.os}</dt><dd data-b="os">{os}</dd></div>
+              </dl>
+            </article>
+          ))}
+          <article class="idcard front" id="idcard" data-cities={JSON.stringify(h.cities)} data-fonts-unit={h.card.fontsUnit}>
+            <canvas class="gl" data-kind="card" aria-hidden="true"></canvas>
+            <header class="id-head"><span>{h.card.title}</span><span class="id-no">No. <b data-f="no">0042</b></span></header>
+            <div class="id-city"><span class="city" data-f="city">{first.city}</span><span class="region" data-f="region">{first.region}</span></div>
+            <dl class="id-fields">
+              <div><dt>{h.card.exitIp}</dt><dd data-f="ip">172.58.•••.••</dd></div>
+              <div><dt>{h.card.tz}</dt><dd data-f="tz">America/Los_Angeles</dd></div>
+              <div><dt>{h.card.lang}</dt><dd data-f="lang">en-US, en</dd></div>
+              <div><dt>{h.card.os}</dt><dd data-f="os">Windows 11</dd></div>
+              <div><dt>{h.card.engine}</dt><dd data-f="core">Chromium 150</dd></div>
+              <div><dt>{h.card.screen}</dt><dd data-f="res">1920 × 1080</dd></div>
+              <div class="wide"><dt>{h.card.gpu}</dt><dd data-f="gpu">Intel Iris Xe Graphics</dd></div>
+              <div><dt>{h.card.canvas}</dt><dd data-f="hash">7c2e…a91f</dd></div>
+              <div><dt>{h.card.fonts}</dt><dd data-f="fonts">61 {h.card.fontsUnit}</dd></div>
+            </dl>
+            <div class="mrz" aria-hidden="true"><span data-f="mrz1">FOLIO&lt;ENV0042&lt;&lt;US&lt;SEATTLE&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span><span data-f="mrz2">WIN11&lt;CHR150&lt;1920X1080&lt;&lt;7C2EA91F</span></div>
+            <div class="stamp" id="stamp" aria-hidden="true"><span class="s-top">FOLIO</span><span class="s-main">{h.card.stamp}</span><span class="s-date" data-f="date">2026·10·21</span></div>
+          </article>
+        </div>
+        <div class="reroll-row">
+          <button class="btn btn-ghost" id="reroll" type="button">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9"></path><path d="M13.5 2.5v3h-3"></path></svg>
+            {h.reroll}
+          </button>
+          <span class="fine">{h.rerollHint}</span>
+        </div>
+      </div>
+    </div>
+    <div class="spec"><div class="wrap spec-in">{h.spec.map(([b, s]) => <span><b>{b}</b>{s}</span>)}</div></div>
+  </section>
+
+  <section class="sec" id="who">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">{d.who.eyebrow}</p><h2>{d.who.title}</h2><p class="sec-lead">{d.who.lead}</p></div>
+      <div class="who-grid">
+        {d.who.items.map(w => (
+          <article class="who"><p class="who-tag">{w.tag}</p><h3>{w.title}</h3><p>{w.body}</p><p class="who-fit">{w.fit}</p></article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-alt" id="inside">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">{d.inside.eyebrow}</p><h2>{d.inside.title}</h2></div>
+      <div class="inside-grid">
+        <div class="vectors">
+          {d.inside.groups.map(([g, chips]) => <div class="vg"><h3>{g}</h3><ul class="chips">{chips.map(c => <li>{c}</li>)}</ul></div>)}
+          <p class="note">{d.inside.note}</p>
+        </div>
+        <figure class="compare">
+          <figcaption><b>{d.inside.compareTitle}</b><span>{d.inside.compareHint}</span></figcaption>
+          <div class="tbl-scroll">
+            <table>
+              <thead><tr>{d.inside.cols.map(c => <th scope="col">{c}</th>)}</tr></thead>
+              <tbody>
+                {d.inside.rows.map(([k, a, b, marked]) => (
+                  <tr>
+                    <th scope="row">{k}</th>
+                    <td class={marked ? 'bad' : ''}>{marked && <span class="mk" aria-label={d.inside.leak}>×</span>}{a}</td>
+                    <td class={marked ? 'folio good' : 'folio'}>{marked && <span class="mk" aria-label={d.inside.match}>✓</span>}{b}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="team">
+    <div class="wrap team-grid">
+      <div>
+        <p class="eyebrow">{d.team.eyebrow}</p>
+        <h2>{d.team.title}</h2>
+        <p class="sec-lead">{d.team.lead}</p>
+        <ul class="points">{d.team.points.map(([b, s]) => <li><b>{b}</b><span>{s}</span></li>)}</ul>
+      </div>
+      <figure class="tpanel" aria-label={d.team.example}>
+        <div class="tpanel-head"><span>{d.team.panelTitle}</span><span class="mono">{d.team.panelMeta}</span></div>
+        {d.team.members.map(([ini, name, role, gone]) => (
+          <div class={gone ? 'mrow gone' : 'mrow'}>
+            <span class="av" aria-hidden="true">{ini}</span>
+            <span class="mname"><b>{name}</b><small>{role}</small></span>
+            <span class={gone ? 'pill accent' : 'pill ok'}>{gone ? d.team.left : d.team.active}</span>
+          </div>
+        ))}
+        <div class="tlog">
+          <div class="tlog-title">{d.team.logTitle}</div>
+          {d.team.log.map(([time, text]) => <p><time>{time}</time><span>{text}</span></p>)}
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec sec-alt" id="auto">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">{d.auto.eyebrow}</p><h2>{d.auto.title}</h2></div>
+      <div class="auto-grid">
+        <div class="auto-col">
+          <h3>{d.auto.noCode}</h3>
+          <ul class="points">{d.auto.noCodePoints.map(([b, s]) => <li><b>{b}</b><span>{s}</span></li>)}</ul>
+        </div>
+        <div class="auto-col">
+          <h3>{d.auto.withCode}</h3>
+          <p>{d.auto.withCodeBody}</p>
+          <ul class="libs">{d.auto.libs.map(l => <li>{l}</li>)}</ul>
+<pre class="code"><code><span class="c-kw">import</span> {'{'} chromium {'}'} <span class="c-kw">from</span> <span class="c-str">'playwright'</span>;
+
+<span class="c-com">{d.auto.codeComment}</span>
+<span class="c-kw">const</span> res = <span class="c-kw">await</span> <span class="c-fn">fetch</span>(<span class="c-str">'http://127.0.0.1:47210/api/env/0042/start'</span>);
+<span class="c-kw">const</span> {'{'} wsEndpoint {'}'} = <span class="c-kw">await</span> res.<span class="c-fn">json</span>();
+
+<span class="c-kw">const</span> browser = <span class="c-kw">await</span> chromium.<span class="c-fn">connectOverCDP</span>(wsEndpoint);
+<span class="c-kw">const</span> page = browser.<span class="c-fn">contexts</span>()[0].<span class="c-fn">pages</span>()[0];
+<span class="c-kw">await</span> page.<span class="c-fn">goto</span>(<span class="c-str">'https://seller.example.com'</span>);</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="trust">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">{d.trust.eyebrow}</p><h2>{d.trust.title}</h2></div>
+      <div class="trust-grid">{d.trust.items.map(([b, s]) => <div class="trust"><h3>{b}</h3><p>{s}</p></div>)}</div>
+    </div>
+  </section>
+
+  <section class="sec sec-alt" id="price">
+    <div class="wrap">
+      <div class="price-head">
+        <div class="sec-head"><p class="eyebrow">{d.pricing.eyebrow}</p><h2>{d.pricing.title}</h2></div>
+        <div class="seg" role="group" aria-label={d.pricing.eyebrow}>
+          <button type="button" data-period="monthly" aria-pressed="true">{d.pricing.monthly}</button>
+          <button type="button" data-period="yearly" aria-pressed="false">{d.pricing.yearly}<em>{d.pricing.save}</em></button>
+        </div>
+      </div>
+      <div class="plans">
+        {(['free', 'studio', 'company'] as const).map(id => (
+          <article class={id === 'studio' ? 'plan featured' : 'plan'} data-plan={id}>
+            {id === 'studio' && <p class="plan-flag">{d.pricing.flag}</p>}
+            <h3>{d.plans[id]}</h3>
+            <p class="plan-for">{d.pricing.for[id]}</p>
+            <p class="price"><span class="amt" data-amt></span><span class="per" data-per></span></p>
+            <p class="per-env" data-perenv></p>
+            <p class="bill-note" data-note></p>
+            <a class={id === 'studio' ? 'btn btn-stamp full' : 'btn btn-line full'} data-cta
+              href={id === 'free' ? link(lang, 'signup/') : id === 'studio' ? link(lang, 'checkout/?plan=studio&trial=1') : link(lang, 'contact-sales/')}>{d.pricing.cta[id]}</a>
+            {id !== 'free' && <a class="buy" data-buy href={link(lang, `checkout/?plan=${id}&period=monthly`)}>{d.pricing.buy}</a>}
+            <ul class="feat">{d.pricing.features[id].map(f => <li>{f}</li>)}</ul>
+          </article>
+        ))}
+      </div>
+      <p class="price-foot" data-foot></p>
+    </div>
+  </section>
+
+  <section class="sec" id="faq">
+    <div class="wrap faq-wrap">
+      <div>
+        <p class="eyebrow">{d.faq.eyebrow}</p>
+        <h2>{d.faq.title}</h2>
+        <p class="sec-lead">{d.faq.lead} <a href={link(lang, 'contact-sales/')}>{d.faq.contact}</a></p>
+      </div>
+      <div class="faq">{d.faq.items.map(([q, a], i) => <details open={i === 0}><summary>{q}</summary><p>{a}</p></details>)}</div>
+    </div>
+  </section>
+
+  <section class="band" id="start">
+    <canvas class="gl" data-kind="band" aria-hidden="true"></canvas>
+    <div class="wrap band-in">
+      <h2>{d.band.title}</h2>
+      <p>{d.band.body}</p>
+      <div class="cta-row">
+        <a class="btn btn-stamp" href={link(lang, 'download/')}>{d.band.windows}</a>
+        <a class="btn btn-band" href={link(lang, 'download/')}>{d.band.mac}</a>
+      </div>
+      <p class="fine">{d.band.fine}</p>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { startGuilloche } from '../../lib/guilloche';
+  import { startReroll } from '../../scripts/reroll';
+  import { startPricing } from '../../scripts/pricing';
+  startGuilloche();
+  startReroll();
+  startPricing();
+</script>

@@ -1,0 +1,213 @@
+---
+import Base from '../../layouts/Base.astro';
+import '../../styles/app.css';
+import { langPaths, link, t, type Lang } from '../../lib/i18n';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const d = t(lang);
+const a = d.account;
+---
+<Base lang={lang} path="account/" title={a.title} noindex>
+  <section class="wrap page">
+    <div class="page-head row"><h1>{a.title}</h1><span class="spacer"></span><button class="btn btn-ghost" type="button" id="logout">{d.auth.logout}</button></div>
+    <div class="notice error" id="err" role="alert" hidden></div>
+    <div class="acct-grid" id="acct" hidden>
+      <div>
+        <section class="panel" aria-labelledby="plan-h">
+          <h2 id="plan-h">{a.plan}</h2>
+          <div class="plan-card">
+            <span class="name" id="plan-name"></span>
+            <span class="fine" id="plan-status"></span>
+            <span id="plan-usage" style="margin-top:8px"></span>
+            <span class="meter"><i id="plan-meter"></i></span>
+            <span class="fine" id="plan-members"></span>
+          </div>
+          <div class="row" id="plan-actions" style="margin-top:18px">
+            <a class="btn btn-stamp btn-sm" id="change-plan" href="#">{a.changePlan}</a>
+            <a class="btn btn-ghost" id="add-profiles" href="#" hidden>{a.addProfiles}</a>
+            <button class="btn btn-ghost" type="button" id="start-trial" hidden>{a.startTrial}</button>
+            <button class="btn btn-ghost" type="button" id="cancel" hidden>{a.cancelPlan}</button>
+            <button class="btn btn-ghost" type="button" id="resume" hidden>{a.resume}</button>
+          </div>
+          <div class="confirm" id="cancel-confirm" style="margin-top:12px" hidden>
+            <span>{a.cancelConfirm}</span>
+            <button class="btn btn-stamp btn-sm" type="button" id="cancel-yes">{a.confirmCancel}</button>
+            <button class="linkish" type="button" id="cancel-no">{a.cancel}</button>
+          </div>
+        </section>
+
+        <section class="panel" id="pay-panel" aria-labelledby="pay-h">
+          <h2 id="pay-h">{a.payments}</h2>
+          <p class="fine" id="no-pay" hidden>{a.noPayments}</p>
+          <div class="tbl-scroll">
+            <table class="list" id="pay-table" hidden>
+              <thead><tr>{a.cols.map(col => <th scope="col">{col}</th>)}</tr></thead>
+              <tbody id="pay-rows"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <div>
+        <section class="panel" aria-labelledby="profile-h">
+          <h2 id="profile-h">{a.profile}</h2>
+          <dl class="kv">
+            <dt>{d.auth.email}</dt><dd id="email"></dd>
+            <dt>{a.emailStatus}</dt><dd id="verified"></dd>
+            <dt><label for="locale">{a.language}</label></dt>
+            <dd><select id="locale" class="field-select"><option value="en">English</option><option value="zh">中文</option></select></dd>
+          </dl>
+        </section>
+        <section class="panel" aria-labelledby="ws-h">
+          <h2 id="ws-h">{a.workspaces}</h2>
+          <ul class="ws-list" id="ws-list"></ul>
+          <form class="row" id="ws-form" style="margin-top:14px">
+            <div class="field" style="flex:1"><label for="ws-name" hidden>{a.newWorkspace}</label><input id="ws-name" maxlength="80" placeholder={a.newWorkspace} /></div>
+            <button class="btn btn-ghost" type="submit">{a.create}</button>
+          </form>
+        </section>
+        <section class="panel">
+          <h2>{a.download}</h2>
+          <p class="fine">{a.downloadBody}</p>
+          <p style="margin-top:14px"><a class="btn btn-line btn-sm" href={link(lang, 'download/')}>{a.downloadCta}</a></p>
+        </section>
+      </div>
+    </div>
+  </section>
+</Base>
+<script>
+  import { api, type Me, type Payment, type Workspace } from '../../lib/api';
+  import { day, money } from '../../lib/format';
+  import { $, d, esc, lang, param, requireMe, showError, to } from '../../scripts/session';
+
+  const a = d.account;
+  let me: Me, ws: Workspace;
+  const fail = (e: unknown) => showError($('err'), e);
+
+  async function load(){
+    me = await requireMe();
+    const current = me.workspaces.find(w => w.id === param('ws')) ?? me.workspaces[0];
+    ws = await api<Workspace>('GET', `/workspaces/${current.id}`);
+    renderProfile(); renderWorkspaces(); renderPlan();
+    await renderPayments();
+    $('acct').hidden = false;
+  }
+
+  function renderProfile(){
+    $('email').textContent = me.user.email;
+    $('verified').innerHTML = me.user.emailVerified
+      ? `<span class="pill ok">${a.verified}</span>`
+      : `<span class="pill accent">${a.unverified}</span> <a href="${to('verify/')}?next=${encodeURIComponent(location.pathname + location.search)}">${a.verifyNow}</a>`;
+    $<HTMLSelectElement>('locale').value = me.user.locale;
+  }
+
+  function renderWorkspaces(){
+    $('ws-list').innerHTML = me.workspaces.map(w => `
+      <li class="${w.id === ws.id ? 'current' : ''}" data-id="${w.id}">
+        <a href="?ws=${w.id}">${esc(w.name)}</a>
+        <span class="pill muted">${a.roles[w.role]}</span>
+        <span class="fine">${d.plans[w.plan]}</span>
+        <span class="spacer"></span>
+        ${w.role !== 'member' ? `<button class="linkish fine" type="button" data-rename="${w.id}">${a.rename}</button>` : ''}
+      </li>`).join('');
+  }
+
+  function renderPlan(){
+    const s = ws.subscription, manager = ws.role !== 'member';
+    const paid = s.status === 'active' && s.plan !== 'free';
+    $('plan-name').textContent = d.plans[s.plan];
+    $('plan-status').textContent =
+      s.status === 'trialing' ? a.trialEnds(day(s.trialEndsAt!, lang)) :
+      paid && s.cancelAtPeriodEnd ? a.ends(day(s.currentPeriodEnd!, lang)) :
+      paid && s.scheduledPlan ? a.scheduled(d.plans[s.scheduledPlan], day(s.currentPeriodEnd!, lang)) :
+      paid ? `${a.renews(day(s.currentPeriodEnd!, lang))} · ${d.periods[s.period!]}` : '';
+    $('plan-usage').textContent = a.usage(ws.usage.profiles, s.entitlements.profiles);
+    $<HTMLElement>('plan-meter').style.width = `${Math.min(100, (ws.usage.profiles / s.entitlements.profiles) * 100)}%`;
+    $('plan-members').textContent = s.entitlements.members === null ? a.unlimited : d.pricing.oneMember;
+    const checkout = `${to('checkout/')}?ws=${ws.id}`;
+    $<HTMLAnchorElement>('change-plan').href = checkout;
+    $<HTMLAnchorElement>('add-profiles').href = checkout;
+    $('plan-actions').hidden = !manager;
+    $('add-profiles').hidden = !paid;
+    $('start-trial').hidden = !s.trialAvailable;
+    $('cancel').hidden = !paid || s.cancelAtPeriodEnd;
+    $('resume').hidden = !paid || !(s.cancelAtPeriodEnd || s.scheduledPlan);
+    $('cancel-confirm').hidden = true;
+    $('pay-panel').hidden = !manager;
+  }
+
+  async function renderPayments(){
+    if (ws.role === 'member') return;
+    const { payments } = await api<{ payments: Payment[] }>('GET', `/workspaces/${ws.id}/payments`);
+    $('no-pay').hidden = payments.length > 0;
+    $('pay-table').hidden = payments.length === 0;
+    $('pay-rows').innerHTML = payments.map(p => `
+      <tr data-id="${p.id}">
+        <td>${day(p.createdAt, lang)}</td>
+        <td><a class="mono" href="${to('invoice/')}?id=${p.id}">${p.invoiceNumber}</a></td>
+        <td class="mono">${money(p.amountCents, lang)}</td>
+        <td><span class="pill ${p.status === 'paid' ? 'ok' : 'muted'}">${p.status === 'paid' ? a.paid : a.refunded}</span></td>
+        <td>${p.refundable ? `<button class="linkish fine" type="button" data-refund="${p.id}">${a.refund}</button>` : ''}</td>
+      </tr>`).join('');
+  }
+
+  async function refreshWorkspace(){
+    ws = await api<Workspace>('GET', `/workspaces/${ws.id}`);
+    me = await api<Me>('GET', '/me');
+    renderWorkspaces(); renderPlan(); await renderPayments();
+  }
+
+  const act = (fn: () => Promise<unknown>) => async () => { $('err').hidden = true; try { await fn(); await refreshWorkspace(); } catch (e){ fail(e); } };
+  $('start-trial').addEventListener('click', act(() => api('POST', `/workspaces/${ws.id}/billing/trial`)));
+  $('resume').addEventListener('click', act(() => api('POST', `/workspaces/${ws.id}/billing/resume`)));
+  $('cancel').addEventListener('click', () => { $('cancel-confirm').hidden = false; });
+  $('cancel-no').addEventListener('click', () => { $('cancel-confirm').hidden = true; });
+  $('cancel-yes').addEventListener('click', act(() => api('POST', `/workspaces/${ws.id}/billing/cancel`)));
+
+  $('pay-rows').addEventListener('click', ev => {
+    const id = (ev.target as HTMLElement).closest<HTMLElement>('[data-refund]')?.dataset.refund;
+    if (!id) return;
+    const row = $('pay-rows').querySelector(`tr[data-id="${id}"]`)!;
+    const confirmRow = document.createElement('tr');
+    confirmRow.innerHTML = `<td colspan="5"><div class="confirm"><span>${a.refundConfirm}</span><button class="btn btn-stamp btn-sm" type="button" data-yes>${a.confirmRefund}</button><button class="linkish" type="button" data-no>${a.cancel}</button></div></td>`;
+    row.after(confirmRow);
+    confirmRow.querySelector('[data-no]')!.addEventListener('click', () => confirmRow.remove());
+    confirmRow.querySelector('[data-yes]')!.addEventListener('click', act(() => api('POST', `/payments/${id}/refund`)));
+  });
+
+  $('ws-list').addEventListener('click', ev => {
+    const id = (ev.target as HTMLElement).closest<HTMLElement>('[data-rename]')?.dataset.rename;
+    if (!id) return;
+    const li = $('ws-list').querySelector<HTMLElement>(`li[data-id="${id}"]`)!;
+    const w = me.workspaces.find(x => x.id === id)!;
+    li.innerHTML = `<form class="row" style="flex:1"><div class="field" style="flex:1"><input maxlength="80" value="${esc(w.name)}" aria-label="${a.rename}" /></div><button class="btn btn-ghost" type="submit">${a.save}</button><button class="linkish fine" type="button" data-no>${a.cancel}</button></form>`;
+    const form = li.querySelector('form')!;
+    form.querySelector('[data-no]')!.addEventListener('click', renderWorkspaces);
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      try { await api('PATCH', `/workspaces/${id}`, { name: form.querySelector('input')!.value }); await refreshWorkspace(); } catch (err){ fail(err); }
+    });
+  });
+
+  $('ws-form').addEventListener('submit', async ev => {
+    ev.preventDefault();
+    const name = $<HTMLInputElement>('ws-name').value.trim();
+    if (!name) return;
+    try {
+      const w = await api<{ id: string }>('POST', '/workspaces', { name });
+      location.assign(`?ws=${w.id}`);
+    } catch (e){ fail(e); }
+  });
+
+  $<HTMLSelectElement>('locale').addEventListener('change', async ev => {
+    const locale = (ev.target as HTMLSelectElement).value;
+    try { await api('PATCH', '/me', { locale }); location.assign(`/${locale}/account/${location.search}`); } catch (e){ fail(e); }
+  });
+
+  $('logout').addEventListener('click', async () => {
+    try { await api('POST', '/auth/logout'); } finally { location.assign(`/${lang}/`); }
+  });
+
+  load().catch(fail);
+</script>

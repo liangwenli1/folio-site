@@ -1,0 +1,23 @@
+---
+import Base from '../../layouts/Base.astro';
+import { langPaths, link, t, type Lang } from '../../lib/i18n';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const d = t(lang).download;
+---
+<Base lang={lang} path="download/" title={d.title}>
+  <section class="wrap page">
+    <div class="page-head"><h1>{d.title}</h1><p>{d.lead}</p></div>
+    <div class="dl-grid">
+      {[['Windows', d.windows], ['macOS', d.mac]].map(([os, req]) => (
+        <div class="panel"><h2>{os}</h2><p class="fine">{req}</p><p style="margin-top:16px"><button class="btn btn-line" type="button" disabled>{d.soon}</button></p></div>
+      ))}
+    </div>
+    <p class="fine" style="margin-top:24px">{d.already} <a href={link(lang, 'account/')}>{t(lang).nav.account}</a></p>
+  </section>
+</Base>
+<style>
+  .dl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;max-width:760px}
+  .dl-grid .panel + .panel{margin-top:0}
+</style>
