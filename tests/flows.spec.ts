@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, request, test, type Page } from '@playwright/test';
 
 const PASSWORD = 'correct horse battery';
 let n = 0;
@@ -6,13 +6,27 @@ const uniqueEmail = () => `e2e${Date.now().toString(36)}${n++}@example.com`;
 
 // The server sends real mail; in tests it goes to the local Mailpit inbox.
 const MAILPIT = process.env.MAILPIT_URL ?? 'http://folio-mailpit:8025';
-async function emailCode(email: string){
+async function lastMail(email: string){
   for (let i = 0; i < 50; i++){
     const { messages } = await (await fetch(`${MAILPIT}/api/v1/search?limit=1&query=${encodeURIComponent(`to:${email}`)}`)).json() as { messages: { ID: string }[] };
-    if (messages.length) return ((await (await fetch(`${MAILPIT}/api/v1/message/${messages[0].ID}`)).json()) as { Text: string }).Text.match(/\b\d{6}\b/)![0];
+    if (messages.length) return (await (await fetch(`${MAILPIT}/api/v1/message/${messages[0].ID}`)).json()) as { Subject: string; Text: string };
     await new Promise(r => setTimeout(r, 100));
   }
   throw new Error(`No email for ${email}`);
+}
+const emailCode = async (email: string) => (await lastMail(email)).Text.match(/\b\d{6}\b/)![0];
+
+// An account made through the API, with a paid plan: someone who will invite people.
+async function owner(){
+  const email = uniqueEmail();
+  const api = await request.newContext({ baseURL: process.env.API_URL ?? 'http://localhost:47110', extraHTTPHeaders: { origin: 'http://localhost:47120' } });
+  await api.post('/auth/register', { data: { email, password: PASSWORD } });
+  await api.post('/auth/verify-email', { data: { code: await emailCode(email) } });
+  const workspaceId = (await (await api.get('/me')).json()).workspaces[0].id as string;
+  const { checkoutId } = await (await api.post(`/workspaces/${workspaceId}/billing/checkout`, { data: { plan: 'studio', period: 'monthly', addonPacks: 0 } })).json();
+  await api.post(`/billing/checkouts/${checkoutId}/pay`, { data: { card: { number: '4242424242424242', expMonth: 12, expYear: 2030, cvc: '123' } } });
+  await api.patch(`/workspaces/${workspaceId}`, { data: { name: 'Larkspur Trading' } });
+  return { email, api, workspaceId };
 }
 
 // Keep tests independent of the network: no web fonts.
@@ -127,4 +141,43 @@ test('the sales form sends an inquiry', async ({ page }) => {
   await page.fill('#message', 'We run 1,200 profiles across three teams.');
   await page.click('button[type="submit"]');
   await expect(page.locator('#ok')).toBeVisible();
+});
+
+test('an emailed invitation leads a new person through sign-up into the workspace', async ({ page }) => {
+  const host = await owner();
+  const email = uniqueEmail();
+  await host.api.post(`/workspaces/${host.workspaceId}/invitations`, { data: { email, role: 'member' } });
+  const mail = await lastMail(email);
+  expect(mail.Subject).toBe(`${host.email} invited you to Larkspur Trading on Folio`);
+  const link = mail.Text.match(/https?:\/\/\S+\/invite\/\?token=[\w-]+/)![0];
+
+  await page.goto(link.replace(/^https?:\/\/[^/]+/, ''));
+  await expect(page.locator('#lead')).toHaveText(`${host.email} invited you to join Larkspur Trading on Folio as a member.`);
+  await page.getByRole('link', { name: 'Create an account' }).click();
+  await expect(page.locator('#email')).toHaveValue(email);
+  await page.fill('#password', PASSWORD);
+  await page.click('button[type="submit"]');
+  await page.waitForURL(/\/verify\//);
+  await page.fill('#code', await emailCode(email));
+  await page.click('button[type="submit"]');
+
+  await page.waitForURL(/\/invite\//);
+  await page.getByRole('button', { name: 'Join Larkspur Trading' }).click();
+  await expect(page.locator('#lead')).toHaveText('You’re in Larkspur Trading.');
+  await page.getByRole('link', { name: 'Go to your account' }).click();
+  await expect(page.locator('#ws-list')).toContainText('Larkspur Trading');
+  await expect(page.locator('#ws-list li', { hasText: 'Larkspur Trading' })).toContainText('Member');
+});
+
+test('pending invitations show on the account page in Chinese and can be joined there', async ({ page }) => {
+  const host = await owner();
+  const email = await signUp(page, 'zh');
+  await host.api.post(`/workspaces/${host.workspaceId}/invitations`, { data: { email, role: 'admin' } });
+  await page.reload();
+  const invite = page.locator('#inv-list li');
+  await expect(invite).toContainText('Larkspur Trading');
+  await expect(invite).toContainText(`${host.email} 邀请你成为管理员`);
+  await invite.getByRole('button', { name: '加入' }).click();
+  await expect(page.locator('#ws-list li.current')).toContainText('Larkspur Trading');
+  await expect(page.locator('#inv-panel')).toBeHidden();
 });

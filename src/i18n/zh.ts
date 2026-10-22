@@ -178,7 +178,7 @@ export const zh: typeof en = {
     forgotTitle: '重设密码', forgotLead: '填写账号邮箱，我们会发送验证码。',
     sendCode: '发送验证码', resetTitle: '设置新密码', newPassword: '新密码', reset: '保存新密码',
     resetDone: '密码已更新，请用新密码登录。',
-    devNotice: '开发版本：不会真的发邮件，验证码在服务端日志里。',
+    devNotice: '开发版本：邮件发到本机的测试收件箱 http://127.0.0.1:47125。',
     logout: '退出登录'
   },
 
@@ -223,7 +223,23 @@ export const zh: typeof en = {
     paid: '已付款', refunded: '已退款', invoice: '发票', refund: '退款',
     refundConfirm: '确定退款吗？套餐会恢复到这笔付款之前的状态。', confirmRefund: '确定退款',
     download: '下载客户端', downloadBody: '用同一个账号登录桌面客户端，套餐和团队都已经在那里了。',
-    downloadCta: '下载'
+    downloadCta: '下载',
+    invitations: '邀请', invitedBy: (inviter: string, role: string) => `${inviter} 邀请你成为${role}`, accept: '加入', decline: '拒绝'
+  },
+  invite: {
+    title: '团队邀请', checking: '正在查看邀请…',
+    missing: '这个链接里没有邀请信息，请重新打开邮件里的链接。',
+    gone: '这个邀请已经失效：已被接受、撤回，或者被更新的邀请替换了。',
+    lead: (inviter: string, workspace: string, role: string) => `${inviter} 邀请你以${role}身份加入 Folio 上的团队「${workspace}」。`,
+    roles: { admin: '管理员', member: '成员' }, forEmail: (email: string) => `邀请邮箱：${email}`,
+    expired: '这个邀请已过期，请让对方重新邀请。',
+    login: '登录后接受', signup: '注册账号',
+    wrong: (invited: string, current: string) => `这个邀请是发给 ${invited} 的，但你当前登录的是 ${current}。`, switch: '退出登录，换另一个账号',
+    verify: '请先验证邮箱，验证后会回到这里。', verifyCta: '去验证邮箱',
+    accept: (workspace: string) => `加入「${workspace}」`, decline: '拒绝',
+    joined: (workspace: string) => `你已加入「${workspace}」。`,
+    joinedLead: '用这个账号登录 Folio 工作台，就能在团队菜单里看到它。',
+    download: '下载工作台', account: '前往账户', declined: '你已拒绝这个邀请。'
   },
 
   invoice: {
@@ -297,6 +313,11 @@ export const zh: typeof en = {
     not_found: '没有找到相关内容。',
     validation: '有些内容没填或格式不对。',
     network: '暂时连不上 Folio，请检查网络后重试。',
+    wrong_account: '这个邀请是发给另一个邮箱的。',
+    email_unverified: '请先验证邮箱。',
+    invitation_expired: '这个邀请已过期，请让对方重新邀请。',
+    seat_limit: '这个团队没有空余席位了，请让所有者升级套餐。',
+    mail_unavailable: '邮件没能发出，请稍后再试。',
     internal: '我们这边出了点问题，请重试。'
   }
 };

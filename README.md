@@ -1,6 +1,6 @@
 # folio-site
 
-The Folio marketing site and account pages: landing, sign-up and log-in, email verification, password reset, checkout, account and billing, invoices, contact sales, docs and legal pages. English and Chinese (`/en/…`, `/zh/…`); `/` picks one from the browser language.
+The Folio marketing site and account pages: landing, sign-up and log-in, email verification, password reset, checkout, account and billing, invoices, team invitations (`/invite/?token=…`, from the invitation email), contact sales, docs and legal pages. English and Chinese (`/en/…`, `/zh/…`); `/` picks one from the browser language.
 
 ## Stack
 
@@ -18,7 +18,7 @@ folio-server must allow this origin (`SITE_ORIGINS`, default `http://localhost:4
 | Variable | Default | Meaning |
 |---|---|---|
 | `PUBLIC_API_URL` | `http://localhost:47110` | folio-server base URL |
-| `PUBLIC_DEV_NOTICE` | unset | `1` shows the "emails aren't sent" hint on verification pages in a production build |
+| `PUBLIC_DEV_NOTICE` | unset | `1` shows the "emails go to the local test inbox" hint on verification pages in a production build |
 | `SITE_URL` | `http://localhost:47120` | Canonical site URL |
 
 ## Scripts

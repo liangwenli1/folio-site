@@ -1,0 +1,86 @@
+---
+import Base from '../../layouts/Base.astro';
+import { langPaths, t, type Lang } from '../../lib/i18n';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const d = t(lang);
+---
+<Base lang={lang} path="invite/" title={d.invite.title} noindex>
+  <section class="wrap page">
+    <div class="page-narrow">
+      <div class="page-head"><h1>{d.invite.title}</h1><p id="lead">{d.invite.checking}</p></div>
+      <div class="panel form" id="panel">
+        <div class="notice error" id="err" role="alert" hidden></div>
+        <p class="fine" id="for" hidden></p>
+        <p id="note" hidden></p>
+        <div class="row" id="actions"></div>
+      </div>
+    </div>
+  </section>
+</Base>
+<script>
+  import { api, ApiFailure, type Me } from '../../lib/api';
+  import { $, d, here, param, showError, to } from '../../scripts/session';
+
+  interface Preview { id: string; workspaceName: string; inviter: string | null; email: string; role: 'admin' | 'member'; expired: boolean }
+  const actions = $('actions');
+  const say = (id: 'lead' | 'note', text: string) => { $(id).textContent = text; $(id).hidden = false; };
+  function link(label: string, href: string, cls: string){
+    const a = document.createElement('a');
+    a.className = cls; a.href = href; a.textContent = label;
+    return a;
+  }
+  function button(label: string, cls: string, run: () => Promise<void>){
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = cls; b.textContent = label;
+    b.addEventListener('click', async () => {
+      $('err').hidden = true;
+      actions.querySelectorAll('button').forEach(x => { x.disabled = true; });
+      try { await run(); } catch (e){ showError($('err'), e); } finally { actions.querySelectorAll('button').forEach(x => { x.disabled = false; }); }
+    });
+    return b;
+  }
+
+  async function show(){
+    const token = param('token');
+    if (!token) return say('lead', d.invite.missing);
+    let inv: Preview;
+    try {
+      inv = await api<Preview>('GET', `/invitations/by-token/${encodeURIComponent(token)}`);
+    } catch (e){
+      if (e instanceof ApiFailure && e.status === 404) return say('lead', d.invite.gone);
+      throw e;
+    }
+    say('lead', d.invite.lead(inv.inviter ?? 'Folio', inv.workspaceName, d.invite.roles[inv.role]));
+    $('for').textContent = d.invite.forEmail(inv.email); $('for').hidden = false;
+    if (inv.expired) return say('note', d.invite.expired);
+
+    let me: Me | null = null;
+    try { me = await api<Me>('GET', '/me'); } catch (e){ if (!(e instanceof ApiFailure && e.status === 401)) throw e; }
+    // Back to this page after logging in, signing up or verifying.
+    const back = `next=${encodeURIComponent(here())}`, email = `email=${encodeURIComponent(inv.email)}`;
+    if (!me){
+      actions.append(link(d.invite.login, `${to('login/')}?${email}&${back}`, 'btn btn-stamp'), link(d.invite.signup, `${to('signup/')}?${email}&${back}`, 'btn btn-ghost'));
+    } else if (me.user.email !== inv.email){
+      say('note', d.invite.wrong(inv.email, me.user.email));
+      actions.append(button(d.invite.switch, 'btn btn-ghost', async () => { await api('POST', '/auth/logout'); location.reload(); }));
+    } else if (!me.user.emailVerified){
+      say('note', d.invite.verify);
+      actions.append(link(d.invite.verifyCta, `${to('verify/')}?${back}`, 'btn btn-stamp'));
+    } else {
+      actions.append(
+        button(d.invite.accept(inv.workspaceName), 'btn btn-stamp', async () => {
+          await api('POST', `/invitations/${inv.id}/accept`);
+          actions.replaceChildren(link(d.invite.download, to('download/'), 'btn btn-stamp'), link(d.invite.account, to('account/'), 'btn btn-ghost'));
+          say('lead', d.invite.joined(inv.workspaceName)); say('note', d.invite.joinedLead); $('for').hidden = true;
+        }),
+        button(d.invite.decline, 'btn btn-ghost', async () => {
+          await api('POST', `/invitations/${inv.id}/decline`);
+          actions.replaceChildren(); say('note', d.invite.declined);
+        })
+      );
+    }
+  }
+  show().catch(e => showError($('err'), e));
+</script>

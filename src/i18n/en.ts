@@ -176,7 +176,7 @@ export const en = {
     forgotTitle: 'Reset your password', forgotLead: 'Enter your account email and we’ll send a code.',
     sendCode: 'Send code', resetTitle: 'Choose a new password', newPassword: 'New password', reset: 'Set new password',
     resetDone: 'Password updated. Log in with the new one.',
-    devNotice: 'Development build: emails aren’t sent. The code is in the server log.',
+    devNotice: 'Development build: emails go to the local test inbox at http://127.0.0.1:47125.',
     logout: 'Log out'
   },
 
@@ -221,7 +221,23 @@ export const en = {
     paid: 'Paid', refunded: 'Refunded', invoice: 'Invoice', refund: 'Refund',
     refundConfirm: 'Refund this payment? Your plan goes back to what it was before it.', confirmRefund: 'Yes, refund',
     download: 'Get the app', downloadBody: 'Log in to the desktop app with this same account. Your plan and workspaces are already there.',
-    downloadCta: 'Download'
+    downloadCta: 'Download',
+    invitations: 'Invitations', invitedBy: (inviter: string, role: string) => `From ${inviter}, as ${role}`, accept: 'Join', decline: 'Decline'
+  },
+  invite: {
+    title: 'Invitation', checking: 'Checking the invitation…',
+    missing: 'This link has no invitation in it. Open the link from the email again.',
+    gone: 'This invitation is no longer open: it was accepted, withdrawn, or replaced by a newer one.',
+    lead: (inviter: string, workspace: string, role: string) => `${inviter} invited you to join ${workspace} on Folio as ${role}.`,
+    roles: { admin: 'an admin', member: 'a member' }, forEmail: (email: string) => `For ${email}`,
+    expired: 'This invitation has expired. Ask for a new one.',
+    login: 'Log in to accept', signup: 'Create an account',
+    wrong: (invited: string, current: string) => `This invitation is for ${invited}, but you’re logged in as ${current}.`, switch: 'Log out and use the other account',
+    verify: 'Confirm your email address first; you’ll come back here.', verifyCta: 'Confirm email',
+    accept: (workspace: string) => `Join ${workspace}`, decline: 'Decline',
+    joined: (workspace: string) => `You’re in ${workspace}.`,
+    joinedLead: 'Log in to the Folio workbench with this account; the workspace is in its workspace menu.',
+    download: 'Download the workbench', account: 'Go to your account', declined: 'You declined the invitation.'
   },
 
   invoice: {
@@ -295,6 +311,11 @@ export const en = {
     not_found: 'We couldn’t find that.',
     validation: 'Some fields are missing or not valid.',
     network: 'Can’t reach Folio right now. Check your connection and try again.',
+    wrong_account: 'This invitation is for a different email address.',
+    email_unverified: 'Confirm your email address first.',
+    invitation_expired: 'This invitation has expired. Ask for a new one.',
+    seat_limit: 'This workspace has no free seat. Ask its owner to upgrade.',
+    mail_unavailable: 'We couldn’t send the email. Try again in a minute.',
     internal: 'Something went wrong on our side. Try again.'
   } as Record<string, string>
 };

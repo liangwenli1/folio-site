@@ -59,6 +59,10 @@ const a = d.account;
             <dd><select id="locale" class="field-select"><option value="en">English</option><option value="zh">中文</option></select></dd>
           </dl>
         </section>
+        <section class="panel" id="inv-panel" aria-labelledby="inv-h" hidden>
+          <h2 id="inv-h">{a.invitations}</h2>
+          <ul class="ws-list" id="inv-list"></ul>
+        </section>
         <section class="panel" aria-labelledby="ws-h">
           <h2 id="ws-h">{a.workspaces}</h2>
           <ul class="ws-list" id="ws-list"></ul>
@@ -90,7 +94,7 @@ const a = d.account;
     const current = me.workspaces.find(w => w.id === param('ws')) ?? me.workspaces[0];
     ws = await api<Workspace>('GET', `/workspaces/${current.id}`);
     renderProfile(); renderWorkspaces(); renderPlan();
-    await renderPayments();
+    await Promise.all([renderPayments(), renderInvitations()]);
     $('acct').hidden = false;
   }
 
@@ -112,6 +116,33 @@ const a = d.account;
         ${w.role !== 'member' ? `<button class="linkish fine" type="button" data-rename="${w.id}">${a.rename}</button>` : ''}
       </li>`).join('');
   }
+
+  // Invitations sent to this address, joined or declined right here.
+  async function renderInvitations(){
+    const { invitations } = await api<{ invitations: { id: string; workspaceName: string; inviter: string | null; role: 'admin' | 'member' }[] }>('GET', '/me/invitations');
+    $('inv-panel').hidden = !invitations.length;
+    $('inv-list').innerHTML = invitations.map(i => `
+      <li data-inv="${i.id}">
+        <span><b>${esc(i.workspaceName)}</b><br><span class="fine">${esc(a.invitedBy(i.inviter ?? 'Folio', a.roles[i.role]))}</span></span>
+        <span class="spacer"></span>
+        <button class="btn btn-stamp btn-sm" type="button" data-accept="${i.id}">${a.accept}</button>
+        <button class="linkish fine" type="button" data-decline="${i.id}">${a.decline}</button>
+      </li>`).join('');
+  }
+  $('inv-list').addEventListener('click', async ev => {
+    const b = (ev.target as HTMLElement).closest<HTMLButtonElement>('button[data-accept],button[data-decline]');
+    if (!b) return;
+    b.disabled = true;
+    try {
+      if (b.dataset.accept){
+        const ws = await api<{ id: string }>('POST', `/invitations/${b.dataset.accept}/accept`);
+        location.assign(`?ws=${ws.id}`);
+      } else {
+        await api('POST', `/invitations/${b.dataset.decline}/decline`);
+        await renderInvitations();
+      }
+    } catch (e){ fail(e); b.disabled = false; }
+  });
 
   function renderPlan(){
     const s = ws.subscription, manager = ws.role !== 'member';

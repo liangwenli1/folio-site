@@ -26,8 +26,9 @@ const d = t(lang);
 </Base>
 <script>
   import { api } from '../../lib/api';
-  import { $, d, lang, onSubmit, to, withNext } from '../../scripts/session';
+  import { $, d, lang, onSubmit, param, to, withNext } from '../../scripts/session';
   $<HTMLAnchorElement>('to-login').href = withNext(to('login/'));
+  if (param('email')) $<HTMLInputElement>('email').value = param('email')!;
   onSubmit($<HTMLFormElement>('form'), $('err'), async () => {
     const email = $<HTMLInputElement>('email').value.trim(), password = $<HTMLInputElement>('password').value;
     if (!email || password.length < 8) throw d.errors.validation;
