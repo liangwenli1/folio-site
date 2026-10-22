@@ -88,6 +88,8 @@ export interface paths {
                          */
                         client?: "web" | "desktop";
                         deviceName?: string;
+                        /** Format: uuid */
+                        deviceId?: string;
                     };
                 };
             };
@@ -1698,6 +1700,8 @@ export interface paths {
                                 updatedAt: string;
                                 deletedAt: string | null;
                                 version: number;
+                                /** @enum {string} */
+                                syncMode: "cloud" | "local";
                                 data: {
                                     version: number;
                                     size: number;
@@ -1763,6 +1767,8 @@ export interface paths {
                         timezoneOverride?: string | null;
                         localeOverride?: string | null;
                         notes?: string | null;
+                        /** @enum {string} */
+                        syncMode?: "cloud" | "local";
                     };
                 };
             };
@@ -1809,6 +1815,8 @@ export interface paths {
                             updatedAt: string;
                             deletedAt: string | null;
                             version: number;
+                            /** @enum {string} */
+                            syncMode: "cloud" | "local";
                             data: {
                                 version: number;
                                 size: number;
@@ -1888,6 +1896,8 @@ export interface paths {
                             timezoneOverride?: string | null;
                             localeOverride?: string | null;
                             notes?: string | null;
+                            /** @enum {string} */
+                            syncMode?: "cloud" | "local";
                         }[];
                     };
                 };
@@ -1936,6 +1946,8 @@ export interface paths {
                                 updatedAt: string;
                                 deletedAt: string | null;
                                 version: number;
+                                /** @enum {string} */
+                                syncMode: "cloud" | "local";
                                 data: {
                                     version: number;
                                     size: number;
@@ -2017,6 +2029,8 @@ export interface paths {
                         timezoneOverride?: string | null;
                         localeOverride?: string | null;
                         notes?: string | null;
+                        /** @enum {string} */
+                        syncMode?: "cloud" | "local";
                     };
                 };
             };
@@ -2063,6 +2077,8 @@ export interface paths {
                             updatedAt: string;
                             deletedAt: string | null;
                             version: number;
+                            /** @enum {string} */
+                            syncMode: "cloud" | "local";
                             data: {
                                 version: number;
                                 size: number;
@@ -2202,6 +2218,8 @@ export interface paths {
                                 updatedAt: string;
                                 deletedAt: string | null;
                                 version: number;
+                                /** @enum {string} */
+                                syncMode: "cloud" | "local";
                                 data: {
                                     version: number;
                                     size: number;
@@ -2766,7 +2784,14 @@ export interface paths {
                 };
                 cookie?: never;
             };
-            requestBody?: never;
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        via?: "api";
+                    } | null;
+                };
+            };
             responses: {
                 /** @description Default Response */
                 200: {
@@ -2955,6 +2980,115 @@ export interface paths {
             };
         };
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/profiles/{id}/cookies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            cookies: {
+                                name: string;
+                                value: string;
+                                domain: string;
+                                /** @default / */
+                                path: string;
+                                /** @default -1 */
+                                expires: number;
+                                /** @default false */
+                                httpOnly: boolean;
+                                /** @default false */
+                                secure: boolean;
+                                /**
+                                 * @default Lax
+                                 * @enum {string}
+                                 */
+                                sameSite: "Strict" | "Lax" | "None";
+                            }[];
+                            savedAt: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        cookies: {
+                            name: string;
+                            value: string;
+                            domain: string;
+                            /** @default / */
+                            path?: string;
+                            /** @default -1 */
+                            expires?: number;
+                            /** @default false */
+                            httpOnly?: boolean;
+                            /** @default false */
+                            secure?: boolean;
+                            /**
+                             * @default Lax
+                             * @enum {string}
+                             */
+                            sameSite?: "Strict" | "Lax" | "None";
+                        }[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            version: number;
+                            size: number;
+                            cookies: number;
+                            storageBytes: number;
+                            origins: number;
+                            savedAt: string;
+                            deviceName: string | null;
+                        };
+                    };
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -3558,10 +3692,1483 @@ export interface paths {
         };
         trace?: never;
     };
+    "/workspaces/{id}/activity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    profileId?: string;
+                    actorId?: string;
+                    kind?: "open" | "profiles" | "trash" | "proxies" | "cookies" | "team" | "automation";
+                    before?: number;
+                    limit?: number;
+                };
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            entries: {
+                                seq: number;
+                                at: string;
+                                actor: string | null;
+                                deviceName: string | null;
+                                /** @enum {string} */
+                                action: "profile.create" | "profile.update" | "profile.move" | "profile.tag" | "profile.untag" | "profile.set-proxy" | "profile.assign" | "profile.set-department" | "profile.trash" | "profile.restore" | "profile.purge" | "profile.open" | "profile.close" | "profile.takeover" | "proxy.create" | "proxy.import" | "proxy.update" | "proxy.delete" | "group.create" | "group.rename" | "group.delete" | "member.invite" | "member.join" | "member.role" | "member.remove" | "member.leave" | "invitation.withdraw" | "department.create" | "department.update" | "department.delete" | "cookies.export" | "cookies.import" | "workspace.export" | "workspace.import" | "flow.create" | "flow.update" | "flow.delete" | "task.create" | "task.update" | "task.delete" | "run.start" | "run.finish";
+                                profile: {
+                                    id: string | null;
+                                    name: string;
+                                    number: number;
+                                } | null;
+                                detail: {
+                                    [key: string]: unknown;
+                                };
+                            }[];
+                            retentionDays: number;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/workspaces/{id}/activity.csv": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    profileId?: string;
+                    actorId?: string;
+                    kind?: "open" | "profiles" | "trash" | "proxies" | "cookies" | "team" | "automation";
+                };
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/workspaces/{id}/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            groups: string[];
+                            proxies: {
+                                ref: string;
+                                name: string;
+                                /** @enum {string} */
+                                type: "http" | "https" | "socks5";
+                                host: string;
+                                port: number;
+                                username: string | null;
+                                password: string | null;
+                                backupRef: string | null;
+                            }[];
+                            profiles: {
+                                name: string;
+                                /** @default [] */
+                                tags: string[];
+                                /** @enum {string} */
+                                kernel: "chromium" | "firefox";
+                                kernelVersion: string;
+                                /** @enum {string} */
+                                os: "windows" | "macos" | "linux";
+                                fingerprint: {
+                                    /** @enum {string} */
+                                    kind: "chromium";
+                                    seed: number;
+                                    hardwareConcurrency: number;
+                                } | {
+                                    /** @enum {string} */
+                                    kind: "firefox";
+                                    config: {
+                                        [key: string]: unknown;
+                                    };
+                                };
+                                timezoneOverride?: string | null;
+                                localeOverride?: string | null;
+                                notes?: string | null;
+                                /** @enum {string} */
+                                syncMode?: "cloud" | "local";
+                                ref: string;
+                                group: string | null;
+                                proxyRef: string | null;
+                                saved: boolean;
+                            }[];
+                            workspace: string;
+                            exportedAt: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/workspaces/{id}/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        groups: string[];
+                        proxies: {
+                            ref: string;
+                            name: string;
+                            /** @enum {string} */
+                            type: "http" | "https" | "socks5";
+                            host: string;
+                            port: number;
+                            username: string | null;
+                            password: string | null;
+                            backupRef: string | null;
+                        }[];
+                        profiles: {
+                            name: string;
+                            /** @default [] */
+                            tags?: string[];
+                            /** @enum {string} */
+                            kernel: "chromium" | "firefox";
+                            kernelVersion: string;
+                            /** @enum {string} */
+                            os: "windows" | "macos" | "linux";
+                            fingerprint: {
+                                /** @enum {string} */
+                                kind: "chromium";
+                                seed: number;
+                                hardwareConcurrency: number;
+                            } | {
+                                /** @enum {string} */
+                                kind: "firefox";
+                                config: {
+                                    [key: string]: unknown;
+                                };
+                            };
+                            timezoneOverride?: string | null;
+                            localeOverride?: string | null;
+                            notes?: string | null;
+                            /** @enum {string} */
+                            syncMode?: "cloud" | "local";
+                            ref: string;
+                            group: string | null;
+                            proxyRef: string | null;
+                            saved: boolean;
+                        }[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            profiles: {
+                                ref: string;
+                                id: string;
+                            }[];
+                            added: {
+                                profiles: number;
+                                proxies: number;
+                                groups: number;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/workspaces/{id}/flows": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            flows: {
+                                id: string;
+                                name: string;
+                                steps: components["schemas"]["Step"][];
+                                version: number;
+                                createdBy: string | null;
+                                createdAt: string;
+                                updatedAt: string;
+                                canEdit: boolean;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        name: string;
+                        steps: components["schemas"]["StepInput"][];
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            name: string;
+                            steps: components["schemas"]["Step"][];
+                            version: number;
+                            createdBy: string | null;
+                            createdAt: string;
+                            updatedAt: string;
+                            canEdit: boolean;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/flows/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": null;
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        version: number;
+                        name?: string;
+                        steps?: components["schemas"]["StepInput"][];
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            name: string;
+                            steps: components["schemas"]["Step"][];
+                            version: number;
+                            createdBy: string | null;
+                            createdAt: string;
+                            updatedAt: string;
+                            canEdit: boolean;
+                        };
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/workspaces/{id}/tasks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            tasks: {
+                                id: string;
+                                name: string;
+                                flowId: string;
+                                profileIds: string[];
+                                profiles: number;
+                                concurrency: number;
+                                retries: number;
+                                timeoutMin: number;
+                                hasVariables: boolean;
+                                schedule: components["schemas"]["Schedule"] | null;
+                                runner: {
+                                    email: string | null;
+                                    deviceName: string | null;
+                                    self: boolean;
+                                } | null;
+                                createdBy: string | null;
+                                canEdit: boolean;
+                                version: number;
+                                createdAt: string;
+                                updatedAt: string;
+                                lastRun: {
+                                    id: string;
+                                    taskId: string;
+                                    /** @enum {string} */
+                                    trigger: "manual" | "rerun" | "schedule";
+                                    /** @enum {string} */
+                                    status: "running" | "done" | "stopped" | "interrupted" | "missed" | "busy";
+                                    flowVersion: number;
+                                    startedBy: string | null;
+                                    deviceName: string | null;
+                                    scheduledFor: string | null;
+                                    startedAt: string;
+                                    finishedAt: string | null;
+                                    counts: {
+                                        pending: number;
+                                        running: number;
+                                        ok: number;
+                                        failed: number;
+                                        signed_out: number;
+                                        skipped: number;
+                                        canceled: number;
+                                    };
+                                } | null;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        name: string;
+                        /** Format: uuid */
+                        flowId: string;
+                        profileIds: string[];
+                        variables?: {
+                            [key: string]: {
+                                [key: string]: string;
+                            };
+                        } | null;
+                        concurrency: number;
+                        retries: number;
+                        timeoutMin: number;
+                        schedule?: components["schemas"]["ScheduleInput"] | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            name: string;
+                            flowId: string;
+                            profileIds: string[];
+                            profiles: number;
+                            concurrency: number;
+                            retries: number;
+                            timeoutMin: number;
+                            hasVariables: boolean;
+                            schedule: components["schemas"]["Schedule"] | null;
+                            runner: {
+                                email: string | null;
+                                deviceName: string | null;
+                                self: boolean;
+                            } | null;
+                            createdBy: string | null;
+                            canEdit: boolean;
+                            version: number;
+                            createdAt: string;
+                            updatedAt: string;
+                            lastRun: {
+                                id: string;
+                                taskId: string;
+                                /** @enum {string} */
+                                trigger: "manual" | "rerun" | "schedule";
+                                /** @enum {string} */
+                                status: "running" | "done" | "stopped" | "interrupted" | "missed" | "busy";
+                                flowVersion: number;
+                                startedBy: string | null;
+                                deviceName: string | null;
+                                scheduledFor: string | null;
+                                startedAt: string;
+                                finishedAt: string | null;
+                                counts: {
+                                    pending: number;
+                                    running: number;
+                                    ok: number;
+                                    failed: number;
+                                    signed_out: number;
+                                    skipped: number;
+                                    canceled: number;
+                                };
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tasks/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": null;
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        version: number;
+                        runHere?: boolean;
+                        name?: string;
+                        /** Format: uuid */
+                        flowId?: string;
+                        profileIds?: string[];
+                        variables?: {
+                            [key: string]: {
+                                [key: string]: string;
+                            };
+                        } | null;
+                        concurrency?: number;
+                        retries?: number;
+                        timeoutMin?: number;
+                        schedule?: components["schemas"]["ScheduleInput"] | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            name: string;
+                            flowId: string;
+                            profileIds: string[];
+                            profiles: number;
+                            concurrency: number;
+                            retries: number;
+                            timeoutMin: number;
+                            hasVariables: boolean;
+                            schedule: components["schemas"]["Schedule"] | null;
+                            runner: {
+                                email: string | null;
+                                deviceName: string | null;
+                                self: boolean;
+                            } | null;
+                            createdBy: string | null;
+                            canEdit: boolean;
+                            version: number;
+                            createdAt: string;
+                            updatedAt: string;
+                            lastRun: {
+                                id: string;
+                                taskId: string;
+                                /** @enum {string} */
+                                trigger: "manual" | "rerun" | "schedule";
+                                /** @enum {string} */
+                                status: "running" | "done" | "stopped" | "interrupted" | "missed" | "busy";
+                                flowVersion: number;
+                                startedBy: string | null;
+                                deviceName: string | null;
+                                scheduledFor: string | null;
+                                startedAt: string;
+                                finishedAt: string | null;
+                                counts: {
+                                    pending: number;
+                                    running: number;
+                                    ok: number;
+                                    failed: number;
+                                    signed_out: number;
+                                    skipped: number;
+                                    canceled: number;
+                                };
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/tasks/{id}/variables": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            variables: {
+                                [key: string]: {
+                                    [key: string]: string;
+                                };
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tasks/{id}/runs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        trigger: "manual" | "rerun" | "schedule";
+                        profileIds?: string[];
+                        /** Format: date-time */
+                        scheduledFor?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            run: {
+                                id: string;
+                                taskId: string;
+                                /** @enum {string} */
+                                trigger: "manual" | "rerun" | "schedule";
+                                /** @enum {string} */
+                                status: "running" | "done" | "stopped" | "interrupted" | "missed" | "busy";
+                                flowVersion: number;
+                                startedBy: string | null;
+                                deviceName: string | null;
+                                scheduledFor: string | null;
+                                startedAt: string;
+                                finishedAt: string | null;
+                                counts: {
+                                    pending: number;
+                                    running: number;
+                                    ok: number;
+                                    failed: number;
+                                    signed_out: number;
+                                    skipped: number;
+                                    canceled: number;
+                                };
+                            };
+                            task: {
+                                name: string;
+                                concurrency: number;
+                                retries: number;
+                                timeoutMin: number;
+                            };
+                            steps: components["schemas"]["Step"][];
+                            items: {
+                                profileId: string;
+                                name: string;
+                                number: number;
+                                vars: {
+                                    [key: string]: string;
+                                };
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/runs/{id}/items/{profileId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                    profileId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        status: "running" | "ok" | "failed" | "signed_out" | "skipped" | "canceled";
+                        attempts: number;
+                        error?: {
+                            code: string;
+                            message: string;
+                        } | null;
+                        log?: {
+                            attempt: number;
+                            path: string;
+                            type: string;
+                            target: string;
+                            ms: number | null;
+                            value?: string;
+                            error?: {
+                                code: string;
+                                message: string;
+                            };
+                        }[];
+                        data?: {
+                            [key: string]: string;
+                        };
+                        screenshots?: string[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": null;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/runs/{id}/heartbeat": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": null;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/runs/{id}/finish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        status: "done" | "stopped";
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            taskId: string;
+                            /** @enum {string} */
+                            trigger: "manual" | "rerun" | "schedule";
+                            /** @enum {string} */
+                            status: "running" | "done" | "stopped" | "interrupted" | "missed" | "busy";
+                            flowVersion: number;
+                            startedBy: string | null;
+                            deviceName: string | null;
+                            scheduledFor: string | null;
+                            startedAt: string;
+                            finishedAt: string | null;
+                            counts: {
+                                pending: number;
+                                running: number;
+                                ok: number;
+                                failed: number;
+                                signed_out: number;
+                                skipped: number;
+                                canceled: number;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tasks/{id}/missed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        slots: string[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": null;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/schedules": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            tasks: {
+                                id: string;
+                                workspaceId: string;
+                                name: string;
+                                schedule: components["schemas"]["Schedule"];
+                                since: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/workspaces/{id}/runs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    taskId?: string;
+                    before?: string;
+                    limit?: number;
+                };
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            runs: {
+                                id: string;
+                                taskId: string;
+                                /** @enum {string} */
+                                trigger: "manual" | "rerun" | "schedule";
+                                /** @enum {string} */
+                                status: "running" | "done" | "stopped" | "interrupted" | "missed" | "busy";
+                                flowVersion: number;
+                                startedBy: string | null;
+                                deviceName: string | null;
+                                scheduledFor: string | null;
+                                startedAt: string;
+                                finishedAt: string | null;
+                                counts: {
+                                    pending: number;
+                                    running: number;
+                                    ok: number;
+                                    failed: number;
+                                    signed_out: number;
+                                    skipped: number;
+                                    canceled: number;
+                                };
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/runs/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            run: {
+                                id: string;
+                                taskId: string;
+                                /** @enum {string} */
+                                trigger: "manual" | "rerun" | "schedule";
+                                /** @enum {string} */
+                                status: "running" | "done" | "stopped" | "interrupted" | "missed" | "busy";
+                                flowVersion: number;
+                                startedBy: string | null;
+                                deviceName: string | null;
+                                scheduledFor: string | null;
+                                startedAt: string;
+                                finishedAt: string | null;
+                                counts: {
+                                    pending: number;
+                                    running: number;
+                                    ok: number;
+                                    failed: number;
+                                    signed_out: number;
+                                    skipped: number;
+                                    canceled: number;
+                                };
+                            };
+                            items: {
+                                profileId: string | null;
+                                profileName: string;
+                                profileNumber: number;
+                                /** @enum {string} */
+                                status: "pending" | "running" | "ok" | "failed" | "signed_out" | "skipped" | "canceled";
+                                attempts: number;
+                                startedAt: string | null;
+                                finishedAt: string | null;
+                                error: {
+                                    code: string;
+                                    message: string;
+                                } | null;
+                                log: {
+                                    attempt: number;
+                                    path: string;
+                                    type: string;
+                                    target: string;
+                                    ms: number | null;
+                                    value?: string;
+                                    error?: {
+                                        code: string;
+                                        message: string;
+                                    };
+                                }[];
+                                data: {
+                                    [key: string]: string;
+                                };
+                                screenshots: string[];
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: never;
+    schemas: {
+        StepInput: {
+            /** @enum {string} */
+            type: "open";
+            url: string;
+        } | {
+            /** @enum {string} */
+            type: "click";
+            selector: string;
+        } | {
+            /** @enum {string} */
+            type: "type";
+            selector: string;
+            text: string;
+            slow: boolean;
+        } | {
+            /** @enum {string} */
+            type: "press";
+            key: string;
+        } | {
+            /** @enum {string} */
+            type: "wait";
+            /** @enum {string} */
+            until: "time" | "visible" | "hidden";
+            seconds: number;
+            maxSeconds: number | null;
+            selector: string | null;
+        } | {
+            /** @enum {string} */
+            type: "scroll";
+            /** @enum {string} */
+            to: "element" | "pixels" | "bottom";
+            selector: string | null;
+            pixels: number | null;
+        } | {
+            /** @enum {string} */
+            type: "extract";
+            selector: string;
+            attribute: string | null;
+            variable: string;
+        } | {
+            /** @enum {string} */
+            type: "set";
+            variable: string;
+            value: string;
+        } | {
+            /** @enum {string} */
+            type: "screenshot";
+            selector: string | null;
+        } | {
+            /** @enum {string} */
+            type: "script";
+            code: string;
+            variable: string | null;
+        } | {
+            /** @enum {string} */
+            type: "signedIn";
+            url: string;
+            /** @enum {string} */
+            mode: "present" | "absent";
+            selector: string;
+            seconds: number;
+        } | {
+            /** @enum {string} */
+            type: "if";
+            test: {
+                /** @enum {string} */
+                kind: "exists";
+                selector: string;
+            } | {
+                /** @enum {string} */
+                kind: "contains";
+                selector: string;
+                text: string;
+            } | {
+                /** @enum {string} */
+                kind: "equals";
+                variable: string;
+                value: string;
+            };
+            then: components["schemas"]["StepInput"][];
+            else: components["schemas"]["StepInput"][];
+        } | {
+            /** @enum {string} */
+            type: "loop";
+            /** @enum {string} */
+            mode: "times" | "each";
+            times: number | null;
+            selector: string | null;
+            steps: components["schemas"]["StepInput"][];
+        };
+        ScheduleInput: {
+            /** @enum {string} */
+            kind: "once";
+            /** Format: date-time */
+            at: string;
+            tz: string;
+        } | {
+            /** @enum {string} */
+            kind: "daily";
+            time: string;
+            days: number[];
+            tz: string;
+        };
+        Step: {
+            /** @enum {string} */
+            type: "open";
+            url: string;
+        } | {
+            /** @enum {string} */
+            type: "click";
+            selector: string;
+        } | {
+            /** @enum {string} */
+            type: "type";
+            selector: string;
+            text: string;
+            slow: boolean;
+        } | {
+            /** @enum {string} */
+            type: "press";
+            key: string;
+        } | {
+            /** @enum {string} */
+            type: "wait";
+            /** @enum {string} */
+            until: "time" | "visible" | "hidden";
+            seconds: number;
+            maxSeconds: number | null;
+            selector: string | null;
+        } | {
+            /** @enum {string} */
+            type: "scroll";
+            /** @enum {string} */
+            to: "element" | "pixels" | "bottom";
+            selector: string | null;
+            pixels: number | null;
+        } | {
+            /** @enum {string} */
+            type: "extract";
+            selector: string;
+            attribute: string | null;
+            variable: string;
+        } | {
+            /** @enum {string} */
+            type: "set";
+            variable: string;
+            value: string;
+        } | {
+            /** @enum {string} */
+            type: "screenshot";
+            selector: string | null;
+        } | {
+            /** @enum {string} */
+            type: "script";
+            code: string;
+            variable: string | null;
+        } | {
+            /** @enum {string} */
+            type: "signedIn";
+            url: string;
+            /** @enum {string} */
+            mode: "present" | "absent";
+            selector: string;
+            seconds: number;
+        } | {
+            /** @enum {string} */
+            type: "if";
+            test: {
+                /** @enum {string} */
+                kind: "exists";
+                selector: string;
+            } | {
+                /** @enum {string} */
+                kind: "contains";
+                selector: string;
+                text: string;
+            } | {
+                /** @enum {string} */
+                kind: "equals";
+                variable: string;
+                value: string;
+            };
+            then: components["schemas"]["Step"][];
+            else: components["schemas"]["Step"][];
+        } | {
+            /** @enum {string} */
+            type: "loop";
+            /** @enum {string} */
+            mode: "times" | "each";
+            times: number | null;
+            selector: string | null;
+            steps: components["schemas"]["Step"][];
+        };
+        Schedule: {
+            /** @enum {string} */
+            kind: "once";
+            /** Format: date-time */
+            at: string;
+            tz: string;
+        } | {
+            /** @enum {string} */
+            kind: "daily";
+            time: string;
+            days: number[];
+            tz: string;
+        };
+    };
     responses: never;
     parameters: never;
     requestBodies: never;

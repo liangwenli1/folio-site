@@ -106,8 +106,8 @@ export const en = {
       ['Scheduled tasks', 'Open chosen profiles at a set time each day, confirm they’re still signed in, and get an alert when one isn’t.']
     ],
     withCode: 'With code',
-    withCodeBody: 'The local API starts any profile and returns a debugging address. Your existing automation framework takes it from there, with no rewrite.',
-    libs: ['Playwright', 'Puppeteer', 'Selenium', 'Any CDP client'],
+    withCodeBody: 'The local API starts any profile and hands your script its debugging address. Your existing automation takes it from there, with no rewrite.',
+    libs: ['Playwright', 'Puppeteer', 'Selenium', 'CDP · WebDriver BiDi'],
     codeComment: '// Start profile 0042 in Folio'
   },
 
@@ -261,7 +261,47 @@ export const en = {
 
   docs: {
     title: 'Docs', lead: 'Guides for setting up profiles, proxies and your team will live here as the app opens up.',
-    apiTitle: 'API reference', apiLead: 'Folio’s local API lets your scripts start a profile and take control of it through the Chrome DevTools Protocol. The full reference ships with the automation release.',
+    apiTitle: 'API reference', apiLead: 'Folio’s local API lets scripts on your computer open a profile and take it over with the automation tools you already use. It runs inside the Folio app, on your computer only.',
+    api: {
+      setupTitle: 'Turn it on',
+      setup: [
+        'In the Folio app, open API & scripts, switch the local API on and make a token. The token is shown once; copy it then.',
+        'Requests go to http://127.0.0.1:47210 (the port can be changed on the same page) with the header Authorization: Bearer <token>. A token belongs to you and the workspace it was made in, works only on that computer, and can do what you can: members reach only their own profiles.'
+      ],
+      limitsTitle: 'Limits',
+      limits: 'Free and Studio allow 60 requests a minute: opening, closing and looking things up. Company is unthrottled. What your script sends to the browser over its debugging address is not counted. Past the limit, requests answer 429 with a Retry-After header in seconds.',
+      enginesTitle: 'Engines and tools',
+      engines: [
+        ['Chromium profiles', 'Answer with a CDP address (wsEndpoint) and, for Selenium, a debuggerAddress. Playwright (connectOverCDP), Puppeteer, Selenium with chromedriver for Chromium 150, or any CDP client.'],
+        ['Firefox profiles', 'Answer with a WebDriver BiDi address. Puppeteer (protocol: webDriverBiDi) or any WebDriver BiDi client. Playwright and Selenium can’t attach to a Firefox that is already running. While a script drives a Firefox profile, scheduled tasks skip it.']
+      ] as [string, string][],
+      endpointsTitle: 'Endpoints',
+      endpointsLead: 'A profile is named by its number (42 or 0042) or its id.',
+      endpoints: [
+        ['GET', '/api/v1/profiles', 'The profiles you can see: id, number, name, engine, and whether each runs.'],
+        ['POST', '/api/v1/profiles/{number}/start', 'Opens the profile the way the app does (lock, saved sign-ins, proxy) and answers with protocol, wsEndpoint and, for Chromium, debuggerAddress. Starting one that is already open through the API answers the same address.'],
+        ['GET', '/api/v1/profiles/{number}', 'Whether it runs, with its address when it was opened through the API.'],
+        ['POST', '/api/v1/profiles/{number}/stop', 'Closes it; its sign-ins are saved as usual.'],
+        ['GET', '/api/v1/tasks', 'The workspace’s tasks, each with its last run.'],
+        ['POST', '/api/v1/tasks/{id}/run', 'Runs a task on this computer and answers with runId.'],
+        ['GET', '/api/v1/runs/{id}', 'A run’s status and counts, and each profile’s result and extracted data.']
+      ] as [string, string, string][],
+      errorsTitle: 'Errors',
+      errorsLead: 'Errors answer { "error": { "code", "message" } }.',
+      errors: [
+        ['401', 'unauthorized', 'No token, an unknown or revoked one, or one made by another account than the one logged in to the app.'],
+        ['404', 'not_found', 'No such profile, task or run among those you can see.'],
+        ['409', 'running_without_api', 'The profile is open but was opened by hand, so it has no debugging address. Close it, then start it through the API.'],
+        ['409', 'locked', 'The profile is open on another computer.'],
+        ['409', 'task_running', 'The task is already running.'],
+        ['429', 'rate_limited', 'Over 60 requests a minute on Free or Studio; retryAfter says when to try again.'],
+        ['502', 'proxy_down', 'The profile’s proxy didn’t answer, and there’s no working backup line.']
+      ] as [string, string, string][],
+      examplesTitle: 'Examples',
+      examples: { playwright: 'Playwright, Chromium profile', puppeteer: 'Puppeteer, Chromium profile', selenium: 'Selenium (Python), Chromium profile', firefox: 'Puppeteer, Firefox profile' },
+      securityTitle: 'Security',
+      security: 'The debugging address has no password. While a profile opened through the API is running, any program on that computer can control it, as with any browser debugging port. Profiles opened by hand never get one, and the API listens on 127.0.0.1 only.'
+    },
     changelogTitle: 'Changelog',
     changelog: [['0.1 · October 2026', 'Accounts, workspaces, plans and the first build of the desktop workbench.']] as [string, string][]
   },

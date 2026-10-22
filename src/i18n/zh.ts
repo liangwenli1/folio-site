@@ -108,8 +108,8 @@ export const zh: typeof en = {
       ['定时任务', '每天固定时间打开指定环境，检查登录状态，掉线了提醒你。']
     ],
     withCode: '写代码',
-    withCodeBody: '本地 API 启动任意环境并返回调试地址，你熟悉的自动化框架直接接管，脚本不用改写。',
-    libs: ['Playwright', 'Puppeteer', 'Selenium', '任何支持 CDP 的工具'],
+    withCodeBody: '本地 API 启动任意环境，把调试地址交给你的脚本，你熟悉的自动化框架直接接管，脚本不用改写。',
+    libs: ['Playwright', 'Puppeteer', 'Selenium', 'CDP · WebDriver BiDi'],
     codeComment: '// 启动 Folio 里编号 0042 的环境'
   },
 
@@ -263,7 +263,47 @@ export const zh: typeof en = {
 
   docs: {
     title: '使用文档', lead: '环境、代理和团队的设置指南会随客户端开放陆续上线。',
-    apiTitle: 'API 参考', apiLead: 'Folio 的本地 API 让你的脚本可以启动一个环境，并通过 Chrome DevTools 协议接管它。完整参考会随自动化功能一起发布。',
+    apiTitle: 'API 参考', apiLead: 'Folio 的本地 API 让你电脑上的脚本打开一个环境，再用你熟悉的自动化工具接管。它运行在 Folio 客户端里，只在你自己的电脑上提供。',
+    api: {
+      setupTitle: '开启',
+      setup: [
+        '在 Folio 客户端打开「API 与脚本」，打开本机 API，生成一个令牌。令牌只显示一次，请当场复制。',
+        '请求发到 http://127.0.0.1:47210（端口可以在同一页修改），请求头带上 Authorization: Bearer <令牌>。令牌属于你和生成它的团队，只在那台电脑上有效，权限和你相同：成员只能操作分配给自己的环境。'
+      ],
+      limitsTitle: '限速',
+      limits: '体验版和工作室版每分钟最多 60 次请求，包括打开、关闭和查询；公司版不限速。脚本通过调试地址直接发给浏览器的指令不计入。超出时返回 429，Retry-After 响应头给出几秒后可以重试。',
+      enginesTitle: '内核与工具',
+      engines: [
+        ['Chromium 环境', '返回 CDP 地址（wsEndpoint），以及给 Selenium 用的 debuggerAddress。可以用 Playwright（connectOverCDP）、Puppeteer、Selenium（配合 Chromium 150 对应的 chromedriver）或任何支持 CDP 的工具。'],
+        ['Firefox 环境', '返回 WebDriver BiDi 地址。可以用 Puppeteer（protocol: webDriverBiDi）或任何支持 WebDriver BiDi 的工具。Playwright 和 Selenium 目前不能接管已经在运行的 Firefox。脚本控制某个 Firefox 环境期间，定时任务会跳过它。']
+      ] as [string, string][],
+      endpointsTitle: '接口',
+      endpointsLead: '环境用编号（42 或 0042）或 id 指定。',
+      endpoints: [
+        ['GET', '/api/v1/profiles', '你能看到的环境：id、编号、名称、内核，以及是否在运行。'],
+        ['POST', '/api/v1/profiles/{编号}/start', '按客户端的正常流程打开环境（占用锁、恢复登录状态、代理），返回 protocol、wsEndpoint，Chromium 另有 debuggerAddress。已经通过 API 打开的，返回同一个地址。'],
+        ['GET', '/api/v1/profiles/{编号}', '是否在运行；通过 API 打开的附带调试地址。'],
+        ['POST', '/api/v1/profiles/{编号}/stop', '关闭环境，照常保存登录状态。'],
+        ['GET', '/api/v1/tasks', '团队的任务，各自带最近一次运行。'],
+        ['POST', '/api/v1/tasks/{id}/run', '在这台电脑上运行一个任务，返回 runId。'],
+        ['GET', '/api/v1/runs/{id}', '一次运行的状态和计数，以及每个环境的结果和提取到的数据。']
+      ] as [string, string, string][],
+      errorsTitle: '错误',
+      errorsLead: '出错时返回 { "error": { "code", "message" } }。',
+      errors: [
+        ['401', 'unauthorized', '没带令牌、令牌不对或已作废，或者令牌不是客户端当前登录的账号生成的。'],
+        ['404', 'not_found', '你能看到的环境、任务或运行记录里没有这一个。'],
+        ['409', 'running_without_api', '这个环境已经打开，但是手动打开的，没有调试地址。请先关闭，再通过 API 打开。'],
+        ['409', 'locked', '这个环境正在另一台电脑上使用。'],
+        ['409', 'task_running', '这个任务正在运行。'],
+        ['429', 'rate_limited', '体验版或工作室版一分钟内超过 60 次请求；retryAfter 告诉你几秒后再试。'],
+        ['502', 'proxy_down', '环境的代理没有响应，也没有可用的备用线路。']
+      ] as [string, string, string][],
+      examplesTitle: '示例',
+      examples: { playwright: 'Playwright，Chromium 环境', puppeteer: 'Puppeteer，Chromium 环境', selenium: 'Selenium（Python），Chromium 环境', firefox: 'Puppeteer，Firefox 环境' },
+      securityTitle: '安全',
+      security: '调试地址没有密码。通过 API 打开的环境运行期间，那台电脑上的任何程序都能控制它，这和所有浏览器的调试端口一样。手动打开的环境不会开调试地址，本机 API 也只监听 127.0.0.1。'
+    },
     changelogTitle: '更新日志',
     changelog: [['0.1 · 2026 年 10 月', '账号、团队、套餐，以及桌面工作台的第一个版本。']]
   },

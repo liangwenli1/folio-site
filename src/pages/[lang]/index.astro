@@ -146,7 +146,9 @@ const first = h.cities[0];
 <pre class="code"><code><span class="c-kw">import</span> {'{'} chromium {'}'} <span class="c-kw">from</span> <span class="c-str">'playwright'</span>;
 
 <span class="c-com">{d.auto.codeComment}</span>
-<span class="c-kw">const</span> res = <span class="c-kw">await</span> <span class="c-fn">fetch</span>(<span class="c-str">'http://127.0.0.1:47210/api/env/0042/start'</span>);
+<span class="c-kw">const</span> res = <span class="c-kw">await</span> <span class="c-fn">fetch</span>(<span class="c-str">'http://127.0.0.1:47210/api/v1/profiles/0042/start'</span>, {'{'}
+  method: <span class="c-str">'POST'</span>, headers: {'{'} authorization: <span class="c-str">'Bearer &lt;token&gt;'</span> {'}'}
+{'}'});
 <span class="c-kw">const</span> {'{'} wsEndpoint {'}'} = <span class="c-kw">await</span> res.<span class="c-fn">json</span>();
 
 <span class="c-kw">const</span> browser = <span class="c-kw">await</span> chromium.<span class="c-fn">connectOverCDP</span>(wsEndpoint);
