@@ -28,7 +28,7 @@ folio-server must allow this origin (`SITE_ORIGINS`, default `http://localhost:4
 | `npm run build` | Static build into `dist/` |
 | `npm run check` | Astro and TypeScript diagnostics |
 | `npm run api:types` | Regenerates `src/lib/api-schema.d.ts` from the server's OpenAPI document (`API_URL`, default `http://localhost:47110`) |
-| `npm run test:e2e` | Playwright end-to-end tests. Needs a built site and a running folio-server with `DEV_TOOLS=1 MOCK_PAYMENTS=1` on `localhost:47110` |
+| `npm run test:e2e` | Playwright end-to-end tests. Needs a built site, a running folio-server with `DEV_TOOLS=1 MOCK_PAYMENTS=1` on `localhost:47110`, and the Mailpit inbox it sends to (`MAILPIT_URL`, default `http://folio-mailpit:8025`), where the tests read verification codes |
 
 ## Layout
 

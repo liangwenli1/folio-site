@@ -1,9 +1,19 @@
 import { expect, test, type Page } from '@playwright/test';
 
-const API = process.env.API_URL ?? 'http://localhost:47110';
 const PASSWORD = 'correct horse battery';
 let n = 0;
 const uniqueEmail = () => `e2e${Date.now().toString(36)}${n++}@example.com`;
+
+// The server sends real mail; in tests it goes to the local Mailpit inbox.
+const MAILPIT = process.env.MAILPIT_URL ?? 'http://folio-mailpit:8025';
+async function emailCode(email: string){
+  for (let i = 0; i < 50; i++){
+    const { messages } = await (await fetch(`${MAILPIT}/api/v1/search?limit=1&query=${encodeURIComponent(`to:${email}`)}`)).json() as { messages: { ID: string }[] };
+    if (messages.length) return ((await (await fetch(`${MAILPIT}/api/v1/message/${messages[0].ID}`)).json()) as { Text: string }).Text.match(/\b\d{6}\b/)![0];
+    await new Promise(r => setTimeout(r, 100));
+  }
+  throw new Error(`No email for ${email}`);
+}
 
 // Keep tests independent of the network: no web fonts.
 test.beforeEach(async ({ page }) => {
@@ -17,8 +27,7 @@ async function signUp(page: Page, lang: 'en' | 'zh', next = ''){
   await page.fill('#password', PASSWORD);
   await page.click('button[type="submit"]');
   await page.waitForURL(/\/verify\//);
-  const { code } = await (await page.request.get(`${API}/dev/mail?email=${encodeURIComponent(email)}`)).json();
-  await page.fill('#code', code);
+  await page.fill('#code', await emailCode(email));
   await page.click('button[type="submit"]');
   await page.waitForURL(next ? new RegExp(next.replace(/[?]/g, '\\?')) : /\/account\//);
   return email;
