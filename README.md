@@ -13,13 +13,14 @@ npm install
 PUBLIC_API_URL=http://localhost:47110 npm run dev    # http://localhost:47120
 ```
 
-folio-server must allow this origin (`SITE_ORIGINS`, default `http://localhost:47120`). In production, serve the site and the API on the same registrable domain (e.g. `example.com` and `api.example.com`) so the session cookie is sent.
+folio-server must allow this origin (`SITE_ORIGINS`, default `http://localhost:47120`). In production the site and the API share one origin: the Docker image's nginx serves the site and passes `/api/` on to the API (see below).
 
 | Variable | Default | Meaning |
 |---|---|---|
 | `PUBLIC_API_URL` | `http://localhost:47110` | folio-server base URL |
 | `PUBLIC_DEV_NOTICE` | unset | `1` shows the "emails go to the local test inbox" hint on verification pages in a production build |
 | `SITE_URL` | `http://localhost:47120` | Canonical site URL |
+| `PUBLIC_DESKTOP_REPO` | unset | GitHub repository (`owner/name`) whose latest release has the installers; the download page links to `Folio-Setup-x64.exe` and `Folio-arm64.dmg` there. Unset, the download buttons say "Coming soon" |
 
 ## Scripts
 
@@ -28,7 +29,11 @@ folio-server must allow this origin (`SITE_ORIGINS`, default `http://localhost:4
 | `npm run build` | Static build into `dist/` |
 | `npm run check` | Astro and TypeScript diagnostics |
 | `npm run api:types` | Regenerates `src/lib/api-schema.d.ts` from the server's OpenAPI document (`API_URL`, default `http://localhost:47110`) |
-| `npm run test:e2e` | Playwright end-to-end tests. Needs a built site, a running folio-server with `DEV_TOOLS=1 MOCK_PAYMENTS=1` on `localhost:47110`, and the Mailpit inbox it sends to (`MAILPIT_URL`, default `http://folio-mailpit:8025`), where the tests read verification codes |
+| `npm run test:e2e` | Playwright end-to-end tests. Needs a built site, a running folio-server with `MOCK_PAYMENTS=1` on `localhost:47110`, and the Mailpit inbox it sends to (`MAILPIT_URL`, default `http://folio-mailpit:8025`), where the tests read verification codes. With `SITE_URL` and `API_URL` set (e.g. `http://localhost:8080` and `http://localhost:8080/api`), they run against a deployment instead |
+
+## Docker image
+
+`Dockerfile` builds the site (`PUBLIC_API_URL=/api`) and serves it with nginx on port 8080 (`deploy/nginx.conf`), which passes `/api/` on to the API container (`server:47110`, re-resolved through Docker's DNS) with streaming for live updates and uploads up to 100 MB. It is meant to sit behind Cloudflare: the visitor's address is taken from `CF-Connecting-IP` only when the connection comes from one of Cloudflare's ranges, downloaded from cloudflare.com when the image is built (rebuild to pick up changes). Build arguments: `SITE_URL`, `PUBLIC_DESKTOP_REPO`, and `BUILD_IMAGE` for building behind a TLS-inspecting proxy. How it is deployed is in folio-server's README ("Deploy").
 
 ## Layout
 

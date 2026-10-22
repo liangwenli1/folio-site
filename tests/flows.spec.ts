@@ -19,13 +19,14 @@ const emailCode = async (email: string) => (await lastMail(email)).Text.match(/\
 // An account made through the API, with a paid plan: someone who will invite people.
 async function owner(){
   const email = uniqueEmail();
-  const api = await request.newContext({ baseURL: process.env.API_URL ?? 'http://localhost:47110', extraHTTPHeaders: { origin: 'http://localhost:47120' } });
-  await api.post('/auth/register', { data: { email, password: PASSWORD } });
-  await api.post('/auth/verify-email', { data: { code: await emailCode(email) } });
-  const workspaceId = (await (await api.get('/me')).json()).workspaces[0].id as string;
-  const { checkoutId } = await (await api.post(`/workspaces/${workspaceId}/billing/checkout`, { data: { plan: 'studio', period: 'monthly', addonPacks: 0 } })).json();
-  await api.post(`/billing/checkouts/${checkoutId}/pay`, { data: { card: { number: '4242424242424242', expMonth: 12, expYear: 2030, cvc: '123' } } });
-  await api.patch(`/workspaces/${workspaceId}`, { data: { name: 'Larkspur Trading' } });
+  // Paths are relative to the API's address (with a trailing slash), which can have a path of its own (/api in production).
+  const api = await request.newContext({ baseURL: `${process.env.API_URL ?? 'http://localhost:47110'}/`, extraHTTPHeaders: { origin: new URL(process.env.SITE_URL ?? 'http://localhost:47120').origin } });
+  await api.post('auth/register', { data: { email, password: PASSWORD } });
+  await api.post('auth/verify-email', { data: { code: await emailCode(email) } });
+  const workspaceId = (await (await api.get('me')).json()).workspaces[0].id as string;
+  const { checkoutId } = await (await api.post(`workspaces/${workspaceId}/billing/checkout`, { data: { plan: 'studio', period: 'monthly', addonPacks: 0 } })).json();
+  await api.post(`billing/checkouts/${checkoutId}/pay`, { data: { card: { number: '4242424242424242', expMonth: 12, expYear: 2030, cvc: '123' } } });
+  await api.patch(`workspaces/${workspaceId}`, { data: { name: 'Larkspur Trading' } });
   return { email, api, workspaceId };
 }
 
@@ -110,6 +111,24 @@ test('the Studio trial starts from the pricing link', async ({ page }) => {
   await expect(page.locator('#plan-status')).toContainText('Trial ends on');
 });
 
+test('while payments are off, paid plans say coming soon and the free trial still starts', async ({ page }) => {
+  // The server says it can't take payments (as in production until a gateway is in).
+  await page.route('**/plans', async r => { const res = await r.fetch(); await r.fulfill({ response: res, json: { ...await res.json(), payments: false } }); });
+  await page.goto('/zh/');
+  await expect(page.locator('[data-plan="studio"] .buy')).toHaveText('即将开放');
+  await expect(page.locator('[data-plan="company"] .buy')).toHaveText('即将开放');
+  await expect(page.locator('[data-buy]')).toHaveCount(0);
+
+  await signUp(page, 'en');
+  await page.goto('/en/checkout/?plan=studio');
+  await expect(page.locator('#pay')).toHaveText('Coming soon');
+  await expect(page.locator('#pay')).toBeDisabled();
+  await expect(page.locator('#soon')).toBeVisible();
+  await expect(page.locator('#number')).toBeHidden();
+  await page.click('#trial-btn');
+  await expect(page.locator('#done-text')).toHaveText('Trial started. Studio is yours for 7 days.');
+});
+
 test('the latest payment can be refunded from the account page', async ({ page }) => {
   await signUp(page, 'en');
   await page.goto('/en/checkout/?plan=studio&period=monthly');
@@ -146,7 +165,7 @@ test('the sales form sends an inquiry', async ({ page }) => {
 test('an emailed invitation leads a new person through sign-up into the workspace', async ({ page }) => {
   const host = await owner();
   const email = uniqueEmail();
-  await host.api.post(`/workspaces/${host.workspaceId}/invitations`, { data: { email, role: 'member' } });
+  await host.api.post(`workspaces/${host.workspaceId}/invitations`, { data: { email, role: 'member' } });
   const mail = await lastMail(email);
   expect(mail.Subject).toBe(`${host.email} invited you to Larkspur Trading on Folio`);
   const link = mail.Text.match(/https?:\/\/\S+\/invite\/\?token=[\w-]+/)![0];
@@ -172,7 +191,7 @@ test('an emailed invitation leads a new person through sign-up into the workspac
 test('pending invitations show on the account page in Chinese and can be joined there', async ({ page }) => {
   const host = await owner();
   const email = await signUp(page, 'zh');
-  await host.api.post(`/workspaces/${host.workspaceId}/invitations`, { data: { email, role: 'admin' } });
+  await host.api.post(`workspaces/${host.workspaceId}/invitations`, { data: { email, role: 'admin' } });
   await page.reload();
   const invite = page.locator('#inv-list li');
   await expect(invite).toContainText('Larkspur Trading');

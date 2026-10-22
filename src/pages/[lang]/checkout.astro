@@ -58,6 +58,7 @@ const c = d.checkout;
         <ul class="lines" id="lines"></ul>
         <p class="total"><span>{c.total}</span><b id="total">–</b></p>
         <p class="fine" id="effect" style="margin-top:8px"></p>
+        <p class="notice" id="soon" hidden>{c.soon}</p>
         <form class="form" id="card-form" novalidate>
           <div class="notice dev"><b>{c.mockTitle}.</b> {c.mockBody}</div>
           <div class="field"><label for="number">{c.cardNumber}</label><input id="number" inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242" required /></div>
@@ -150,9 +151,12 @@ const c = d.checkout;
       $('total').textContent = money(q.totalCents, lang);
       $('effect').textContent = c.change[q.change];
       const needsCard = q.totalCents > 0;
-      $('card-form').querySelectorAll<HTMLElement>('.field, .field-row, .notice').forEach(el => { el.hidden = !needsCard; });
-      $('pay').textContent = needsCard ? c.pay(money(q.totalCents, lang)) : c.confirm;
-      $<HTMLButtonElement>('pay').disabled = false;
+      // Until payments open, only changes that cost nothing go through.
+      const soon = needsCard && !plans.payments;
+      $('soon').hidden = !soon;
+      $('card-form').querySelectorAll<HTMLElement>('.field, .field-row, .notice').forEach(el => { el.hidden = !needsCard || soon; });
+      $('pay').textContent = soon ? c.soonPay : needsCard ? c.pay(money(q.totalCents, lang)) : c.confirm;
+      $<HTMLButtonElement>('pay').disabled = soon;
     } catch (e){
       if (mine !== seq) return;
       quote = null;

@@ -8,6 +8,13 @@ export async function startPricing(){
   let plans: Plans;
   try { plans = await api<Plans>('GET', '/plans'); } catch { return; }
   let period: 'monthly' | 'yearly' = 'monthly';
+  // Until payments open, paid plans can't be bought; the free trial and Free still work.
+  if (!plans.payments) document.querySelectorAll('[data-buy]').forEach(a => {
+    const soon = document.createElement('span');
+    soon.className = 'buy soon';
+    soon.textContent = d.soon;
+    a.replaceWith(soon);
+  });
 
   const render = () => {
     for (const p of plans.plans){

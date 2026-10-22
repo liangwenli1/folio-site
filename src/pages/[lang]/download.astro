@@ -5,15 +5,25 @@ import { langPaths, link, t, type Lang } from '../../lib/i18n';
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
 const d = t(lang).download;
+// The installers are on the public desktop repository's latest release, under names that don't change between versions.
+const repo = import.meta.env.PUBLIC_DESKTOP_REPO;
+const latest = (file: string) => (repo ? `https://github.com/${repo}/releases/latest/download/${file}` : null);
+const systems = [
+  { os: 'Windows', req: d.windows, note: d.winNote, href: latest('Folio-Setup-x64.exe') },
+  { os: 'macOS', req: d.mac, note: d.macNote, href: latest('Folio-arm64.dmg') }
+];
 ---
 <Base lang={lang} path="download/" title={d.title}>
   <section class="wrap page">
     <div class="page-head"><h1>{d.title}</h1><p>{d.lead}</p></div>
     <div class="dl-grid">
-      {[['Windows', d.windows], ['macOS', d.mac]].map(([os, req]) => (
-        <div class="panel"><h2>{os}</h2><p class="fine">{req}</p><p style="margin-top:16px"><button class="btn btn-line" type="button" disabled>{d.soon}</button></p></div>
+      {systems.map(s => (
+        <div class="panel"><h2>{s.os}</h2><p class="fine">{s.req}</p>
+          <p style="margin-top:16px">{s.href ? <a class="btn btn-stamp" href={s.href}>{d.get}</a> : <button class="btn btn-line" type="button" disabled>{d.soon}</button>}</p>
+          {s.href && <p class="fine" style="margin-top:14px">{s.note}</p>}</div>
       ))}
     </div>
+    {repo && <p class="fine" style="margin-top:24px">{d.engines}</p>}
     <p class="fine" style="margin-top:24px">{d.already} <a href={link(lang, 'account/')}>{t(lang).nav.account}</a></p>
   </section>
 </Base>

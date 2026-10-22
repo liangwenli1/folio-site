@@ -143,7 +143,7 @@ export const zh: typeof en = {
       studio: ['成员不限', '窗口同步与批量操作', '团队权限与环境转交', '操作记录保留 30 天', '工作日在线客服'],
       company: ['工作室版的全部功能', '环境按部门分组管理', '操作记录保留 1 年，可导出', '专属客服群，每天 12 小时', 'API 调用不限速']
     },
-    buy: '立即购买',
+    buy: '立即购买', soon: '即将开放',
     foot: (pack: string) => `环境不够用？每加 100 个 ${pack}/月。需要 2000 个以上环境，我们单独报价。价格不含当地税费，每笔付款都有发票。`
   },
 
@@ -199,6 +199,7 @@ export const zh: typeof en = {
     },
     card: '银行卡', cardNumber: '卡号', expiry: '有效期（MM/YY）', cvc: '安全码', name: '持卡人姓名',
     pay: (amount: string) => `支付 ${amount}`, confirm: '确认变更',
+    soon: '付费套餐即将开放。现在可以先免费试用，或者继续使用体验版。', soonPay: '即将开放',
     trial: '或者先免费试用工作室版 7 天', trialCta: '开始免费试用',
     mockTitle: '测试付款', mockBody: '目前不会真的扣款。卡号用 4242 4242 4242 4242，有效期填任意未来日期。4000 0000 0000 0002 会被拒绝。',
     success: '付款成功，套餐已生效。', applied: '变更已保存。', trialStarted: '试用已开始，工作室版可以用 7 天。',
@@ -256,8 +257,11 @@ export const zh: typeof en = {
   },
 
   download: {
-    title: '下载 Folio', lead: '桌面客户端正在内测，开放后会在这里提供 Windows 和 macOS 安装包。',
-    windows: 'Windows 10 及以上', mac: 'macOS 12 及以上', soon: '即将推出',
+    title: '下载 Folio', lead: '安装桌面客户端，用 Folio 账号登录，套餐、团队和环境都已经在里面了。',
+    windows: 'Windows 10 及以上，64 位', mac: 'macOS 12 及以上，Apple 芯片（M1 及更新）', get: '下载', soon: '即将推出',
+    winNote: 'Folio 暂未做代码签名。如果 SmartScreen 拦下安装程序，点「更多信息」，再点「仍要运行」。',
+    macNote: 'Folio 暂未做代码签名。把 Folio 拖进「应用程序」。第一次打不开时，到「系统设置 › 隐私与安全性」里点「仍要打开」；如果提示 Folio 已损坏，在终端里执行 xattr -cr /Applications/Folio.app，再重新打开。',
+    engines: '浏览器内核在环境第一次用到时下载，来自内核项目自己在 GitHub 上的发布页，并核对官方公布的校验值。',
     already: '已经有账号？登录客户端后，套餐会自动带过去。'
   },
 

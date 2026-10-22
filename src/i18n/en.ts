@@ -141,7 +141,7 @@ export const en = {
       studio: ['Unlimited members', 'Window sync and bulk actions', 'Team permissions and profile handover', '30-day activity log', 'Live chat on weekdays'],
       company: ['Everything in Studio', 'Profiles grouped by department', '1-year activity log you can export', 'Dedicated support channel, 12 hours a day', 'Unthrottled API']
     },
-    buy: 'Buy now',
+    buy: 'Buy now', soon: 'Coming soon',
     foot: (pack: string) => `Need more room? Add 100 profiles for ${pack} a month. For more than 2,000 profiles, we’ll quote you directly. Prices exclude local taxes, and every plan comes with invoices.`
   },
 
@@ -197,6 +197,7 @@ export const en = {
     },
     card: 'Card', cardNumber: 'Card number', expiry: 'Expiry (MM/YY)', cvc: 'CVC', name: 'Name on card',
     pay: (amount: string) => `Pay ${amount}`, confirm: 'Confirm change',
+    soon: 'Paid plans open soon. You can start the free trial now, or keep using Free.', soonPay: 'Coming soon',
     trial: 'Or try Studio free for 7 days', trialCta: 'Start free trial',
     mockTitle: 'Test payments', mockBody: 'No real money moves yet. Use 4242 4242 4242 4242 with any future date. 4000 0000 0000 0002 is declined.',
     success: 'Payment received. Your plan is active.', applied: 'Change saved.', trialStarted: 'Trial started. Studio is yours for 7 days.',
@@ -254,8 +255,11 @@ export const en = {
   },
 
   download: {
-    title: 'Download Folio', lead: 'The desktop app is in private beta. Installers for Windows and macOS will appear here when it opens.',
-    windows: 'Windows 10 and later', mac: 'macOS 12 and later', soon: 'Coming soon',
+    title: 'Download Folio', lead: 'Install the desktop app and log in with your Folio account. Your plan, team and profiles are already there.',
+    windows: 'Windows 10 and later, 64-bit', mac: 'macOS 12 and later, Apple silicon (M1 and newer)', get: 'Download', soon: 'Coming soon',
+    winNote: 'Folio isn’t code-signed yet. If SmartScreen stops the installer, click “More info”, then “Run anyway”.',
+    macNote: 'Folio isn’t code-signed yet. Drag Folio into Applications. If macOS won’t open it the first time, go to System Settings › Privacy & Security and click “Open Anyway”. If it says Folio is damaged, run xattr -cr /Applications/Folio.app in Terminal, then open it again.',
+    engines: 'Each browser engine downloads the first time a profile needs it, from the engine’s own project on GitHub, and is checked against its published checksum.',
     already: 'Already have an account? Your plan carries over the moment you log in to the app.'
   },
 
