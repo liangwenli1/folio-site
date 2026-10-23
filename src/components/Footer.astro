@@ -1,13 +1,17 @@
 ---
-import { link, t, type Lang } from '../lib/i18n';
+import Mark from './Mark.astro';
+import { link, otherLang, t, type Lang } from '../lib/i18n';
 
-interface Props { lang: Lang }
-const { lang } = Astro.props;
+interface Props { lang: Lang; path: string }
+const { lang, path } = Astro.props;
 const d = t(lang).footer;
+const other = otherLang(lang);
+// The switch names the language the page is in; clicking it opens the same page in the other one.
+const names: Record<Lang, string> = { en: 'English', zh: '简体中文' };
 ---
 <footer class="foot">
   <div class="wrap foot-in">
-    <a class="brand" href={link(lang)} aria-label="Folio"><span class="seal" aria-hidden="true">F</span><span class="brand-word">Folio</span></a>
+    <a class="brand" href={link(lang)} aria-label="Folio"><Mark /><span class="brand-word">Folio</span></a>
     <nav aria-label="Footer">
       <a href={link(lang, 'docs/')}>{d.docs}</a>
       <a href={link(lang, 'docs/api/')}>{d.api}</a>
@@ -16,14 +20,26 @@ const d = t(lang).footer;
       <a href={link(lang, 'privacy/')}>{d.privacy}</a>
       <a href={link(lang, 'terms/')}>{d.terms}</a>
     </nav>
-    <p class="fine">{d.rights}</p>
+    <div class="foot-end">
+      <p class="fine">{d.rights}</p>
+      <a class="lang-switch" href={`/${other}/${path}`} hreflang={other} title={other === 'zh' ? '切换到简体中文' : 'Switch to English'} data-lang-switch>
+        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M1.5 8h13M8 1.5c2 2 2.8 4.2 2.8 6.5S10 12.5 8 14.5M8 1.5C6 3.5 5.2 5.7 5.2 8S6 12.5 8 14.5" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+        {names[lang]}
+      </a>
+    </div>
   </div>
 </footer>
+<script>
+  // Keep the query string when switching language, so checkout and invoice links survive.
+  document.querySelectorAll<HTMLAnchorElement>('[data-lang-switch]').forEach(a => {
+    a.addEventListener('click', () => { a.href = a.href.split(/[?#]/)[0] + location.search + location.hash; });
+  });
+</script>
 <style>
   .foot{padding-block:40px;border-top:1px solid var(--line)}
   .foot-in{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:20px 40px}
   nav{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:14px;color:var(--ink-2)}
   nav a{text-decoration:none}
   nav a:hover{color:var(--ink)}
-  .fine{flex-basis:100%}
+  .foot-end{flex-basis:100%;display:flex;justify-content:space-between;align-items:center;gap:16px}
 </style>

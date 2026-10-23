@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Mark from '../../components/Mark.astro';
 import '../../styles/app.css';
 import { langPaths, link, t, type Lang } from '../../lib/i18n';
 
@@ -19,7 +20,7 @@ const i = d.invoice;
     <article class="invoice" id="invoice" hidden>
       <header>
         <div>
-          <a class="brand" href={link(lang)}><span class="seal" aria-hidden="true">F</span><span class="brand-word">{i.seller}</span></a>
+          <a class="brand" href={link(lang)}><Mark /><span class="brand-word">{i.seller}</span></a>
           <p class="fine" style="margin-top:8px">{i.sellerNote}</p>
         </div>
         <h1>{i.title}</h1>

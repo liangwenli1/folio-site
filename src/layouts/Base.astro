@@ -1,4 +1,7 @@
 ---
+import '@fontsource-variable/manrope/wght.css';
+import '@fontsource-variable/schibsted-grotesk/wght.css';
+import '@fontsource-variable/martian-mono/wght.css';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -7,9 +10,6 @@ import { t, type Lang } from '../lib/i18n';
 interface Props { lang: Lang; path: string; title?: string; description?: string; noindex?: boolean }
 const { lang, path, title, description, noindex = false } = Astro.props;
 const d = t(lang);
-const fonts = lang === 'zh'
-  ? 'family=Bodoni+Moda:opsz,wght@6..96,700&family=Martian+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;900'
-  : 'family=Bodoni+Moda:ital,opsz,wght@0,6..96,600..800;1,6..96,600..800&family=Martian+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400..700';
 ---
 <!doctype html>
 <html lang={lang}>
@@ -22,13 +22,10 @@ const fonts = lang === 'zh'
     <link rel="alternate" hreflang="en" href={`/en/${path}`} />
     <link rel="alternate" hreflang="zh" href={`/zh/${path}`} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href={`https://fonts.googleapis.com/css2?${fonts}&display=swap`} />
   </head>
   <body>
-    <Header lang={lang} path={path} />
+    <Header lang={lang} />
     <main><slot /></main>
-    <Footer lang={lang} />
+    <Footer lang={lang} path={path} />
   </body>
 </html>
