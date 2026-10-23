@@ -32,7 +32,7 @@ const d = t(lang);
   $<HTMLInputElement>('email').value = param('email') ?? '';
   onSubmit($<HTMLFormElement>('form'), $('err'), async () => {
     const email = $<HTMLInputElement>('email').value.trim(), password = $<HTMLInputElement>('password').value;
-    if (password.length < 8) throw d.errors.validation;
+    if (password.length < 8) throw d.errors.passwordShort;
     await api('POST', '/auth/password/reset', { email, code: $<HTMLInputElement>('code').value, password });
     location.assign(`${to('login/')}?reset=1&email=${encodeURIComponent(email)}`);
   });

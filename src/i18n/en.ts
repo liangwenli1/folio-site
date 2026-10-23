@@ -354,6 +354,7 @@ export const en = {
     forbidden: 'You don’t have access to this.',
     not_found: 'We couldn’t find that.',
     validation: 'Some fields are missing or not valid.',
+    emailMissing: 'Enter your email address.', passwordShort: 'The password needs at least 8 characters.',
     network: 'Can’t reach Folio right now. Check your connection and try again.',
     wrong_account: 'This invitation is for a different email address.',
     email_unverified: 'Confirm your email address first.',

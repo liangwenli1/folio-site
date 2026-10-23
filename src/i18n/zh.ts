@@ -356,6 +356,7 @@ export const zh: typeof en = {
     forbidden: '你没有权限访问这里。',
     not_found: '没有找到相关内容。',
     validation: '有些内容没填或格式不对。',
+    emailMissing: '请填写邮箱。', passwordShort: '密码至少需要 8 位。',
     network: '暂时连不上 Folio，请检查网络后重试。',
     wrong_account: '这个邀请是发给另一个邮箱的。',
     email_unverified: '请先验证邮箱。',
