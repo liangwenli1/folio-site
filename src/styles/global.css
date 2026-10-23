@@ -9,11 +9,11 @@
   --shadow:0 1px 0 rgba(19,33,47,.04),0 22px 44px -22px rgba(19,33,47,.32);
   --f-display:"Manrope Variable","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
   --f-body:"Schibsted Grotesk Variable","Helvetica Neue",Arial,system-ui,sans-serif;
-  --f-data:"Martian Mono Variable",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --f-data:"JetBrains Mono Variable",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
 }
 html[lang="zh"]{
   --f-body:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
-  --f-data:"Martian Mono Variable",ui-monospace,Menlo,Consolas,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",monospace;
+  --f-data:"JetBrains Mono Variable",ui-monospace,Menlo,Consolas,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",monospace;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -41,6 +41,8 @@ html[lang="zh"]{
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:76px}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+/* Browsers give code its own generic monospace (NSimSun on Chinese Windows); everything mono uses the bundled font. */
+code,kbd,pre,samp{font-family:var(--f-data);font-size:1em}
 html[lang="zh"] body{line-height:1.75}
 h1,h2,h3{margin:0;text-wrap:balance}
 p{margin:0}
