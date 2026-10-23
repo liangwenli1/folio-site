@@ -67,7 +67,7 @@ test('landing page shows live prices in both languages', async ({ page }) => {
   await expect(page.locator('[data-f="no"]')).toHaveText('0043');
 
   await page.goto('/zh/');
-  await expect(page.locator('h1')).toContainText('一个号出事');
+  await expect(page.locator('h1')).toContainText('一个账号受限');
   await expect(page.locator('[data-plan="company"] [data-amt]')).toHaveText('US$99');
 });
 
@@ -96,7 +96,7 @@ test('a declined card shows the reason in Chinese and the plan stays the same', 
   await page.goto('/zh/checkout/?plan=company&period=yearly');
   await expect(page.locator('#total')).toHaveText('US$948');
   await payWith(page, '4000 0000 0000 0002');
-  await expect(page.locator('#err')).toHaveText('这张卡被拒绝了，请换一张卡。');
+  await expect(page.locator('#err')).toHaveText('该银行卡被拒绝，请更换银行卡。');
   await page.goto('/zh/account/');
   await expect(page.locator('#plan-name')).toHaveText('体验版');
 });
@@ -195,7 +195,7 @@ test('pending invitations show on the account page in Chinese and can be joined 
   await page.reload();
   const invite = page.locator('#inv-list li');
   await expect(invite).toContainText('Larkspur Trading');
-  await expect(invite).toContainText(`${host.email} 邀请你成为管理员`);
+  await expect(invite).toContainText(`${host.email} 邀请您成为管理员`);
   await invite.getByRole('button', { name: '加入' }).click();
   await expect(page.locator('#ws-list li.current')).toContainText('Larkspur Trading');
   await expect(page.locator('#inv-panel')).toBeHidden();

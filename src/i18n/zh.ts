@@ -1,30 +1,30 @@
 import type { en } from './en';
 
-// 中文文案。结构必须和 en.ts 完全一致。
+// 中文文案。结构必须和 en.ts 完全一致。用正式、精炼的书面语；尽量不用人称，必须称呼时用「您」。
 export const zh: typeof en = {
-  langName: '中文',
+  langName: '简体中文',
   meta: {
     title: 'Folio 指纹浏览器',
-    description: '一台电脑运营几十家店铺、广告户和社媒号，账号之间互不牵连。每个账号一个独立的浏览器环境、指纹和代理。'
+    description: '在一台电脑上运营数十家店铺、广告账户与社媒账号，账号之间互不关联。每个账号拥有独立的浏览器环境、指纹与代理。'
   },
-  nav: { who: '适合谁', inside: '环境里有什么', teams: '团队', automation: '自动化', pricing: '价格', faq: '常见问题', login: '登录', start: '免费试用', account: '账户', menu: '菜单' },
+  nav: { who: '适用场景', inside: '环境隔离', teams: '团队协作', automation: '自动化', pricing: '价格', faq: '常见问题', login: '登录', start: '免费试用', account: '账户', menu: '菜单' },
   plans: { free: '体验版', studio: '工作室版', company: '公司版' },
   periods: { monthly: '月付', yearly: '年付' },
 
   hero: {
-    eyebrow: '指纹浏览器 · 给多店铺、多广告户、多社媒号的团队',
-    h1a: '一个号出事，', h1b: '别的号', h1em: '照常开张。',
-    lead: 'Folio 给每个账号开一个独立的浏览器环境。指纹、Cookie、代理 IP 各用各的，在平台眼里，它们来自一百台不同的电脑。',
-    ctaStart: '免费开 5 个环境', ctaDownload: '下载客户端',
-    fine: '支持 Windows 10 及以上、macOS 12 及以上 · 不用绑卡',
-    reroll: '再开一个环境',
-    rerollHint: '每点一次换一套完整指纹，时区和语言跟着出口 IP 走。',
+    eyebrow: '指纹浏览器 · 面向多店铺、多广告账户、多社媒账号团队',
+    h1a: '一个账号受限，', h1b: '其余账号', h1em: '不受牵连。',
+    lead: 'Folio 为每个账号提供独立的浏览器环境，指纹、Cookie 与代理 IP 相互隔离。在平台看来，每个账号都来自不同的设备。',
+    ctaStart: '免费使用 5 个环境', ctaDownload: '下载客户端',
+    fine: '支持 Windows 10 及以上、macOS 12 及以上 · 无需绑卡',
+    reroll: '生成新环境',
+    rerollHint: '每次生成一套完整指纹，时区与语言自动匹配出口 IP。',
     card: { title: 'FOLIO · 浏览器环境', exitIp: '出口 IP', tz: '时区', lang: '语言', os: '系统', engine: '内核', screen: '分辨率', gpu: 'WebGL 显卡', canvas: 'Canvas 指纹', fonts: '字体', fontsUnit: '款', stamp: 'ISOLATED' },
     spec: [
       ['Chromium 150 · Firefox 156', '两种内核，按环境选择'],
-      ['Canvas、WebGL、音频、字体', '每个环境各不相同'],
-      ['HTTP · HTTPS · SOCKS5', '代理，使用前先检测'],
-      ['CDP', '本地 API，接你的脚本']
+      ['Canvas、WebGL、音频、字体', '每个环境独立生成'],
+      ['HTTP · HTTPS · SOCKS5', '代理协议，使用前自动检测'],
+      ['CDP', '本地 API，对接自动化脚本']
     ],
     cities: [
       { city: '西雅图', region: '美国 · 华盛顿州' }, { city: '伦敦', region: '英国 · 英格兰' },
@@ -36,19 +36,19 @@ export const zh: typeof en = {
   },
 
   who: {
-    eyebrow: '适合谁',
-    title: '多账号的生意，最怕连坐',
-    lead: '平台判断两个账号是不是同一个人，看的不只是 IP。浏览器会交出几十项设备信息，任何一项重合，都可能把你的账号串到一起。',
+    eyebrow: '适用场景',
+    title: '多账号运营的首要风险：账号关联',
+    lead: '平台识别账号关联，依据的不只是 IP。浏览器会暴露数十项设备信息，任意一项重合，都可能导致账号被关联。',
     items: [
-      { tag: '跨境店铺', title: '十家店，一家被查，另外九家照常卖。', body: '每家店固定一个环境、一条代理线路。登录地点和设备长期不变，平台看到的是一位稳定的老卖家。', fit: '适合：同时经营 5 家以上店铺的卖家团队' },
-      { tag: '广告代投', title: '客户的广告户，一个客户一组环境。', body: '同事交接时，把整组环境转过去，对方打开就是登录状态，不用再找客户要验证码。', fit: '适合：同时服务多个客户的投放代理商' },
-      { tag: '社媒矩阵', title: '五十个号的日常，一个人照看得过来。', body: '窗口同步让一次操作在多个窗口同时执行，定时任务接走每天重复的登录和巡检。', fit: '适合：一人维护几十个账号的内容团队' }
+      { tag: '跨境店铺', title: '多店铺独立运营，单店受限不影响其他店铺。', body: '每家店铺固定使用一个环境与一条代理线路，登录地点与设备长期稳定，符合平台对正常卖家的判断。', fit: '适用于：同时经营 5 家以上店铺的卖家团队' },
+      { tag: '广告代投', title: '按客户划分环境，广告账户互不交叉。', body: '人员交接时整组转交环境，接手者打开即为登录状态，无需再向客户索取验证码。', fit: '适用于：同时服务多个客户的投放代理商' },
+      { tag: '社媒矩阵', title: '一人即可维护数十个账号的日常运营。', body: '窗口同步将一次操作同时执行到多个窗口，定时任务自动完成每日登录与巡检。', fit: '适用于：一人管理数十个账号的内容团队' }
     ]
   },
 
   inside: {
-    eyebrow: '环境里有什么',
-    title: '平台会查的信号，每个环境单独处理',
+    eyebrow: '环境隔离',
+    title: '平台检测的各项信号，逐一独立处理',
     groups: [
       ['设备', ['User-Agent', '客户端提示', 'CPU 核心数', '设备内存', '触控支持']],
       ['渲染', ['Canvas', 'WebGL 图像', 'WebGL 显卡信息', 'AudioContext', '字体列表']],
@@ -56,31 +56,31 @@ export const zh: typeof en = {
       ['地区', ['时区', '语言', '地理位置']],
       ['存储', ['Cookie', 'LocalStorage', 'IndexedDB', '缓存', '扩展程序']]
     ],
-    note: '指纹按真实设备组合生成，系统、显卡和字体互相匹配。你不会在 Folio 里看到一台装着 NVIDIA 独显的 MacBook。',
-    compareTitle: '同一条西雅图代理，两种开法',
-    compareHint: '左边每一个叉，都是平台把账号串到一起的线索。',
-    cols: ['检查项', '普通浏览器挂代理', 'Folio 环境'],
+    note: '指纹基于真实设备组合生成，系统、显卡与字体相互匹配，不会出现「搭载 NVIDIA 独显的 MacBook」这类矛盾组合。',
+    compareTitle: '同一条西雅图代理的两种用法',
+    compareHint: '左侧每一处不一致，都是平台关联账号的依据。',
+    cols: ['检测项', '普通浏览器 + 代理', 'Folio 环境'],
     rows: [
       ['出口 IP', '西雅图', '西雅图', false],
       ['时区', 'Asia/Shanghai', 'America/Los_Angeles', true],
       ['浏览器语言', 'zh-CN', 'en-US', true],
-      ['WebRTC', '暴露本机真实 IP', '不会暴露真实 IP', true],
-      ['地理位置', '读到你的真实位置', '西雅图附近', true],
-      ['Canvas 指纹', '和你其他账号一模一样', '这个环境独有', true],
-      ['Cookie', '所有账号混在一起', '每个环境单独保存', true]
+      ['WebRTC', '暴露本机真实 IP', '不暴露真实 IP', true],
+      ['地理位置', '返回真实位置', '西雅图附近', true],
+      ['Canvas 指纹', '与其他账号完全相同', '本环境独有', true],
+      ['Cookie', '所有账号共用', '每个环境独立保存', true]
     ],
-    leak: '有破绽', match: '一致'
+    leak: '不一致', match: '一致'
   },
 
   team: {
-    eyebrow: '团队',
-    title: '员工离职，账号留在公司',
-    lead: '账号是公司的资产，别让它跟着某个人的电脑走。',
+    eyebrow: '团队协作',
+    title: '人员离职，账号归属公司',
+    lead: '账号是企业资产，不应依附于个人设备。',
     points: [
-      ['按人分配环境', '运营只看得到自己负责的店铺，投放只看得到自己的广告户。'],
-      ['能用，看不到密码', '成员打开环境就是登录状态，账号密码不经过他的手。'],
-      ['离职当天收回', '移除成员，他名下的环境立刻转给你指定的人，不用连夜改密码。'],
-      ['谁动过什么，都有记录', '哪位成员几点打开了哪个环境、改了哪项设置，一页查完。']
+      ['按人分配环境', '运营仅可见自己负责的店铺，投放仅可见自己的广告账户。'],
+      ['可用而不可见密码', '成员打开环境即为登录状态，账号密码不经成员之手。'],
+      ['离职当日收回', '移除成员后，其名下环境立即转交指定人员，无需紧急修改密码。'],
+      ['操作全程留痕', '成员何时打开了哪个环境、修改了哪项设置，均有记录可查。']
     ],
     panelTitle: '美区运营组', panelMeta: '3 名在职 · 46 个环境', active: '在职', left: '已离职',
     members: [
@@ -89,78 +89,78 @@ export const zh: typeof en = {
       ['许', '许诺', '欧洲店铺 · 10 个环境', false],
       ['陈', '陈一', '店铺运营 · 18 个环境已转交', true]
     ],
-    logTitle: '操作记录',
+    logTitle: '操作日志',
     log: [
       ['10-21 09:12', '林晓 打开了 US-Store-07'],
-      ['10-21 08:55', '周航 给 Ads-Client-03 换了代理'],
-      ['10-20 18:40', '管理员 移除了陈一，18 个环境转给林晓']
+      ['10-21 08:55', '周航 更换了 Ads-Client-03 的代理'],
+      ['10-20 18:40', '管理员 移除了陈一，18 个环境已转交林晓']
     ],
     example: '示例'
   },
 
   auto: {
     eyebrow: '自动化',
-    title: '重复的活，点一次或者写一次',
-    noCode: '不写代码',
+    title: '重复操作，配置一次即可自动执行',
+    noCode: '无需编程',
     noCodePoints: [
-      ['窗口同步', '在一个窗口里点击、输入、滚动，选中的其他窗口一起照做。'],
-      ['批量操作', '用表格一次导入几百个环境，批量换代理、批量导入 Cookie。'],
-      ['定时任务', '每天固定时间打开指定环境，检查登录状态，掉线了提醒你。']
+      ['窗口同步', '在一个窗口中点击、输入、滚动，所选窗口同步执行。'],
+      ['批量操作', '通过表格一次导入数百个环境，批量更换代理、批量导入 Cookie。'],
+      ['定时任务', '按设定时间打开指定环境并检查登录状态，掉线时及时提醒。']
     ],
-    withCode: '写代码',
-    withCodeBody: '本地 API 启动任意环境，把调试地址交给你的脚本，你熟悉的自动化框架直接接管，脚本不用改写。',
+    withCode: '编程接入',
+    withCodeBody: '通过本地 API 启动任意环境，并将调试地址交给脚本。现有自动化框架可直接接管，无需改写脚本。',
     libs: ['Playwright', 'Puppeteer', 'Selenium', 'CDP · WebDriver BiDi'],
-    codeComment: '// 启动 Folio 里编号 0042 的环境'
+    codeComment: '// 启动 Folio 中编号为 0042 的环境'
   },
 
   trust: {
-    eyebrow: '先试再买',
-    title: '别急着信我们，先自己测',
+    eyebrow: '免费试用',
+    title: '先测试，再决定',
     items: [
-      ['5 个环境，永久免费', '不绑卡，不限时间。够你把一家店从登录到上架完整跑一遍。'],
-      ['检测网站，你自己挑', '在环境里打开你信任的任何指纹检测网站，结果自己看。'],
-      ['7 天内，不满意就退', '付费后 7 天内申请，全额退款，不问原因。'],
-      ['数据随时整份带走', '环境配置和 Cookie 一键导出。哪天不用了，账号也不会被锁在这里。']
+      ['5 个环境永久免费', '无需绑卡，不限时长，足以完成一家店铺从登录到上架的全流程验证。'],
+      ['检测网站自由选择', '在环境中打开任意指纹检测网站，结果自行判断。'],
+      ['7 天无理由退款', '付费后 7 天内申请，全额退款。'],
+      ['数据随时导出', '环境配置与 Cookie 一键导出，账号不会被锁定在 Folio 中。']
     ]
   },
 
   pricing: {
     eyebrow: '价格',
-    title: '按环境数收费，加人不加钱',
+    title: '按环境数计费，成员数量不限',
     monthly: '月付', yearly: '年付', save: '省 20%',
     perMonth: '/ 月', forever: '永久免费',
     perProfile: (amount: string) => `折合每个环境 ${amount}/月`,
-    billedMonthly: '按月付，随时取消',
-    billedYearly: (total: string) => `按年付，共 ${total}`,
-    noCard: '不用绑卡',
+    billedMonthly: '按月付费，随时取消',
+    billedYearly: (total: string) => `按年付费，共 ${total}`,
+    noCard: '无需绑卡',
     profilesMembers: (p: number, m: string) => `${p} 个环境 · ${m}`,
     oneMember: '1 名成员', unlimitedMembers: '成员不限',
     flag: '适合 3–20 人团队',
-    for: { free: '先看看适不适合你', studio: '一个团队的日常运营', company: '多团队、多业务线' },
+    for: { free: '体验核心功能', studio: '单个团队的日常运营', company: '多团队、多业务线' },
     cta: { free: '免费开始', studio: '免费试用 7 天', company: '联系销售' },
     features: {
-      free: ['两种内核，完整的指纹设置', '代理检测，时区、语言自动匹配', '本地 API', '文档与社区支持'],
-      studio: ['成员不限', '窗口同步与批量操作', '团队权限与环境转交', '操作记录保留 30 天', '工作日在线客服'],
-      company: ['工作室版的全部功能', '环境按部门分组管理', '操作记录保留 1 年，可导出', '专属客服群，每天 12 小时', 'API 调用不限速']
+      free: ['两种内核，完整指纹配置', '代理检测，自动匹配时区与语言', '本地 API', '文档与社区支持'],
+      studio: ['成员不限', '窗口同步与批量操作', '团队权限与环境转交', '操作日志保留 30 天', '工作日在线客服'],
+      company: ['包含工作室版全部功能', '环境按部门分组管理', '操作日志保留 1 年，支持导出', '专属客服群，每日 12 小时', 'API 调用不限速']
     },
     buy: '立即购买', soon: '即将开放',
-    foot: (pack: string) => `环境不够用？每加 100 个 ${pack}/月。需要 2000 个以上环境，我们单独报价。价格不含当地税费，每笔付款都有发票。`
+    foot: (pack: string) => `如需更多环境，每增加 100 个 ${pack}/月；超过 2000 个环境可单独报价。价格不含当地税费，每笔付款均提供发票。`
   },
 
   faq: {
-    eyebrow: '常见问题', title: '买之前，大家常问这些', lead: '没找到你的问题？', contact: '直接问我们',
+    eyebrow: '常见问题', title: '购买前的常见问题', lead: '未找到答案？', contact: '联系我们',
     items: [
-      ['用了 Folio，账号就不会被封了吗？', '不能保证。Folio 解决的是多个账号被认成同一台设备的问题。账号本身违反平台规则，或者代理 IP 已经被很多人用过，照样会出问题。我们建议一个环境配一条独立的住宅代理或 ISP 代理。'],
-      ['代理要自己准备吗？', '要。Folio 支持 HTTP、HTTPS 和 SOCKS5 代理，可以逐个填写，也可以用表格批量导入。添加时会自动检测连通性和出口位置，并据此设置时区和语言。'],
-      ['Chromium 和 Firefox 内核选哪个？', '大多数账号选 Chromium，每个 Chromium 环境都有自己稳定的指纹。Firefox 环境适合需要 Firefox 用户身份的网站；同一台电脑上的 Firefox 环境之间，指纹重合的部分更多，同一平台的多个账号不要都放在 Firefox 环境里。'],
-      ['环境数据存在哪里？', '默认加密后同步到云端，换一台电脑登录就能接着用；也可以把某个环境设成只存本机。任何时候都能把全部数据整份导出。'],
-      ['内核怎么更新？', 'Folio 使用开源的指纹内核，每个新版本经过我们测试后才推送。已有环境保持原来的内核版本，什么时候升级由你决定。']
+      ['使用 Folio 能保证账号不被封禁吗？', '不能保证。Folio 解决的是多个账号被识别为同一设备的问题。若账号本身违反平台规则，或代理 IP 已被大量用户使用，仍可能受到限制。建议每个环境配置一条独立的住宅代理或 ISP 代理。'],
+      ['需要自备代理吗？', '需要。Folio 支持 HTTP、HTTPS 与 SOCKS5 代理，可逐条填写或通过表格批量导入。添加时自动检测连通性与出口位置，并据此设置时区与语言。'],
+      ['Chromium 与 Firefox 内核如何选择？', '多数账号建议使用 Chromium，每个 Chromium 环境拥有独立且稳定的指纹。Firefox 环境适用于需要 Firefox 用户特征的网站；同一台电脑上的 Firefox 环境之间指纹重合度较高，同一平台的多个账号不宜全部放在 Firefox 环境中。'],
+      ['环境数据存储在哪里？', '默认加密后同步至云端，更换电脑登录即可继续使用；也可将指定环境设为仅存本机。全部数据可随时完整导出。'],
+      ['内核如何更新？', 'Folio 采用开源指纹内核，每个新版本经测试后推送。现有环境保持原内核版本，升级时机由您决定。']
     ]
   },
 
   band: {
-    title: '先开 5 个环境，用一周再说',
-    body: '注册账号、下载客户端，几分钟就能配好第一个环境。',
+    title: '从 5 个免费环境开始',
+    body: '注册账号并下载客户端，几分钟即可完成第一个环境的配置。',
     windows: '下载 Windows 版', mac: '下载 macOS 版',
     fine: '测试版 · Chromium 150 与 Firefox 156 内核'
   },
@@ -168,201 +168,201 @@ export const zh: typeof en = {
   footer: { docs: '使用文档', api: 'API 参考', changelog: '更新日志', privacy: '隐私政策', terms: '服务条款', sales: '联系销售', rights: '© 2026 Folio' },
 
   auth: {
-    signupTitle: '创建 Folio 账号', signupLead: '5 个环境永久免费，不用绑卡。',
+    signupTitle: '创建 Folio 账号', signupLead: '5 个环境永久免费，无需绑卡。',
     loginTitle: '登录 Folio', email: '邮箱', password: '密码', passwordHint: '至少 8 位',
-    signup: '创建账号', login: '登录', haveAccount: '已经有账号了？', noAccount: '第一次用 Folio？',
+    signup: '创建账号', login: '登录', haveAccount: '已有账号？', noAccount: '还没有账号？',
     forgot: '忘记密码？',
-    verifyTitle: '查收邮件', verifyLead: (email: string) => `我们向 ${email} 发送了 6 位验证码，15 分钟内有效。`,
-    code: '验证码', verify: '验证邮箱', resend: '重新发送', resent: '新的验证码已发送。',
+    verifyTitle: '验证邮箱', verifyLead: (email: string) => `验证码已发送至 ${email}，15 分钟内有效。`,
+    code: '验证码', verify: '验证', resend: '重新发送', resent: '新的验证码已发送。',
     verified: '邮箱已验证。',
-    forgotTitle: '重设密码', forgotLead: '填写账号邮箱，我们会发送验证码。',
-    sendCode: '发送验证码', resetTitle: '设置新密码', newPassword: '新密码', reset: '保存新密码',
-    resetDone: '密码已更新，请用新密码登录。',
-    devNotice: '开发版本：邮件发到本机的测试收件箱 http://127.0.0.1:47125。',
+    forgotTitle: '重设密码', forgotLead: '输入账号邮箱，我们将发送验证码。',
+    sendCode: '发送验证码', resetTitle: '设置新密码', newPassword: '新密码', reset: '保存',
+    resetDone: '密码已更新，请使用新密码登录。',
+    devNotice: '开发版本：邮件发送至本机测试收件箱 http://127.0.0.1:47125。',
     logout: '退出登录'
   },
 
   checkout: {
     title: '选择套餐', workspace: '团队', plan: '套餐', billing: '付费周期',
-    packs: '加量包', packsHint: '每包 100 个环境', total: '今天应付',
+    packs: '加量包', packsHint: '每包 100 个环境', total: '本次应付',
     current: (plan: string) => `当前套餐：${plan}`,
-    currentTrial: (plan: string) => `当前套餐：${plan}（免费试用中）`,
+    currentTrial: (plan: string) => `当前套餐：${plan}（试用中）`,
     lines: {
       plan: (plan: string, period: string) => `${plan}，${period}`,
       addon: (qty: number, prorated: boolean) => `加量包 × ${qty}（每包 100 个环境）${prorated ? '，按本周期剩余天数折算' : ''}`,
-      credit: (plan: string) => `抵扣：${plan}未用完的时间`
+      credit: (plan: string) => `抵扣：${plan}剩余时长`
     },
     change: {
-      new: '今天开始生效。', upgrade: '今天开始生效，当前套餐未用完的时间会折算抵扣。', addon: '立即生效。',
-      'reduce-addon': '立即生效。超出新上限的环境需要归档；本周期费用不退。',
-      downgrade: '当前周期结束后生效，现在不用付款。'
+      new: '即日生效。', upgrade: '即日生效，当前套餐剩余时长将折算抵扣。', addon: '立即生效。',
+      'reduce-addon': '立即生效。超出新上限的环境需归档，本周期费用不予退还。',
+      downgrade: '当前周期结束后生效，本次无需付款。'
     },
     card: '银行卡', cardNumber: '卡号', expiry: '有效期（MM/YY）', cvc: '安全码', name: '持卡人姓名',
     pay: (amount: string) => `支付 ${amount}`, confirm: '确认变更',
-    soon: '付费套餐即将开放。现在可以先免费试用，或者继续使用体验版。', soonPay: '即将开放',
-    trial: '或者先免费试用工作室版 7 天', trialCta: '开始免费试用',
-    mockTitle: '测试付款', mockBody: '目前不会真的扣款。卡号用 4242 4242 4242 4242，有效期填任意未来日期。4000 0000 0000 0002 会被拒绝。',
-    success: '付款成功，套餐已生效。', applied: '变更已保存。', trialStarted: '试用已开始，工作室版可以用 7 天。',
-    toAccount: '前往账户页', noManage: '只有所有者和管理员可以修改这个团队的套餐。'
+    soon: '付费套餐即将开放，可先免费试用，或继续使用体验版。', soonPay: '即将开放',
+    trial: '也可免费试用工作室版 7 天', trialCta: '开始试用',
+    mockTitle: '测试支付', mockBody: '当前不会实际扣款。卡号请使用 4242 4242 4242 4242，有效期填写任意未来日期；4000 0000 0000 0002 将被拒绝。',
+    success: '支付成功，套餐已生效。', applied: '变更已保存。', trialStarted: '试用已开始，可使用工作室版 7 天。',
+    toAccount: '前往账户', noManage: '仅所有者和管理员可修改团队套餐。'
   },
 
   account: {
-    title: '账户', profile: '个人信息', language: '语言', emailStatus: '验证状态',
+    title: '账户', profile: '个人信息', language: '语言', emailStatus: '邮箱验证',
     verified: '已验证', unverified: '未验证', verifyNow: '立即验证',
     workspaces: '团队', newWorkspace: '新建团队', create: '创建', rename: '重命名', save: '保存', cancel: '取消',
     roles: { owner: '所有者', admin: '管理员', member: '成员' },
     plan: '套餐', usage: (used: number, limit: number) => `已用 ${used} / ${limit} 个环境`,
     unlimited: '成员不限',
     renews: (date: string) => `${date} 自动续费`, ends: (date: string) => `${date} 到期`,
-    trialEnds: (date: string) => `试用 ${date} 结束`,
-    scheduled: (plan: string, date: string) => `${date} 起改为${plan}`,
+    trialEnds: (date: string) => `试用于 ${date} 结束`,
+    scheduled: (plan: string, date: string) => `${date} 起变更为${plan}`,
     changePlan: '更换套餐', addProfiles: '增加环境', startTrial: '免费试用工作室版 7 天',
-    cancelPlan: '到期后取消', resume: '保留套餐',
-    cancelConfirm: '确定取消套餐吗？当前周期结束前仍可正常使用。', confirmCancel: '确定取消',
-    payments: '付款与发票', noPayments: '还没有付款记录。',
+    cancelPlan: '到期后取消', resume: '恢复续费',
+    cancelConfirm: '确定取消套餐？当前周期结束前仍可正常使用。', confirmCancel: '确定取消',
+    payments: '付款与发票', noPayments: '暂无付款记录。',
     cols: ['日期', '发票', '金额', '状态', ''],
     paid: '已付款', refunded: '已退款', invoice: '发票', refund: '退款',
-    refundConfirm: '确定退款吗？套餐会恢复到这笔付款之前的状态。', confirmRefund: '确定退款',
-    download: '下载客户端', downloadBody: '用同一个账号登录桌面客户端，套餐和团队都已经在那里了。',
+    refundConfirm: '确定退款？套餐将恢复至该笔付款之前的状态。', confirmRefund: '确定退款',
+    download: '下载客户端', downloadBody: '使用同一账号登录桌面客户端，套餐与团队信息自动同步。',
     downloadCta: '下载',
-    invitations: '邀请', invitedBy: (inviter: string, role: string) => `${inviter} 邀请你成为${role}`, accept: '加入', decline: '拒绝'
+    invitations: '邀请', invitedBy: (inviter: string, role: string) => `${inviter} 邀请您成为${role}`, accept: '加入', decline: '拒绝'
   },
   invite: {
-    title: '团队邀请', checking: '正在查看邀请…',
-    missing: '这个链接里没有邀请信息，请重新打开邮件里的链接。',
-    gone: '这个邀请已经失效：已被接受、撤回，或者被更新的邀请替换了。',
-    lead: (inviter: string, workspace: string, role: string) => `${inviter} 邀请你以${role}身份加入 Folio 上的团队「${workspace}」。`,
-    roles: { admin: '管理员', member: '成员' }, forEmail: (email: string) => `邀请邮箱：${email}`,
-    expired: '这个邀请已过期，请让对方重新邀请。',
+    title: '团队邀请', checking: '正在核对邀请…',
+    missing: '链接中缺少邀请信息，请重新打开邮件中的链接。',
+    gone: '该邀请已失效：已被接受、撤回或被新的邀请替代。',
+    lead: (inviter: string, workspace: string, role: string) => `${inviter} 邀请您以${role}身份加入 Folio 团队「${workspace}」。`,
+    roles: { admin: '管理员', member: '成员' }, forEmail: (email: string) => `受邀邮箱：${email}`,
+    expired: '该邀请已过期，请联系邀请人重新发送。',
     login: '登录后接受', signup: '注册账号',
-    wrong: (invited: string, current: string) => `这个邀请是发给 ${invited} 的，但你当前登录的是 ${current}。`, switch: '退出登录，换另一个账号',
-    verify: '请先验证邮箱，验证后会回到这里。', verifyCta: '去验证邮箱',
+    wrong: (invited: string, current: string) => `该邀请发送至 ${invited}，当前登录账号为 ${current}。`, switch: '退出并切换账号',
+    verify: '请先验证邮箱，完成后将返回此页。', verifyCta: '验证邮箱',
     accept: (workspace: string) => `加入「${workspace}」`, decline: '拒绝',
-    joined: (workspace: string) => `你已加入「${workspace}」。`,
-    joinedLead: '用这个账号登录 Folio 工作台，就能在团队菜单里看到它。',
-    download: '下载工作台', account: '前往账户', declined: '你已拒绝这个邀请。'
+    joined: (workspace: string) => `已加入「${workspace}」。`,
+    joinedLead: '使用该账号登录 Folio 工作台，即可在团队菜单中看到此团队。',
+    download: '下载工作台', account: '前往账户', declined: '已拒绝该邀请。'
   },
 
   invoice: {
     title: '发票', number: '发票编号', date: '日期', billedTo: '付款人', workspace: '团队',
-    period: '服务周期', item: '项目', amount: '金额', total: '合计', paidWith: (brand: string, last4: string) => `已用 ${brand} 尾号 ${last4} 支付`,
-    refunded: (date: string) => `已于 ${date} 退款`, print: '打印或存为 PDF', back: '返回账户页',
-    seller: 'Folio', sellerNote: '测试发票，未发生真实付款。'
+    period: '服务周期', item: '项目', amount: '金额', total: '合计', paidWith: (brand: string, last4: string) => `已使用 ${brand} 尾号 ${last4} 支付`,
+    refunded: (date: string) => `已于 ${date} 退款`, print: '打印或保存为 PDF', back: '返回账户',
+    seller: 'Folio', sellerNote: '测试发票，未发生实际付款。'
   },
 
   sales: {
-    title: '联系销售', lead: '需要 500 个以上环境、多个部门，或者有定制需求？简单说说情况，我们一个工作日内回复。',
-    name: '姓名', email: '工作邮箱', company: '公司', teamSize: '团队人数', message: '你的需求',
-    send: '发送', sent: '已收到，我们会在一个工作日内联系你。'
+    title: '联系销售', lead: '需要 500 个以上环境、多部门管理或定制方案？请提交需求，我们将在一个工作日内回复。',
+    name: '姓名', email: '工作邮箱', company: '公司', teamSize: '团队规模', message: '需求描述',
+    send: '提交', sent: '已收到，我们将在一个工作日内与您联系。'
   },
 
   download: {
-    title: '下载 Folio', lead: '安装桌面客户端，用 Folio 账号登录，套餐、团队和环境都已经在里面了。',
-    windows: 'Windows 10 及以上，64 位', mac: 'macOS 12 及以上，Apple 芯片（M1 及更新）', get: '下载', soon: '即将推出',
-    winNote: 'Folio 暂未做代码签名。如果 SmartScreen 拦下安装程序，点「更多信息」，再点「仍要运行」。',
-    macNote: 'Folio 暂未做代码签名。把 Folio 拖进「应用程序」。第一次打不开时，到「系统设置 › 隐私与安全性」里点「仍要打开」；如果提示 Folio 已损坏，在终端里执行 xattr -cr /Applications/Folio.app，再重新打开。',
-    engines: '浏览器内核在环境第一次用到时下载，来自内核项目自己在 GitHub 上的发布页，并核对官方公布的校验值。',
-    already: '已经有账号？登录客户端后，套餐会自动带过去。'
+    title: '下载 Folio', lead: '安装桌面客户端并使用 Folio 账号登录，套餐、团队与环境自动同步。',
+    windows: 'Windows 10 及以上（64 位）', mac: 'macOS 12 及以上（Apple 芯片，M1 及更新）', get: '下载', soon: '即将推出',
+    winNote: 'Folio 暂未进行代码签名。如 SmartScreen 拦截安装程序，请点击「更多信息」，再点击「仍要运行」。',
+    macNote: 'Folio 暂未进行代码签名。请将 Folio 拖入「应用程序」。首次无法打开时，前往「系统设置 › 隐私与安全性」点击「仍要打开」；如提示应用已损坏，请在终端执行 xattr -cr /Applications/Folio.app 后重新打开。',
+    engines: '浏览器内核在首次使用时下载，来源为各内核项目在 GitHub 的官方发布页，并核对官方公布的校验值。',
+    already: '已有账号？登录客户端后套餐自动生效。'
   },
 
   docs: {
-    title: '使用文档', lead: '环境、代理和团队的设置指南会随客户端开放陆续上线。',
-    apiTitle: 'API 参考', apiLead: 'Folio 的本地 API 让你电脑上的脚本打开一个环境，再用你熟悉的自动化工具接管。它运行在 Folio 客户端里，只在你自己的电脑上提供。',
+    title: '使用文档', lead: '环境、代理与团队的配置指南将随客户端开放陆续发布。',
+    apiTitle: 'API 参考', apiLead: 'Folio 本地 API 可由本机脚本打开环境，并交由现有自动化工具接管。API 运行于 Folio 客户端内，仅在本机提供。',
     api: {
-      setupTitle: '开启',
+      setupTitle: '启用',
       setup: [
-        '在 Folio 客户端打开「API 与脚本」，打开本机 API，生成一个令牌。令牌只显示一次，请当场复制。',
-        '请求发到 http://127.0.0.1:47210（端口可以在同一页修改），请求头带上 Authorization: Bearer <令牌>。令牌属于你和生成它的团队，只在那台电脑上有效，权限和你相同：成员只能操作分配给自己的环境。'
+        '在 Folio 客户端打开「API 与脚本」，启用本机 API 并生成令牌。令牌仅显示一次，请立即复制保存。',
+        '请求地址为 http://127.0.0.1:47210（端口可在同一页面修改），请求头需携带 Authorization: Bearer <令牌>。令牌归属于生成者及其所在团队，仅在生成它的电脑上有效，权限与生成者一致：成员仅可操作分配给自己的环境。'
       ],
       limitsTitle: '限速',
-      limits: '体验版和工作室版每分钟最多 60 次请求，包括打开、关闭和查询；公司版不限速。脚本通过调试地址直接发给浏览器的指令不计入。超出时返回 429，Retry-After 响应头给出几秒后可以重试。',
+      limits: '体验版与工作室版每分钟最多 60 次请求（含打开、关闭与查询），公司版不限速。脚本通过调试地址直接发送给浏览器的指令不计入限额。超出限额时返回 429，并在 Retry-After 响应头中给出可重试的秒数。',
       enginesTitle: '内核与工具',
       engines: [
-        ['Chromium 环境', '返回 CDP 地址（wsEndpoint），以及给 Selenium 用的 debuggerAddress。可以用 Playwright（connectOverCDP）、Puppeteer、Selenium（配合 Chromium 150 对应的 chromedriver）或任何支持 CDP 的工具。'],
-        ['Firefox 环境', '返回 WebDriver BiDi 地址。可以用 Puppeteer（protocol: webDriverBiDi）或任何支持 WebDriver BiDi 的工具。Playwright 和 Selenium 目前不能接管已经在运行的 Firefox。脚本控制某个 Firefox 环境期间，定时任务会跳过它。']
+        ['Chromium 环境', '返回 CDP 地址（wsEndpoint）及供 Selenium 使用的 debuggerAddress。支持 Playwright（connectOverCDP）、Puppeteer、Selenium（需配合 Chromium 150 对应版本的 chromedriver）及其他支持 CDP 的工具。'],
+        ['Firefox 环境', '返回 WebDriver BiDi 地址。支持 Puppeteer（protocol: webDriverBiDi）及其他支持 WebDriver BiDi 的工具。Playwright 与 Selenium 目前无法接管已运行的 Firefox。脚本控制 Firefox 环境期间，定时任务将跳过该环境。']
       ] as [string, string][],
       endpointsTitle: '接口',
-      endpointsLead: '环境用编号（42 或 0042）或 id 指定。',
+      endpointsLead: '环境可通过编号（42 或 0042）或 id 指定。',
       endpoints: [
-        ['GET', '/api/v1/profiles', '你能看到的环境：id、编号、名称、内核，以及是否在运行。'],
-        ['POST', '/api/v1/profiles/{编号}/start', '按客户端的正常流程打开环境（占用锁、恢复登录状态、代理），返回 protocol、wsEndpoint，Chromium 另有 debuggerAddress。已经通过 API 打开的，返回同一个地址。'],
-        ['GET', '/api/v1/profiles/{编号}', '是否在运行；通过 API 打开的附带调试地址。'],
-        ['POST', '/api/v1/profiles/{编号}/stop', '关闭环境，照常保存登录状态。'],
-        ['GET', '/api/v1/tasks', '团队的任务，各自带最近一次运行。'],
-        ['POST', '/api/v1/tasks/{id}/run', '在这台电脑上运行一个任务，返回 runId。'],
-        ['GET', '/api/v1/runs/{id}', '一次运行的状态和计数，以及每个环境的结果和提取到的数据。']
+        ['GET', '/api/v1/profiles', '当前账号可见的环境：id、编号、名称、内核及运行状态。'],
+        ['POST', '/api/v1/profiles/{编号}/start', '按客户端标准流程打开环境（占用锁、恢复登录状态、连接代理），返回 protocol、wsEndpoint；Chromium 环境另返回 debuggerAddress。已通过 API 打开的环境返回相同地址。'],
+        ['GET', '/api/v1/profiles/{编号}', '运行状态；通过 API 打开的环境附带调试地址。'],
+        ['POST', '/api/v1/profiles/{编号}/stop', '关闭环境，并照常保存登录状态。'],
+        ['GET', '/api/v1/tasks', '团队任务列表，各附最近一次运行记录。'],
+        ['POST', '/api/v1/tasks/{id}/run', '在本机运行指定任务，返回 runId。'],
+        ['GET', '/api/v1/runs/{id}', '运行状态与统计，以及各环境的结果与提取的数据。']
       ] as [string, string, string][],
       errorsTitle: '错误',
       errorsLead: '出错时返回 { "error": { "code", "message" } }。',
       errors: [
-        ['401', 'unauthorized', '没带令牌、令牌不对或已作废，或者令牌不是客户端当前登录的账号生成的。'],
-        ['404', 'not_found', '你能看到的环境、任务或运行记录里没有这一个。'],
-        ['409', 'running_without_api', '这个环境已经打开，但是手动打开的，没有调试地址。请先关闭，再通过 API 打开。'],
-        ['409', 'locked', '这个环境正在另一台电脑上使用。'],
-        ['409', 'task_running', '这个任务正在运行。'],
-        ['429', 'rate_limited', '体验版或工作室版一分钟内超过 60 次请求；retryAfter 告诉你几秒后再试。'],
-        ['502', 'proxy_down', '环境的代理没有响应，也没有可用的备用线路。']
+        ['401', 'unauthorized', '未携带令牌、令牌无效或已作废，或令牌并非由客户端当前登录账号生成。'],
+        ['404', 'not_found', '在可见的环境、任务或运行记录中未找到该对象。'],
+        ['409', 'running_without_api', '该环境已手动打开，没有调试地址。请先关闭，再通过 API 打开。'],
+        ['409', 'locked', '该环境正在另一台电脑上使用。'],
+        ['409', 'task_running', '该任务正在运行。'],
+        ['429', 'rate_limited', '体验版或工作室版一分钟内请求超过 60 次；retryAfter 给出可重试的秒数。'],
+        ['502', 'proxy_down', '环境代理无响应，且没有可用的备用线路。']
       ] as [string, string, string][],
       examplesTitle: '示例',
-      examples: { playwright: 'Playwright，Chromium 环境', puppeteer: 'Puppeteer，Chromium 环境', selenium: 'Selenium（Python），Chromium 环境', firefox: 'Puppeteer，Firefox 环境' },
+      examples: { playwright: 'Playwright · Chromium 环境', puppeteer: 'Puppeteer · Chromium 环境', selenium: 'Selenium（Python）· Chromium 环境', firefox: 'Puppeteer · Firefox 环境' },
       securityTitle: '安全',
-      security: '调试地址没有密码。通过 API 打开的环境运行期间，那台电脑上的任何程序都能控制它，这和所有浏览器的调试端口一样。手动打开的环境不会开调试地址，本机 API 也只监听 127.0.0.1。'
+      security: '调试地址没有密码保护。通过 API 打开的环境运行期间，本机任何程序均可控制该环境，这与所有浏览器的调试端口一致。手动打开的环境不开启调试地址，本机 API 仅监听 127.0.0.1。'
     },
     changelogTitle: '更新日志',
-    changelog: [['0.1 · 2026 年 10 月', '账号、团队、套餐，以及桌面工作台的第一个版本。']]
+    changelog: [['0.1 · 2026 年 10 月', '账号、团队、套餐，以及桌面工作台首个版本。']]
   },
 
   legal: {
     privacyTitle: '隐私政策', termsTitle: '服务条款',
-    draft: '草稿。正式文本正在准备，上线前会替换本页内容。',
+    draft: '草稿。正式文本准备中，上线前将替换本页内容。',
     privacyBody: [
-      '我们收集你注册时填写的邮箱和密码、你创建的团队，以及你选择的套餐。',
-      '你选择同步的浏览器环境数据会先加密再存储。',
-      '我们不出售你的数据。'
+      '我们收集注册时填写的邮箱与密码、创建的团队以及所选套餐。',
+      '选择同步的浏览器环境数据先加密再存储。',
+      '我们不出售用户数据。'
     ],
     termsBody: [
-      'Folio 是管理多个浏览器环境的工具。使用它时，你需要自行遵守相关平台的规则。',
-      '付费套餐会自动续费，直到你取消。最近一笔付款可以在 7 天内申请退款。'
+      'Folio 是管理多个浏览器环境的工具，使用时须自行遵守相关平台的规则。',
+      '付费套餐将自动续费，直至取消。最近一笔付款可在 7 天内申请退款。'
     ]
   },
 
   errors: {
-    email_taken: '这个邮箱已经注册过了，请直接登录。',
-    invalid_credentials: '邮箱或密码不对。',
+    email_taken: '该邮箱已注册，请直接登录。',
+    invalid_credentials: '邮箱或密码错误。',
     unauthenticated: '请先登录。',
-    code_invalid: '验证码不对，请检查邮件后重试。',
+    code_invalid: '验证码错误，请核对邮件后重试。',
     code_expired: '验证码已过期，请重新获取。',
-    too_many_attempts: '错误次数太多，请重新获取验证码。',
-    already_verified: '这个邮箱已经验证过了。',
+    too_many_attempts: '错误次数过多，请重新获取验证码。',
+    already_verified: '该邮箱已验证。',
     email_not_verified: '修改套餐前请先验证邮箱。',
-    card_invalid: '请检查卡号和安全码。',
-    card_expired: '这张卡已过期。',
-    card_declined: '这张卡被拒绝了，请换一张卡。',
+    card_invalid: '请检查卡号与安全码。',
+    card_expired: '该银行卡已过期。',
+    card_declined: '该银行卡被拒绝，请更换银行卡。',
     insufficient_funds: '卡内余额不足。',
     checkout_expired: '支付页面已过期，请重新开始。',
-    checkout_closed: '这次支付已经结束，请重新开始。',
-    quote_stale: '你的套餐在这期间有变化，请确认新的金额后重试。',
-    no_change: '这已经是你当前的套餐。',
-    change_packs_separately: '加量包和套餐请分两步修改。',
-    profile_cap: '套餐最多支持 2000 个环境，更多请联系销售。',
-    trial_used: '这个团队已经用过免费试用了。',
-    already_subscribed: '这个团队已经有套餐了。',
-    not_subscribed: '这个团队没有付费套餐。',
-    refund_window_passed: '付款 7 天内才能申请退款。',
-    refund_latest_only: '只能退最近的一笔付款。',
-    already_refunded: '这笔付款已经退过款了。',
-    payments_unavailable: '暂时无法付款。',
-    rate_limited: '操作太频繁，请等一分钟再试。',
-    forbidden: '你没有权限访问这里。',
-    not_found: '没有找到相关内容。',
-    validation: '有些内容没填或格式不对。',
-    emailMissing: '请填写邮箱。', passwordShort: '密码至少需要 8 位。',
-    network: '暂时连不上 Folio，请检查网络后重试。',
-    wrong_account: '这个邀请是发给另一个邮箱的。',
+    checkout_closed: '本次支付已结束，请重新开始。',
+    quote_stale: '套餐在此期间已变更，请确认新金额后重试。',
+    no_change: '已是当前套餐。',
+    change_packs_separately: '加量包与套餐请分两步修改。',
+    profile_cap: '套餐最多支持 2000 个环境，如需更多请联系销售。',
+    trial_used: '该团队已使用过免费试用。',
+    already_subscribed: '该团队已有套餐。',
+    not_subscribed: '该团队没有付费套餐。',
+    refund_window_passed: '仅可在付款后 7 天内申请退款。',
+    refund_latest_only: '仅可退还最近一笔付款。',
+    already_refunded: '该笔付款已退款。',
+    payments_unavailable: '暂不支持付款。',
+    rate_limited: '操作过于频繁，请一分钟后重试。',
+    forbidden: '没有访问权限。',
+    not_found: '未找到相关内容。',
+    validation: '部分内容未填写或格式有误。',
+    emailMissing: '请填写邮箱。', passwordShort: '密码至少 8 位。',
+    network: '无法连接 Folio，请检查网络后重试。',
+    wrong_account: '该邀请发送至其他邮箱。',
     email_unverified: '请先验证邮箱。',
-    invitation_expired: '这个邀请已过期，请让对方重新邀请。',
-    seat_limit: '这个团队没有空余席位了，请让所有者升级套餐。',
-    mail_unavailable: '邮件没能发出，请稍后再试。',
-    internal: '我们这边出了点问题，请重试。'
+    invitation_expired: '该邀请已过期，请联系邀请人重新发送。',
+    seat_limit: '团队席位已满，请联系所有者升级套餐。',
+    mail_unavailable: '邮件发送失败，请稍后重试。',
+    internal: '服务暂时异常，请稍后重试。'
   }
 };
