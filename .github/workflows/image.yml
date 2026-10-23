@@ -2,7 +2,8 @@
 # (tag "main") and from version tags (tags "v1.2.3" and "latest"). The end-to-end tests need a running folio-server
 # and a mail inbox, so they run on the development machine before each release.
 #
-# Repository variables: FOLIO_URL, the site's public address (e.g. https://folio.example.com); DESKTOP_REPO, the
+# Repository variables: FOLIO_URL, the site's public address (e.g. https://folio.example.com, or
+# http://<server IP>:8080 while testing without a domain; it only sets the canonical links); DESKTOP_REPO, the
 # public desktop repository whose latest release has the installers (e.g. your-name/folio-desktop).
 name: Image
 
@@ -40,7 +41,7 @@ jobs:
           FOLIO_URL: ${{ vars.FOLIO_URL }}
           DESKTOP_REPO: ${{ vars.DESKTOP_REPO }}
         run: |
-          case "$FOLIO_URL" in https://*) ;; *) echo "::error::Set the repository variable FOLIO_URL (e.g. https://folio.example.com)"; exit 1;; esac
+          case "$FOLIO_URL" in http://*|https://*) ;; *) echo "::error::Set the repository variable FOLIO_URL (e.g. https://folio.example.com)"; exit 1;; esac
           case "$DESKTOP_REPO" in */*) ;; *) echo "::error::Set the repository variable DESKTOP_REPO (e.g. your-name/folio-desktop)"; exit 1;; esac
       - uses: actions/checkout@v5
       - uses: docker/setup-buildx-action@v3
