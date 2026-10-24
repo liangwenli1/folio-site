@@ -47,7 +47,7 @@ html[lang="zh"] .plan-card .name{font-weight:900}
 .invoice .meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin:24px 0;font-size:14px}
 .invoice .meta dt{font-size:12px;color:var(--ink-2)}
 .invoice .meta dd{margin:2px 0 0;font-family:var(--f-data);font-size:13px}
-.invoice .refunded{position:absolute;right:32px;top:90px;transform:rotate(-12deg);border:3px double var(--accent);color:var(--accent);border-radius:var(--r-sm);padding:6px 14px;font-family:var(--f-data);letter-spacing:.14em;mix-blend-mode:var(--stamp-blend)}
+.invoice .refunded{position:absolute;right:32px;top:90px;transform:rotate(-12deg);border:3px double var(--accent);color:var(--accent);border-radius:var(--r-sm);padding:6px 14px;font-family:var(--f-data);letter-spacing:.14em}
 @media print{
   .top,.foot,.no-print{display:none!important}
   body{background:#fff;color:#000}

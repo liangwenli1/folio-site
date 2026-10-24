@@ -57,17 +57,15 @@ async function payWith(page: Page, number: string){
 
 test('landing page shows live prices in both languages', async ({ page }) => {
   await page.goto('/en/');
-  await expect(page.locator('h1')).toContainText('One account flagged.');
+  await expect(page.locator('h1')).toHaveText('Isolated browser profiles for every account.');
   const studio = page.locator('[data-plan="studio"]');
   await expect(studio.locator('[data-amt]')).toHaveText('$29');
   await page.click('[data-period="yearly"]');
   await expect(studio.locator('[data-amt]')).toHaveText('$23');
   await expect(studio.locator('[data-note]')).toContainText('$276');
-  await page.click('#reroll');
-  await expect(page.locator('[data-f="no"]')).toHaveText('0043');
 
   await page.goto('/zh/');
-  await expect(page.locator('h1')).toContainText('一个账号受限');
+  await expect(page.locator('h1')).toHaveText('账号环境相互隔离。');
   await expect(page.locator('[data-plan="company"] [data-amt]')).toHaveText('US$99');
 });
 
@@ -79,7 +77,7 @@ test('the calculator finds the cheapest plan and takes its add-on packs to check
   await expect($('calc-plan')).toHaveText('Studio + 1 add-on pack');
   await expect($('calc-amt')).toHaveText('$44');
   await expect($('calc-detail')).toHaveText('200 profiles · $0.22 per profile a month');
-  await expect($('calc-alt')).toContainText('Company is $99 a month');
+  await expect($('calc-alt')).toContainText('Company costs $99 a month');
   await expect(page.locator('[data-plan="studio"] [data-fit]')).toHaveText('180 profiles: Studio + 1 add-on pack');
   await expect($('calc-cta')).toHaveAttribute('href', '/en/checkout/?plan=studio&period=monthly&packs=1');
   await page.click('[data-period="yearly"]');
@@ -88,10 +86,10 @@ test('the calculator finds the cheapest plan and takes its add-on packs to check
   // The ends of the slider: Free, and a quote above the maximum.
   await $('calc-n').fill('0');
   await expect($('calc-plan')).toHaveText('Free');
-  await expect($('calc-cta')).toHaveText('Start free');
+  await expect($('calc-cta')).toHaveText('Try free');
   await $('calc-n').fill('400');
   await expect($('calc-out')).toHaveText('2000+');
-  await expect($('calc-cta')).toHaveText('Talk to sales');
+  await expect($('calc-cta')).toHaveText('Contact sales');
 
   await signUp(page, 'en', '/en/checkout/?plan=studio&period=monthly&packs=1');
   await expect($('packs')).toHaveText('1');
@@ -105,11 +103,11 @@ test('sign up, buy Studio and open the invoice', async ({ page }) => {
   await page.waitForURL(/\/checkout\//);
   await expect(page.locator('#total')).toHaveText('$29');
   await payWith(page, '4242 4242 4242 4242');
-  await expect(page.locator('#done-text')).toHaveText('Payment received. Your plan is active.');
+  await expect(page.locator('#done-text')).toHaveText('Payment received. The plan is active.');
 
   await page.goto('/en/account/');
   await expect(page.locator('#plan-name')).toHaveText('Studio');
-  await expect(page.locator('#plan-usage')).toHaveText('0 of 100 profiles');
+  await expect(page.locator('#plan-usage')).toHaveText('0 of 100 profiles used');
   const row = page.locator('#pay-rows tr').first();
   await expect(row).toContainText('$29');
   await row.locator('a').click();
@@ -133,7 +131,7 @@ test('the Studio trial starts from the pricing link', async ({ page }) => {
   await page.goto('/en/checkout/?plan=studio&trial=1');
   await expect(page.locator('#trial-box')).toBeVisible();
   await page.click('#trial-btn');
-  await expect(page.locator('#done-text')).toHaveText('Trial started. Studio is yours for 7 days.');
+  await expect(page.locator('#done-text')).toHaveText('Trial started. Studio is available for 7 days.');
   await page.goto('/en/account/');
   await expect(page.locator('#plan-status')).toContainText('Trial ends on');
 });
@@ -153,7 +151,7 @@ test('while payments are off, paid plans say coming soon and the free trial stil
   await expect(page.locator('#soon')).toBeVisible();
   await expect(page.locator('#number')).toBeHidden();
   await page.click('#trial-btn');
-  await expect(page.locator('#done-text')).toHaveText('Trial started. Studio is yours for 7 days.');
+  await expect(page.locator('#done-text')).toHaveText('Trial started. Studio is available for 7 days.');
 });
 
 test('the latest payment can be refunded from the account page', async ({ page }) => {
@@ -198,7 +196,7 @@ test('an emailed invitation leads a new person through sign-up into the workspac
   const link = mail.Text.match(/https?:\/\/\S+\/invite\/\?token=[\w-]+/)![0];
 
   await page.goto(link.replace(/^https?:\/\/[^/]+/, ''));
-  await expect(page.locator('#lead')).toHaveText(`${host.email} invited you to join Larkspur Trading on Folio as a member.`);
+  await expect(page.locator('#lead')).toHaveText(`${host.email} invited you to join the Folio workspace Larkspur Trading as a member.`);
   await page.getByRole('link', { name: 'Create an account' }).click();
   await expect(page.locator('#email')).toHaveValue(email);
   await page.fill('#password', PASSWORD);
@@ -209,8 +207,8 @@ test('an emailed invitation leads a new person through sign-up into the workspac
 
   await page.waitForURL(/\/invite\//);
   await page.getByRole('button', { name: 'Join Larkspur Trading' }).click();
-  await expect(page.locator('#lead')).toHaveText('You’re in Larkspur Trading.');
-  await page.getByRole('link', { name: 'Go to your account' }).click();
+  await expect(page.locator('#lead')).toHaveText('Joined Larkspur Trading.');
+  await page.getByRole('link', { name: 'Go to account' }).click();
   await expect(page.locator('#ws-list')).toContainText('Larkspur Trading');
   await expect(page.locator('#ws-list li', { hasText: 'Larkspur Trading' })).toContainText('Member');
 });

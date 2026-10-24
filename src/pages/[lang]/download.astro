@@ -23,7 +23,7 @@ const systems = [
           {s.href && <p class="fine" style="margin-top:14px">{s.note}</p>}</div>
       ))}
     </div>
-    {repo && <p class="fine" style="margin-top:24px">{d.engines}</p>}
+    {repo && <p class="fine" style="margin-top:24px">{d.steps[2][1]}</p>}
     <p class="fine" style="margin-top:24px">{d.already} <a href={link(lang, 'account/')}>{t(lang).nav.account}</a></p>
   </section>
 </Base>

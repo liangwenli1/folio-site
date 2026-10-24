@@ -1,71 +1,48 @@
 import type { en } from './en';
 
-// 中文文案。结构必须和 en.ts 完全一致。用正式、精炼的书面语；尽量不用人称，必须称呼时用「您」。
+// 中文文案。结构必须和 en.ts 完全一致。
+// 调子：平实稳妥，不做绝对承诺；采用「支持……，减少／提升……」的功能加价值句式；正文统一称「浏览器环境」，
+// 计数、表头等紧凑处可简称「环境」；尽量不用人称，必须称呼时用「您」。
 export const zh: typeof en = {
   langName: '简体中文',
   meta: {
     title: 'Folio 指纹浏览器',
-    description: '在一台电脑上运营数十家店铺、广告账户与社媒账号，账号之间互不关联。每个账号拥有独立的浏览器环境、指纹与代理。'
+    description: '面向多店铺、多广告账户与多社媒账号团队的指纹浏览器，为每个账号提供独立的浏览器环境，支持差异化指纹配置、Cookie 隔离与独立代理 IP。'
   },
-  nav: { who: '适用场景', inside: '环境隔离', teams: '团队协作', automation: '自动化', pricing: '价格', faq: '常见问题', login: '登录', start: '免费试用', account: '账户', menu: '菜单' },
+  nav: { who: '适用场景', inside: '环境隔离', teams: '团队协作', automation: '自动化', pricing: '价格', faq: '常见问题', login: '登录', start: '免费体验', account: '账户', menu: '菜单' },
   plans: { free: '体验版', studio: '工作室版', company: '公司版' },
   periods: { monthly: '月付', yearly: '年付' },
 
   hero: {
-    eyebrow: '指纹浏览器 · 面向多店铺、多广告账户、多社媒账号团队',
-    h1a: '一个账号受限，', h1b: '其余账号', h1em: '不受牵连。',
-    lead: 'Folio 为每个账号提供独立的浏览器环境，指纹、Cookie 与代理 IP 相互隔离。在平台看来，每个账号都来自不同的设备。',
-    ctaStart: '免费使用 5 个环境', ctaDownload: '下载客户端',
-    fine: '支持 Windows 10 及以上、macOS 12 及以上 · 无需绑卡',
-    reroll: '生成新环境',
-    rerollHint: '每次生成一套完整指纹，时区与语言自动匹配出口 IP。',
-    card: { title: 'FOLIO · 浏览器环境', exitIp: '出口 IP', tz: '时区', lang: '语言', os: '系统', engine: '内核', screen: '分辨率', gpu: 'WebGL 显卡', canvas: 'Canvas 指纹', fonts: '字体', fontsUnit: '款', stamp: 'ISOLATED' },
+    eyebrow: '面向多账号运营团队的指纹浏览器',
+    h1: '账号环境相互隔离。',
+    lead: 'Folio 为每个账号提供独立的浏览器环境，支持差异化指纹配置、Cookie 隔离与独立代理 IP，满足多账号独立运行与集中管理需求。',
+    ctaStart: '免费体验 5 个浏览器环境', ctaDownload: '下载客户端',
+    fine: 'Windows 10 及以上 · macOS 12 及以上 · 无需绑定银行卡',
+    showcase: { label: '工作台操作演示：检查代理、打开浏览器环境、恢复标签页、体检、安装扩展、批量打开、窗口同步与团队协作。', pause: '暂停演示', play: '播放演示' },
+    sample: { name: 'UK-Shop-01', place: '伦敦 · Firefox 156', status: '运行中' },
     spec: [
-      ['Chromium 150 · Firefox 156', '两种内核，按环境选择'],
-      ['Canvas、WebGL、音频、字体', '每个环境独立生成'],
-      ['HTTP · HTTPS · SOCKS5', '代理协议，使用前自动检测'],
-      ['CDP', '本地 API，对接自动化脚本']
-    ],
-    cities: [
-      { city: '西雅图', region: '美国 · 华盛顿州' }, { city: '伦敦', region: '英国 · 英格兰' },
-      { city: '东京', region: '日本 · 东京都' }, { city: '法兰克福', region: '德国 · 黑森州' },
-      { city: '圣保罗', region: '巴西 · 圣保罗州' }, { city: '多伦多', region: '加拿大 · 安大略省' },
-      { city: '新加坡', region: '新加坡' }, { city: '悉尼', region: '澳大利亚 · 新南威尔士州' },
-      { city: '首尔', region: '韩国 · 首尔' }, { city: '迈阿密', region: '美国 · 佛罗里达州' }
+      ['Chromium 150 · Firefox 156', '双内核，按浏览器环境选择'],
+      ['Canvas、WebGL、音频、字体', '按浏览器环境独立生成'],
+      ['HTTP · HTTPS · SOCKS5', '使用前自动检测连通性'],
+      ['CDP · WebDriver BiDi', '本地 API，对接自动化脚本']
     ]
-  },
-
-  demo: {
-    eyebrow: '产品演示', title: '打开一个环境，只需一次点击',
-    pause: '暂停演示', play: '播放演示', scenesLabel: '演示内容', loop: '约 20 秒循环',
-    scenes: ['打开环境', '出口地图', '关联风险', '环境体检'],
-    steps: [['检查代理', '出口纽约 · 82 ms'], ['准备内核', 'Chromium 150 · 已就绪'], ['恢复登录', 'Cookie 与站点数据随环境同步'], ['启动浏览器', '时区、语言与出口一致']],
-    app: {
-      nav: ['环境', '代理', '团队', '窗口同步', '流程', '内核'], title: '环境',
-      cities: ['西雅图', '纽约', '纽约', '伦敦'],
-      stage: ['检查代理…', '准备内核…', '恢复登录…', '启动浏览器…'],
-      idle: '未运行', run: '运行中', tip: '纽约 · 2 个环境',
-      risk: '发现 1 项关联风险：2 个环境共用代理 US-NY-02',
-      consistent: ['代理正常 · 82 ms', '时区与出口一致', '语言与出口一致'],
-      report: '体检报告',
-      checks: ['WebRTC 未暴露其他地址', '时区与出口一致', '语言与出口一致', 'User-Agent 与系统一致', 'Canvas 指纹在团队内唯一']
-    }
   },
 
   who: {
     eyebrow: '适用场景',
-    title: '多账号运营的首要风险：账号关联',
-    lead: '平台识别账号关联，依据的不只是 IP。浏览器会暴露数十项设备信息，任意一项重合，都可能导致账号被关联。',
+    title: '账号关联是多账号运营的主要风险',
+    lead: '平台识别账号关联时，除 IP 外还会参考浏览器暴露的多项设备信息。为每个账号配置独立的浏览器环境，可减少设备信息重合。',
     items: [
-      { tag: '跨境店铺', title: '多店铺独立运营，单店受限不影响其他店铺。', body: '每家店铺固定使用一个环境与一条代理线路，登录地点与设备长期稳定，符合平台对正常卖家的判断。', fit: '适用于：同时经营 5 家以上店铺的卖家团队' },
-      { tag: '广告代投', title: '按客户划分环境，广告账户互不交叉。', body: '人员交接时整组转交环境，接手者打开即为登录状态，无需再向客户索取验证码。', fit: '适用于：同时服务多个客户的投放代理商' },
-      { tag: '社媒矩阵', title: '一人即可维护数十个账号的日常运营。', body: '窗口同步将一次操作同时执行到多个窗口，定时任务自动完成每日登录与巡检。', fit: '适用于：一人管理数十个账号的内容团队' }
+      { tag: '跨境店铺', title: '支持多店铺独立运营，降低单店异常对其他店铺的影响。', body: '为每家店铺分配固定的浏览器环境与代理线路，保持登录地点与设备信息稳定。', fit: '适用于：同时经营多家店铺的卖家团队' },
+      { tag: '广告代投', title: '按客户划分浏览器环境，广告账户相互独立。', body: '支持团队成员间的浏览器环境交接，保留登录状态与环境配置，减少重复登录与验证，提升交接效率。', fit: '适用于：同时服务多个客户的投放代理商' },
+      { tag: '社媒矩阵', title: '支持批量维护多个社媒账号，提升日常运营效率。', body: '支持将单次操作同步至多个窗口，并通过定时任务自动完成日常登录与巡检。', fit: '适用于：管理大量账号的内容运营团队' }
     ]
   },
 
   inside: {
     eyebrow: '环境隔离',
-    title: '平台检测的各项信号，逐一独立处理',
+    title: '按检测项独立配置浏览器指纹',
     groups: [
       ['设备', ['User-Agent', '客户端提示', 'CPU 核心数', '设备内存', '触控支持']],
       ['渲染', ['Canvas', 'WebGL 图像', 'WebGL 显卡信息', 'AudioContext', '字体列表']],
@@ -73,31 +50,31 @@ export const zh: typeof en = {
       ['地区', ['时区', '语言', '地理位置']],
       ['存储', ['Cookie', 'LocalStorage', 'IndexedDB', '缓存', '扩展程序']]
     ],
-    note: '指纹基于真实设备组合生成，系统、显卡与字体相互匹配，不会出现「搭载 NVIDIA 独显的 MacBook」这类矛盾组合。',
-    compareTitle: '同一条西雅图代理的两种用法',
-    compareHint: '左侧每一处不一致，都是平台关联账号的依据。',
-    cols: ['检测项', '普通浏览器 + 代理', 'Folio 环境'],
+    note: '指纹基于真实设备参数组合生成，系统、显卡与字体相互匹配，避免出现不合理的配置组合。',
+    compareTitle: '同一代理下，普通浏览器与 Folio 浏览器环境的对比',
+    compareHint: '左列中的不一致项，可能被平台用于识别账号关联。',
+    cols: ['检测项', '普通浏览器 + 代理', 'Folio 浏览器环境'],
     rows: [
       ['出口 IP', '西雅图', '西雅图', false],
       ['时区', 'Asia/Shanghai', 'America/Los_Angeles', true],
       ['浏览器语言', 'zh-CN', 'en-US', true],
       ['WebRTC', '暴露本机真实 IP', '不暴露真实 IP', true],
       ['地理位置', '返回真实位置', '西雅图附近', true],
-      ['Canvas 指纹', '与其他账号完全相同', '本环境独有', true],
-      ['Cookie', '所有账号共用', '每个环境独立保存', true]
+      ['Canvas 指纹', '与其他账号相同', '本浏览器环境独有', true],
+      ['Cookie', '所有账号共用', '按浏览器环境独立保存', true]
     ],
-    leak: '不一致', match: '一致', passed: '体检通过'
+    leak: '不一致', match: '一致'
   },
 
   team: {
     eyebrow: '团队协作',
-    title: '人员离职，账号归属公司',
-    lead: '账号是企业资产，不应依附于个人设备。',
+    title: '浏览器环境由团队统一管理',
+    lead: '账号与浏览器环境归属团队，不依附于个人设备。',
     points: [
-      ['按人分配环境', '运营仅可见自己负责的店铺，投放仅可见自己的广告账户。'],
-      ['可用而不可见密码', '成员打开环境即为登录状态，账号密码不经成员之手。'],
-      ['离职当日收回', '移除成员后，其名下环境立即转交指定人员，无需紧急修改密码。'],
-      ['操作全程留痕', '成员何时打开了哪个环境、修改了哪项设置，均有记录可查。']
+      ['按人分配', '成员仅可访问分配给本人的浏览器环境。'],
+      ['免密使用', '成员可直接使用已保存的登录状态，无需获取账号密码。'],
+      ['离职即时转交', '移除成员后，其名下浏览器环境可即时转交指定人员。'],
+      ['操作记录可追溯', '支持记录浏览器环境的打开、修改与转交操作，便于追溯。']
     ],
     panelTitle: '美区运营组', panelMeta: '3 名在职 · 46 个环境', active: '在职', left: '已离职',
     members: [
@@ -117,105 +94,106 @@ export const zh: typeof en = {
 
   auto: {
     eyebrow: '自动化',
-    title: '重复操作，配置一次即可自动执行',
+    title: '支持批量操作与自动化，减少重复工作',
     noCode: '无需编程',
     noCodePoints: [
-      ['窗口同步', '在一个窗口中点击、输入、滚动，所选窗口同步执行。'],
-      ['批量操作', '通过表格一次导入数百个环境，批量更换代理、批量导入 Cookie。'],
-      ['定时任务', '按设定时间打开指定环境并检查登录状态，掉线时及时提醒。']
+      ['窗口同步', '支持将主控窗口的点击、输入与滚动操作同步至多个窗口。'],
+      ['批量操作', '支持通过表格批量导入浏览器环境，批量更换代理与导入 Cookie。'],
+      ['定时任务', '支持按计划打开浏览器环境并检查登录状态，异常时及时提醒。']
     ],
     withCode: '编程接入',
-    withCodeBody: '通过本地 API 启动任意环境，并将调试地址交给脚本。现有自动化框架可直接接管，无需改写脚本。',
+    withCodeBody: '提供本地 API，可启动浏览器环境并返回调试地址，支持 Playwright、Puppeteer、Selenium 等工具接入。',
     libs: ['Playwright', 'Puppeteer', 'Selenium', 'CDP · WebDriver BiDi'],
-    codeComment: '// 启动 Folio 中编号为 0042 的环境',
-    sync: { label: '窗口同步示意：主控窗口的一次点击同步到三个窗口，其中一个窗口报告问题。', lead: '主控', fail: '未找到元素' }
+    codeComment: '// 启动编号为 0042 的浏览器环境'
   },
 
   trust: {
-    eyebrow: '免费试用',
-    title: '先测试，再决定',
+    eyebrow: '免费体验',
+    title: '先行体验，按需选购',
     items: [
-      ['5 个环境永久免费', '无需绑卡，不限时长，足以完成一家店铺从登录到上架的全流程验证。'],
-      ['检测网站自由选择', '在环境中打开任意指纹检测网站，结果自行判断。'],
-      ['7 天无理由退款', '付费后 7 天内申请，全额退款。'],
-      ['数据随时导出', '环境配置与 Cookie 一键导出，账号不会被锁定在 Folio 中。']
+      ['5 个浏览器环境永久免费', '无需绑定银行卡，不限使用期限，可用于完整业务流程验证。'],
+      ['支持自行检测', '支持在浏览器环境中访问指纹检测网站，验证环境配置与隔离效果。'],
+      ['7 天无理由退款', '付款后 7 天内可申请全额退款。'],
+      ['数据随时导出', '支持随时导出浏览器环境配置与 Cookie。']
     ]
   },
 
   pricing: {
     eyebrow: '价格',
-    title: '按环境数计费，成员数量不限',
+    title: '按浏览器环境数量计费，成员数量不限',
     monthly: '月付', yearly: '年付', save: '省 20%',
     perMonth: '/ 月', forever: '永久免费',
     perProfile: (amount: string) => `折合每个环境 ${amount}/月`,
     billedMonthly: '按月付费，随时取消',
     billedYearly: (total: string) => `按年付费，共 ${total}`,
-    noCard: '无需绑卡',
+    noCard: '无需绑定银行卡',
     profilesMembers: (p: number, m: string) => `${p} 个环境 · ${m}`,
     oneMember: '1 名成员', unlimitedMembers: '成员不限',
     flag: '适合 3–20 人团队',
     for: { free: '体验核心功能', studio: '单个团队的日常运营', company: '多团队、多业务线' },
-    cta: { free: '免费开始', studio: '免费试用 7 天', company: '联系销售' },
+    cta: { free: '免费体验', studio: '免费体验 7 天', company: '联系销售' },
     features: {
-      free: ['两种内核，完整指纹配置', '代理检测，自动匹配时区与语言', '本地 API', '文档与社区支持'],
-      studio: ['成员不限', '窗口同步与批量操作', '团队权限与环境转交', '操作日志保留 30 天', '工作日在线客服'],
-      company: ['包含工作室版全部功能', '环境按部门分组管理', '操作日志保留 1 年，支持导出', '专属客服群，每日 12 小时', 'API 调用不限速']
+      free: ['Chromium 与 Firefox 双内核，完整指纹配置', '代理检测，自动匹配时区与语言', '本地 API', '文档与社区支持'],
+      studio: ['成员数量不限', '窗口同步与批量操作', '团队权限与浏览器环境转交', '操作日志保留 30 天', '工作日在线客服'],
+      company: ['包含工作室版全部功能', '浏览器环境按部门分组管理', '操作日志保留 1 年，支持导出', '专属客服群，每日 12 小时', 'API 调用不限速']
     },
     buy: '立即购买', soon: '即将开放',
     calc: {
-      title: '需要多少个环境？', hint: '拖动滑块，查看最省的购买方式。',
-      best: '推荐方案', cheapest: '最省',
+      title: '选择浏览器环境数量', hint: '调整滑块，查看对应配置与价格。',
+      best: '推荐方案', cheapest: '费用最低',
       profiles: (n: number) => `${n} 个环境`,
       withPacks: (plan: string, packs: number) => `${plan} + ${packs} 个加量包`,
       fit: (n: number, pick: string) => `${n} 个环境：${pick}`,
-      company: (amount: string) => `同样数量选公司版为 ${amount}/月，另含部门管理、操作日志保留 1 年、API 不限速。`,
-      custom: (max: number) => `超过 ${max} 个环境`, customBody: '可根据团队规模单独报价。',
+      company: (amount: string) => `同等数量下公司版为 ${amount}/月，另含部门管理、操作日志保留 1 年与 API 不限速。`,
+      custom: (max: number) => `超过 ${max} 个环境`, customBody: '支持根据团队规模单独报价。',
       buy: '按此方案购买'
     },
-    foot: (pack: string) => `如需更多环境，每增加 100 个 ${pack}/月；超过 2000 个环境可单独报价。价格不含当地税费，每笔付款均提供发票。`
+    foot: (pack: string) => `如需更多浏览器环境，每增加 100 个 ${pack}/月；超过 2000 个可单独报价。价格不含当地税费，每笔付款均提供发票。`
   },
 
   faq: {
-    eyebrow: '常见问题', title: '购买前的常见问题', lead: '未找到答案？', contact: '联系我们',
+    eyebrow: '常见问题', title: '常见问题', lead: '其他问题，请', contact: '联系我们',
     items: [
-      ['使用 Folio 能保证账号不被封禁吗？', '不能保证。Folio 解决的是多个账号被识别为同一设备的问题。若账号本身违反平台规则，或代理 IP 已被大量用户使用，仍可能受到限制。建议每个环境配置一条独立的住宅代理或 ISP 代理。'],
-      ['需要自备代理吗？', '需要。Folio 支持 HTTP、HTTPS 与 SOCKS5 代理，可逐条填写或通过表格批量导入。添加时自动检测连通性与出口位置，并据此设置时区与语言。'],
-      ['Chromium 与 Firefox 内核如何选择？', '多数账号建议使用 Chromium，每个 Chromium 环境拥有独立且稳定的指纹。Firefox 环境适用于需要 Firefox 用户特征的网站；同一台电脑上的 Firefox 环境之间指纹重合度较高，同一平台的多个账号不宜全部放在 Firefox 环境中。'],
-      ['环境数据存储在哪里？', '默认加密后同步至云端，更换电脑登录即可继续使用；也可将指定环境设为仅存本机。全部数据可随时完整导出。'],
-      ['内核如何更新？', 'Folio 采用开源指纹内核，每个新版本经测试后推送。现有环境保持原内核版本，升级时机由您决定。']
+      ['使用 Folio 能否保证账号不被封禁？', '不能保证。Folio 用于降低多个账号被识别为同一设备的风险；如账号存在违规操作，或代理 IP 质量不佳，仍可能受到平台限制。建议为每个浏览器环境配置独立的住宅代理或 ISP 代理。'],
+      ['是否需要自备代理？', '需要。支持 HTTP、HTTPS 与 SOCKS5 代理，可逐条添加或批量导入，添加时自动检测连通性与出口位置，并据此匹配时区与语言。'],
+      ['Chromium 与 Firefox 内核如何选择？', '多数账号建议使用 Chromium 内核，每个 Chromium 浏览器环境具备独立且稳定的指纹。Firefox 内核适用于需要 Firefox 用户特征的网站；同一台电脑上的 Firefox 浏览器环境之间指纹重合度较高，同一平台的多个账号不建议全部使用 Firefox 内核。'],
+      ['浏览器环境数据存储在哪里？', '默认加密后同步至云端，更换电脑登录即可继续使用；也支持将指定浏览器环境设为仅保存在本机。全部数据支持随时完整导出。'],
+      ['内核如何更新？', 'Folio 采用开源指纹内核，新版本经测试后发布。现有浏览器环境保持原内核版本，支持按需升级。']
     ]
   },
 
   band: {
-    title: '从 5 个免费环境开始',
-    body: '注册账号并下载客户端，几分钟即可完成第一个环境的配置。',
+    title: '免费体验 5 个浏览器环境',
+    body: '注册账号并下载客户端，即可开始配置浏览器环境。',
     windows: '下载 Windows 版', mac: '下载 macOS 版',
     fine: '测试版 · Chromium 150 与 Firefox 156 内核'
   },
 
-  footer: { docs: '使用文档', api: 'API 参考', changelog: '更新日志', privacy: '隐私政策', terms: '服务条款', sales: '联系销售', rights: '© 2026 Folio' },
+  footer: { docs: '使用文档', api: 'API 参考', changelog: '更新日志', privacy: '隐私政策', terms: '服务条款', sales: '联系销售', rights: '© 2026 Folio', product: '产品', resources: '资源', company: '公司' },
 
   auth: {
-    signupTitle: '创建 Folio 账号', signupLead: '5 个环境永久免费，无需绑卡。',
+    signupTitle: '创建 Folio 账号', signupLead: '免费体验 5 个浏览器环境，无需绑定银行卡。',
     loginTitle: '登录 Folio', email: '邮箱', password: '密码', passwordHint: '至少 8 位',
     signup: '创建账号', login: '登录', haveAccount: '已有账号？', noAccount: '还没有账号？',
     forgot: '忘记密码？',
     verifyTitle: '验证邮箱', verifyLead: (email: string) => `验证码已发送至 ${email}，15 分钟内有效。`,
     code: '验证码', verify: '验证', resend: '重新发送', resent: '新的验证码已发送。',
     verified: '邮箱已验证。',
-    forgotTitle: '重设密码', forgotLead: '输入账号邮箱，我们将发送验证码。',
+    forgotTitle: '重设密码', forgotLead: '输入账号邮箱，系统将发送验证码。',
     sendCode: '发送验证码', resetTitle: '设置新密码', newPassword: '新密码', reset: '保存',
     resetDone: '密码已更新，请使用新密码登录。',
     devNotice: '开发版本：邮件发送至本机测试收件箱 http://127.0.0.1:47125。',
     logout: '退出登录',
-    points: ['注册后即可下载客户端', '官网与客户端使用同一账号', '数据随时导出']
+    showPassword: '显示密码',
+    points: ['注册后即可下载客户端', '官网与客户端使用同一账号', '支持随时导出数据']
   },
 
   checkout: {
     title: '选择套餐', workspace: '团队', plan: '套餐', billing: '付费周期',
     packs: '加量包', packsHint: '每包 100 个环境', total: '本次应付',
+    steps: ['选择套餐', '付款', '完成'], chosen: '已选', edit: '修改', next: '下一步',
     current: (plan: string) => `当前套餐：${plan}`,
-    currentTrial: (plan: string) => `当前套餐：${plan}（试用中）`,
+    currentTrial: (plan: string) => `当前套餐：${plan}（体验中）`,
     lines: {
       plan: (plan: string, period: string) => `${plan}，${period}`,
       addon: (qty: number, prorated: boolean) => `加量包 × ${qty}（每包 100 个环境）${prorated ? '，按本周期剩余天数折算' : ''}`,
@@ -223,36 +201,36 @@ export const zh: typeof en = {
     },
     change: {
       new: '即日生效。', upgrade: '即日生效，当前套餐剩余时长将折算抵扣。', addon: '立即生效。',
-      'reduce-addon': '立即生效。超出新上限的环境需归档，本周期费用不予退还。',
+      'reduce-addon': '立即生效。超出新上限的浏览器环境需归档，本周期费用不予退还。',
       downgrade: '当前周期结束后生效，本次无需付款。'
     },
     card: '银行卡', cardNumber: '卡号', expiry: '有效期（MM/YY）', cvc: '安全码', name: '持卡人姓名',
     pay: (amount: string) => `支付 ${amount}`, confirm: '确认变更',
-    soon: '付费套餐即将开放，可先免费试用，或继续使用体验版。', soonPay: '即将开放',
-    trial: '也可免费试用工作室版 7 天', trialCta: '开始试用',
+    soon: '付费套餐即将开放，可先免费体验工作室版，或继续使用体验版。', soonPay: '即将开放',
+    trial: '也可免费体验工作室版 7 天', trialCta: '开始体验',
     mockTitle: '测试支付', mockBody: '当前不会实际扣款。卡号请使用 4242 4242 4242 4242，有效期填写任意未来日期；4000 0000 0000 0002 将被拒绝。',
-    success: '支付成功，套餐已生效。', applied: '变更已保存。', trialStarted: '试用已开始，可使用工作室版 7 天。',
+    success: '支付成功，套餐已生效。', applied: '变更已保存。', trialStarted: '体验已开始，可使用工作室版 7 天。',
     toAccount: '前往账户', noManage: '仅所有者和管理员可修改团队套餐。'
   },
 
   account: {
     title: '账户', profile: '个人信息', language: '语言', emailStatus: '邮箱验证',
     verified: '已验证', unverified: '未验证', verifyNow: '立即验证',
-    workspaces: '团队', newWorkspace: '新建团队', create: '创建', rename: '重命名', save: '保存', cancel: '取消',
+    workspaces: '团队', newWorkspace: '新建团队', create: '创建', rename: '重命名', save: '保存', cancel: '取消', current: '当前',
     roles: { owner: '所有者', admin: '管理员', member: '成员' },
     plan: '套餐', usage: (used: number, limit: number) => `已用 ${used} / ${limit} 个环境`,
     unlimited: '成员不限',
     renews: (date: string) => `${date} 自动续费`, ends: (date: string) => `${date} 到期`,
-    trialEnds: (date: string) => `试用于 ${date} 结束`,
+    trialEnds: (date: string) => `体验于 ${date} 结束`,
     scheduled: (plan: string, date: string) => `${date} 起变更为${plan}`,
-    changePlan: '更换套餐', addProfiles: '增加环境', startTrial: '免费试用工作室版 7 天',
+    changePlan: '更换套餐', addProfiles: '增加环境', startTrial: '免费体验工作室版 7 天',
     cancelPlan: '到期后取消', resume: '恢复续费',
     cancelConfirm: '确定取消套餐？当前周期结束前仍可正常使用。', confirmCancel: '确定取消',
     payments: '付款与发票', noPayments: '暂无付款记录。',
     cols: ['日期', '发票', '金额', '状态', ''],
     paid: '已付款', refunded: '已退款', invoice: '发票', refund: '退款',
     refundConfirm: '确定退款？套餐将恢复至该笔付款之前的状态。', confirmRefund: '确定退款',
-    download: '下载客户端', downloadBody: '使用同一账号登录桌面客户端，套餐与团队信息自动同步。',
+    download: '下载客户端', downloadBody: '使用同一账号登录客户端，套餐与团队信息自动同步。',
     downloadCta: '下载',
     invitations: '邀请', invitedBy: (inviter: string, role: string) => `${inviter} 邀请您成为${role}`, accept: '加入', decline: '拒绝'
   },
@@ -262,14 +240,15 @@ export const zh: typeof en = {
     gone: '该邀请已失效：已被接受、撤回或被新的邀请替代。',
     lead: (inviter: string, workspace: string, role: string) => `${inviter} 邀请您以${role}身份加入 Folio 团队「${workspace}」。`,
     roles: { admin: '管理员', member: '成员' }, forEmail: (email: string) => `受邀邮箱：${email}`,
+    expires: (date: string) => `${date} 过期`,
     expired: '该邀请已过期，请联系邀请人重新发送。',
     login: '登录后接受', signup: '注册账号',
     wrong: (invited: string, current: string) => `该邀请发送至 ${invited}，当前登录账号为 ${current}。`, switch: '退出并切换账号',
     verify: '请先验证邮箱，完成后将返回此页。', verifyCta: '验证邮箱',
     accept: (workspace: string) => `加入「${workspace}」`, decline: '拒绝',
     joined: (workspace: string) => `已加入「${workspace}」。`,
-    joinedLead: '使用该账号登录 Folio 工作台，即可在团队菜单中看到此团队。',
-    download: '下载工作台', account: '前往账户', declined: '已拒绝该邀请。'
+    joinedLead: '使用该账号登录 Folio 客户端，即可在团队菜单中查看该团队。',
+    download: '下载客户端', account: '前往账户', declined: '已拒绝该邀请。'
   },
 
   invoice: {
@@ -280,23 +259,37 @@ export const zh: typeof en = {
   },
 
   sales: {
-    title: '联系销售', lead: '需要 500 个以上环境、多部门管理或定制方案？请提交需求，我们将在一个工作日内回复。',
+    title: '联系销售', lead: '如需 500 个以上浏览器环境、多部门管理或定制方案，请提交需求，销售团队将在一个工作日内回复。',
+    points: [
+      ['500 个以上浏览器环境', '支持按数量单独报价，超过 2000 个亦可。'],
+      ['多部门管理', '支持按部门分组管理浏览器环境，操作日志保留 1 年并支持导出。'],
+      ['一个工作日内回复', '工作日由专人对接，支持安排产品演示。']
+    ],
     name: '姓名', email: '工作邮箱', company: '公司', teamSize: '团队规模', message: '需求描述',
-    send: '提交', sent: '已收到，我们将在一个工作日内与您联系。'
+    send: '提交', sent: '需求已提交，销售团队将在一个工作日内与您联系。'
   },
 
   download: {
-    title: '下载 Folio', lead: '安装桌面客户端并使用 Folio 账号登录，套餐、团队与环境自动同步。',
+    title: '下载 Folio', lead: '安装客户端并使用 Folio 账号登录，套餐、团队与浏览器环境自动同步。',
     windows: 'Windows 10 及以上（64 位）', mac: 'macOS 12 及以上（Apple 芯片，M1 及更新）', get: '下载', soon: '即将推出',
+    version: (v: string) => `版本 ${v}`, released: (date: string) => `${date} 发布`,
+    notesTitle: '首次安装提示',
     winNote: 'Folio 暂未进行代码签名。如 SmartScreen 拦截安装程序，请点击「更多信息」，再点击「仍要运行」。',
     macNote: 'Folio 暂未进行代码签名。请将 Folio 拖入「应用程序」。首次无法打开时，前往「系统设置 › 隐私与安全性」点击「仍要打开」；如提示应用已损坏，请在终端执行 xattr -cr /Applications/Folio.app 后重新打开。',
-    engines: '浏览器内核在首次使用时下载，来源为各内核项目在 GitHub 的官方发布页，并核对官方公布的校验值。',
-    already: '已有账号？登录客户端后套餐自动生效。'
+    stepsTitle: '安装后三步开始使用',
+    steps: [
+      ['下载并安装', 'Windows 运行安装程序；macOS 将 Folio 拖入「应用程序」。'],
+      ['登录 Folio 账号', '套餐、团队与浏览器环境自动同步。'],
+      ['首次打开时下载内核', '内核来源为各内核项目在 GitHub 的官方发布页，并核对官方公布的校验值。']
+    ],
+    already: '已有账号，登录客户端后套餐自动生效。'
   },
 
   docs: {
-    title: '使用文档', lead: '环境、代理与团队的配置指南将随客户端开放陆续发布。',
-    apiTitle: 'API 参考', apiLead: 'Folio 本地 API 可由本机脚本打开环境，并交由现有自动化工具接管。API 运行于 Folio 客户端内，仅在本机提供。',
+    title: '使用文档', lead: '浏览器环境、代理与团队的配置指南将陆续发布。',
+    search: '搜索文档', toc: '本页内容', soon: '即将发布', home: '文档',
+    nav: { guides: '使用文档', api: 'API 参考', other: '其他', start: '快速开始', profiles: '浏览器环境与指纹', proxies: '代理', team: '团队协作' },
+    apiTitle: 'API 参考', apiLead: 'Folio 本地 API 支持本机脚本打开浏览器环境，并交由现有自动化工具接管。API 运行于 Folio 客户端内，仅在本机提供。',
     api: {
       setupTitle: '启用',
       setup: [
@@ -338,7 +331,7 @@ export const zh: typeof en = {
       security: '调试地址没有密码保护。通过 API 打开的环境运行期间，本机任何程序均可控制该环境，这与所有浏览器的调试端口一致。手动打开的环境不开启调试地址，本机 API 仅监听 127.0.0.1。'
     },
     changelogTitle: '更新日志',
-    changelog: [['0.1 · 2026 年 10 月', '账号、团队、套餐，以及桌面工作台首个版本。']]
+    changelog: [['0.1 · 2026 年 10 月', '账号、团队、套餐，以及桌面客户端首个版本。']]
   },
 
   legal: {
@@ -373,8 +366,8 @@ export const zh: typeof en = {
     quote_stale: '套餐在此期间已变更，请确认新金额后重试。',
     no_change: '已是当前套餐。',
     change_packs_separately: '加量包与套餐请分两步修改。',
-    profile_cap: '套餐最多支持 2000 个环境，如需更多请联系销售。',
-    trial_used: '该团队已使用过免费试用。',
+    profile_cap: '套餐最多支持 2000 个浏览器环境，如需更多请联系销售。',
+    trial_used: '该团队已使用过免费体验。',
     already_subscribed: '该团队已有套餐。',
     not_subscribed: '该团队没有付费套餐。',
     refund_window_passed: '仅可在付款后 7 天内申请退款。',

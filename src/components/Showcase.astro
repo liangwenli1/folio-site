@@ -1,0 +1,13 @@
+---
+// The workbench beside the home page's first screen and the sign-in forms. A still picture for now; where it sits and
+// how big it is comes from the page (index: .hero-vis, sign-in: .auth-aside).
+import type { Lang } from '../lib/i18n';
+
+interface Props { lang: Lang; label: string }
+const { label } = Astro.props;
+---
+<figure class="showcase"><img src="/showcase/workbench.webp" width="1280" height="1080" alt={label} /></figure>
+<style>
+  .showcase{margin:0;border-radius:16px;overflow:hidden;background:var(--card);box-shadow:0 0 0 1px rgba(29,28,43,.08),0 50px 100px -40px rgba(80,30,50,.45)}
+  .showcase img{display:block;width:100%;height:100%;object-fit:cover;object-position:0 0}
+</style>

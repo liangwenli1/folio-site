@@ -32,4 +32,10 @@ const d = t(lang);
     document.querySelectorAll('[data-auth="out"]').forEach(e => e.setAttribute('hidden', ''));
     document.querySelectorAll('[data-auth="in"]').forEach(e => e.removeAttribute('hidden'));
   }).catch(() => {});
+  // Over the home page's gradient the header stays clear until the page scrolls (global.css .over-hero).
+  if (document.documentElement.classList.contains('over-hero')){
+    const scrolled = () => document.documentElement.classList.toggle('scrolled', scrollY > 8);
+    scrolled();
+    addEventListener('scroll', scrolled, { passive: true });
+  }
 </script>

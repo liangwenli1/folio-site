@@ -1,31 +1,35 @@
 ---
 import Mark from './Mark.astro';
+import Icon from './Icon.astro';
 import { link, otherLang, t, type Lang } from '../lib/i18n';
 
 interface Props { lang: Lang; path: string }
 const { lang, path } = Astro.props;
-const d = t(lang).footer;
+const d = t(lang);
+const f = d.footer;
 const other = otherLang(lang);
 // The switch names the language the page is in; clicking it opens the same page in the other one.
 const names: Record<Lang, string> = { en: 'English', zh: '简体中文' };
+const cols: [string, [string, string][]][] = [
+  [f.product, [[d.nav.who, '#who'], [d.nav.inside, '#inside'], [d.nav.teams, '#team'], [d.nav.automation, '#auto'], [d.nav.pricing, '#price']].map(([l, h]): [string, string] => [l, link(lang) + h])],
+  [f.resources, [[f.docs, link(lang, 'docs/')], [f.api, link(lang, 'docs/api/')], [f.changelog, link(lang, 'changelog/')]]],
+  [f.company, [[f.sales, link(lang, 'contact-sales/')], [f.privacy, link(lang, 'privacy/')], [f.terms, link(lang, 'terms/')]]]
+];
 ---
 <footer class="foot">
-  <div class="wrap foot-in">
-    <a class="brand" href={link(lang)} aria-label="Folio"><Mark /><span class="brand-word">Folio</span></a>
-    <nav aria-label="Footer">
-      <a href={link(lang, 'docs/')}>{d.docs}</a>
-      <a href={link(lang, 'docs/api/')}>{d.api}</a>
-      <a href={link(lang, 'changelog/')}>{d.changelog}</a>
-      <a href={link(lang, 'contact-sales/')}>{d.sales}</a>
-      <a href={link(lang, 'privacy/')}>{d.privacy}</a>
-      <a href={link(lang, 'terms/')}>{d.terms}</a>
-    </nav>
+  <div class="wrap">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <a class="brand" href={link(lang)} aria-label="Folio"><Mark /><span class="brand-word">Folio</span></a>
+        <p>{d.meta.description}</p>
+      </div>
+      {cols.map(([title, links]) => (
+        <nav class="foot-col" aria-label={title}><b>{title}</b>{links.map(([label, href]) => <a href={href}>{label}</a>)}</nav>
+      ))}
+    </div>
     <div class="foot-end">
-      <p class="fine">{d.rights}</p>
-      <a class="lang-switch" href={`/${other}/${path}`} hreflang={other} title={other === 'zh' ? '切换到简体中文' : 'Switch to English'} data-lang-switch>
-        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M1.5 8h13M8 1.5c2 2 2.8 4.2 2.8 6.5S10 12.5 8 14.5M8 1.5C6 3.5 5.2 5.7 5.2 8S6 12.5 8 14.5" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
-        {names[lang]}
-      </a>
+      <p>{f.rights}</p>
+      <a class="lang-switch" href={`/${other}/${path}`} hreflang={other} title={other === 'zh' ? '切换到简体中文' : 'Switch to English'} data-lang-switch><Icon name="globe" size={14} />{names[lang]}</a>
     </div>
   </div>
 </footer>
@@ -36,10 +40,15 @@ const names: Record<Lang, string> = { en: 'English', zh: '简体中文' };
   });
 </script>
 <style>
-  .foot{padding-block:40px;border-top:1px solid var(--line)}
-  .foot-in{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:20px 40px}
-  nav{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:14px;color:var(--ink-2)}
-  nav a{text-decoration:none}
-  nav a:hover{color:var(--ink)}
-  .foot-end{flex-basis:100%;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .foot{padding:56px 0 30px;background:var(--foot);color:#E9E8F0}
+  .foot-in{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px}
+  .foot-brand p{margin-top:14px;max-width:340px;font-size:13.5px;line-height:1.75;color:rgba(233,232,240,.62)}
+  .foot-col{display:grid;gap:10px;align-content:start;font-size:14px}
+  .foot-col b{margin-bottom:4px;font-size:13px;color:#fff}
+  .foot-col a{text-decoration:none;color:rgba(233,232,240,.62)}
+  .foot-col a:hover{color:#fff}
+  .foot-end{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;margin-top:44px;padding-top:20px;border-top:1px solid rgba(255,255,255,.1);font-size:13px;color:rgba(233,232,240,.5)}
+  .lang-switch{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border:1px solid rgba(255,255,255,.2);border-radius:99px;text-decoration:none;color:rgba(233,232,240,.8)}
+  .lang-switch:hover{color:#fff;border-color:rgba(255,255,255,.45)}
+  @media (max-width:860px){.foot-in{grid-template-columns:repeat(3,minmax(0,1fr));gap:32px 20px}.foot-brand{grid-column:1/-1}}
 </style>

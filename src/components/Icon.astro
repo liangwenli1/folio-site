@@ -1,0 +1,8 @@
+---
+// A line icon, drawn with the text colour (global.css .i).
+import { ICONS, type IconName } from '../lib/icons';
+
+interface Props { name: IconName; size?: number }
+const { name, size = 16 } = Astro.props;
+---
+<svg class="i" width={size} height={size} viewBox="0 0 16 16" aria-hidden="true"><path d={ICONS[name]} /></svg>

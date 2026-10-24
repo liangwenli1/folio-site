@@ -1,5 +1,6 @@
 ---
 import AuthPage from '../../layouts/AuthPage.astro';
+import Password from '../../components/Password.astro';
 import { langPaths, link, t, type Lang } from '../../lib/i18n';
 
 export const getStaticPaths = langPaths;
@@ -8,11 +9,11 @@ const d = t(lang);
 ---
 <AuthPage lang={lang} path="login/" title={d.auth.loginTitle}>
   <div class="page-head"><h1>{d.auth.loginTitle}</h1></div>
-  <form class="panel form" id="form" novalidate>
+  <form class="form" id="form" novalidate>
     <div class="notice ok" id="ok" hidden></div>
     <div class="notice error" id="err" role="alert" hidden></div>
     <div class="field"><label for="email">{d.auth.email}</label><input id="email" name="email" type="email" autocomplete="email" required /></div>
-    <div class="field"><label for="password">{d.auth.password}</label><input id="password" name="password" type="password" autocomplete="current-password" required /></div>
+    <div class="field"><label for="password">{d.auth.password}</label><Password lang={lang} id="password" autocomplete="current-password" /></div>
     <button class="btn btn-primary full" type="submit">{d.auth.login}</button>
     <a class="fine" href={link(lang, 'forgot/')}>{d.auth.forgot}</a>
   </form>

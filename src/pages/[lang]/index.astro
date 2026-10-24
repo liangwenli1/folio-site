@@ -1,7 +1,9 @@
 ---
 import Base from '../../layouts/Base.astro';
-import Demo from '../../components/Demo.astro';
-import Passport from '../../components/Passport.astro';
+import Icon from '../../components/Icon.astro';
+import type { IconName } from '../../lib/icons';
+import Showcase from '../../components/Showcase.astro';
+import SampleProfile from '../../components/SampleProfile.astro';
 import '../../styles/landing.css';
 import { langPaths, link, t, type Lang } from '../../lib/i18n';
 
@@ -9,182 +11,133 @@ export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
 const d = t(lang);
 const h = d.hero;
-// Window sync diagram: from the leading window to each of three others.
-const SYNC = ['M160 112 C 232 112 228 37 300 37', 'M160 112 C 232 112 228 115 300 115', 'M160 112 C 232 112 228 193 300 193'];
+const WHO: IconName[] = ['profiles', 'proxies', 'team'];
+const TRUST: IconName[] = ['dice', 'search', 'restore', 'upload'];
+const AVATARS = ['#D2445E', '#2F6FD6', '#1E8A63', '#C98A12'];
 ---
-<Base lang={lang} path="">
+<Base lang={lang} path="" overHero>
   <section class="hero" id="top">
-    <canvas class="gl" data-kind="hero" aria-hidden="true"></canvas>
+    <div class="glow" aria-hidden="true"></div>
     <div class="wrap hero-in">
       <div class="hero-copy">
         <p class="eyebrow">{h.eyebrow}</p>
-        <h1>{h.h1a}<br />{h.h1b}<em>{h.h1em}</em></h1>
+        <h1>{h.h1}</h1>
         <p class="lead">{h.lead}</p>
         <div class="cta-row">
-          <a class="btn btn-primary" href={link(lang, 'signup/')}>{h.ctaStart}</a>
-          <a class="btn btn-secondary" href={link(lang, 'download/')}>{h.ctaDownload}</a>
+          <a class="btn btn-primary btn-lg" href={link(lang, 'signup/')}>{h.ctaStart}</a>
+          <a class="btn btn-secondary btn-lg" href={link(lang, 'download/')}><Icon name="windows" />{h.ctaDownload}</a>
         </div>
         <p class="fine">{h.fine}</p>
       </div>
-      <div class="hero-stage">
-        <div class="stack">
-          {[['back2', 'b2', '0040', h.cities[2], 'Asia/Tokyo', 'macOS 15'], ['back1', 'b1', '0041', h.cities[1], 'Europe/London', 'Windows 10']].map(([id, cls, no, c, tz, os]) => (
-            <article class={`idcard back ${cls}`} id={id as string} aria-hidden="true">
-              <header class="id-head"><span>{h.card.title}</span><span class="id-no">No. <b data-b="no">{no}</b></span></header>
-              <div class="id-city"><span class="city" data-b="city">{(c as typeof h.cities[number]).city}</span><span class="region" data-b="region">{(c as typeof h.cities[number]).region}</span></div>
-              <dl class="id-fields">
-                <div><dt>{h.card.tz}</dt><dd data-b="tz">{tz}</dd></div>
-                <div><dt>{h.card.os}</dt><dd data-b="os">{os}</dd></div>
-              </dl>
-            </article>
-          ))}
-          <Passport lang={lang} class="front" id="idcard" data-cities={JSON.stringify(h.cities)} data-fonts-unit={h.card.fontsUnit} />
-        </div>
-        <div class="reroll-row">
-          <button class="btn btn-secondary btn-sm" id="reroll" type="button">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9"></path><path d="M13.5 2.5v3h-3"></path></svg>
-            {h.reroll}
-          </button>
-          <span class="fine">{h.rerollHint}</span>
-        </div>
+      <div class="hero-vis">
+        <Showcase lang={lang} label={h.showcase.label} />
+        <SampleProfile lang={lang} />
       </div>
     </div>
-    <div class="spec"><div class="wrap spec-in">{h.spec.map(([b, s]) => <span><b>{b}</b>{s}</span>)}</div></div>
   </section>
-
-  <Demo lang={lang} />
+  <div class="wrap"><div class="spec">{h.spec.map(([b, s]) => <div><b>{b}</b><span>{s}</span></div>)}</div></div>
 
   <section class="sec" id="who">
     <div class="wrap">
-      <div class="sec-head"><p class="eyebrow">{d.who.eyebrow}</p><h2>{d.who.title}</h2><p class="sec-lead">{d.who.lead}</p></div>
+      <div class="sec-head"><p class="eyebrow">{d.who.eyebrow}</p><h2>{d.who.title}</h2><p class="lead">{d.who.lead}</p></div>
       <div class="who-grid">
-        {d.who.items.map(w => (
-          <article class="who"><p class="who-tag">{w.tag}</p><h3>{w.title}</h3><p>{w.body}</p><p class="who-fit">{w.fit}</p></article>
+        {d.who.items.map((w, i) => (
+          <article class="card who">
+            <span class="tile"><Icon name={WHO[i]} size={18} /></span>
+            <p class="who-tag">{w.tag}</p>
+            <h3>{w.title}</h3>
+            <p>{w.body}</p>
+            <p class="who-fit"><Icon name="check" size={12} />{w.fit}</p>
+          </article>
         ))}
       </div>
     </div>
   </section>
 
-  <section class="sec sec-alt" id="inside">
-    <div class="wrap">
-      <div class="sec-head"><p class="eyebrow">{d.inside.eyebrow}</p><h2>{d.inside.title}</h2></div>
-      <div class="inside-grid">
-        <div class="vectors" data-reveal="scan">
-          {d.inside.groups.map(([g, chips]) => <div class="vg"><h3>{g}</h3><ul class="chips">{chips.map(c => <li>{c}</li>)}</ul></div>)}
-          <p class="note">{d.inside.note}</p>
+  <section class="sec sec-alt">
+    <div class="wrap rows">
+      <div class="frow" id="inside">
+        <div>
+          <p class="eyebrow">{d.inside.eyebrow}</p>
+          <h2>{d.inside.title}</h2>
+          <p class="lead">{d.inside.note}</p>
+          <div class="groups">
+            {d.inside.groups.map(([g, chips]) => (
+              <div class="grp"><b>{g}</b><ul>{chips.map(c => <li><Icon name="check" size={11} />{c}</li>)}</ul></div>
+            ))}
+          </div>
         </div>
-        <figure class="compare" data-reveal="check" style={`--rows:${d.inside.rows.length}`}>
-          <figcaption><b>{d.inside.compareTitle}</b><span>{d.inside.compareHint}</span></figcaption>
-          <div class="stamp compare-stamp" aria-hidden="true"><span class="s-top">FOLIO</span><span class="s-main">{d.inside.passed}</span><span class="s-date" data-f="date"></span></div>
-          <div class="tbl-scroll">
-            <table>
-              <thead><tr>{d.inside.cols.map(c => <th scope="col">{c}</th>)}</tr></thead>
-              <tbody>
-                {d.inside.rows.map(([k, a, b, marked], i) => (
-                  <tr style={`--r:${i}`}>
-                    <th scope="row">{k}</th>
-                    <td class={marked ? 'bad' : ''}>{marked && <span class="mk" aria-label={d.inside.leak}>×</span>}{a}</td>
-                    <td class={marked ? 'folio good' : 'folio'}>{marked && <span class="mk" aria-label={d.inside.match}>✓</span>}{b}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <figure class="shot"><img src="/showcase/check.webp" width="1280" height="1080" alt="" style="object-position:100% 0" /></figure>
+      </div>
+
+      <div class="frow flip" id="team">
+        <div>
+          <p class="eyebrow">{d.team.eyebrow}</p>
+          <h2>{d.team.title}</h2>
+          <p class="lead">{d.team.lead}</p>
+          <ul class="pts">{d.team.points.map(([b, s]) => <li><span class="tick"><Icon name="check" size={12} /></span><div><b>{b}</b><p>{s}</p></div></li>)}</ul>
+        </div>
+        <figure class="card tpanel" aria-label={d.team.example}>
+          <div class="tpanel-head"><b>{d.team.panelTitle}</b><span class="mono">{d.team.panelMeta}</span></div>
+          {d.team.members.map(([ini, name, role, gone], i) => (
+            <div class={gone ? 'member gone' : 'member'}>
+              <span class="av" style={`--c:${AVATARS[i]}`} aria-hidden="true">{ini}</span>
+              <span class="mname"><b>{name}</b><small>{role}</small></span>
+              <span class={gone ? 'chip' : 'chip ok'}><Icon name={gone ? 'pause' : 'check'} size={12} />{gone ? d.team.left : d.team.active}</span>
+            </div>
+          ))}
+          <div class="tlog">
+            <p>{d.team.logTitle}</p>
+            {d.team.log.map(([time, text]) => <div><time>{time}</time><span>{text}</span></div>)}
           </div>
         </figure>
       </div>
+
+      <div class="frow" id="auto">
+        <div>
+          <p class="eyebrow">{d.auto.eyebrow}</p>
+          <h2>{d.auto.title}</h2>
+          <h3 class="sub-h">{d.auto.noCode}</h3>
+          <ul class="pts">{d.auto.noCodePoints.map(([b, s]) => <li><span class="tick"><Icon name="check" size={12} /></span><div><b>{b}</b><p>{s}</p></div></li>)}</ul>
+          <h3 class="sub-h">{d.auto.withCode}</h3>
+          <p class="lead">{d.auto.withCodeBody}</p>
+          <ul class="libs">{d.auto.libs.map(l => <li>{l}</li>)}</ul>
+        </div>
+        <figure class="shot"><img src="/showcase/sync.webp" width="1280" height="1080" alt="" style="object-position:0 0" /></figure>
+      </div>
     </div>
   </section>
 
-  <section class="sec" id="team">
-    <div class="wrap team-grid">
-      <div>
-        <p class="eyebrow">{d.team.eyebrow}</p>
-        <h2>{d.team.title}</h2>
-        <p class="sec-lead">{d.team.lead}</p>
-        <ul class="points">{d.team.points.map(([b, s]) => <li><b>{b}</b><span>{s}</span></li>)}</ul>
-      </div>
-      <figure class="tpanel" aria-label={d.team.example}>
-        <div class="tpanel-head"><span>{d.team.panelTitle}</span><span class="mono">{d.team.panelMeta}</span></div>
-        {d.team.members.map(([ini, name, role, gone]) => (
-          <div class={gone ? 'mrow gone' : 'mrow'}>
-            <span class="av" aria-hidden="true">{ini}</span>
-            <span class="mname"><b>{name}</b><small>{role}</small></span>
-            <span class={gone ? 'pill accent' : 'pill ok'}>{gone ? d.team.left : d.team.active}</span>
-          </div>
-        ))}
-        <div class="tlog">
-          <div class="tlog-title">{d.team.logTitle}</div>
-          {d.team.log.map(([time, text]) => <p><time>{time}</time><span>{text}</span></p>)}
+  <section class="sec">
+    <div class="wrap">
+      <figure class="card compare">
+        <figcaption><b>{d.inside.compareTitle}</b><span>{d.inside.compareHint}</span></figcaption>
+        <div class="tbl-scroll">
+          <table>
+            <thead><tr>{d.inside.cols.map(c => <th scope="col">{c}</th>)}</tr></thead>
+            <tbody>
+              {d.inside.rows.map(([k, a, b, marked]) => (
+                <tr>
+                  <th scope="row">{k}</th>
+                  <td class={marked ? 'bad' : ''}>{marked && <span class="mk" role="img" aria-label={d.inside.leak}><Icon name="x" size={11} /></span>}{a}</td>
+                  <td class="good">{marked && <span class="mk" role="img" aria-label={d.inside.match}><Icon name="check" size={11} /></span>}{b}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </figure>
     </div>
   </section>
 
-  <section class="sec sec-alt" id="auto">
+  <section class="sec sec-alt" id="trust">
     <div class="wrap">
-      <div class="sec-head"><p class="eyebrow">{d.auto.eyebrow}</p><h2>{d.auto.title}</h2></div>
-      <div class="auto-grid">
-        <div class="auto-col">
-          <h3>{d.auto.noCode}</h3>
-          <ul class="points">{d.auto.noCodePoints.map(([b, s]) => <li><b>{b}</b><span>{s}</span></li>)}</ul>
-          <figure class="sync" data-reveal="sync">
-            <svg viewBox="0 0 440 230" role="img" aria-label={d.auto.sync.label}>
-              {SYNC.map((path, i) => <path class={`link l${i + 1}`} d={path} />)}
-              <g class="leader">
-                <rect class="halo" x="10" y="60" width="150" height="104" rx="9" />
-                <rect class="win" x="10" y="60" width="150" height="104" rx="9" />
-                <path class="bar" d="M19 61h132a8 8 0 0 1 8 8v6H11v-6a8 8 0 0 1 8-8z" />
-                <rect class="ln" x="22" y="90" width="92" height="6" rx="3" /><rect class="ln" x="22" y="102" width="70" height="6" rx="3" />
-                <rect class="key" x="22" y="120" width="52" height="15" rx="4" />
-                <circle class="ripple" cx="48" cy="127.5" r="2"><animate id="sync-go" attributeName="r" values="2;16" dur=".5s" begin="indefinite" fill="freeze" /><animate attributeName="opacity" values=".8;0" dur=".5s" begin="sync-go.begin" fill="freeze" /></circle>
-                <text class="tag" x="150" y="156" text-anchor="end">{d.auto.sync.lead}</text>
-              </g>
-              {[6, 84, 162].map((y, i) => (
-                <g class={`follow f${i + 1}`}>
-                  <rect class="win" x="300" y={y} width="130" height="62" rx="8" />
-                  <path class="bar" d={`M308 ${y + 1}h114a7 7 0 0 1 7 7v4H301v-4a7 7 0 0 1 7-7z`} />
-                  <rect class="ln" x="310" y={y + 20} width="70" height="5" rx="2.5" />
-                  <rect class="key" x="310" y={y + 36} width="42" height="12" rx="3" />
-                  {i === 2 && <text class="fail" x="310" y={y + 47}>{d.auto.sync.fail}</text>}
-                </g>
-              ))}
-              {SYNC.map((path, i) => (
-                <circle class="pulse" r="5" opacity="0">
-                  <animateMotion path={path} dur=".8s" begin={`sync-go.begin+${0.3 + i * 0.08}s`} fill="freeze" />
-                  <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.1;.85;1" dur=".8s" begin={`sync-go.begin+${0.3 + i * 0.08}s`} fill="freeze" />
-                </circle>
-              ))}
-            </svg>
-          </figure>
-        </div>
-        <div class="auto-col">
-          <h3>{d.auto.withCode}</h3>
-          <p>{d.auto.withCodeBody}</p>
-          <ul class="libs">{d.auto.libs.map(l => <li>{l}</li>)}</ul>
-<pre class="code"><code><span class="c-kw">import</span> {'{'} chromium {'}'} <span class="c-kw">from</span> <span class="c-str">'playwright'</span>;
-
-<span class="c-com">{d.auto.codeComment}</span>
-<span class="c-kw">const</span> res = <span class="c-kw">await</span> <span class="c-fn">fetch</span>(<span class="c-str">'http://127.0.0.1:47210/api/v1/profiles/0042/start'</span>, {'{'}
-  method: <span class="c-str">'POST'</span>, headers: {'{'} authorization: <span class="c-str">'Bearer &lt;token&gt;'</span> {'}'}
-{'}'});
-<span class="c-kw">const</span> {'{'} wsEndpoint {'}'} = <span class="c-kw">await</span> res.<span class="c-fn">json</span>();
-
-<span class="c-kw">const</span> browser = <span class="c-kw">await</span> chromium.<span class="c-fn">connectOverCDP</span>(wsEndpoint);
-<span class="c-kw">const</span> page = browser.<span class="c-fn">contexts</span>()[0].<span class="c-fn">pages</span>()[0];
-<span class="c-kw">await</span> page.<span class="c-fn">goto</span>(<span class="c-str">'https://seller.example.com'</span>);</code></pre>
-        </div>
-      </div>
+      <div class="sec-head c"><p class="eyebrow">{d.trust.eyebrow}</p><h2>{d.trust.title}</h2></div>
+      <div class="trust-grid">{d.trust.items.map(([b, s], i) => <div class="card trust"><span class="tile"><Icon name={TRUST[i]} size={18} /></span><h3>{b}</h3><p>{s}</p></div>)}</div>
     </div>
   </section>
 
-  <section class="sec" id="trust">
-    <div class="wrap">
-      <div class="sec-head"><p class="eyebrow">{d.trust.eyebrow}</p><h2>{d.trust.title}</h2></div>
-      <div class="trust-grid">{d.trust.items.map(([b, s]) => <div class="trust"><h3>{b}</h3><p>{s}</p></div>)}</div>
-    </div>
-  </section>
-
-  <section class="sec sec-alt" id="price">
+  <section class="sec" id="price">
     <div class="wrap">
       <div class="price-head">
         <div class="sec-head"><p class="eyebrow">{d.pricing.eyebrow}</p><h2>{d.pricing.title}</h2></div>
@@ -193,7 +146,7 @@ const SYNC = ['M160 112 C 232 112 228 37 300 37', 'M160 112 C 232 112 228 115 30
           <button type="button" data-period="yearly" aria-pressed="false">{d.pricing.yearly}<em>{d.pricing.save}</em></button>
         </div>
       </div>
-      <div class="calc" id="calc" hidden>
+      <div class="card calc" id="calc" hidden>
         <div class="calc-pick">
           <label for="calc-n"><b>{d.pricing.calc.title}</b><span>{d.pricing.calc.hint}</span></label>
           <div class="calc-track" id="calc-track">
@@ -206,25 +159,25 @@ const SYNC = ['M160 112 C 232 112 228 37 300 37', 'M160 112 C 232 112 228 115 30
           <p class="fine">{d.pricing.calc.best}</p>
           <p class="calc-plan"><span id="calc-plan"></span><em id="calc-cheapest">{d.pricing.calc.cheapest}</em></p>
           <p class="price"><span class="amt" id="calc-amt"></span><span class="per" id="calc-per">{d.pricing.perMonth}</span></p>
-          <p id="calc-detail"></p>
+          <p class="calc-detail" id="calc-detail"></p>
           <p class="fine" id="calc-alt"></p>
           <a class="btn btn-primary btn-sm" id="calc-cta" href="#"></a>
         </div>
       </div>
       <div class="plans">
         {(['free', 'studio', 'company'] as const).map(id => (
-          <article class={id === 'studio' ? 'plan featured' : 'plan'} data-plan={id}>
+          <article class={id === 'studio' ? 'card plan featured' : 'card plan'} data-plan={id}>
             {id === 'studio' && <p class="plan-flag">{d.pricing.flag}</p>}
             <h3>{d.plans[id]}</h3>
             <p class="plan-for">{d.pricing.for[id]}</p>
             <p class="price"><span class="amt" data-amt></span><span class="per" data-per></span></p>
-            <p class="per-env" data-perenv></p>
-            <p class="bill-note" data-note></p>
+            <p class="plan-meta" data-perenv></p>
+            <p class="plan-note" data-note></p>
             <p class="plan-fit" data-fit hidden></p>
             <a class={id === 'studio' ? 'btn btn-primary full' : 'btn btn-secondary full'} data-cta
               href={id === 'free' ? link(lang, 'signup/') : id === 'studio' ? link(lang, 'checkout/?plan=studio&trial=1') : link(lang, 'contact-sales/')}>{d.pricing.cta[id]}</a>
             {id !== 'free' && <a class="buy" data-buy href={link(lang, `checkout/?plan=${id}&period=monthly`)}>{d.pricing.buy}</a>}
-            <ul class="feat">{d.pricing.features[id].map(f => <li>{f}</li>)}</ul>
+            <ul class="feat">{d.pricing.features[id].map(f => <li><Icon name="check" size={12} />{f}</li>)}</ul>
           </article>
         ))}
       </div>
@@ -232,38 +185,28 @@ const SYNC = ['M160 112 C 232 112 228 37 300 37', 'M160 112 C 232 112 228 115 30
     </div>
   </section>
 
-  <section class="sec" id="faq">
-    <div class="wrap faq-wrap">
-      <div>
-        <p class="eyebrow">{d.faq.eyebrow}</p>
-        <h2>{d.faq.title}</h2>
-        <p class="sec-lead">{d.faq.lead} <a href={link(lang, 'contact-sales/')}>{d.faq.contact}</a></p>
-      </div>
-      <div class="faq">{d.faq.items.map(([q, a], i) => <details open={i === 0}><summary>{q}</summary><p>{a}</p></details>)}</div>
+  <section class="sec sec-alt" id="faq">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">{d.faq.eyebrow}</p><h2>{d.faq.title}</h2><p class="lead">{d.faq.lead} <a href={link(lang, 'contact-sales/')}>{d.faq.contact}</a></p></div>
+      <div class="faq">{d.faq.items.map(([q, a], i) => <details open={i === 0}><summary>{q}<span class="faq-x"><Icon name="plus" size={14} /></span></summary><p>{a}</p></details>)}</div>
     </div>
   </section>
 
-  <section class="band" id="start">
-    <canvas class="gl" data-kind="band" aria-hidden="true"></canvas>
-    <div class="wrap band-in">
-      <h2>{d.band.title}</h2>
-      <p>{d.band.body}</p>
-      <div class="cta-row">
-        <a class="btn btn-primary" href={link(lang, 'download/')}>{d.band.windows}</a>
-        <a class="btn btn-band" href={link(lang, 'download/')}>{d.band.mac}</a>
+  <section class="sec" id="start">
+    <div class="wrap">
+      <div class="band">
+        <div><h2>{d.band.title}</h2><p>{d.band.body}</p></div>
+        <div class="band-cta">
+          <a class="btn btn-primary btn-lg" href={link(lang, 'download/')}><Icon name="windows" />{d.band.windows}</a>
+          <a class="btn btn-secondary btn-lg" href={link(lang, 'download/')}><Icon name="apple" />{d.band.mac}</a>
+          <p class="mono">{d.band.fine}</p>
+        </div>
       </div>
-      <p class="fine">{d.band.fine}</p>
     </div>
   </section>
 </Base>
 
 <script>
-  import { startGuilloche } from '../../lib/guilloche';
-  import { startPassport } from '../../scripts/passport';
   import { startPricing } from '../../scripts/pricing';
-  import { startReveal } from '../../scripts/reveal';
-  startGuilloche();
-  startPassport();
   startPricing();
-  startReveal();
 </script>

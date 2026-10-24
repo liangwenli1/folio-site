@@ -8,7 +8,7 @@ const d = t(lang);
 ---
 <AuthPage lang={lang} path="forgot/" title={d.auth.forgotTitle}>
   <div class="page-head"><h1>{d.auth.forgotTitle}</h1><p>{d.auth.forgotLead}</p></div>
-  <form class="panel form" id="form" novalidate>
+  <form class="form" id="form" novalidate>
     <div class="notice error" id="err" role="alert" hidden></div>
     <div class="field"><label for="email">{d.auth.email}</label><input id="email" name="email" type="email" autocomplete="email" required /></div>
     <button class="btn btn-primary full" type="submit">{d.auth.sendCode}</button>
