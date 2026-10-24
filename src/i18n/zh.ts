@@ -103,8 +103,7 @@ export const zh: typeof en = {
     ],
     withCode: '编程接入',
     withCodeBody: '提供本地 API，可启动浏览器环境并返回调试地址，支持 Playwright、Puppeteer、Selenium 等工具接入。',
-    libs: ['Playwright', 'Puppeteer', 'Selenium', 'CDP · WebDriver BiDi'],
-    codeComment: '// 启动编号为 0042 的浏览器环境'
+    libs: ['Playwright', 'Puppeteer', 'Selenium', 'CDP · WebDriver BiDi']
   },
 
   trust: {

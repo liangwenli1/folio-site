@@ -7,5 +7,5 @@ const lang = Astro.params.lang as Lang;
 const l = t(lang).legal;
 ---
 <DocPage lang={lang} path="terms/" title={l.termsTitle} draft={l.draft}>
-  {l.termsBody.map(p => <p>{p}</p>)}
+  {l.termsBody.map(p => <p class="doc-body">{p}</p>)}
 </DocPage>

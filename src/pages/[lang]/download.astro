@@ -1,33 +1,68 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { day } from '../../lib/format';
+import type { IconName } from '../../lib/icons';
 import { langPaths, link, t, type Lang } from '../../lib/i18n';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
 const d = t(lang).download;
 // The installers are on the public desktop repository's latest release, under names that don't change between versions.
+// That release's version and date come with the build (README); without them the line is left out.
 const repo = import.meta.env.PUBLIC_DESKTOP_REPO;
+const version = import.meta.env.PUBLIC_DESKTOP_VERSION;
+const released = import.meta.env.PUBLIC_DESKTOP_RELEASED;
 const latest = (file: string) => (repo ? `https://github.com/${repo}/releases/latest/download/${file}` : null);
-const systems = [
-  { os: 'Windows', req: d.windows, note: d.winNote, href: latest('Folio-Setup-x64.exe') },
-  { os: 'macOS', req: d.mac, note: d.macNote, href: latest('Folio-arm64.dmg') }
+const systems: { os: string; icon: IconName; req: string; note: string; href: string | null }[] = [
+  { os: 'Windows', icon: 'windows', req: d.windows, note: d.winNote, href: latest('Folio-Setup-x64.exe') },
+  { os: 'macOS', icon: 'apple', req: d.mac, note: d.macNote, href: latest('Folio-arm64.dmg') }
 ];
+const STEPS: IconName[] = ['download', 'user', 'engines'];
 ---
 <Base lang={lang} path="download/" title={d.title}>
   <section class="wrap page">
-    <div class="page-head"><h1>{d.title}</h1><p>{d.lead}</p></div>
-    <div class="dl-grid">
+    <div class="page-head dl-head"><h1>{d.title}</h1><p>{d.lead}</p></div>
+    <div class="dl-os">
       {systems.map(s => (
-        <div class="panel"><h2>{s.os}</h2><p class="fine">{s.req}</p>
-          <p style="margin-top:16px">{s.href ? <a class="btn btn-primary" href={s.href}>{d.get}</a> : <button class="btn btn-secondary" type="button" disabled>{d.soon}</button>}</p>
-          {s.href && <p class="fine" style="margin-top:14px">{s.note}</p>}</div>
+        <div class="panel dl-card">
+          <span class="dl-ic"><Icon name={s.icon} size={26} /></span>
+          <h2>{s.os}</h2>
+          <p class="dl-req">{s.req}</p>
+          {version && <p class="dl-meta" data-version><span>{d.version(version)}</span>{released && <span>{d.released(day(released, lang))}</span>}</p>}
+          {s.href ? <a class="btn btn-primary btn-lg full" href={s.href}><Icon name="download" />{d.get}</a> : <button class="btn btn-secondary btn-lg full" type="button" disabled>{d.soon}</button>}
+          <details class="dl-note"><summary><Icon name="alert" size={13} />{d.notesTitle}</summary><p>{s.note}</p></details>
+        </div>
       ))}
     </div>
-    {repo && <p class="fine" style="margin-top:24px">{d.steps[2][1]}</p>}
-    <p class="fine" style="margin-top:24px">{d.already} <a href={link(lang, 'account/')}>{t(lang).nav.account}</a></p>
+    <h2 class="dl-h2">{d.stepsTitle}</h2>
+    <ol class="dl-steps">
+      {d.steps.map(([title, body], i) => (
+        <li class="panel"><span class="dl-n">{i + 1}</span><span class="tile"><Icon name={STEPS[i]} size={18} /></span><b>{title}</b><p>{body}</p></li>
+      ))}
+    </ol>
+    <p class="alt dl-already">{d.already} <a href={link(lang, 'account/')}>{t(lang).nav.account}</a></p>
   </section>
 </Base>
 <style>
-  .dl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;max-width:760px}
-  .dl-grid .panel + .panel{margin-top:0}
+  .dl-head{max-width:640px;margin:0 auto 36px;text-align:center}
+  .dl-head p{margin-inline:auto}
+  .dl-os{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:20px;max-width:980px;margin:0 auto}
+  .dl-card{display:grid;gap:14px;align-content:start;padding:30px}
+  .dl-ic{display:grid;place-items:center;width:56px;height:56px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
+  .dl-card h2{font-size:24px}
+  .dl-req{font-size:14px;color:var(--ink-2)}
+  .dl-meta{display:flex;flex-wrap:wrap;gap:4px 16px;font-family:var(--f-data);font-size:12.5px;color:var(--ink-3)}
+  .dl-note{padding-top:12px;border-top:1px dashed var(--line-2);font-size:13.5px;color:var(--ink-2)}
+  .dl-note summary{display:flex;align-items:center;gap:6px;list-style:none;font-weight:600;color:var(--ink);cursor:pointer}
+  .dl-note summary::-webkit-details-marker{display:none}
+  .dl-note p{margin-top:8px;line-height:1.7;overflow-wrap:anywhere}
+  .dl-h2{margin:72px 0 22px;font-size:26px;text-align:center}
+  .dl-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:0;padding:0;list-style:none}
+  .dl-steps li{position:relative;display:grid;gap:10px;align-content:start;padding:24px;box-shadow:none}
+  .dl-steps b{font-family:var(--f-display);font-size:17px;font-weight:600}
+  .dl-steps p{font-size:14px;line-height:1.7;color:var(--ink-2)}
+  .dl-n{position:absolute;right:20px;top:18px;font:600 13px var(--f-data);color:var(--ink-3)}
+  .dl-already{margin-top:28px;text-align:center}
+  @media (max-width:860px){.dl-steps{grid-template-columns:minmax(0,1fr)}}
 </style>

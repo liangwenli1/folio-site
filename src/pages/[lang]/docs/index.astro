@@ -1,11 +1,28 @@
 ---
 import DocPage from '../../../components/DocPage.astro';
+import Icon from '../../../components/Icon.astro';
+import type { IconName } from '../../../lib/icons';
 import { langPaths, link, t, type Lang } from '../../../lib/i18n';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
 const d = t(lang);
+const N = d.docs.nav;
+const GUIDES: [IconName, string][] = [['user', N.start], ['profiles', N.profiles], ['proxies', N.proxies], ['team', N.team]];
 ---
 <DocPage lang={lang} path="docs/" title={d.docs.title} lead={d.docs.lead}>
-  <p><a href={link(lang, 'docs/api/')}>{d.docs.apiTitle}</a> · <a href={link(lang, 'changelog/')}>{d.docs.changelogTitle}</a></p>
+  <div class="hub">
+    {GUIDES.map(([icon, title]) => <div class="card hub-card soon"><span class="tile"><Icon name={icon} size={18} /></span><b>{title}<span class="tag">{d.docs.soon}</span></b></div>)}
+    <a class="card hub-card" href={link(lang, 'docs/api/')}><span class="tile"><Icon name="code" size={18} /></span><b>{d.docs.apiTitle}</b><p>{d.docs.apiLead}</p></a>
+    <a class="card hub-card" href={link(lang, 'changelog/')}><span class="tile"><Icon name="doc" size={18} /></span><b>{d.docs.changelogTitle}</b><p>{d.docs.changelog[0].join(' · ')}</p></a>
+  </div>
 </DocPage>
+<style>
+  .hub{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;align-items:start}
+  .hub-card{display:grid;gap:10px;align-content:start;padding:22px;text-decoration:none}
+  .hub-card b{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-family:var(--f-display);font-size:17px;font-weight:600}
+  .hub-card p{font-size:14px;line-height:1.7;color:var(--ink-2)}
+  a.hub-card:hover{border-color:var(--line-2)}
+  .hub-card.soon{background:var(--panel);box-shadow:none}
+  .hub-card.soon .tile{opacity:.6}
+</style>

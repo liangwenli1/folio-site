@@ -1,6 +1,7 @@
 # The site image: the static site served by nginx, which also passes /api/ on to the API server. Build arguments:
 # SITE_URL, the public address (canonical links); PUBLIC_DESKTOP_REPO, the GitHub repository (owner/name) whose
-# latest release has the installers. BUILD_IMAGE lets a build behind a TLS-inspecting proxy use a Node image that
+# latest release has the installers; PUBLIC_DESKTOP_VERSION and PUBLIC_DESKTOP_RELEASED (YYYY-MM-DD), that release's
+# version and date for the download page (optional). BUILD_IMAGE lets a build behind a TLS-inspecting proxy use a Node image that
 # trusts the proxy's certificate; the image that runs is always the official nginx one.
 ARG BUILD_IMAGE=node:24.21.0-trixie-slim
 
@@ -11,6 +12,8 @@ RUN npm ci
 COPY . .
 ARG SITE_URL
 ARG PUBLIC_DESKTOP_REPO
+ARG PUBLIC_DESKTOP_VERSION
+ARG PUBLIC_DESKTOP_RELEASED
 ENV PUBLIC_API_URL=/api ASTRO_TELEMETRY_DISABLED=1
 RUN npm run build
 

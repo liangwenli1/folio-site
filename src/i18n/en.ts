@@ -101,8 +101,7 @@ export const en = {
     ],
     withCode: 'With code',
     withCodeBody: 'A local API starts browser profiles and returns their debugging address, for use with Playwright, Puppeteer, Selenium and similar tools.',
-    libs: ['Playwright', 'Puppeteer', 'Selenium', 'CDP · WebDriver BiDi'],
-    codeComment: '// Start browser profile 0042'
+    libs: ['Playwright', 'Puppeteer', 'Selenium', 'CDP · WebDriver BiDi']
   },
 
   trust: {

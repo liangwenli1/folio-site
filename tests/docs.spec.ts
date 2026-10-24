@@ -1,4 +1,4 @@
-// The API reference, in both languages, and the homepage's list of tools that points to it.
+// The docs: the API reference in both languages, the search over the contents, and the download page.
 import { expect, test } from '@playwright/test';
 
 test('the API reference lists the endpoints and both engines’ protocols, in English and Chinese', async ({ page }) => {
@@ -18,4 +18,23 @@ test('the API reference lists the endpoints and both engines’ protocols, in En
 test('the homepage names the tools the local API works with', async ({ page }) => {
   await page.goto('/en/');
   await expect(page.locator('#auto .libs')).toContainText('CDP · WebDriver BiDi');
+});
+
+test('the docs search narrows the contents and the page headings, without a server', async ({ page }) => {
+  await page.goto('/en/docs/api/');
+  const nav = page.locator('.doc-nav'), toc = page.locator('.doc-toc');
+  await page.fill('[data-doc-search]', 'rate');
+  await expect(nav.getByRole('link', { name: 'Rate limits' })).toBeVisible();
+  await expect(nav.getByRole('link', { name: 'Endpoints' })).toBeHidden();
+  await expect(nav.getByText('Quick start')).toBeHidden();
+  await expect(toc.getByRole('link', { name: 'Rate limits' })).toBeVisible();
+  await expect(toc.getByRole('link', { name: 'Security' })).toBeHidden();
+  await page.fill('[data-doc-search]', '');
+  await expect(nav.getByText('Quick start')).toBeVisible();
+});
+
+test('without a release configured, the download page shows no version and says coming soon', async ({ page }) => {
+  await page.goto('/zh/download/');
+  await expect(page.locator('[data-version]')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: '即将推出' })).toHaveCount(2);
 });

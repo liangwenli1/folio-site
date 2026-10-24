@@ -4,7 +4,8 @@
 #
 # Repository variables: FOLIO_URL, the site's public address (e.g. https://folio.example.com, or
 # http://<server IP>:8080 while testing without a domain; it only sets the canonical links); DESKTOP_REPO, the
-# public desktop repository whose latest release has the installers (e.g. your-name/folio-desktop).
+# public desktop repository whose latest release has the installers (e.g. your-name/folio-desktop); optionally
+# DESKTOP_VERSION and DESKTOP_RELEASED (YYYY-MM-DD), that release's version and date, shown on the download page.
 name: Image
 
 on:
@@ -67,3 +68,5 @@ jobs:
           build-args: |
             SITE_URL=${{ vars.FOLIO_URL }}
             PUBLIC_DESKTOP_REPO=${{ vars.DESKTOP_REPO }}
+            PUBLIC_DESKTOP_VERSION=${{ vars.DESKTOP_VERSION }}
+            PUBLIC_DESKTOP_RELEASED=${{ vars.DESKTOP_RELEASED }}

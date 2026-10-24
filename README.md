@@ -21,6 +21,8 @@ folio-server must allow this origin (`SITE_ORIGINS`, default `http://localhost:4
 | `PUBLIC_DEV_NOTICE` | unset | `1` shows the "emails go to the local test inbox" hint on verification pages in a production build |
 | `SITE_URL` | `http://localhost:47120` | Canonical site URL |
 | `PUBLIC_DESKTOP_REPO` | unset | GitHub repository (`owner/name`) whose latest release has the installers; the download page links to `Folio-Setup-x64.exe` and `Folio-arm64.dmg` there. Unset, the download buttons say "Coming soon" |
+| `PUBLIC_DESKTOP_VERSION` | unset | That release's version (e.g. `0.1.0`), shown on the download page; unset, the version line is left out |
+| `PUBLIC_DESKTOP_RELEASED` | unset | That release's date (`YYYY-MM-DD`), shown next to the version |
 
 ## Scripts
 
@@ -33,7 +35,7 @@ folio-server must allow this origin (`SITE_ORIGINS`, default `http://localhost:4
 
 ## Docker image
 
-`Dockerfile` builds the site (`PUBLIC_API_URL=/api`) and serves it with nginx on port 8080 (`deploy/nginx.conf`), which passes `/api/` on to the API container (`server:47110`, re-resolved through Docker's DNS) with streaming for live updates and uploads up to 100 MB. It is meant to sit behind Cloudflare: the visitor's address is taken from `CF-Connecting-IP` only when the connection comes from one of Cloudflare's ranges, downloaded from cloudflare.com when the image is built (rebuild to pick up changes). Build arguments: `SITE_URL`, `PUBLIC_DESKTOP_REPO`, and `BUILD_IMAGE` for building behind a TLS-inspecting proxy. How it is deployed is in folio-server's README ("Deploy").
+`Dockerfile` builds the site (`PUBLIC_API_URL=/api`) and serves it with nginx on port 8080 (`deploy/nginx.conf`), which passes `/api/` on to the API container (`server:47110`, re-resolved through Docker's DNS) with streaming for live updates and uploads up to 100 MB. It is meant to sit behind Cloudflare: the visitor's address is taken from `CF-Connecting-IP` only when the connection comes from one of Cloudflare's ranges, downloaded from cloudflare.com when the image is built (rebuild to pick up changes). Build arguments: `SITE_URL`, `PUBLIC_DESKTOP_REPO`, `PUBLIC_DESKTOP_VERSION`, `PUBLIC_DESKTOP_RELEASED`, and `BUILD_IMAGE` for building behind a TLS-inspecting proxy. How it is deployed is in folio-server's README ("Deploy").
 
 ## Layout
 
