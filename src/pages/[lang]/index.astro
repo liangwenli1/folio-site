@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Demo from '../../components/Demo.astro';
 import Passport from '../../components/Passport.astro';
 import '../../styles/landing.css';
 import { langPaths, link, t, type Lang } from '../../lib/i18n';
@@ -50,6 +51,8 @@ const SYNC = ['M160 112 C 232 112 228 37 300 37', 'M160 112 C 232 112 228 115 30
     </div>
     <div class="spec"><div class="wrap spec-in">{h.spec.map(([b, s]) => <span><b>{b}</b>{s}</span>)}</div></div>
   </section>
+
+  <Demo lang={lang} />
 
   <section class="sec" id="who">
     <div class="wrap">

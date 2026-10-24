@@ -33,6 +33,23 @@ export const en = {
     ]
   },
 
+  demo: {
+    eyebrow: 'See it work', title: 'One click opens a profile',
+    pause: 'Pause demo', play: 'Play demo', scenesLabel: 'Parts of the demo', loop: 'Loops every 20 seconds',
+    scenes: ['Open a profile', 'Exit map', 'Link risks', 'Health check'],
+    steps: [['Check the proxy', 'Exits in New York · 82 ms'], ['Prepare the engine', 'Chromium 150 · ready'], ['Restore sign-ins', 'Cookies and site data travel with the profile'], ['Start the browser', 'Time zone and language match the exit']],
+    app: {
+      nav: ['Profiles', 'Proxies', 'Team', 'Window sync', 'Flows', 'Engines'], title: 'Profiles',
+      cities: ['Seattle', 'New York', 'New York', 'London'],
+      stage: ['Checking the proxy…', 'Preparing the engine…', 'Restoring sign-ins…', 'Starting the browser…'],
+      idle: 'Not running', run: 'Running', tip: 'New York · 2 profiles',
+      risk: '1 thing could link your profiles: 2 profiles share the proxy US-NY-02',
+      consistent: ['Proxy working · 82 ms', 'Time zone matches the exit', 'Language matches the exit'],
+      report: 'Health check',
+      checks: ['WebRTC shows no other address', 'Time zone matches the exit', 'Language matches the exit', 'User agent matches the system', 'Canvas drawing is unique in the team']
+    }
+  },
+
   who: {
     eyebrow: 'Who it’s for',
     title: 'When you run many accounts, the real risk is getting linked',
