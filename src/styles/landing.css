@@ -16,7 +16,16 @@ html[lang="zh"] .hero h1 em{font-style:normal;font-weight:900}
 .hero-stage{display:flex;flex-direction:column;align-items:center;gap:22px}
 .stack{position:relative;width:min(100%,440px);margin-top:28px}
 .idcard{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px 22px 18px;overflow:hidden}
-.idcard.front{z-index:2;box-shadow:var(--shadow)}
+.idcard.front{z-index:2;box-shadow:var(--shadow);transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .3s ease,box-shadow .3s ease}
+/* The security foil, as in the workbench: rainbow bands and a glint that follow the pointer. Only a real mouse shows it. */
+.idcard.front::after{content:'';position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s ease;mix-blend-mode:var(--stamp-blend);
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.55),transparent 35%),
+    linear-gradient(115deg,transparent 18%,rgba(255,92,170,.2) 32%,rgba(80,220,255,.22) 44%,rgba(255,226,80,.2) 56%,rgba(140,255,170,.16) 66%,transparent 80%);
+  background-size:100% 100%,220% 220%;background-position:center,var(--mx,50%) var(--my,50%)}
+@media (hover:hover) and (pointer:fine){
+  .idcard.front:hover{transition:transform .08s linear,box-shadow .3s ease;box-shadow:var(--shadow-pop)}
+  .idcard.front:hover::after{opacity:1}
+}
 .idcard.back{position:absolute;inset:0;box-shadow:var(--shadow)}
 .idcard.back > *{opacity:.62}
 .b2{z-index:0;transform:translate(20px,-26px) rotate(3.5deg)}
@@ -40,10 +49,8 @@ html[lang="zh"] .city{font-weight:900;font-size:30px}
 .reroll-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;width:min(100%,440px)}
 .reroll-row .fine{flex:1 1 100%;text-wrap:balance}
 .reroll-row svg{width:15px;height:15px}
-.front.lift{animation:lift .55s cubic-bezier(.3,.7,.3,1)}
-.stamp.stamping{animation:stampIn .5s cubic-bezier(.2,.9,.3,1.2) .28s both}
-@keyframes lift{0%{transform:none}35%{transform:translateY(-10px) rotate(-.8deg)}100%{transform:none}}
-@keyframes stampIn{0%{transform:rotate(-14deg) scale(1.45);opacity:0}100%{transform:rotate(-14deg) scale(1);opacity:.9}}
+.stamp.thud{animation:stamp-in .5s cubic-bezier(.2,1.4,.4,1) .15s both}
+@keyframes stamp-in{0%{transform:rotate(-28deg) scale(1.9);opacity:0}60%{opacity:.95}100%{transform:rotate(-14deg) scale(1);opacity:.9}}
 .spec{position:relative;border-top:1px solid var(--line);background:color-mix(in srgb,var(--bg) 70%,transparent)}
 .spec-in{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px 32px;padding-block:18px;font-size:13.5px;color:var(--ink-2)}
 .spec-in span{display:grid;gap:2px;min-width:0}
@@ -180,4 +187,3 @@ html[lang="zh"] .plan h3{font-weight:900;font-size:22px}
 .band .cta-row{margin-top:16px}
 .band .fine{font-family:var(--f-data);font-size:11.5px;letter-spacing:.04em;color:var(--band-2);margin-top:4px}
 @media (max-width:720px){.band-in{padding-block:72px}}
-@media (prefers-reduced-motion: reduce){.front.lift,.stamp.stamping{animation:none}}
