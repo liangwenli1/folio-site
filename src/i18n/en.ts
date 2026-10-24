@@ -2,7 +2,6 @@
 // Tone: measured and factual, no absolute promises; feature plus benefit ("…, reducing …"); "browser profile" in prose,
 // "profile" where space is tight (counts, table headings).
 export const en = {
-  langName: 'English',
   meta: {
     title: 'Folio Browser',
     description: 'A fingerprint browser for teams running multiple stores, ad accounts and social accounts: a separate browser profile for each account, with configurable fingerprints, isolated cookies and a dedicated proxy IP.'
