@@ -92,7 +92,13 @@ test('the calculator finds the cheapest plan and takes its add-on packs to check
   await expect($('calc-cta')).toHaveText('Contact sales');
 
   await signUp(page, 'en', '/en/checkout/?plan=studio&period=monthly&packs=1');
+  // The plan is in the link, so checkout opens at paying, with the packs carried over; changing it keeps them.
+  await expect($('step-pay')).toBeVisible();
+  await expect($('chosen')).toHaveText('Studio + 1 add-on pack · monthly');
+  await expect($('total')).toHaveText('$44');
+  await page.click('#edit');
   await expect($('packs')).toHaveText('1');
+  await page.click('#next');
   await expect($('total')).toHaveText('$44');
 });
 
@@ -101,6 +107,10 @@ test('sign up, buy Studio and open the invoice', async ({ page }) => {
   await expect(page.locator('#plan-name')).toHaveText('Free');
   await page.click('#change-plan');
   await page.waitForURL(/\/checkout\//);
+  // Without a plan in the link, checkout starts at choosing one.
+  await expect(page.locator('#step-plan')).toBeVisible();
+  await page.click('#next');
+  await expect(page.locator('#chosen')).toHaveText('Studio · monthly');
   await expect(page.locator('#total')).toHaveText('$29');
   await payWith(page, '4242 4242 4242 4242');
   await expect(page.locator('#done-text')).toHaveText('Payment received. The plan is active.');

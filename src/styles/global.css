@@ -44,7 +44,8 @@ html[lang="zh"]{--w-display:400}
 
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:calc(var(--hd) + 12px)}
-body{margin:0;background:var(--page);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body{display:flex;flex-direction:column;min-height:100svh;margin:0;background:var(--page);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body > main{flex:1}
 html[lang="zh"] body{line-height:1.75}
 /* Browsers give code its own generic monospace (NSimSun on Chinese Windows); everything mono uses the bundled font. */
 code,kbd,pre,samp{font-family:var(--f-data);font-size:1em}

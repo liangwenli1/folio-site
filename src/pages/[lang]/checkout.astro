@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
 import '../../styles/app.css';
 import { langPaths, link, t, type Lang } from '../../lib/i18n';
 
@@ -9,66 +10,81 @@ const d = t(lang);
 const c = d.checkout;
 ---
 <Base lang={lang} path="checkout/" title={c.title} noindex>
-  <section class="wrap page">
-    <div class="page-head"><h1>{c.title}</h1><p id="current"></p></div>
+  <section class="wrap page co">
+    <div class="co-head"><h1>{c.title}</h1><span class="tag" id="current"></span></div>
+    <ol class="steps" id="steps">
+      {c.steps.map((label, i) => <li data-step={i + 1}><i><span>{i + 1}</span><Icon name="check" size={11} /></i>{label}</li>)}
+    </ol>
     <div class="notice error" id="err" role="alert" hidden></div>
     <div class="notice" id="no-manage" hidden>{c.noManage}</div>
-    <div class="panel" id="done" hidden>
-      <p class="notice ok" id="done-text"></p>
-      <p style="margin-top:16px"><a class="btn btn-primary" href={link(lang, 'account/')}>{c.toAccount}</a></p>
+    <div class="panel done" id="done" hidden>
+      <span class="tile"><Icon name="check" size={20} /></span>
+      <p id="done-text"></p>
+      <a class="btn btn-primary" href={link(lang, 'account/')}>{c.toAccount}</a>
     </div>
-    <div class="co-grid" id="co" hidden>
-      <div class="panel">
-        <div class="field" id="ws-field" hidden style="margin-bottom:22px">
+    <div class="co-body" id="co" hidden>
+      <div class="panel co-plan" id="step-plan">
+        <div class="field" id="ws-field" hidden>
           <label for="ws">{c.workspace}</label>
           <select id="ws"></select>
         </div>
         <fieldset class="opts">
           <legend>{c.plan}</legend>
           {(['studio', 'company'] as const).map(id => (
-            <label class="opt"><input type="radio" name="plan" value={id} /><b>{d.plans[id]}</b><span data-price={id}></span></label>
+            <label class="opt"><input type="radio" name="plan" value={id} /><span><b>{d.plans[id]}</b><small data-size={id}></small></span><span class="opt-price" data-price={id}></span></label>
           ))}
         </fieldset>
-        <fieldset class="opts">
-          <legend>{c.billing}</legend>
-          <div class="seg" role="group">
-            <button type="button" data-period="monthly" aria-pressed="true">{d.pricing.monthly}</button>
-            <button type="button" data-period="yearly" aria-pressed="false">{d.pricing.yearly}<em>{d.pricing.save}</em></button>
-          </div>
-        </fieldset>
-        <div class="field">
-          <label id="packs-label">{c.packs}</label>
-          <div class="row">
-            <div class="stepper" role="group" aria-labelledby="packs-label">
-              <button type="button" id="packs-minus" aria-label="−">−</button>
-              <output id="packs">0</output>
-              <button type="button" id="packs-plus" aria-label="+">+</button>
+        <div class="co-two">
+          <fieldset class="opts">
+            <legend>{c.billing}</legend>
+            <div class="seg" role="group">
+              <button type="button" data-period="monthly" aria-pressed="true">{d.pricing.monthly}</button>
+              <button type="button" data-period="yearly" aria-pressed="false">{d.pricing.yearly}<em>{d.pricing.save}</em></button>
             </div>
-            <span class="hint" id="packs-hint">{c.packsHint}</span>
+          </fieldset>
+          <div class="opts">
+            <p class="legend" id="packs-label">{c.packs}</p>
+            <div class="row">
+              <div class="stepper" role="group" aria-labelledby="packs-label">
+                <button type="button" id="packs-minus" aria-label="−">−</button>
+                <output id="packs">0</output>
+                <button type="button" id="packs-plus" aria-label="+">+</button>
+              </div>
+              <span class="fine" id="packs-hint">{c.packsHint}</span>
+            </div>
           </div>
         </div>
-        <div class="trial" id="trial-box" hidden>
-          <p>{c.trial}</p>
-          <button class="btn btn-secondary btn-sm" type="button" id="trial-btn">{c.trialCta}</button>
-        </div>
+        <button class="btn btn-primary btn-lg full" type="button" id="next">{c.next}</button>
       </div>
 
-      <div class="panel summary">
-        <h2>{c.total}</h2>
-        <ul class="lines" id="lines"></ul>
-        <p class="total"><span>{c.total}</span><b id="total">–</b></p>
-        <p class="fine" id="effect" style="margin-top:8px"></p>
-        <p class="notice" id="soon" hidden>{c.soon}</p>
-        <form class="form" id="card-form" novalidate>
-          <div class="notice dev"><b>{c.mockTitle}.</b> {c.mockBody}</div>
-          <div class="field"><label for="number">{c.cardNumber}</label><input id="number" inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242" required /></div>
-          <div class="field-row">
-            <div class="field"><label for="exp">{c.expiry}</label><input id="exp" inputmode="numeric" autocomplete="cc-exp" placeholder="12/30" required /></div>
-            <div class="field"><label for="cvc">{c.cvc}</label><input id="cvc" inputmode="numeric" autocomplete="cc-csc" maxlength="4" placeholder="123" required /></div>
+      <div class="co-pay" id="step-pay" hidden>
+        <div class="panel chosen">
+          <div><p class="panel-t">{c.chosen}</p><b id="chosen"></b><small id="chosen-meta"></small></div>
+          <button class="linkish" type="button" id="edit">{c.edit}</button>
+        </div>
+        <form class="panel form" id="card-form" novalidate>
+          <div class="form" id="card-fields">
+            <p class="panel-t">{c.card}</p>
+            <div class="field"><label for="number">{c.cardNumber}</label><input id="number" inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242" required /></div>
+            <div class="field-row">
+              <div class="field"><label for="exp">{c.expiry}</label><input id="exp" inputmode="numeric" autocomplete="cc-exp" placeholder="12/30" required /></div>
+              <div class="field"><label for="cvc">{c.cvc}</label><input id="cvc" inputmode="numeric" autocomplete="cc-csc" maxlength="4" placeholder="123" required /></div>
+            </div>
+            <div class="field"><label for="name">{c.name}</label><input id="name" autocomplete="cc-name" /></div>
           </div>
-          <div class="field"><label for="name">{c.name}</label><input id="name" autocomplete="cc-name" /></div>
-          <button class="btn btn-primary full" type="submit" id="pay" disabled>{c.confirm}</button>
+          <ul class="lines" id="lines"></ul>
+          <p class="total"><span>{c.total}</span><b id="total">–</b></p>
+          <p class="fine" id="effect"></p>
+          <p class="notice" id="soon" hidden>{c.soon}</p>
+          <button class="btn btn-primary btn-lg full" type="submit" id="pay" disabled>{c.confirm}</button>
+          <p class="mock" id="mock"><Icon name="alert" size={13} /><span><b>{c.mockTitle}</b> · {c.mockBody}</span></p>
         </form>
+      </div>
+
+      <div class="trial" id="trial-box" hidden>
+        <Icon name="clock" />
+        <span>{c.trial}</span>
+        <button class="btn btn-secondary btn-sm" type="button" id="trial-btn">{c.trialCta}</button>
       </div>
     </div>
   </section>
@@ -86,7 +102,8 @@ const c = d.checkout;
   if (!managed.length){ $('no-manage').hidden = false; throw new Error('no managed workspace'); }
 
   const plans = await api<Plans>('GET', '/plans');
-  const priceOf = (id: PlanId, period: Period) => plans.plans.find(p => p.id === id)!.price[period];
+  const planOf = (id: PlanId) => plans.plans.find(p => p.id === id)!;
+  const perMonth = (id: PlanId, period: Period) => (period === 'monthly' ? planOf(id).price.monthly : Math.round(planOf(id).price.yearly / 12));
   let ws: Workspace;
   const sel = {
     plan: (param('plan') === 'company' ? 'company' : 'studio') as PlanId,
@@ -95,6 +112,21 @@ const c = d.checkout;
     packs: Math.max(0, Number.parseInt(param('packs') ?? '', 10) || 0)
   };
   let quote: Quote | null = null;
+
+  // Choose a plan, pay, done. A link that already names a plan (pricing, calculator) starts at paying, unless it is
+  // the free trial's.
+  function step(n: 1 | 2 | 3){
+    document.querySelectorAll<HTMLElement>('#steps li').forEach(li => {
+      const i = Number(li.dataset.step);
+      li.classList.toggle('done', i < n || n === 3);
+      li.classList.toggle('now', i === n && n !== 3);
+    });
+    $('step-plan').hidden = n !== 1;
+    $('step-pay').hidden = n !== 2;
+    $('co').hidden = n === 3;
+    $('done').hidden = n !== 3;
+    scrollTo({ top: 0 });
+  }
 
   const select = $<HTMLSelectElement>('ws');
   select.innerHTML = managed.map(w => `<option value="${w.id}">${w.name.replace(/</g, '&lt;')} · ${d.plans[w.plan]}</option>`).join('');
@@ -120,14 +152,17 @@ const c = d.checkout;
     document.querySelectorAll<HTMLInputElement>('input[name="plan"]').forEach(i => { i.checked = i.value === sel.plan; });
     document.querySelectorAll('[data-period]').forEach(b => b.setAttribute('aria-pressed', String(b.getAttribute('data-period') === sel.period)));
     (['studio', 'company'] as PlanId[]).forEach(id => {
-      const p = sel.period === 'monthly' ? priceOf(id, 'monthly') : Math.round(priceOf(id, 'yearly') / 12);
-      document.querySelector(`[data-price="${id}"]`)!.textContent = `${money(p, lang)} ${d.pricing.perMonth}`;
+      const p = planOf(id);
+      document.querySelector(`[data-size="${id}"]`)!.textContent = d.pricing.profilesMembers(p.profiles, p.members === 1 ? d.pricing.oneMember : d.pricing.unlimitedMembers);
+      document.querySelector(`[data-price="${id}"]`)!.textContent = `${money(perMonth(id, sel.period), lang)} ${d.pricing.perMonth}`;
     });
+    const base = planOf(sel.plan).profiles, profiles = base + sel.packs * plans.addon.profiles;
     $('packs').textContent = String(sel.packs);
-    const base = plans.plans.find(p => p.id === sel.plan)!.profiles;
     $<HTMLButtonElement>('packs-minus').disabled = sel.packs === 0;
     $<HTMLButtonElement>('packs-plus').disabled = base + (sel.packs + 1) * plans.addon.profiles > plans.maxProfiles;
-    $('packs-hint').textContent = `${c.packsHint} · ${base + sel.packs * plans.addon.profiles}`;
+    $('packs-hint').textContent = `${c.packsHint} · ${d.pricing.calc.profiles(profiles)}`;
+    $('chosen').textContent = `${sel.packs ? d.pricing.calc.withPacks(d.plans[sel.plan], sel.packs) : d.plans[sel.plan]} · ${d.periods[sel.period]}`;
+    $('chosen-meta').textContent = `${ws.name} · ${d.pricing.calc.profiles(profiles)}`;
     requote();
   }
 
@@ -155,7 +190,7 @@ const c = d.checkout;
       // Until payments open, only changes that cost nothing go through.
       const soon = needsCard && !plans.payments;
       $('soon').hidden = !soon;
-      $('card-form').querySelectorAll<HTMLElement>('.field, .field-row, .notice').forEach(el => { el.hidden = !needsCard || soon; });
+      $('card-fields').hidden = $('mock').hidden = !needsCard || soon;
       $('pay').textContent = soon ? c.soonPay : needsCard ? c.pay(money(q.totalCents, lang)) : c.confirm;
       $<HTMLButtonElement>('pay').disabled = soon;
     } catch (e){
@@ -167,10 +202,8 @@ const c = d.checkout;
   }
 
   function finish(text: string){
-    $('co').hidden = true;
     $('done-text').textContent = text;
-    $('done').hidden = false;
-    scrollTo({ top: 0 });
+    step(3);
   }
 
   document.querySelectorAll<HTMLInputElement>('input[name="plan"]').forEach(i => i.addEventListener('change', () => { sel.plan = i.value as PlanId; render(); }));
@@ -178,6 +211,8 @@ const c = d.checkout;
   $('packs-minus').addEventListener('click', () => { sel.packs = Math.max(0, sel.packs - 1); render(); });
   $('packs-plus').addEventListener('click', () => { sel.packs += 1; render(); });
   select.addEventListener('change', () => loadWorkspace().catch(e => showError($('err'), e)));
+  $('next').addEventListener('click', () => step(2));
+  $('edit').addEventListener('click', () => step(1));
 
   $('trial-btn').addEventListener('click', async () => {
     try { await api('POST', `/workspaces/${ws.id}/billing/trial`); finish(c.trialStarted); }
@@ -202,5 +237,5 @@ const c = d.checkout;
   });
 
   await loadWorkspace();
-  $('co').hidden = false;
+  step(param('plan') && param('trial') !== '1' ? 2 : 1);
 </script>

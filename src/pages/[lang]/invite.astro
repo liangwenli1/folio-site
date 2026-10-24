@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import '../../styles/app.css';
 import { langPaths, t, type Lang } from '../../lib/i18n';
 
 export const getStaticPaths = langPaths;
@@ -7,15 +8,15 @@ const lang = Astro.params.lang as Lang;
 const d = t(lang);
 ---
 <Base lang={lang} path="invite/" title={d.invite.title} noindex>
-  <section class="wrap page">
-    <div class="page-narrow">
-      <div class="page-head"><h1>{d.invite.title}</h1><p id="lead">{d.invite.checking}</p></div>
-      <div class="panel form" id="panel">
-        <div class="notice error" id="err" role="alert" hidden></div>
-        <p class="fine" id="for" hidden></p>
-        <p id="note" hidden></p>
-        <div class="row" id="actions"></div>
-      </div>
+  <section class="wrap page iv">
+    <h1 class="iv-t">{d.invite.title}</h1>
+    <div class="panel iv-card" id="panel">
+      <div class="iv-ws" id="ws" hidden><span class="iv-letter" id="ws-letter" aria-hidden="true"></span><b id="ws-name"></b></div>
+      <p class="iv-lead" id="lead">{d.invite.checking}</p>
+      <p class="fine" id="for" hidden></p>
+      <div class="notice error" id="err" role="alert" hidden></div>
+      <p class="notice" id="note" hidden></p>
+      <div class="iv-acts" id="actions"></div>
     </div>
   </section>
 </Base>
@@ -52,6 +53,9 @@ const d = t(lang);
       if (e instanceof ApiFailure && e.status === 404) return say('lead', d.invite.gone);
       throw e;
     }
+    $('ws-letter').textContent = [...inv.workspaceName][0] ?? '';
+    $('ws-name').textContent = inv.workspaceName;
+    $('ws').hidden = false;
     say('lead', d.invite.lead(inv.inviter ?? 'Folio', inv.workspaceName, d.invite.roles[inv.role]));
     $('for').textContent = d.invite.forEmail(inv.email); $('for').hidden = false;
     if (inv.expired) return say('note', d.invite.expired);
@@ -61,21 +65,21 @@ const d = t(lang);
     // Back to this page after logging in, signing up or verifying.
     const back = `next=${encodeURIComponent(here())}`, email = `email=${encodeURIComponent(inv.email)}`;
     if (!me){
-      actions.append(link(d.invite.login, `${to('login/')}?${email}&${back}`, 'btn btn-primary'), link(d.invite.signup, `${to('signup/')}?${email}&${back}`, 'btn btn-secondary'));
+      actions.append(link(d.invite.signup, `${to('signup/')}?${email}&${back}`, 'btn btn-primary btn-lg'), link(d.invite.login, `${to('login/')}?${email}&${back}`, 'btn btn-secondary btn-lg'));
     } else if (me.user.email !== inv.email){
       say('note', d.invite.wrong(inv.email, me.user.email));
-      actions.append(button(d.invite.switch, 'btn btn-secondary', async () => { await api('POST', '/auth/logout'); location.reload(); }));
+      actions.append(button(d.invite.switch, 'btn btn-secondary btn-lg', async () => { await api('POST', '/auth/logout'); location.reload(); }));
     } else if (!me.user.emailVerified){
       say('note', d.invite.verify);
-      actions.append(link(d.invite.verifyCta, `${to('verify/')}?${back}`, 'btn btn-primary'));
+      actions.append(link(d.invite.verifyCta, `${to('verify/')}?${back}`, 'btn btn-primary btn-lg'));
     } else {
       actions.append(
-        button(d.invite.accept(inv.workspaceName), 'btn btn-primary', async () => {
+        button(d.invite.accept(inv.workspaceName), 'btn btn-primary btn-lg', async () => {
           await api('POST', `/invitations/${inv.id}/accept`);
-          actions.replaceChildren(link(d.invite.download, to('download/'), 'btn btn-primary'), link(d.invite.account, to('account/'), 'btn btn-secondary'));
+          actions.replaceChildren(link(d.invite.download, to('download/'), 'btn btn-primary btn-lg'), link(d.invite.account, to('account/'), 'btn btn-secondary btn-lg'));
           say('lead', d.invite.joined(inv.workspaceName)); say('note', d.invite.joinedLead); $('for').hidden = true;
         }),
-        button(d.invite.decline, 'btn btn-secondary', async () => {
+        button(d.invite.decline, 'btn btn-secondary btn-lg', async () => {
           await api('POST', `/invitations/${inv.id}/decline`);
           actions.replaceChildren(); say('note', d.invite.declined);
         })

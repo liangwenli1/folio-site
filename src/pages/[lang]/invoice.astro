@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Mark from '../../components/Mark.astro';
+import Icon from '../../components/Icon.astro';
 import '../../styles/app.css';
 import { langPaths, link, t, type Lang } from '../../lib/i18n';
 
@@ -10,35 +11,31 @@ const d = t(lang);
 const i = d.invoice;
 ---
 <Base lang={lang} path="invoice/" title={i.title} noindex>
-  <section class="wrap page">
-    <div class="row no-print" style="margin-bottom:20px">
-      <a class="quiet" href={link(lang, 'account/')}>← {i.back}</a>
+  <section class="wrap page in">
+    <div class="row no-print in-bar">
+      <a class="quiet row" href={link(lang, 'account/')}><Icon name="back" />{i.back}</a>
       <span class="spacer"></span>
-      <button class="btn btn-secondary btn-sm" type="button" id="print">{i.print}</button>
+      <button class="btn btn-secondary" type="button" id="print"><Icon name="download" />{i.print}</button>
     </div>
     <div class="notice error" id="err" role="alert" hidden></div>
-    <article class="invoice" id="invoice" hidden>
-      <header>
-        <div>
-          <a class="brand" href={link(lang)}><Mark /><span class="brand-word">{i.seller}</span></a>
-          <p class="fine" style="margin-top:8px">{i.sellerNote}</p>
-        </div>
-        <h1>{i.title}</h1>
+    <article class="panel in-doc" id="invoice" hidden>
+      <header class="in-hd">
+        <a class="brand" href={link(lang)}><Mark /><span class="brand-word">{i.seller}</span></a>
+        <div class="in-no"><h1>{i.title}</h1><span class="fine">{i.number} <span class="mono" id="number"></span></span><span class="tag" id="refunded" hidden></span></div>
       </header>
-      <div class="refunded" id="refunded" hidden></div>
-      <dl class="meta">
-        <div><dt>{i.number}</dt><dd id="number"></dd></div>
+      <dl class="in-meta">
         <div><dt>{i.date}</dt><dd id="date"></dd></div>
         <div><dt>{i.billedTo}</dt><dd id="billed"></dd></div>
         <div><dt>{i.workspace}</dt><dd id="ws"></dd></div>
         <div><dt>{i.period}</dt><dd id="period"></dd></div>
       </dl>
-      <table class="list">
-        <thead><tr><th scope="col">{i.item}</th><th scope="col" style="text-align:right">{i.amount}</th></tr></thead>
+      <table class="list in-lines">
+        <thead><tr><th scope="col">{i.item}</th><th scope="col" class="num">{i.amount}</th></tr></thead>
         <tbody id="lines"></tbody>
-        <tfoot><tr><th scope="row">{i.total}</th><td class="mono" style="text-align:right;font-weight:600" id="total"></td></tr></tfoot>
       </table>
-      <p class="fine" id="paid-with" style="margin-top:18px"></p>
+      <p class="in-sum"><span>{i.total}</span><b class="mono" id="total"></b></p>
+      <p class="fine in-paid" id="paid-with"></p>
+      <p class="fine in-note">{i.sellerNote}</p>
     </article>
   </section>
 </Base>
@@ -59,7 +56,7 @@ const i = d.invoice;
     $('period').textContent = p.periodStart && p.periodEnd ? `${day(p.periodStart, lang)} – ${day(p.periodEnd, lang)}` : '–';
     for (const l of p.lines){
       const tr = document.createElement('tr');
-      tr.innerHTML = '<td></td><td class="mono" style="text-align:right"></td>';
+      tr.innerHTML = '<td></td><td class="mono num"></td>';
       tr.children[0].textContent = lineLabel(d, l);
       tr.children[1].textContent = money(l.amountCents, lang);
       $('lines').append(tr);

@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
 import '../../styles/app.css';
 import { langPaths, link, t, type Lang } from '../../lib/i18n';
 
@@ -10,35 +11,41 @@ const a = d.account;
 ---
 <Base lang={lang} path="account/" title={a.title} noindex>
   <section class="wrap page">
-    <div class="page-head row"><h1>{a.title}</h1><span class="spacer"></span><button class="btn btn-secondary btn-sm" type="button" id="logout">{d.auth.logout}</button></div>
+    <div class="ac-head">
+      <div class="page-head"><h1>{a.title}</h1><p id="me-email"></p></div>
+      <button class="btn btn-text" type="button" id="logout"><Icon name="logout" />{d.auth.logout}</button>
+    </div>
     <div class="notice error" id="err" role="alert" hidden></div>
-    <div class="acct-grid" id="acct" hidden>
-      <div>
-        <section class="panel" aria-labelledby="plan-h">
-          <h2 id="plan-h">{a.plan}</h2>
-          <div class="plan-card">
-            <span class="name" id="plan-name"></span>
-            <span class="fine" id="plan-status"></span>
-            <span id="plan-usage" style="margin-top:8px"></span>
+    <div class="ac-grid" id="acct" hidden>
+      <div class="ac-col">
+        <section class="panel ac-plan" aria-labelledby="plan-h">
+          <div class="ac-plan-top">
+            <div>
+              <p class="panel-t" id="plan-h">{a.plan} · <span id="plan-ws"></span></p>
+              <b class="ac-plan-name" id="plan-name"></b>
+              <p class="fine" id="plan-status"></p>
+            </div>
+            <div class="row" id="plan-actions">
+              <a class="btn btn-secondary btn-sm" id="add-profiles" href="#" hidden>{a.addProfiles}</a>
+              <button class="btn btn-secondary btn-sm" type="button" id="start-trial" hidden>{a.startTrial}</button>
+              <button class="btn btn-secondary btn-sm" type="button" id="resume" hidden>{a.resume}</button>
+              <a class="btn btn-primary btn-sm" id="change-plan" href="#">{a.changePlan}</a>
+            </div>
+          </div>
+          <div class="ac-use">
+            <div class="row"><span id="plan-usage"></span><span class="spacer"></span><span class="fine" id="plan-members"></span></div>
             <span class="meter"><i id="plan-meter"></i></span>
-            <span class="fine" id="plan-members"></span>
           </div>
-          <div class="row" id="plan-actions" style="margin-top:18px">
-            <a class="btn btn-primary btn-sm" id="change-plan" href="#">{a.changePlan}</a>
-            <a class="btn btn-secondary btn-sm" id="add-profiles" href="#" hidden>{a.addProfiles}</a>
-            <button class="btn btn-secondary btn-sm" type="button" id="start-trial" hidden>{a.startTrial}</button>
-            <button class="btn btn-secondary btn-sm" type="button" id="cancel" hidden>{a.cancelPlan}</button>
-            <button class="btn btn-secondary btn-sm" type="button" id="resume" hidden>{a.resume}</button>
-          </div>
-          <div class="confirm" id="cancel-confirm" style="margin-top:12px" hidden>
+          <button class="linkish fine ac-cancel" type="button" id="cancel" hidden>{a.cancelPlan}</button>
+          <div class="confirm" id="cancel-confirm" hidden>
             <span>{a.cancelConfirm}</span>
-            <button class="btn btn-primary btn-sm" type="button" id="cancel-yes">{a.confirmCancel}</button>
-            <button class="linkish" type="button" id="cancel-no">{a.cancel}</button>
+            <button class="btn btn-secondary btn-sm" type="button" id="cancel-yes">{a.confirmCancel}</button>
+            <button class="linkish fine" type="button" id="cancel-no">{a.cancel}</button>
           </div>
         </section>
 
         <section class="panel" id="pay-panel" aria-labelledby="pay-h">
-          <h2 id="pay-h">{a.payments}</h2>
+          <h2 class="panel-t" id="pay-h">{a.payments}</h2>
           <p class="fine" id="no-pay" hidden>{a.noPayments}</p>
           <div class="tbl-scroll">
             <table class="list" id="pay-table" hidden>
@@ -49,32 +56,35 @@ const a = d.account;
         </section>
       </div>
 
-      <div>
+      <div class="ac-col">
+        <section class="panel" id="inv-panel" aria-labelledby="inv-h" hidden>
+          <h2 class="panel-t" id="inv-h">{a.invitations}</h2>
+          <ul class="ac-list" id="inv-list"></ul>
+        </section>
+        <section class="panel" aria-labelledby="ws-h">
+          <h2 class="panel-t" id="ws-h">{a.workspaces}</h2>
+          <ul class="ac-list" id="ws-list"></ul>
+          <form class="row ac-new" id="ws-form">
+            <div class="field"><label for="ws-name" hidden>{a.newWorkspace}</label><input id="ws-name" maxlength="80" placeholder={a.newWorkspace} /></div>
+            <button class="btn btn-secondary" type="submit">{a.create}</button>
+          </form>
+        </section>
         <section class="panel" aria-labelledby="profile-h">
-          <h2 id="profile-h">{a.profile}</h2>
+          <h2 class="panel-t" id="profile-h">{a.profile}</h2>
           <dl class="kv">
             <dt>{d.auth.email}</dt><dd id="email"></dd>
             <dt>{a.emailStatus}</dt><dd id="verified"></dd>
-            <dt><label for="locale">{a.language}</label></dt>
-            <dd><select id="locale" class="field-select"><option value="en">English</option><option value="zh">简体中文</option></select></dd>
+            <dt>{a.language}</dt>
+            <dd><div class="seg" role="group" aria-label={a.language} id="locale">
+              <button type="button" data-locale="zh" aria-pressed="false">简体中文</button>
+              <button type="button" data-locale="en" aria-pressed="false">English</button>
+            </div></dd>
           </dl>
         </section>
-        <section class="panel" id="inv-panel" aria-labelledby="inv-h" hidden>
-          <h2 id="inv-h">{a.invitations}</h2>
-          <ul class="ws-list" id="inv-list"></ul>
-        </section>
-        <section class="panel" aria-labelledby="ws-h">
-          <h2 id="ws-h">{a.workspaces}</h2>
-          <ul class="ws-list" id="ws-list"></ul>
-          <form class="row" id="ws-form" style="margin-top:14px">
-            <div class="field" style="flex:1"><label for="ws-name" hidden>{a.newWorkspace}</label><input id="ws-name" maxlength="80" placeholder={a.newWorkspace} /></div>
-            <button class="btn btn-secondary btn-sm" type="submit">{a.create}</button>
-          </form>
-        </section>
-        <section class="panel">
-          <h2>{a.download}</h2>
+        <section class="panel ac-dl" aria-labelledby="dl-h">
+          <h2 class="panel-t" id="dl-h">{a.download}</h2>
           <p class="fine">{a.downloadBody}</p>
-          <p style="margin-top:14px"><a class="btn btn-secondary btn-sm" href={link(lang, 'download/')}>{a.downloadCta}</a></p>
+          <a class="btn btn-secondary" href={link(lang, 'download/')}><Icon name="download" />{a.downloadCta}</a>
         </section>
       </div>
     </div>
@@ -83,9 +93,13 @@ const a = d.account;
 <script>
   import { api, type Me, type Payment, type Workspace } from '../../lib/api';
   import { day, money } from '../../lib/format';
+  import { ICONS } from '../../lib/icons';
   import { $, d, esc, lang, param, requireMe, showError, to } from '../../scripts/session';
 
   const a = d.account;
+  // The status labels' icons (components/Icon.astro draws the same paths at build time).
+  const icon = (path: string) => `<svg class="i" width="12" height="12" viewBox="0 0 16 16" aria-hidden="true"><path d="${path}"/></svg>`;
+  const CHECK = icon(ICONS.check), ALERT = icon(ICONS.alert), UNDO = icon(ICONS.back);
   let me: Me, ws: Workspace;
   const fail = (e: unknown) => showError($('err'), e);
 
@@ -99,21 +113,20 @@ const a = d.account;
   }
 
   function renderProfile(){
-    $('email').textContent = me.user.email;
+    $('email').textContent = $('me-email').textContent = me.user.email;
     $('verified').innerHTML = me.user.emailVerified
-      ? `<span class="pill ok">${a.verified}</span>`
-      : `<span class="pill accent">${a.unverified}</span> <a href="${to('verify/')}?next=${encodeURIComponent(location.pathname + location.search)}">${a.verifyNow}</a>`;
-    $<HTMLSelectElement>('locale').value = me.user.locale;
+      ? `<span class="chip ok">${CHECK}${a.verified}</span>`
+      : `<span class="chip warn">${ALERT}${a.unverified}</span> <a href="${to('verify/')}?next=${encodeURIComponent(location.pathname + location.search)}">${a.verifyNow}</a>`;
+    document.querySelectorAll('[data-locale]').forEach(b => b.setAttribute('aria-pressed', String(b.getAttribute('data-locale') === me.user.locale)));
   }
 
   function renderWorkspaces(){
     $('ws-list').innerHTML = me.workspaces.map(w => `
       <li class="${w.id === ws.id ? 'current' : ''}" data-id="${w.id}">
-        <a href="?ws=${w.id}">${esc(w.name)}</a>
-        <span class="pill muted">${a.roles[w.role]}</span>
-        <span class="fine">${d.plans[w.plan]}</span>
-        <span class="spacer"></span>
-        ${w.role !== 'member' ? `<button class="linkish fine" type="button" data-rename="${w.id}">${a.rename}</button>` : ''}
+        <span class="ac-letter" aria-hidden="true">${esc([...w.name][0] ?? '')}</span>
+        <span class="ac-name"><a href="?ws=${w.id}">${esc(w.name)}</a><small>${a.roles[w.role]} · ${d.plans[w.plan]}</small></span>
+        ${w.id === ws.id ? `<span class="tag">${a.current}</span>` : ''}
+        ${w.role !== 'member' ? `<button class="btn btn-text btn-sm" type="button" data-rename="${w.id}">${a.rename}</button>` : ''}
       </li>`).join('');
   }
 
@@ -123,10 +136,10 @@ const a = d.account;
     $('inv-panel').hidden = !invitations.length;
     $('inv-list').innerHTML = invitations.map(i => `
       <li data-inv="${i.id}">
-        <span><b>${esc(i.workspaceName)}</b><br><span class="fine">${esc(a.invitedBy(i.inviter ?? 'Folio', a.roles[i.role]))}</span></span>
-        <span class="spacer"></span>
+        <span class="ac-letter" aria-hidden="true">${esc([...i.workspaceName][0] ?? '')}</span>
+        <span class="ac-name"><b>${esc(i.workspaceName)}</b><small>${esc(a.invitedBy(i.inviter ?? 'Folio', a.roles[i.role]))}</small></span>
+        <button class="btn btn-text btn-sm" type="button" data-decline="${i.id}">${a.decline}</button>
         <button class="btn btn-primary btn-sm" type="button" data-accept="${i.id}">${a.accept}</button>
-        <button class="linkish fine" type="button" data-decline="${i.id}">${a.decline}</button>
       </li>`).join('');
   }
   $('inv-list').addEventListener('click', async ev => {
@@ -147,7 +160,8 @@ const a = d.account;
   function renderPlan(){
     const s = ws.subscription, manager = ws.role !== 'member';
     const paid = s.status === 'active' && s.plan !== 'free';
-    $('plan-name').textContent = d.plans[s.plan];
+    $('plan-ws').textContent = ws.name;
+    $('plan-name').textContent = s.addonPacks ? d.pricing.calc.withPacks(d.plans[s.plan], s.addonPacks) : d.plans[s.plan];
     $('plan-status').textContent =
       s.status === 'trialing' ? a.trialEnds(day(s.trialEndsAt!, lang)) :
       paid && s.cancelAtPeriodEnd ? a.ends(day(s.currentPeriodEnd!, lang)) :
@@ -178,8 +192,8 @@ const a = d.account;
         <td>${day(p.createdAt, lang)}</td>
         <td><a class="mono" href="${to('invoice/')}?id=${p.id}">${p.invoiceNumber}</a></td>
         <td class="mono">${money(p.amountCents, lang)}</td>
-        <td><span class="pill ${p.status === 'paid' ? 'ok' : 'muted'}">${p.status === 'paid' ? a.paid : a.refunded}</span></td>
-        <td>${p.refundable ? `<button class="linkish fine" type="button" data-refund="${p.id}">${a.refund}</button>` : ''}</td>
+        <td>${p.status === 'paid' ? `<span class="chip ok">${CHECK}${a.paid}</span>` : `<span class="chip">${UNDO}${a.refunded}</span>`}</td>
+        <td class="act">${p.refundable ? `<button class="btn btn-text btn-sm" type="button" data-refund="${p.id}">${a.refund}</button>` : ''}</td>
       </tr>`).join('');
   }
 
@@ -201,7 +215,7 @@ const a = d.account;
     if (!id) return;
     const row = $('pay-rows').querySelector(`tr[data-id="${id}"]`)!;
     const confirmRow = document.createElement('tr');
-    confirmRow.innerHTML = `<td colspan="5"><div class="confirm"><span>${a.refundConfirm}</span><button class="btn btn-primary btn-sm" type="button" data-yes>${a.confirmRefund}</button><button class="linkish" type="button" data-no>${a.cancel}</button></div></td>`;
+    confirmRow.innerHTML = `<td colspan="5"><div class="confirm"><span>${a.refundConfirm}</span><button class="btn btn-secondary btn-sm" type="button" data-yes>${a.confirmRefund}</button><button class="linkish fine" type="button" data-no>${a.cancel}</button></div></td>`;
     row.after(confirmRow);
     confirmRow.querySelector('[data-no]')!.addEventListener('click', () => confirmRow.remove());
     confirmRow.querySelector('[data-yes]')!.addEventListener('click', act(() => api('POST', `/payments/${id}/refund`)));
@@ -212,7 +226,7 @@ const a = d.account;
     if (!id) return;
     const li = $('ws-list').querySelector<HTMLElement>(`li[data-id="${id}"]`)!;
     const w = me.workspaces.find(x => x.id === id)!;
-    li.innerHTML = `<form class="row" style="flex:1"><div class="field" style="flex:1"><input maxlength="80" value="${esc(w.name)}" aria-label="${a.rename}" /></div><button class="btn btn-secondary btn-sm" type="submit">${a.save}</button><button class="linkish fine" type="button" data-no>${a.cancel}</button></form>`;
+    li.innerHTML = `<form class="row ac-new"><div class="field"><input maxlength="80" value="${esc(w.name)}" aria-label="${a.rename}" /></div><button class="btn btn-secondary btn-sm" type="submit">${a.save}</button><button class="linkish fine" type="button" data-no>${a.cancel}</button></form>`;
     const form = li.querySelector('form')!;
     form.querySelector('[data-no]')!.addEventListener('click', renderWorkspaces);
     form.addEventListener('submit', async e => {
@@ -231,8 +245,9 @@ const a = d.account;
     } catch (e){ fail(e); }
   });
 
-  $<HTMLSelectElement>('locale').addEventListener('change', async ev => {
-    const locale = (ev.target as HTMLSelectElement).value;
+  $('locale').addEventListener('click', async ev => {
+    const locale = (ev.target as HTMLElement).closest<HTMLButtonElement>('[data-locale]')?.dataset.locale;
+    if (!locale || locale === me.user.locale) return;
     try { await api('PATCH', '/me', { locale }); location.assign(`/${locale}/account/${location.search}`); } catch (e){ fail(e); }
   });
 
