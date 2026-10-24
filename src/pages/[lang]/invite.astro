@@ -22,9 +22,10 @@ const d = t(lang);
 </Base>
 <script>
   import { api, ApiFailure, type Me } from '../../lib/api';
-  import { $, d, here, param, showError, to } from '../../scripts/session';
+  import { day } from '../../lib/format';
+  import { $, d, here, lang, param, showError, to } from '../../scripts/session';
 
-  interface Preview { id: string; workspaceName: string; inviter: string | null; email: string; role: 'admin' | 'member'; expired: boolean }
+  interface Preview { id: string; workspaceName: string; inviter: string | null; email: string; role: 'admin' | 'member'; expired: boolean; expiresAt: string }
   const actions = $('actions');
   const say = (id: 'lead' | 'note', text: string) => { $(id).textContent = text; $(id).hidden = false; };
   function link(label: string, href: string, cls: string){
@@ -57,8 +58,8 @@ const d = t(lang);
     $('ws-name').textContent = inv.workspaceName;
     $('ws').hidden = false;
     say('lead', d.invite.lead(inv.inviter ?? 'Folio', inv.workspaceName, d.invite.roles[inv.role]));
-    $('for').textContent = d.invite.forEmail(inv.email); $('for').hidden = false;
-    if (inv.expired) return say('note', d.invite.expired);
+    if (inv.expired){ $('for').textContent = d.invite.forEmail(inv.email); $('for').hidden = false; return say('note', d.invite.expired); }
+    $('for').textContent = `${d.invite.forEmail(inv.email)} · ${d.invite.expires(day(inv.expiresAt, lang))}`; $('for').hidden = false;
 
     let me: Me | null = null;
     try { me = await api<Me>('GET', '/me'); } catch (e){ if (!(e instanceof ApiFailure && e.status === 401)) throw e; }

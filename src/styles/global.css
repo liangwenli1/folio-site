@@ -183,7 +183,7 @@ table.list tr:last-child td{border-bottom:0}
 .auth-pts .i{color:var(--ink-3)}
 .auth-aside{position:relative;height:600px;border-radius:26px;overflow:hidden;background:#FFF7F5;border:1px solid var(--line)}
 .auth-aside .glow{height:100%;-webkit-mask:none;mask:none}
-.auth-aside .showcase{position:absolute;left:70px;top:70px;width:860px;height:640px}
+.auth-aside .showcase{position:absolute;left:40px;right:40px;top:50%;translate:0 -58%}
 .auth-aside .sample{left:40px;bottom:40px}
 @media (prefers-color-scheme: dark){ .auth-aside{background:var(--panel)} }
 @media (max-width:900px){.auth{grid-template-columns:minmax(0,460px);justify-content:center;padding-block:40px 72px}.auth-aside{display:none}}

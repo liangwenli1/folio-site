@@ -207,6 +207,7 @@ test('an emailed invitation leads a new person through sign-up into the workspac
 
   await page.goto(link.replace(/^https?:\/\/[^/]+/, ''));
   await expect(page.locator('#lead')).toHaveText(`${host.email} invited you to join the Folio workspace Larkspur Trading as a member.`);
+  await expect(page.locator('#for')).toContainText(`Invited email: ${email} · Expires on `);
   await page.getByRole('link', { name: 'Create an account' }).click();
   await expect(page.locator('#email')).toHaveValue(email);
   await page.fill('#password', PASSWORD);

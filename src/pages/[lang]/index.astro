@@ -30,7 +30,7 @@ const AVATARS = ['#D2445E', '#2F6FD6', '#1E8A63', '#C98A12'];
         <p class="fine">{h.fine}</p>
       </div>
       <div class="hero-vis">
-        <Showcase lang={lang} label={h.showcase.label} />
+        <Showcase lang={lang} label={h.showcase.label} pause={h.showcase.pause} play={h.showcase.play} />
         <SampleProfile lang={lang} />
       </div>
     </div>
@@ -67,7 +67,7 @@ const AVATARS = ['#D2445E', '#2F6FD6', '#1E8A63', '#C98A12'];
             ))}
           </div>
         </div>
-        <figure class="shot"><img src="/showcase/check.webp" width="1280" height="1080" alt="" style="object-position:100% 0" /></figure>
+        <figure class="shot"><picture><source srcset={`/demo/${lang}-dark/checkup.webp`} media="(prefers-color-scheme: dark)" /><img src={`/demo/${lang}-light/checkup.webp`} width="1920" height="1200" alt="" loading="lazy" style="object-position:50% 40%" /></picture></figure>
       </div>
 
       <div class="frow flip" id="team">
@@ -103,7 +103,7 @@ const AVATARS = ['#D2445E', '#2F6FD6', '#1E8A63', '#C98A12'];
           <p class="lead">{d.auto.withCodeBody}</p>
           <ul class="libs">{d.auto.libs.map(l => <li>{l}</li>)}</ul>
         </div>
-        <figure class="shot"><img src="/showcase/sync.webp" width="1280" height="1080" alt="" style="object-position:0 0" /></figure>
+        <figure class="shot"><picture><source srcset={`/demo/${lang}-dark/sync.webp`} media="(prefers-color-scheme: dark)" /><img src={`/demo/${lang}-light/sync.webp`} width="1920" height="1200" alt="" loading="lazy" style="object-position:30% 0" /></picture></figure>
       </div>
     </div>
   </section>

@@ -17,9 +17,9 @@ const d = t(lang);
       <div class="auth-form"><slot /></div>
       {points && <ul class="auth-pts">{d.auth.points.map(p => <li><Icon name="check" size={12} />{p}</li>)}</ul>}
     </div>
-    <div class="auth-aside" aria-hidden="true">
-      <div class="glow"></div>
-      <Showcase lang={lang} label={d.hero.showcase.label} />
+    <div class="auth-aside">
+      <div class="glow" aria-hidden="true"></div>
+      <Showcase lang={lang} label={d.hero.showcase.label} pause={d.hero.showcase.pause} play={d.hero.showcase.play} />
       <SampleProfile lang={lang} />
     </div>
   </section>
