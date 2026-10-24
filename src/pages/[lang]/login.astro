@@ -1,27 +1,23 @@
 ---
-import Base from '../../layouts/Base.astro';
+import AuthPage from '../../layouts/AuthPage.astro';
 import { langPaths, link, t, type Lang } from '../../lib/i18n';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
 const d = t(lang);
 ---
-<Base lang={lang} path="login/" title={d.auth.loginTitle} noindex>
-  <section class="wrap page">
-    <div class="page-narrow">
-      <div class="page-head"><h1>{d.auth.loginTitle}</h1></div>
-      <form class="panel form" id="form" novalidate>
-        <div class="notice ok" id="ok" hidden></div>
-        <div class="notice error" id="err" role="alert" hidden></div>
-        <div class="field"><label for="email">{d.auth.email}</label><input id="email" name="email" type="email" autocomplete="email" required /></div>
-        <div class="field"><label for="password">{d.auth.password}</label><input id="password" name="password" type="password" autocomplete="current-password" required /></div>
-        <button class="btn btn-primary full" type="submit">{d.auth.login}</button>
-        <a class="fine" href={link(lang, 'forgot/')}>{d.auth.forgot}</a>
-      </form>
-      <p class="alt">{d.auth.noAccount} <a id="to-signup" href={link(lang, 'signup/')}>{d.auth.signup}</a></p>
-    </div>
-  </section>
-</Base>
+<AuthPage lang={lang} path="login/" title={d.auth.loginTitle}>
+  <div class="page-head"><h1>{d.auth.loginTitle}</h1></div>
+  <form class="panel form" id="form" novalidate>
+    <div class="notice ok" id="ok" hidden></div>
+    <div class="notice error" id="err" role="alert" hidden></div>
+    <div class="field"><label for="email">{d.auth.email}</label><input id="email" name="email" type="email" autocomplete="email" required /></div>
+    <div class="field"><label for="password">{d.auth.password}</label><input id="password" name="password" type="password" autocomplete="current-password" required /></div>
+    <button class="btn btn-primary full" type="submit">{d.auth.login}</button>
+    <a class="fine" href={link(lang, 'forgot/')}>{d.auth.forgot}</a>
+  </form>
+  <p class="alt">{d.auth.noAccount} <a id="to-signup" href={link(lang, 'signup/')}>{d.auth.signup}</a></p>
+</AuthPage>
 <script>
   import { api } from '../../lib/api';
   import { $, d, nextPath, onSubmit, param, to, withNext } from '../../scripts/session';

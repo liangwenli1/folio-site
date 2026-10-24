@@ -1,23 +1,19 @@
 ---
-import Base from '../../layouts/Base.astro';
+import AuthPage from '../../layouts/AuthPage.astro';
 import { langPaths, t, type Lang } from '../../lib/i18n';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
 const d = t(lang);
 ---
-<Base lang={lang} path="forgot/" title={d.auth.forgotTitle} noindex>
-  <section class="wrap page">
-    <div class="page-narrow">
-      <div class="page-head"><h1>{d.auth.forgotTitle}</h1><p>{d.auth.forgotLead}</p></div>
-      <form class="panel form" id="form" novalidate>
-        <div class="notice error" id="err" role="alert" hidden></div>
-        <div class="field"><label for="email">{d.auth.email}</label><input id="email" name="email" type="email" autocomplete="email" required /></div>
-        <button class="btn btn-primary full" type="submit">{d.auth.sendCode}</button>
-      </form>
-    </div>
-  </section>
-</Base>
+<AuthPage lang={lang} path="forgot/" title={d.auth.forgotTitle}>
+  <div class="page-head"><h1>{d.auth.forgotTitle}</h1><p>{d.auth.forgotLead}</p></div>
+  <form class="panel form" id="form" novalidate>
+    <div class="notice error" id="err" role="alert" hidden></div>
+    <div class="field"><label for="email">{d.auth.email}</label><input id="email" name="email" type="email" autocomplete="email" required /></div>
+    <button class="btn btn-primary full" type="submit">{d.auth.sendCode}</button>
+  </form>
+</AuthPage>
 <script>
   import { api } from '../../lib/api';
   import { $, onSubmit, to } from '../../scripts/session';

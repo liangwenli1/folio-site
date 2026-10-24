@@ -58,6 +58,12 @@ function draw(c: HTMLCanvasElement){
     const col = tok('--guilloche');
     waves(ctx, w, 86, 7, 0.024, 10, col, 0.09, 0.55);
     waves(ctx, w, h - 30, 6, 0.03, 9, col, 0.08, 0.5);
+  } else if (kind === 'rosette'){
+    // A square canvas that CSS turns slowly, as behind the workbench's sign-in card; wide enough to show around the card.
+    const col = tok('--guilloche'), R = Math.min(w, h) * 0.36;
+    ring(ctx, w / 2, h / 2, R, R * 0.09, 16, 7, 26, col, 0.2, 0.6);
+    ring(ctx, w / 2, h / 2, R * 1.3, R * 0.05, 28, 11, 16, col, 0.13, 0.6);
+    ring(ctx, w / 2, h / 2, R * 0.62, R * 0.08, 12, 5, 14, col, 0.16, 0.6);
   } else if (kind === 'band'){
     const col = tok('--band-line');
     const R = Math.min(h * 0.62, w * 0.36);

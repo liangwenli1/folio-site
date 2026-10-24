@@ -24,8 +24,8 @@
 .plan-card{display:grid;gap:6px}
 .plan-card .name{font-family:var(--f-display);font-size:30px;font-weight:800;line-height:1.1}
 html[lang="zh"] .plan-card .name{font-weight:900}
-.meter{display:block;height:6px;border-radius:3px;background:var(--seg);overflow:hidden;max-width:320px}
-.meter i{display:block;height:100%;background:var(--guilloche)}
+.meter{display:block;height:6px;border-radius:99px;background:var(--seg);overflow:hidden;max-width:320px}
+.meter i{display:block;height:100%;background:var(--accent);border-radius:99px}
 .acct-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);gap:20px;align-items:start}
 .acct-grid > div{display:grid;gap:20px;min-width:0}
 .acct-grid .panel + .panel{margin-top:0}
@@ -33,6 +33,11 @@ html[lang="zh"] .plan-card .name{font-weight:900}
 .ws-list{list-style:none;margin:0;padding:0;display:grid}
 .ws-list li{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
 .ws-list li:last-child{border-bottom:0}
+/* Labels never break inside a word; a long workspace name is cut short, and the row wraps when space runs out. */
+.ws-list li{flex-wrap:wrap}
+.ws-list li > *{flex:none;white-space:nowrap}
+.ws-list li > a{max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.ws-list li > .spacer{flex:1}
 .ws-list a{font-weight:600;text-decoration:none}
 .ws-list li.current a{color:var(--accent)}
 /* invoice: printable */

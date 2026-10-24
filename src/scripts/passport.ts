@@ -35,12 +35,10 @@ export function startPassport(){
   if (!card) return;
   const cities = JSON.parse(card.dataset.cities!) as { city: string; region: string }[];
   const unit = card.dataset.fontsUnit!;
-  const stamp = document.getElementById('stamp')!;
+  const stamp = card.querySelector<HTMLElement>('.stamp')!;
   const b1 = document.getElementById('back1')!, b2 = document.getElementById('back2')!;
   const button = document.getElementById('reroll') as HTMLButtonElement;
   let no = 42, cityIdx = 0;
-  const today = new Date();
-  card.querySelector('[data-f="date"]')!.textContent = `${today.getFullYear()}·${String(today.getMonth() + 1).padStart(2, '0')}·${String(today.getDate()).padStart(2, '0')}`;
   if (!reduce) restart(stamp, 'thud');
 
   if (!reduce && matchMedia('(hover: hover) and (pointer: fine)').matches){

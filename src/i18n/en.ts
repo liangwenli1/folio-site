@@ -177,7 +177,8 @@ export const en = {
     sendCode: 'Send code', resetTitle: 'Choose a new password', newPassword: 'New password', reset: 'Set new password',
     resetDone: 'Password updated. Log in with the new one.',
     devNotice: 'Development build: emails go to the local test inbox at http://127.0.0.1:47125.',
-    logout: 'Log out'
+    logout: 'Log out',
+    points: ['Download the app as soon as you sign up', 'One account for the site and the app', 'Export your data any time']
   },
 
   checkout: {

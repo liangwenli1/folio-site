@@ -1,30 +1,26 @@
 ---
-import Base from '../../layouts/Base.astro';
+import AuthPage from '../../layouts/AuthPage.astro';
 import { langPaths, t, type Lang } from '../../lib/i18n';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
 const d = t(lang);
 ---
-<Base lang={lang} path="reset/" title={d.auth.resetTitle} noindex>
-  <section class="wrap page">
-    <div class="page-narrow">
-      <div class="page-head"><h1>{d.auth.resetTitle}</h1></div>
-      <form class="panel form" id="form" novalidate>
-        <div class="notice dev" id="dev" hidden>{d.auth.devNotice}</div>
-        <div class="notice error" id="err" role="alert" hidden></div>
-        <div class="field"><label for="email">{d.auth.email}</label><input id="email" name="email" type="email" autocomplete="email" required /></div>
-        <div class="field"><label for="code">{d.auth.code}</label><input class="code-input" id="code" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required /></div>
-        <div class="field">
-          <label for="password">{d.auth.newPassword}</label>
-          <input id="password" name="password" type="password" autocomplete="new-password" minlength="8" required />
-          <span class="hint">{d.auth.passwordHint}</span>
-        </div>
-        <button class="btn btn-primary full" type="submit">{d.auth.reset}</button>
-      </form>
+<AuthPage lang={lang} path="reset/" title={d.auth.resetTitle}>
+  <div class="page-head"><h1>{d.auth.resetTitle}</h1></div>
+  <form class="panel form" id="form" novalidate>
+    <div class="notice dev" id="dev" hidden>{d.auth.devNotice}</div>
+    <div class="notice error" id="err" role="alert" hidden></div>
+    <div class="field"><label for="email">{d.auth.email}</label><input id="email" name="email" type="email" autocomplete="email" required /></div>
+    <div class="field"><label for="code">{d.auth.code}</label><input class="code-input" id="code" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required /></div>
+    <div class="field">
+      <label for="password">{d.auth.newPassword}</label>
+      <input id="password" name="password" type="password" autocomplete="new-password" minlength="8" required />
+      <span class="hint">{d.auth.passwordHint}</span>
     </div>
-  </section>
-</Base>
+    <button class="btn btn-primary full" type="submit">{d.auth.reset}</button>
+  </form>
+</AuthPage>
 <script>
   import { api } from '../../lib/api';
   import { $, d, devBuild, onSubmit, param, to } from '../../scripts/session';

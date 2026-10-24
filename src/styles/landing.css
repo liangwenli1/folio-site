@@ -1,5 +1,4 @@
 /* Landing page sections, ported from the approved design. */
-.gl{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 
 /* hero */
 .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
@@ -15,7 +14,6 @@ html[lang="zh"] .hero h1 em{font-style:normal;font-weight:900}
 .hero-copy .fine{margin-top:16px}
 .hero-stage{display:flex;flex-direction:column;align-items:center;gap:22px}
 .stack{position:relative;width:min(100%,440px);margin-top:28px}
-.idcard{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px 22px 18px;overflow:hidden}
 .idcard.front{z-index:2;box-shadow:var(--shadow);transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .3s ease,box-shadow .3s ease}
 /* The security foil, as in the workbench: rainbow bands and a glint that follow the pointer. Only a real mouse shows it. */
 .idcard.front::after{content:'';position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s ease;mix-blend-mode:var(--stamp-blend);
@@ -30,27 +28,9 @@ html[lang="zh"] .hero h1 em{font-style:normal;font-weight:900}
 .idcard.back > *{opacity:.62}
 .b2{z-index:0;transform:translate(20px,-26px) rotate(3.5deg)}
 .b1{z-index:1;transform:translate(-22px,-14px) rotate(-4deg)}
-.id-head{position:relative;display:flex;justify-content:space-between;gap:12px;font-family:var(--f-data);font-size:10.5px;letter-spacing:.14em;color:var(--ink-2);padding-bottom:12px;border-bottom:1px dashed var(--line-2)}
-.id-no b{color:var(--accent);font-weight:600}
-.id-city{position:relative;display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 12px;margin:14px 0}
-.city{font-family:var(--f-display);font-weight:800;font-size:34px;line-height:1.1}
-html[lang="zh"] .city{font-weight:900;font-size:30px}
-.region{font-size:13px;color:var(--ink-2)}
-.id-fields{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px 18px;margin:0}
-.id-fields > div{min-width:0}
-.id-fields .wide{grid-column:1/-1}
-.id-fields dt{font-size:11.5px;color:var(--ink-2);line-height:1.4}
-.id-fields dd{margin:2px 0 0;font-family:var(--f-data);font-size:12px;line-height:1.5;overflow-wrap:anywhere}
-.mrz{position:relative;display:grid;margin-top:18px;padding-top:12px;border-top:1px solid var(--line);font-family:var(--f-data);font-size:clamp(9.5px,2.6vw,11.5px);letter-spacing:.06em;line-height:1.65;color:var(--ink-2);white-space:nowrap;overflow:hidden}
-.stamp{position:absolute;right:18px;bottom:16px;width:112px;height:112px;border-radius:50%;border:3px double var(--accent);color:var(--accent);display:grid;place-content:center;justify-items:center;text-align:center;line-height:1.2;transform:rotate(-14deg);mix-blend-mode:var(--stamp-blend);opacity:.9}
-.s-top,.s-date{font-family:var(--f-data);font-size:8px;letter-spacing:.22em}
-.s-main{font-family:var(--f-display);font-weight:800;font-size:15.5px;letter-spacing:.08em;margin:3px 0}
-.s-date{letter-spacing:.06em;padding-top:3px;border-top:1px solid currentColor}
 .reroll-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;width:min(100%,440px)}
 .reroll-row .fine{flex:1 1 100%;text-wrap:balance}
 .reroll-row svg{width:15px;height:15px}
-.stamp.thud{animation:stamp-in .5s cubic-bezier(.2,1.4,.4,1) .15s both}
-@keyframes stamp-in{0%{transform:rotate(-28deg) scale(1.9);opacity:0}60%{opacity:.95}100%{transform:rotate(-14deg) scale(1);opacity:.9}}
 .spec{position:relative;border-top:1px solid var(--line);background:color-mix(in srgb,var(--bg) 70%,transparent)}
 .spec-in{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px 32px;padding-block:18px;font-size:13.5px;color:var(--ink-2)}
 .spec-in span{display:grid;gap:2px;min-width:0}
@@ -58,11 +38,6 @@ html[lang="zh"] .city{font-weight:900;font-size:30px}
 @media (max-width:860px){.spec-in{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:960px){.hero-in{grid-template-columns:minmax(0,1fr);gap:40px;padding-block:52px 56px}}
 @media (max-width:480px){
-  .idcard{padding:18px 16px 16px}
-  .city{font-size:28px}
-  .stamp{width:88px;height:88px;right:10px;bottom:10px}
-  .s-main{font-size:12px}
-  .s-top,.s-date{font-size:6.5px}
   .b1{transform:translate(-10px,-12px) rotate(-3deg)}
   .b2{transform:translate(10px,-22px) rotate(3deg)}
 }

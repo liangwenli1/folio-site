@@ -179,7 +179,8 @@ export const zh: typeof en = {
     sendCode: '发送验证码', resetTitle: '设置新密码', newPassword: '新密码', reset: '保存',
     resetDone: '密码已更新，请使用新密码登录。',
     devNotice: '开发版本：邮件发送至本机测试收件箱 http://127.0.0.1:47125。',
-    logout: '退出登录'
+    logout: '退出登录',
+    points: ['注册后即可下载客户端', '官网与客户端使用同一账号', '数据随时导出']
   },
 
   checkout: {

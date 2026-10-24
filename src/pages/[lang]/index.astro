@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Passport from '../../components/Passport.astro';
 import '../../styles/landing.css';
 import { langPaths, link, t, type Lang } from '../../lib/i18n';
 
@@ -7,7 +8,6 @@ export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
 const d = t(lang);
 const h = d.hero;
-const first = h.cities[0];
 ---
 <Base lang={lang} path="">
   <section class="hero" id="top">
@@ -28,31 +28,14 @@ const first = h.cities[0];
           {[['back2', 'b2', '0040', h.cities[2], 'Asia/Tokyo', 'macOS 15'], ['back1', 'b1', '0041', h.cities[1], 'Europe/London', 'Windows 10']].map(([id, cls, no, c, tz, os]) => (
             <article class={`idcard back ${cls}`} id={id as string} aria-hidden="true">
               <header class="id-head"><span>{h.card.title}</span><span class="id-no">No. <b data-b="no">{no}</b></span></header>
-              <div class="id-city"><span class="city" data-b="city">{(c as typeof first).city}</span><span class="region" data-b="region">{(c as typeof first).region}</span></div>
+              <div class="id-city"><span class="city" data-b="city">{(c as typeof h.cities[number]).city}</span><span class="region" data-b="region">{(c as typeof h.cities[number]).region}</span></div>
               <dl class="id-fields">
                 <div><dt>{h.card.tz}</dt><dd data-b="tz">{tz}</dd></div>
                 <div><dt>{h.card.os}</dt><dd data-b="os">{os}</dd></div>
               </dl>
             </article>
           ))}
-          <article class="idcard front" id="idcard" data-cities={JSON.stringify(h.cities)} data-fonts-unit={h.card.fontsUnit}>
-            <canvas class="gl" data-kind="card" aria-hidden="true"></canvas>
-            <header class="id-head"><span>{h.card.title}</span><span class="id-no">No. <b data-f="no">0042</b></span></header>
-            <div class="id-city"><span class="city" data-f="city">{first.city}</span><span class="region" data-f="region">{first.region}</span></div>
-            <dl class="id-fields">
-              <div><dt>{h.card.exitIp}</dt><dd data-f="ip">172.58.•••.••</dd></div>
-              <div><dt>{h.card.tz}</dt><dd data-f="tz">America/Los_Angeles</dd></div>
-              <div><dt>{h.card.lang}</dt><dd data-f="lang">en-US, en</dd></div>
-              <div><dt>{h.card.os}</dt><dd data-f="os">Windows 11</dd></div>
-              <div><dt>{h.card.engine}</dt><dd data-f="core">Chromium 150</dd></div>
-              <div><dt>{h.card.screen}</dt><dd data-f="res">1920 × 1080</dd></div>
-              <div class="wide"><dt>{h.card.gpu}</dt><dd data-f="gpu">Intel Iris Xe Graphics</dd></div>
-              <div><dt>{h.card.canvas}</dt><dd data-f="hash">7c2e…a91f</dd></div>
-              <div><dt>{h.card.fonts}</dt><dd data-f="fonts">61 {h.card.fontsUnit}</dd></div>
-            </dl>
-            <div class="mrz" aria-hidden="true"><span data-f="mrz1">FOLIO&lt;ENV0042&lt;&lt;US&lt;SEATTLE&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span><span data-f="mrz2">WIN11&lt;CHR150&lt;1920X1080&lt;&lt;7C2EA91F</span></div>
-            <div class="stamp" id="stamp" aria-hidden="true"><span class="s-top">FOLIO</span><span class="s-main">{h.card.stamp}</span><span class="s-date" data-f="date">2026·10·21</span></div>
-          </article>
+          <Passport lang={lang} class="front" id="idcard" data-cities={JSON.stringify(h.cities)} data-fonts-unit={h.card.fontsUnit} />
         </div>
         <div class="reroll-row">
           <button class="btn btn-secondary btn-sm" id="reroll" type="button">

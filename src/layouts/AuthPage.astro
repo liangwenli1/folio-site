@@ -1,0 +1,24 @@
+---
+// Sign-in, sign-up and the email/password steps around them: the form, and beside it the passport card on the
+// rosette, as on the workbench's sign-in screen. `points` lists what the account gets (sign-up only).
+import Base from './Base.astro';
+import Passport from '../components/Passport.astro';
+import { t, type Lang } from '../lib/i18n';
+
+interface Props { lang: Lang; path: string; title: string; points?: boolean }
+const { lang, path, title, points = false } = Astro.props;
+---
+<Base lang={lang} path={path} title={title} noindex>
+  <section class="wrap auth">
+    <div class="auth-main"><slot /></div>
+    <div class="auth-aside">
+      <canvas class="gl rosette" data-kind="rosette" aria-hidden="true"></canvas>
+      <Passport lang={lang} aria-hidden="true" />
+      {points && <ul class="auth-points">{t(lang).auth.points.map(p => <li>{p}</li>)}</ul>}
+    </div>
+  </section>
+</Base>
+<script>
+  import { startGuilloche } from '../lib/guilloche';
+  startGuilloche();
+</script>

@@ -9,6 +9,9 @@ export const money = (cents: number, lang: Lang) =>
 export const day = (iso: string, lang: Lang) =>
   new Intl.DateTimeFormat(locale(lang), { year: 'numeric', month: lang === 'zh' ? 'long' : 'short', day: 'numeric' }).format(new Date(iso));
 
+// The date on a visa stamp: 2026·10·24.
+export const stampDate = (d: Date) => `${d.getFullYear()}·${String(d.getMonth() + 1).padStart(2, '0')}·${String(d.getDate()).padStart(2, '0')}`;
+
 export function lineLabel(d: Dict, line: QuoteLine){
   switch (line.kind){
     case 'plan': return d.checkout.lines.plan(d.plans[line.plan], d.periods[line.period]);
