@@ -69,7 +69,7 @@ export const zh: typeof en = {
       ['Canvas 指纹', '与其他账号完全相同', '本环境独有', true],
       ['Cookie', '所有账号共用', '每个环境独立保存', true]
     ],
-    leak: '不一致', match: '一致'
+    leak: '不一致', match: '一致', passed: '体检通过'
   },
 
   team: {
@@ -110,7 +110,8 @@ export const zh: typeof en = {
     withCode: '编程接入',
     withCodeBody: '通过本地 API 启动任意环境，并将调试地址交给脚本。现有自动化框架可直接接管，无需改写脚本。',
     libs: ['Playwright', 'Puppeteer', 'Selenium', 'CDP · WebDriver BiDi'],
-    codeComment: '// 启动 Folio 中编号为 0042 的环境'
+    codeComment: '// 启动 Folio 中编号为 0042 的环境',
+    sync: { label: '窗口同步示意：主控窗口的一次点击同步到三个窗口，其中一个窗口报告问题。', lead: '主控', fail: '未找到元素' }
   },
 
   trust: {

@@ -67,7 +67,7 @@ export const en = {
       ['Canvas hash', 'Identical on all your accounts', 'Unique to this profile', true],
       ['Cookies', 'Shared by every account', 'Kept per profile', true]
     ] as [string, string, string, boolean][],
-    leak: 'Leaks', match: 'Matches'
+    leak: 'Leaks', match: 'Matches', passed: 'PASSED'
   },
 
   team: {
@@ -108,7 +108,8 @@ export const en = {
     withCode: 'With code',
     withCodeBody: 'The local API starts any profile and hands your script its debugging address. Your existing automation takes it from there, with no rewrite.',
     libs: ['Playwright', 'Puppeteer', 'Selenium', 'CDP · WebDriver BiDi'],
-    codeComment: '// Start profile 0042 in Folio'
+    codeComment: '// Start profile 0042 in Folio',
+    sync: { label: 'Window sync: one click in the leading window reaches three others; one of them reports a problem.', lead: 'Leader', fail: 'Element not found' }
   },
 
   trust: {

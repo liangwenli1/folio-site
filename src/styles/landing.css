@@ -56,13 +56,22 @@ html[lang="zh"] .who h3{font-size:21px;line-height:1.45}
 
 /* inside */
 .inside-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:56px;align-items:start}
-.vectors{display:grid;gap:18px}
+.vectors{position:relative;display:grid;gap:18px}
+/* The scan (scripts/reveal.ts): a beam crosses the chips, each turns green with a tick as it passes. */
+.chips li::after{content:"✓";position:absolute;top:-7px;right:-7px;width:15px;height:15px;border-radius:50%;background:var(--good);color:var(--on-accent);font-family:var(--f-body);font-size:9px;font-weight:700;line-height:15px;text-align:center;transform:scale(0)}
+.vectors.play .chips li{background:var(--good-soft);border-color:color-mix(in srgb,var(--good) 45%,transparent);color:var(--good-ink)}
+.vectors.play .chips li::after{transform:scale(1)}
+.vectors.armed .chips li{transition:background-color .3s ease var(--d,0s),border-color .3s ease var(--d,0s),color .3s ease var(--d,0s)}
+.vectors.armed .chips li::after{transition:transform .3s cubic-bezier(.2,1.4,.4,1) var(--d,0s)}
+.vectors.armed::after{content:"";position:absolute;top:-8px;bottom:-8px;left:0;width:90px;pointer-events:none;opacity:0;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--accent) 20%,transparent),transparent)}
+.vectors.armed.play::after{animation:beam 1.6s linear forwards}
+@keyframes beam{0%{left:0;opacity:0}10%{opacity:1}85%{opacity:1}100%{left:calc(100% - 90px);opacity:0}}
 .vg{display:grid;grid-template-columns:84px minmax(0,1fr);gap:16px;align-items:baseline;padding-bottom:18px;border-bottom:1px solid var(--line)}
 .vg h3{font-size:15px;font-weight:600}
 .chips{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
-.chips li{font-family:var(--f-data);font-size:11.5px;line-height:1.5;padding:4px 10px;border:1px solid var(--line-2);border-radius:var(--r-sm);background:var(--card)}
+.chips li{position:relative;font-family:var(--f-data);font-size:11.5px;line-height:1.5;padding:4px 10px;border:1px solid var(--line-2);border-radius:var(--r-sm);background:var(--card)}
 .note{font-size:15px;color:var(--ink-2);margin-top:4px}
-.compare{margin:0;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);overflow:hidden;min-width:0}
+.compare{position:relative;margin:0;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);overflow:hidden;min-width:0}
 .compare figcaption{display:grid;gap:4px;padding:20px 22px 16px;border-bottom:1px solid var(--line)}
 .compare figcaption b{font-family:var(--f-display);font-weight:700;font-size:22px;line-height:1.2}
 .compare figcaption span{font-size:14px;color:var(--ink-2)}
@@ -73,6 +82,15 @@ html[lang="zh"] .who h3{font-size:21px;line-height:1.45}
 .compare tbody tr:last-child > *{border-bottom:0}
 .compare td.folio{background:color-mix(in srgb,var(--good) 8%,transparent)}
 .mk{display:inline-block;width:1.25em;font-weight:700}
+/* The check: marks appear row by row, then the stamp lands on the caption. */
+.compare-stamp{top:14px;bottom:auto;right:18px;width:88px;height:88px;border-color:var(--good);color:var(--good);opacity:0}
+.compare-stamp .s-main{font-size:13px}
+html[lang="zh"] .compare-stamp .s-main{letter-spacing:.02em}
+.compare.play .compare-stamp{opacity:.9}
+.compare.armed .mk{opacity:0;transform:scale(.3)}
+.compare.armed.play .mk{opacity:1;transform:none;transition:opacity .2s ease calc(var(--r) * .18s),transform .35s cubic-bezier(.2,1.4,.4,1) calc(var(--r) * .18s)}
+.compare.armed.play .compare-stamp{animation:stamp-in .5s cubic-bezier(.2,1.4,.4,1) calc(var(--rows) * .18s + .15s) both}
+.compare figcaption{padding-right:120px}
 .bad .mk{color:var(--accent)} .good .mk{color:var(--good)}
 @media (max-width:960px){.inside-grid{grid-template-columns:minmax(0,1fr);gap:40px}}
 
@@ -99,6 +117,25 @@ html[lang="zh"] .who h3{font-size:21px;line-height:1.45}
 .auto-col h3{font-family:var(--f-data);font-size:11.5px;font-weight:400;letter-spacing:.14em;text-transform:uppercase;padding-bottom:12px;border-bottom:1px solid var(--ink)}
 .auto-col .points{margin-top:22px}
 .auto-col > p{margin-top:20px;color:var(--ink-2)}
+/* window sync: the leading window's click travels to the others (scripts/reveal.ts); the last one fails */
+.sync{margin:32px 0 0;padding:18px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow)}
+.sync svg{display:block;width:100%;height:auto;overflow:visible}
+.sync .link{fill:none;stroke:var(--line-2);stroke-width:2;transition:stroke .3s ease}
+.sync .win{fill:var(--card);stroke:var(--line-2);stroke-width:1.2;transition:stroke .3s ease}
+.sync .bar,.sync .ln{fill:var(--seg)}
+.sync .key{fill:var(--accent)}
+.sync .leader .win{stroke:var(--good);stroke-width:1.6}
+.sync .halo{fill:none;stroke:var(--good-soft);stroke-width:8}
+.sync .ripple{fill:none;stroke:var(--accent);stroke-width:2;opacity:0}
+.sync .pulse{fill:var(--good);filter:drop-shadow(0 0 4px var(--good))}
+.sync text{font-family:var(--f-body);font-size:13px;font-weight:700}
+.sync .tag{fill:var(--good-ink)}
+.sync .fail{fill:var(--bad-ink);opacity:0;transition:opacity .3s ease}
+.sync .key{transition:opacity .2s ease}
+.sync.done .l3{stroke:var(--bad);stroke-dasharray:5 4}
+.sync.done .f3 .win{stroke:var(--bad);stroke-width:1.6}
+.sync.done .f3 .key{opacity:0}
+.sync.done .fail{opacity:1}
 .libs{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
 .libs li{font-family:var(--f-data);font-size:11.5px;padding:4px 10px;border:1px solid var(--line-2);border-radius:var(--r-sm);background:var(--card)}
 .code{margin:18px 0 0;background:var(--code-bg);color:var(--code-ink);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px 22px;overflow-x:auto;font-family:var(--f-data);font-size:12.5px;line-height:1.85}
