@@ -306,7 +306,7 @@ export const zh: typeof en = {
       endpointsLead: '环境可通过编号（42 或 0042）或 id 指定。',
       endpoints: [
         ['GET', '/api/v1/profiles', '当前账号可见的环境：id、编号、名称、内核及运行状态。'],
-        ['POST', '/api/v1/profiles/{编号}/start', '按客户端标准流程打开环境（占用锁、恢复登录状态、连接代理），返回 protocol、wsEndpoint；Chromium 环境另返回 debuggerAddress。已通过 API 打开的环境返回相同地址。'],
+        ['POST', '/api/v1/profiles/{编号}/start', '按客户端标准流程打开环境（占用锁、恢复登录状态、连接代理），返回 protocol、wsEndpoint；Chromium 环境另返回 debuggerAddress。已通过 API 打开的环境返回相同地址。默认只打开一个空白页；加参数 ?restoreTabs=1 可恢复上次关闭时的标签页。'],
         ['GET', '/api/v1/profiles/{编号}', '运行状态；通过 API 打开的环境附带调试地址。'],
         ['POST', '/api/v1/profiles/{编号}/stop', '关闭环境，并照常保存登录状态。'],
         ['GET', '/api/v1/tasks', '团队任务列表，各附最近一次运行记录。'],

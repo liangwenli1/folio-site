@@ -304,7 +304,7 @@ export const en = {
       endpointsLead: 'A profile is identified by its number (42 or 0042) or its id.',
       endpoints: [
         ['GET', '/api/v1/profiles', 'Profiles visible to the current account: id, number, name, engine and running state.'],
-        ['POST', '/api/v1/profiles/{number}/start', 'Opens the profile as the app does (lock, saved sign-ins, proxy) and returns protocol and wsEndpoint, plus debuggerAddress for Chromium. A profile already opened through the API returns the same address.'],
+        ['POST', '/api/v1/profiles/{number}/start', 'Opens the profile as the app does (lock, saved sign-ins, proxy) and returns protocol and wsEndpoint, plus debuggerAddress for Chromium. A profile already opened through the API returns the same address. It opens on one blank tab; add ?restoreTabs=1 to reopen the tabs it was last closed with.'],
         ['GET', '/api/v1/profiles/{number}', 'Running state, with the debugging address if it was opened through the API.'],
         ['POST', '/api/v1/profiles/{number}/stop', 'Closes the profile and saves its sign-ins as usual.'],
         ['GET', '/api/v1/tasks', 'The workspace’s tasks, each with its most recent run.'],
