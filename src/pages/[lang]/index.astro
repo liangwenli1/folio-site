@@ -18,8 +18,8 @@ const first = h.cities[0];
         <h1>{h.h1a}<br />{h.h1b}<em>{h.h1em}</em></h1>
         <p class="lead">{h.lead}</p>
         <div class="cta-row">
-          <a class="btn btn-stamp" href={link(lang, 'signup/')}>{h.ctaStart}</a>
-          <a class="btn btn-line" href={link(lang, 'download/')}>{h.ctaDownload}</a>
+          <a class="btn btn-primary" href={link(lang, 'signup/')}>{h.ctaStart}</a>
+          <a class="btn btn-secondary" href={link(lang, 'download/')}>{h.ctaDownload}</a>
         </div>
         <p class="fine">{h.fine}</p>
       </div>
@@ -55,7 +55,7 @@ const first = h.cities[0];
           </article>
         </div>
         <div class="reroll-row">
-          <button class="btn btn-ghost" id="reroll" type="button">
+          <button class="btn btn-secondary btn-sm" id="reroll" type="button">
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9"></path><path d="M13.5 2.5v3h-3"></path></svg>
             {h.reroll}
           </button>
@@ -184,7 +184,7 @@ const first = h.cities[0];
             <p class="price"><span class="amt" data-amt></span><span class="per" data-per></span></p>
             <p class="per-env" data-perenv></p>
             <p class="bill-note" data-note></p>
-            <a class={id === 'studio' ? 'btn btn-stamp full' : 'btn btn-line full'} data-cta
+            <a class={id === 'studio' ? 'btn btn-primary full' : 'btn btn-secondary full'} data-cta
               href={id === 'free' ? link(lang, 'signup/') : id === 'studio' ? link(lang, 'checkout/?plan=studio&trial=1') : link(lang, 'contact-sales/')}>{d.pricing.cta[id]}</a>
             {id !== 'free' && <a class="buy" data-buy href={link(lang, `checkout/?plan=${id}&period=monthly`)}>{d.pricing.buy}</a>}
             <ul class="feat">{d.pricing.features[id].map(f => <li>{f}</li>)}</ul>
@@ -212,7 +212,7 @@ const first = h.cities[0];
       <h2>{d.band.title}</h2>
       <p>{d.band.body}</p>
       <div class="cta-row">
-        <a class="btn btn-stamp" href={link(lang, 'download/')}>{d.band.windows}</a>
+        <a class="btn btn-primary" href={link(lang, 'download/')}>{d.band.windows}</a>
         <a class="btn btn-band" href={link(lang, 'download/')}>{d.band.mac}</a>
       </div>
       <p class="fine">{d.band.fine}</p>

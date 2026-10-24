@@ -15,7 +15,7 @@ const c = d.checkout;
     <div class="notice" id="no-manage" hidden>{c.noManage}</div>
     <div class="panel" id="done" hidden>
       <p class="notice ok" id="done-text"></p>
-      <p style="margin-top:16px"><a class="btn btn-stamp" href={link(lang, 'account/')}>{c.toAccount}</a></p>
+      <p style="margin-top:16px"><a class="btn btn-primary" href={link(lang, 'account/')}>{c.toAccount}</a></p>
     </div>
     <div class="co-grid" id="co" hidden>
       <div class="panel">
@@ -49,7 +49,7 @@ const c = d.checkout;
         </div>
         <div class="trial" id="trial-box" hidden>
           <p>{c.trial}</p>
-          <button class="btn btn-line btn-sm" type="button" id="trial-btn">{c.trialCta}</button>
+          <button class="btn btn-secondary btn-sm" type="button" id="trial-btn">{c.trialCta}</button>
         </div>
       </div>
 
@@ -67,7 +67,7 @@ const c = d.checkout;
             <div class="field"><label for="cvc">{c.cvc}</label><input id="cvc" inputmode="numeric" autocomplete="cc-csc" maxlength="4" placeholder="123" required /></div>
           </div>
           <div class="field"><label for="name">{c.name}</label><input id="name" autocomplete="cc-name" /></div>
-          <button class="btn btn-stamp full" type="submit" id="pay" disabled>{c.confirm}</button>
+          <button class="btn btn-primary full" type="submit" id="pay" disabled>{c.confirm}</button>
         </form>
       </div>
     </div>

@@ -80,5 +80,4 @@ export function startGuilloche(){
   all();
   document.fonts?.ready.then(all);
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', all);
-  new MutationObserver(all).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 }

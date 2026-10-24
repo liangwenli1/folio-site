@@ -61,21 +61,21 @@ const d = t(lang);
     // Back to this page after logging in, signing up or verifying.
     const back = `next=${encodeURIComponent(here())}`, email = `email=${encodeURIComponent(inv.email)}`;
     if (!me){
-      actions.append(link(d.invite.login, `${to('login/')}?${email}&${back}`, 'btn btn-stamp'), link(d.invite.signup, `${to('signup/')}?${email}&${back}`, 'btn btn-ghost'));
+      actions.append(link(d.invite.login, `${to('login/')}?${email}&${back}`, 'btn btn-primary'), link(d.invite.signup, `${to('signup/')}?${email}&${back}`, 'btn btn-secondary'));
     } else if (me.user.email !== inv.email){
       say('note', d.invite.wrong(inv.email, me.user.email));
-      actions.append(button(d.invite.switch, 'btn btn-ghost', async () => { await api('POST', '/auth/logout'); location.reload(); }));
+      actions.append(button(d.invite.switch, 'btn btn-secondary', async () => { await api('POST', '/auth/logout'); location.reload(); }));
     } else if (!me.user.emailVerified){
       say('note', d.invite.verify);
-      actions.append(link(d.invite.verifyCta, `${to('verify/')}?${back}`, 'btn btn-stamp'));
+      actions.append(link(d.invite.verifyCta, `${to('verify/')}?${back}`, 'btn btn-primary'));
     } else {
       actions.append(
-        button(d.invite.accept(inv.workspaceName), 'btn btn-stamp', async () => {
+        button(d.invite.accept(inv.workspaceName), 'btn btn-primary', async () => {
           await api('POST', `/invitations/${inv.id}/accept`);
-          actions.replaceChildren(link(d.invite.download, to('download/'), 'btn btn-stamp'), link(d.invite.account, to('account/'), 'btn btn-ghost'));
+          actions.replaceChildren(link(d.invite.download, to('download/'), 'btn btn-primary'), link(d.invite.account, to('account/'), 'btn btn-secondary'));
           say('lead', d.invite.joined(inv.workspaceName)); say('note', d.invite.joinedLead); $('for').hidden = true;
         }),
-        button(d.invite.decline, 'btn btn-ghost', async () => {
+        button(d.invite.decline, 'btn btn-secondary', async () => {
           await api('POST', `/invitations/${inv.id}/decline`);
           actions.replaceChildren(); say('note', d.invite.declined);
         })

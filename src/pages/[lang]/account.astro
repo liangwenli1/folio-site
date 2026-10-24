@@ -10,7 +10,7 @@ const a = d.account;
 ---
 <Base lang={lang} path="account/" title={a.title} noindex>
   <section class="wrap page">
-    <div class="page-head row"><h1>{a.title}</h1><span class="spacer"></span><button class="btn btn-ghost" type="button" id="logout">{d.auth.logout}</button></div>
+    <div class="page-head row"><h1>{a.title}</h1><span class="spacer"></span><button class="btn btn-secondary btn-sm" type="button" id="logout">{d.auth.logout}</button></div>
     <div class="notice error" id="err" role="alert" hidden></div>
     <div class="acct-grid" id="acct" hidden>
       <div>
@@ -24,15 +24,15 @@ const a = d.account;
             <span class="fine" id="plan-members"></span>
           </div>
           <div class="row" id="plan-actions" style="margin-top:18px">
-            <a class="btn btn-stamp btn-sm" id="change-plan" href="#">{a.changePlan}</a>
-            <a class="btn btn-ghost" id="add-profiles" href="#" hidden>{a.addProfiles}</a>
-            <button class="btn btn-ghost" type="button" id="start-trial" hidden>{a.startTrial}</button>
-            <button class="btn btn-ghost" type="button" id="cancel" hidden>{a.cancelPlan}</button>
-            <button class="btn btn-ghost" type="button" id="resume" hidden>{a.resume}</button>
+            <a class="btn btn-primary btn-sm" id="change-plan" href="#">{a.changePlan}</a>
+            <a class="btn btn-secondary btn-sm" id="add-profiles" href="#" hidden>{a.addProfiles}</a>
+            <button class="btn btn-secondary btn-sm" type="button" id="start-trial" hidden>{a.startTrial}</button>
+            <button class="btn btn-secondary btn-sm" type="button" id="cancel" hidden>{a.cancelPlan}</button>
+            <button class="btn btn-secondary btn-sm" type="button" id="resume" hidden>{a.resume}</button>
           </div>
           <div class="confirm" id="cancel-confirm" style="margin-top:12px" hidden>
             <span>{a.cancelConfirm}</span>
-            <button class="btn btn-stamp btn-sm" type="button" id="cancel-yes">{a.confirmCancel}</button>
+            <button class="btn btn-primary btn-sm" type="button" id="cancel-yes">{a.confirmCancel}</button>
             <button class="linkish" type="button" id="cancel-no">{a.cancel}</button>
           </div>
         </section>
@@ -68,13 +68,13 @@ const a = d.account;
           <ul class="ws-list" id="ws-list"></ul>
           <form class="row" id="ws-form" style="margin-top:14px">
             <div class="field" style="flex:1"><label for="ws-name" hidden>{a.newWorkspace}</label><input id="ws-name" maxlength="80" placeholder={a.newWorkspace} /></div>
-            <button class="btn btn-ghost" type="submit">{a.create}</button>
+            <button class="btn btn-secondary btn-sm" type="submit">{a.create}</button>
           </form>
         </section>
         <section class="panel">
           <h2>{a.download}</h2>
           <p class="fine">{a.downloadBody}</p>
-          <p style="margin-top:14px"><a class="btn btn-line btn-sm" href={link(lang, 'download/')}>{a.downloadCta}</a></p>
+          <p style="margin-top:14px"><a class="btn btn-secondary btn-sm" href={link(lang, 'download/')}>{a.downloadCta}</a></p>
         </section>
       </div>
     </div>
@@ -125,7 +125,7 @@ const a = d.account;
       <li data-inv="${i.id}">
         <span><b>${esc(i.workspaceName)}</b><br><span class="fine">${esc(a.invitedBy(i.inviter ?? 'Folio', a.roles[i.role]))}</span></span>
         <span class="spacer"></span>
-        <button class="btn btn-stamp btn-sm" type="button" data-accept="${i.id}">${a.accept}</button>
+        <button class="btn btn-primary btn-sm" type="button" data-accept="${i.id}">${a.accept}</button>
         <button class="linkish fine" type="button" data-decline="${i.id}">${a.decline}</button>
       </li>`).join('');
   }
@@ -201,7 +201,7 @@ const a = d.account;
     if (!id) return;
     const row = $('pay-rows').querySelector(`tr[data-id="${id}"]`)!;
     const confirmRow = document.createElement('tr');
-    confirmRow.innerHTML = `<td colspan="5"><div class="confirm"><span>${a.refundConfirm}</span><button class="btn btn-stamp btn-sm" type="button" data-yes>${a.confirmRefund}</button><button class="linkish" type="button" data-no>${a.cancel}</button></div></td>`;
+    confirmRow.innerHTML = `<td colspan="5"><div class="confirm"><span>${a.refundConfirm}</span><button class="btn btn-primary btn-sm" type="button" data-yes>${a.confirmRefund}</button><button class="linkish" type="button" data-no>${a.cancel}</button></div></td>`;
     row.after(confirmRow);
     confirmRow.querySelector('[data-no]')!.addEventListener('click', () => confirmRow.remove());
     confirmRow.querySelector('[data-yes]')!.addEventListener('click', act(() => api('POST', `/payments/${id}/refund`)));
@@ -212,7 +212,7 @@ const a = d.account;
     if (!id) return;
     const li = $('ws-list').querySelector<HTMLElement>(`li[data-id="${id}"]`)!;
     const w = me.workspaces.find(x => x.id === id)!;
-    li.innerHTML = `<form class="row" style="flex:1"><div class="field" style="flex:1"><input maxlength="80" value="${esc(w.name)}" aria-label="${a.rename}" /></div><button class="btn btn-ghost" type="submit">${a.save}</button><button class="linkish fine" type="button" data-no>${a.cancel}</button></form>`;
+    li.innerHTML = `<form class="row" style="flex:1"><div class="field" style="flex:1"><input maxlength="80" value="${esc(w.name)}" aria-label="${a.rename}" /></div><button class="btn btn-secondary btn-sm" type="submit">${a.save}</button><button class="linkish fine" type="button" data-no>${a.cancel}</button></form>`;
     const form = li.querySelector('form')!;
     form.querySelector('[data-no]')!.addEventListener('click', renderWorkspaces);
     form.addEventListener('submit', async e => {

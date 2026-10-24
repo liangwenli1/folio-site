@@ -19,7 +19,7 @@ const systems = [
     <div class="dl-grid">
       {systems.map(s => (
         <div class="panel"><h2>{s.os}</h2><p class="fine">{s.req}</p>
-          <p style="margin-top:16px">{s.href ? <a class="btn btn-stamp" href={s.href}>{d.get}</a> : <button class="btn btn-line" type="button" disabled>{d.soon}</button>}</p>
+          <p style="margin-top:16px">{s.href ? <a class="btn btn-primary" href={s.href}>{d.get}</a> : <button class="btn btn-secondary" type="button" disabled>{d.soon}</button>}</p>
           {s.href && <p class="fine" style="margin-top:14px">{s.note}</p>}</div>
       ))}
     </div>
