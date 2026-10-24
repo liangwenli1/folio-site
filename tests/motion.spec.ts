@@ -21,6 +21,8 @@ test('the walkthrough plays, and pauses with its button, out of view and while t
   const demo = page.locator('.showcase');
   await expect(demo).toHaveAttribute('data-state', 'playing');
   await expect(demo).not.toHaveAttribute('data-frame', '0', { timeout: 15_000 });
+  // The camera moves in, so the workbench's text is close to its real size.
+  await expect.poll(async () => Number(await demo.getAttribute('data-zoom')), { timeout: 15_000 }).toBeGreaterThan(1.3);
 
   await demo.getByRole('button', { name: 'Pause walkthrough' }).click();
   await expect(demo).toHaveAttribute('data-state', 'paused');

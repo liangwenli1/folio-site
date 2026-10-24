@@ -9,13 +9,13 @@
 .cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
 .hero-copy .fine{margin-top:14px}
 .hero-vis{position:relative}
-.hero-vis .showcase{position:relative;width:760px;transform:perspective(1800px) rotateY(-10deg) rotateX(4deg);transform-origin:left center}
+.hero-vis .showcase{position:relative;width:760px}
 /* the window runs off the page on the right, so its pause button sits in the middle */
 .hero-vis .fd-btn{right:auto;left:50%;translate:-50% 0}
 .hero-vis .sample{left:-40px;bottom:-30px}
 @media (max-width:1100px){
   .hero-in{grid-template-columns:minmax(0,1fr);gap:48px;padding-block:52px 64px}
-  .hero-vis .showcase{width:100%;transform:none}
+  .hero-vis .showcase{width:100%}
   .hero-vis .sample{left:16px;bottom:-24px}
 }
 
