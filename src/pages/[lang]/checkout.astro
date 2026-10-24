@@ -91,7 +91,8 @@ const c = d.checkout;
   const sel = {
     plan: (param('plan') === 'company' ? 'company' : 'studio') as PlanId,
     period: (param('period') === 'yearly' ? 'yearly' : 'monthly') as Period,
-    packs: 0
+    // The pricing calculator links here with the add-on packs it worked out.
+    packs: Math.max(0, Number.parseInt(param('packs') ?? '', 10) || 0)
   };
   let quote: Quote | null = null;
 
@@ -107,7 +108,7 @@ const c = d.checkout;
     if (paid){
       if (!param('plan')) sel.plan = s.plan as PlanId;
       if (!param('period')) sel.period = s.period as Period;
-      sel.packs = s.addonPacks;
+      if (!param('packs')) sel.packs = s.addonPacks;
     }
     $('current').textContent = (s.status === 'trialing' ? c.currentTrial : c.current)(d.plans[s.plan]);
     $('trial-box').hidden = !s.trialAvailable;

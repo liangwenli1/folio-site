@@ -132,7 +132,7 @@ html[lang="zh"] .plan h3{font-weight:900;font-size:22px}
 .price{display:flex;align-items:baseline;gap:4px;margin-top:18px;font-variant-numeric:tabular-nums;min-height:44px}
 .price .amt{font-family:var(--f-data);font-weight:500;font-size:44px;line-height:1;letter-spacing:-.03em}
 .price .per{font-size:14px;color:var(--ink-2);margin-left:6px}
-.per-env{font-size:14px;font-variant-numeric:tabular-nums}
+.per-env{font-size:14px;white-space:pre-line}
 .bill-note{font-size:13px;color:var(--ink-2);min-height:1.6em}
 .plan .btn{margin-top:18px}
 .plan .buy{align-self:center;font-size:13px;color:var(--ink-2);margin-top:8px}
@@ -140,7 +140,35 @@ html[lang="zh"] .plan h3{font-weight:900;font-size:22px}
 .feat{list-style:none;margin:22px 0 0;padding:20px 0 0;border-top:1px dashed var(--line);display:grid;gap:10px;font-size:14.5px}
 .feat li{position:relative;padding-left:24px}
 .feat li::before{content:"✓";position:absolute;left:0;font-weight:700;color:var(--good)}
+.plan.match{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft),var(--shadow-pop)}
+.plan-fit{margin-top:6px;padding:7px 12px;border-radius:var(--r);background:var(--accent-soft);color:var(--accent);font-size:13px;font-weight:600}
 .price-foot{margin-top:24px;font-size:14px;color:var(--ink-2)}
+
+/* calculator: the slider's thumb is 24px, so the bubble and ticks sit on its centre line */
+.calc{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:28px 40px;align-items:center;margin-bottom:32px;padding:26px 30px;background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+.calc-pick label{display:grid;gap:4px}
+.calc-pick label b{font-family:var(--f-display);font-weight:800;font-size:19px;line-height:1.3}
+.calc-pick label span{font-size:14px;color:var(--ink-2)}
+.calc-track{--p:0;position:relative;margin-top:46px}
+.calc-track output{position:absolute;bottom:calc(100% + 8px);left:calc(12px + (100% - 24px) * var(--p));translate:-50%;padding:1px 10px;border-radius:99px;background:var(--ink);color:var(--bg);font-family:var(--f-data);font-size:13px;font-weight:600;line-height:1.6;white-space:nowrap;pointer-events:none}
+.calc-track input{display:block;width:100%;height:24px;margin:0;-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer}
+.calc-track input::-webkit-slider-runnable-track{height:6px;border-radius:99px;background:linear-gradient(var(--accent),var(--accent)) 0 0/calc(12px + (100% - 24px) * var(--p)) 100% no-repeat,var(--seg)}
+.calc-track input::-moz-range-track{height:6px;border-radius:99px;background:linear-gradient(var(--accent),var(--accent)) 0 0/calc(12px + (100% - 24px) * var(--p)) 100% no-repeat,var(--seg)}
+.calc-track input::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;margin-top:-9px;border-radius:50%;background:var(--card);border:3px solid var(--accent);box-shadow:0 4px 10px -4px var(--accent)}
+.calc-track input::-moz-range-thumb{box-sizing:border-box;width:24px;height:24px;border-radius:50%;background:var(--card);border:3px solid var(--accent)}
+.calc-track input:focus-visible{outline:none}
+.calc-track input:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px var(--accent-soft)}
+.calc-track input:focus-visible::-moz-range-thumb{box-shadow:0 0 0 4px var(--accent-soft)}
+.calc-ticks{position:relative;height:20px;margin-top:8px;font-family:var(--f-data);font-size:12px;color:var(--ink-2)}
+.calc-ticks span{position:absolute;left:calc(12px + (100% - 24px) * var(--i));translate:-50%}
+.calc-res{display:grid;justify-items:start;gap:4px;padding-left:36px;border-left:1px dashed var(--line-2);min-width:0}
+.calc-plan{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-family:var(--f-display);font-weight:800;font-size:22px;line-height:1.3}
+html[lang="zh"] .calc-plan{font-weight:900;font-size:20px}
+.calc-plan em{font-family:var(--f-body);font-style:normal;font-weight:600;font-size:12px;padding:2px 9px;border-radius:99px;color:var(--accent);background:var(--accent-soft)}
+.calc-res .price{margin-top:6px}
+#calc-detail{font-size:14px}
+.calc-res .btn{margin-top:12px}
+@media (max-width:860px){.calc{grid-template-columns:minmax(0,1fr);padding:22px 20px}.calc-res{padding:20px 0 0;border-left:0;border-top:1px dashed var(--line-2)}}
 @media (max-width:960px){.plans{grid-template-columns:minmax(0,1fr);max-width:500px}.plan.featured{margin-top:8px}}
 
 /* faq */

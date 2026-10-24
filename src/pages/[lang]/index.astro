@@ -158,6 +158,24 @@ const h = d.hero;
           <button type="button" data-period="yearly" aria-pressed="false">{d.pricing.yearly}<em>{d.pricing.save}</em></button>
         </div>
       </div>
+      <div class="calc" id="calc" hidden>
+        <div class="calc-pick">
+          <label for="calc-n"><b>{d.pricing.calc.title}</b><span>{d.pricing.calc.hint}</span></label>
+          <div class="calc-track" id="calc-track">
+            <output id="calc-out" for="calc-n"></output>
+            <input type="range" id="calc-n" min="0" step="1" />
+          </div>
+          <div class="calc-ticks" id="calc-ticks" aria-hidden="true"></div>
+        </div>
+        <div class="calc-res" aria-live="polite">
+          <p class="fine">{d.pricing.calc.best}</p>
+          <p class="calc-plan"><span id="calc-plan"></span><em id="calc-cheapest">{d.pricing.calc.cheapest}</em></p>
+          <p class="price"><span class="amt" id="calc-amt"></span><span class="per" id="calc-per">{d.pricing.perMonth}</span></p>
+          <p id="calc-detail"></p>
+          <p class="fine" id="calc-alt"></p>
+          <a class="btn btn-primary btn-sm" id="calc-cta" href="#"></a>
+        </div>
+      </div>
       <div class="plans">
         {(['free', 'studio', 'company'] as const).map(id => (
           <article class={id === 'studio' ? 'plan featured' : 'plan'} data-plan={id}>
@@ -167,6 +185,7 @@ const h = d.hero;
             <p class="price"><span class="amt" data-amt></span><span class="per" data-per></span></p>
             <p class="per-env" data-perenv></p>
             <p class="bill-note" data-note></p>
+            <p class="plan-fit" data-fit hidden></p>
             <a class={id === 'studio' ? 'btn btn-primary full' : 'btn btn-secondary full'} data-cta
               href={id === 'free' ? link(lang, 'signup/') : id === 'studio' ? link(lang, 'checkout/?plan=studio&trial=1') : link(lang, 'contact-sales/')}>{d.pricing.cta[id]}</a>
             {id !== 'free' && <a class="buy" data-buy href={link(lang, `checkout/?plan=${id}&period=monthly`)}>{d.pricing.buy}</a>}

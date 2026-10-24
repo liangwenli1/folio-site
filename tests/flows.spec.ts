@@ -71,6 +71,33 @@ test('landing page shows live prices in both languages', async ({ page }) => {
   await expect(page.locator('[data-plan="company"] [data-amt]')).toHaveText('US$99');
 });
 
+test('the calculator finds the cheapest plan and takes its add-on packs to checkout', async ({ page }) => {
+  await page.goto('/en/');
+  const $ = (id: string) => page.locator(`#${id}`);
+  // 180 profiles: Studio with one pack is cheaper than Company.
+  await expect($('calc-out')).toHaveText('180');
+  await expect($('calc-plan')).toHaveText('Studio + 1 add-on pack');
+  await expect($('calc-amt')).toHaveText('$44');
+  await expect($('calc-detail')).toHaveText('200 profiles · $0.22 per profile a month');
+  await expect($('calc-alt')).toContainText('Company is $99 a month');
+  await expect(page.locator('[data-plan="studio"] [data-fit]')).toHaveText('180 profiles: Studio + 1 add-on pack');
+  await expect($('calc-cta')).toHaveAttribute('href', '/en/checkout/?plan=studio&period=monthly&packs=1');
+  await page.click('[data-period="yearly"]');
+  await expect($('calc-amt')).toHaveText('$35');
+  await expect($('calc-cta')).toHaveAttribute('href', '/en/checkout/?plan=studio&period=yearly&packs=1');
+  // The ends of the slider: Free, and a quote above the maximum.
+  await $('calc-n').fill('0');
+  await expect($('calc-plan')).toHaveText('Free');
+  await expect($('calc-cta')).toHaveText('Start free');
+  await $('calc-n').fill('400');
+  await expect($('calc-out')).toHaveText('2000+');
+  await expect($('calc-cta')).toHaveText('Talk to sales');
+
+  await signUp(page, 'en', '/en/checkout/?plan=studio&period=monthly&packs=1');
+  await expect($('packs')).toHaveText('1');
+  await expect($('total')).toHaveText('$44');
+});
+
 test('sign up, buy Studio and open the invoice', async ({ page }) => {
   await signUp(page, 'en');
   await expect(page.locator('#plan-name')).toHaveText('Free');

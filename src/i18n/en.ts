@@ -142,6 +142,16 @@ export const en = {
       company: ['Everything in Studio', 'Profiles grouped by department', '1-year activity log you can export', 'Dedicated support channel, 12 hours a day', 'Unthrottled API']
     },
     buy: 'Buy now', soon: 'Coming soon',
+    calc: {
+      title: 'How many profiles do you need?', hint: 'Drag the slider for the cheapest way to get them.',
+      best: 'Our pick', cheapest: 'Cheapest',
+      profiles: (n: number) => `${n} profiles`,
+      withPacks: (plan: string, packs: number) => `${plan} + ${packs} add-on ${packs === 1 ? 'pack' : 'packs'}`,
+      fit: (n: number, pick: string) => `${n} profiles: ${pick}`,
+      company: (amount: string) => `Company is ${amount} a month for this, adding departments, a 1-year activity log and an unthrottled API.`,
+      custom: (max: number) => `More than ${max.toLocaleString('en-US')} profiles`, customBody: 'We’ll quote you a price for your team.',
+      buy: 'Buy this plan'
+    },
     foot: (pack: string) => `Need more room? Add 100 profiles for ${pack} a month. For more than 2,000 profiles, we’ll quote you directly. Prices exclude local taxes, and every plan comes with invoices.`
   },
 

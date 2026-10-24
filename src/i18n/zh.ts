@@ -144,6 +144,16 @@ export const zh: typeof en = {
       company: ['包含工作室版全部功能', '环境按部门分组管理', '操作日志保留 1 年，支持导出', '专属客服群，每日 12 小时', 'API 调用不限速']
     },
     buy: '立即购买', soon: '即将开放',
+    calc: {
+      title: '需要多少个环境？', hint: '拖动滑块，查看最省的购买方式。',
+      best: '推荐方案', cheapest: '最省',
+      profiles: (n: number) => `${n} 个环境`,
+      withPacks: (plan: string, packs: number) => `${plan} + ${packs} 个加量包`,
+      fit: (n: number, pick: string) => `${n} 个环境：${pick}`,
+      company: (amount: string) => `同样数量选公司版为 ${amount}/月，另含部门管理、操作日志保留 1 年、API 不限速。`,
+      custom: (max: number) => `超过 ${max} 个环境`, customBody: '可根据团队规模单独报价。',
+      buy: '按此方案购买'
+    },
     foot: (pack: string) => `如需更多环境，每增加 100 个 ${pack}/月；超过 2000 个环境可单独报价。价格不含当地税费，每笔付款均提供发票。`
   },
 
