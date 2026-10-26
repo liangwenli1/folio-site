@@ -242,15 +242,15 @@ export const en = {
     },
     loginTitle: 'Log in to Folio', loginLead: 'Log in with your account to get back to your browser profiles.',
     signupTitle: 'Create a Folio account', signupLead: 'Try 5 browser profiles free. No card required.',
-    email: 'Email', emailPh: 'name@example.com', password: 'Password', setPassword: 'Choose a password', passwordHint: 'At least 8 characters',
+    email: 'Email', emailPh: 'name@example.com', password: 'Password', setPassword: 'Choose a password', passwordPh: 'Your password', passwordHint: '8 to 64 characters; mix letters, numbers and symbols',
+    code: 'Email code', codePh: 'The 6-digit code', getCode: 'Get a code', codeSent: 'The code is on its way. It is valid for 15 minutes.',
     remember: 'Remember me', forgot: 'Forgot password?',
     consent: ['I have read and agree to the', 'Terms of service', 'and the', 'Privacy policy'] as [string, string, string, string],
     signup: 'Create account', login: 'Log in', haveAccount: 'Already have an account?', noAccount: 'New to Folio?', toSignup: 'Sign up',
-    verifyTitle: 'Verify your email', verifyLead: (email: string) => `A 6-digit code was sent to ${email}. It is valid for 15 minutes.`,
-    code: 'Code', verify: 'Verify', resend: 'Send a new code', resendIn: (s: number) => `Resend in ${s}s`, resent: 'A new code has been sent.',
+    verifyTitle: 'Verify your email', verifyLead: (email: string) => `Send a code to ${email}, then enter it here. It is valid for 15 minutes.`,
+    verify: 'Verify', resend: 'Send a code', resendIn: (s: number) => `Resend in ${s}s`, resent: 'A code has been sent.',
     reset: {
       title: 'Reset your password', lead: 'Verify your email, then choose a new password.', steps: ['Verify email', 'New password', 'Done'],
-      code: 'Email code', codePh: 'The 6-digit code', getCode: 'Get a code',
       sent: 'If this email has an account, a code is on its way. It is valid for 15 minutes.',
       next: 'Next', password: 'New password', confirm: 'Confirm the new password', save: 'Save the new password', back: 'Back',
       doneTitle: 'Password reset', doneText: 'Log in with your new password.', toLogin: 'Back to log in',
@@ -505,7 +505,11 @@ export const en = {
       { version: '0.1', date: 'October 2026', area: 'site',
         added: ['Sign-up, sign-in and email verification', 'Plans, checkout and invoices', 'The account page and team invitations'], improved: [], fixed: [] }
     ] as { version: string; date: string; area: 'desktop' | 'site'; added: string[]; improved: string[]; fixed: string[] }[],
-    subscribe: { title: 'Get release news', body: 'Leave your email to hear about new releases and features.', placeholder: 'Your email address', soon: 'Coming soon' }
+    subscribe: {
+      title: 'Get release news', body: 'Leave your email to hear about new releases and features.', placeholder: 'Your email address', send: 'Subscribe',
+      pending: (email: string) => `A confirmation email is on its way to ${email}. Follow its link to finish subscribing.`, subscribed: 'This email is already subscribed.',
+      confirmed: 'You’re subscribed. News of Folio releases will come by email.', unsubscribed: 'You’ve unsubscribed. No more release news will be sent.', badLink: 'That link doesn’t work any more. Subscribe again.'
+    }
   },
 
   docs: {
@@ -568,6 +572,7 @@ export const en = {
             ['Profiles and proxies', 'Profile names, fingerprint settings, tags and notes; proxy addresses, credentials and check results (exit IP and location); for profiles synced to the cloud, their sign-in state (cookies, local storage and the like).', 'Proxy passwords and sign-in state are encrypted before they are stored.'],
             ['Activity log', 'What members did in the workspace, and on which device.', 'Kept according to the plan: 7 days on Free, 30 days on Studio, 1 year on Company.'],
             ['Website cookie', 'The session cookie that keeps you signed in to the website.', 'With “Remember me” it lasts 30 days; otherwise it ends when the browser closes.'],
+            ['Release news', 'The email address and language given when subscribing to release news.', 'News goes out only once confirmed by email; unsubscribing deletes it.'],
             ['Contact and feedback', 'The name, email address, team size and message sent through the contact form; whether a help article helped.', 'Article feedback is not linked to an account.']
           ] as string[][] } },
         { id: 'use', title: 'How we use it', lead: 'What the information above is used for. It is not used for advertising.',
@@ -578,6 +583,7 @@ export const en = {
             ['Workspace and plan', 'Limiting access by role and group, counting what the plan includes, issuing invoices and handling refunds.'],
             ['Profiles and proxies', 'Opening profiles on your computer as they are set up, syncing sign-in state between members, and checking proxy connections.'],
             ['Activity log', 'Letting members with the permission see what happened and look into problems.'],
+            ['Release news', 'Sending news of Folio releases and features.'],
             ['Contact and feedback', 'Answering your enquiry and improving the help articles.']
           ] as string[][] } },
         { id: 'store', title: 'Storage and protection', lead: 'Where and how the information is kept.',
@@ -598,7 +604,8 @@ export const en = {
             ['See', 'Your email address, workspaces and payments are on the account page; members with the permission can see the activity log in the app.'],
             ['Correct', 'Profiles, proxies and workspace details can be changed in the app; a forgotten password can be reset by email.'],
             ['Export', 'Members with the export permission can export the workspace’s profiles as an encrypted file.'],
-            ['Delete', 'Profiles and proxies can be deleted at any time. To close your account, write to us through the contact page; how long that takes is to be confirmed.']
+            ['Delete', 'Profiles and proxies can be deleted at any time. To close your account, write to us through the contact page; how long that takes is to be confirmed.'],
+            ['Unsubscribe', 'The email confirming a subscription has a link to unsubscribe from release news at any time.']
           ] as [string, string | null, string?][] },
         { id: 'contact', title: 'Contact us', lead: 'Questions about this policy or about your information can reach us here.',
           items: [
@@ -657,10 +664,11 @@ export const en = {
     already_refunded: 'This payment has already been refunded.',
     payments_unavailable: 'Payments are not available at the moment.',
     rate_limited: 'Too many requests. Try again in a minute.',
+    too_soon: 'An email went out a moment ago. Try again in a minute.',
     forbidden: 'Access denied.',
     not_found: 'Not found.',
     validation: 'Some fields are missing or invalid.',
-    emailMissing: 'Enter an email address.', passwordShort: 'The password must be at least 8 characters.',
+    emailMissing: 'Enter an email address.', passwordShort: 'The password must be 8 to 64 characters.',
     codeMissing: 'Enter the 6-digit code.', passwordMismatch: 'The two passwords don’t match.', consentMissing: 'Read and agree to the terms of service and privacy policy first.',
     network: 'Folio cannot be reached. Check the network connection and try again.',
     wrong_account: 'This invitation was sent to a different email address.',

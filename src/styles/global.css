@@ -168,7 +168,8 @@ h3{font-weight:600}
 .pw input{padding-right:46px}
 .pw button{position:absolute;right:4px;top:50%;translate:0 -50%;display:grid;place-items:center;width:var(--h-sm);height:var(--h-sm);border:0;border-radius:var(--r);background:transparent;color:var(--ink-3);cursor:pointer}
 .pw button:hover,.pw button[aria-pressed="true"]{color:var(--ink);background:var(--seg)}
-.code-input{font-family:var(--f-data)!important;font-size:22px!important;letter-spacing:.4em;text-align:center}
+.code-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px}
+.code-row .btn{min-width:132px;height:var(--h-ctl)}
 .notice{padding:12px 14px;border-radius:var(--r-card);font-size:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink-2)}
 .notice.error{border-color:color-mix(in srgb,var(--bad) 40%,transparent);background:var(--bad-soft);color:var(--bad-ink)}
 .notice.ok{border-color:color-mix(in srgb,var(--good) 40%,transparent);background:var(--good-soft);color:var(--good-ink)}
@@ -185,25 +186,24 @@ table.list td{height:56px;border-bottom:1px solid var(--line);padding:6px 12px 6
 table.list tr:last-child td{border-bottom:0}
 .confirm{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line);font-size:14px}
 
-/* sign-in pages: the simple header's links; the product on a soft accent panel on the left and the form on the right.
-   On a phone the form comes first and the panel follows, without the walkthrough. */
+/* sign-in pages: the simple header's links; the product on a soft accent panel on the left, centred in it with the three
+   key points in a row along the walkthrough's lower edge (its pause button moves to the top corner), and the form on
+   the right. On a phone the form comes first and the panel follows, without the walkthrough. */
 .top-links{display:flex;gap:28px;margin-left:auto;font-size:14.5px}
 .top-links a{color:var(--ink-2);text-decoration:none}
 .top-links a:hover{color:var(--ink)}
 .auth{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);min-height:calc(100svh - var(--hd))}
-.auth-panel{display:flex;justify-content:flex-end;align-items:center;padding:56px 64px 80px max(32px,calc((100vw - 1200px) / 2 + 32px));background:linear-gradient(165deg,var(--accent-soft),var(--page) 88%);border-right:1px solid var(--line)}
-.auth-panel-in{width:100%;max-width:600px}
+.auth-panel{display:flex;justify-content:center;align-items:center;padding:56px 64px 72px;background:linear-gradient(165deg,var(--accent-soft),var(--page) 88%);border-right:1px solid var(--line)}
+.auth-panel-in{width:100%;max-width:620px}
 .auth-title{font-size:clamp(1.75rem,2.8vw,2.375rem);line-height:1.2}
 .auth-lead{max-width:520px;margin-top:14px;font-size:15.5px;line-height:1.75;color:var(--ink-2)}
-.auth-vis{position:relative;margin:60px 0 32px}
-.auth-pts{margin:0;padding:0;list-style:none}
-.auth-pts li{position:absolute;display:flex;align-items:center;gap:10px;padding:9px 16px 9px 9px;border-radius:14px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-pop);line-height:1.4}
+.auth-vis{position:relative;margin-top:44px}
+.auth-vis .fd-btn{top:10px;bottom:auto}
+.auth-pts{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:-30px 18px 0;padding:0;list-style:none}
+.auth-pts li{display:flex;align-items:center;gap:10px;min-width:0;padding:9px 12px 9px 9px;border-radius:14px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-pop);line-height:1.4}
 .auth-pts li > span:last-child{display:grid}
 .auth-pts b{font-size:13.5px;font-weight:600}
 .auth-pts small{font-size:12px;color:var(--ink-2)}
-.auth-pts li:nth-child(1){top:-36px;right:-12px}
-.auth-pts li:nth-child(2){bottom:-32px;left:-20px}
-.auth-pts li:nth-child(3){bottom:-36px;right:76px}
 .auth-main{display:flex;align-items:center;padding:56px max(32px,calc((100vw - 1200px) / 2 + 32px)) 80px 72px}
 .auth-form{display:grid;gap:22px;width:100%;max-width:420px}
 .auth-form .page-head{margin-bottom:0}
@@ -220,10 +220,10 @@ table.list tr:last-child td{border-bottom:0}
   .auth-main{order:1;justify-content:center;padding:40px 20px 48px}
   .auth-panel{order:2;justify-content:center;padding:40px 20px 56px;border-right:0;border-top:1px solid var(--line)}
   .auth-panel-in{max-width:460px}
-  .auth-vis{margin:28px 0 0}
+  .auth-vis{margin-top:28px}
   .auth-vis .showcase{display:none}
-  .auth-pts{display:grid;gap:10px}
-  .auth-pts li{position:static;box-shadow:none}
+  .auth-pts{grid-template-columns:minmax(0,1fr);gap:10px;margin:0}
+  .auth-pts li{box-shadow:none}
 }
 
 /* Phones: every button is a comfortable touch target. */

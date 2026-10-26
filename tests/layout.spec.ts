@@ -39,16 +39,15 @@ test('on a phone the sections fold into a menu, with the current one marked', as
   await expect(page.getByRole('navigation', { name: 'Menu' })).toBeHidden();
 });
 
-test('no sideways scrolling on a phone behind an account: verify, checkout, account, invoice', async ({ page }) => {
+test('no sideways scrolling on a phone behind an account: checkout, account, invoice', async ({ page }) => {
   const email = `e2e${Date.now().toString(36)}layout@example.com`;
   await page.goto('/zh/signup/');
   await page.fill('#email', email);
+  await page.click('#get');
+  await expect(page.locator('#sent')).toBeVisible();
+  await page.fill('#code', await emailCode(email));
   await page.fill('#password', 'correct horse battery');
   await page.check('#consent');
-  await page.click('button[type="submit"]');
-  await page.waitForURL(/\/verify\//);
-  expect(await sideways(page), 'verify').toBe(0);
-  await page.fill('#code', await emailCode(email));
   await page.click('button[type="submit"]');
   await page.waitForURL(/\/account\//);
   await page.goto('/zh/checkout/');

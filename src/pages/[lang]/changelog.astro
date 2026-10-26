@@ -1,6 +1,7 @@
 ---
 // What changed, release by release: each says which part of Folio it is (the workbench or the website) and what was
-// added, improved and fixed; tabs show one part at a time. Subscribing is not open yet, and the box says so.
+// added, improved and fixed; tabs show one part at a time. Below, subscribing to release news: an email with a link
+// confirms it, and that email's links come back here (?confirm=, ?unsubscribe=).
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import type { IconName } from '../../lib/icons';
@@ -35,7 +36,7 @@ const KINDS: ['added' | 'improved' | 'fixed', IconName][] = [['added', 'plus'], 
           </li>
         ))}
       </ol>
-      <div class="cl-sub">
+      <div class="cl-sub" id="subscribe">
         <svg class="cl-env" viewBox="0 0 80 72" width="80" height="72" aria-hidden="true">
           <defs>
             <linearGradient id="cl-env-front" x1="0" y1="0" x2="0" y2="1"><stop class="hi" offset="0" /><stop class="lo" offset="1" /></linearGradient>
@@ -48,21 +49,50 @@ const KINDS: ['added' | 'improved' | 'fixed', IconName][] = [['added', 'plus'], 
           <path class="folds" d="M10 62 33 47.5M70 62 47 47.5" />
         </svg>
         <div><h2>{L.subscribe.title}</h2><p>{L.subscribe.body}</p></div>
-        <form class="cl-sub-form" aria-disabled="true">
-          <input type="email" placeholder={L.subscribe.placeholder} aria-label={L.subscribe.placeholder} disabled />
-          <span class="cl-soon">{L.subscribe.soon}</span>
+        <form class="cl-sub-form" id="sub-form" novalidate>
+          <input type="email" id="sub-email" autocomplete="email" placeholder={L.subscribe.placeholder} aria-label={L.subscribe.placeholder} required />
+          <button class="btn btn-primary btn-lg" type="submit">{L.subscribe.send}</button>
         </form>
+        <p class="cl-sub-msg" id="sub-msg" role="status" hidden></p>
       </div>
     </div>
   </section>
 </Base>
 <script>
+  import { api, errorText } from '../../lib/api';
+  import { pageLang, t } from '../../lib/i18n';
   // One part of Folio at a time, or everything.
   const tabs = document.querySelectorAll<HTMLButtonElement>('.cl-tabs button');
   tabs.forEach(b => b.addEventListener('click', () => {
     tabs.forEach(x => x.setAttribute('aria-pressed', String(x === b)));
     document.querySelectorAll<HTMLElement>('.cl-list > li').forEach(li => { li.hidden = b.dataset.area !== 'all' && li.dataset.area !== b.dataset.area; });
   }));
+
+  const lang = pageLang(), d = t(lang), S = d.changelog.subscribe;
+  const form = document.getElementById('sub-form') as HTMLFormElement, field = document.getElementById('sub-email') as HTMLInputElement;
+  const msg = document.getElementById('sub-msg')!;
+  const say = (text: string, ok: boolean) => { msg.textContent = text; msg.className = `cl-sub-msg ${ok ? 'ok' : 'bad'}`; msg.hidden = false; };
+  // Subscribing sends the email that confirms it; an address already confirmed is told so.
+  form.addEventListener('submit', async ev => {
+    ev.preventDefault();
+    const email = field.value.trim();
+    if (!email || !field.checkValidity()){ say(d.errors.emailMissing, false); field.focus(); return; }
+    const send = form.querySelector('button')!;
+    send.disabled = true;
+    try {
+      const { status } = await api<{ status: 'pending' | 'subscribed' }>('POST', '/news/subscribe', { email, locale: lang });
+      say(status === 'subscribed' ? S.subscribed : S.pending(email), true);
+    } catch (e){ say(errorText(d, e), false); } finally { send.disabled = false; }
+  });
+  // The email's links: confirming or unsubscribing happens here, and the box says how it went.
+  const query = new URLSearchParams(location.search);
+  for (const [name, path, done] of [['confirm', '/news/confirm', S.confirmed], ['unsubscribe', '/news/unsubscribe', S.unsubscribed]] as const){
+    const token = query.get(name);
+    if (!token) continue;
+    history.replaceState(null, '', location.pathname);
+    api('POST', path, { token }).then(() => say(done, true), () => say(S.badLink, false))
+      .finally(() => document.getElementById('subscribe')!.scrollIntoView({ block: 'center' }));
+  }
 </script>
 <style>
   .cl-hero{padding-block:56px 52px}
@@ -108,10 +138,14 @@ const KINDS: ['added' | 'improved' | 'fixed', IconName][] = [['added', 'plus'], 
   .cl-sub h2{font:600 19px/1.4 var(--f-body);letter-spacing:0}
   .cl-sub p{margin-top:6px;font-size:14px;color:var(--ink-2)}
   .cl-sub-form{display:flex;gap:10px;width:380px}
-  .cl-sub-form input{flex:1;min-width:0;height:var(--h-lg);padding:0 14px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--card);font:inherit;font-size:14px;color:var(--ink);cursor:not-allowed}
+  .cl-sub-form input{flex:1;min-width:0;height:var(--h-lg);padding:0 14px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--card);font:inherit;font-size:14px;color:var(--ink)}
   .cl-sub-form input::placeholder{color:var(--ink-3)}
-  .cl-soon{display:inline-flex;align-items:center;justify-content:center;flex:none;min-width:112px;height:var(--h-lg);padding:0 18px;border-radius:var(--r);background:var(--accent-soft);color:var(--accent-ink);font-size:14px;font-weight:600;white-space:nowrap}
-  @media (max-width:980px){.cl-sub{grid-template-columns:auto minmax(0,1fr);padding:24px 28px}.cl-sub-form{grid-column:1 / -1;width:auto}}
+  .cl-sub-form input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .cl-sub-form .btn{min-width:96px}
+  .cl-sub-msg{grid-column:2 / -1;margin-top:-12px;font-size:13.5px;line-height:1.6}
+  .cl-sub-msg.ok{color:var(--good-ink)}
+  .cl-sub-msg.bad{color:var(--bad-ink)}
+  @media (max-width:980px){.cl-sub{grid-template-columns:auto minmax(0,1fr);padding:24px 28px}.cl-sub-form,.cl-sub-msg{grid-column:1 / -1;width:auto}.cl-sub-msg{margin-top:-8px}}
   @media (max-width:860px){.cl-list > li{grid-template-columns:minmax(0,1fr)}.cl-list > li::before{display:none}}
   @media (max-width:560px){.cl-sub{gap:18px;padding:22px 20px}.cl-env{width:60px;height:54px}}
   @media (max-width:720px){.cl-cols > section,.cl-cols > section + section{padding:0;border:0}}

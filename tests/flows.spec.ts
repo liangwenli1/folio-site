@@ -30,8 +30,8 @@ async function owner(){
   const email = uniqueEmail();
   // Paths are relative to the API's address (with a trailing slash), which can have a path of its own (/api in production).
   const api = await request.newContext({ baseURL: `${process.env.API_URL ?? 'http://localhost:47110'}/`, extraHTTPHeaders: { origin: new URL(process.env.SITE_URL ?? 'http://localhost:47120').origin } });
-  await api.post('auth/register', { data: { email, password: PASSWORD } });
-  await api.post('auth/verify-email', { data: { code: await emailCode(email) } });
+  await api.post('auth/signup-code', { data: { email } });
+  await api.post('auth/register', { data: { email, code: await emailCode(email), password: PASSWORD } });
   const workspaceId = (await (await api.get('me')).json()).workspaces[0].id as string;
   const { checkoutId } = await (await api.post(`workspaces/${workspaceId}/billing/checkout`, { data: { plan: 'studio', period: 'monthly', addonPacks: 0 } })).json();
   await api.post(`billing/checkouts/${checkoutId}/pay`, { data: { card: { number: '4242424242424242', expMonth: 12, expYear: 2030, cvc: '123' } } });
@@ -46,15 +46,21 @@ test.beforeEach(async ({ page }) => {
   await page.route(/fonts\.(googleapis|gstatic)\.com/, r => r.abort());
 });
 
+// Signing up on the page: a code to the address, the code, a password, the terms agreed to.
+async function fillSignUp(page: Page, email: string){
+  await page.fill('#email', email);
+  await page.click('#get');
+  // Once the page says it was sent, the code is the newest email (an invitation may have come before it).
+  await expect(page.locator('#sent')).toBeVisible();
+  await page.fill('#code', await emailCode(email));
+  await page.fill('#password', PASSWORD);
+  await page.check('#consent');
+}
+
 async function signUp(page: Page, lang: 'en' | 'zh', next = ''){
   const email = uniqueEmail();
   await page.goto(`/${lang}/signup/${next ? `?next=${encodeURIComponent(next)}` : ''}`);
-  await page.fill('#email', email);
-  await page.fill('#password', PASSWORD);
-  await page.check('#consent');
-  await page.click('button[type="submit"]');
-  await page.waitForURL(/\/verify\//);
-  await page.fill('#code', await emailCode(email));
+  await fillSignUp(page, email);
   await page.click('button[type="submit"]');
   await page.waitForURL(next ? new RegExp(next.replace(/[?]/g, '\\?')) : /\/account\//);
   return email;
@@ -202,17 +208,56 @@ test('logging in from checkout brings you back to checkout', async ({ page, cont
   await expect(page.locator('#total')).toHaveText('$99');
 });
 
-test('signing up needs the terms and privacy policy agreed to, which open beside the form', async ({ page }) => {
+test('signing up takes the code sent to the address and the terms agreed to; an address with an account is told to log in', async ({ page, context }) => {
+  const email = uniqueEmail();
   await page.goto('/en/signup/');
-  await page.fill('#email', uniqueEmail());
+  await page.fill('#email', email);
   await page.fill('#password', PASSWORD);
+  await page.click('button[type="submit"]');
+  await expect(page.locator('#err')).toHaveText('Enter the 6-digit code.');
+  await expect(page.locator('#code')).toBeFocused();
+  await page.getByRole('button', { name: 'Get a code' }).click();
+  await expect(page.locator('#sent')).toBeVisible();
+  await expect(page.locator('#get')).toBeDisabled();
+  await expect(page.locator('#get')).toHaveText(/^Resend in \d+s$/);
+  const code = await emailCode(email);
+  await page.fill('#code', code === '000000' ? '111111' : '000000');
+  await page.check('#consent');
+  await page.click('button[type="submit"]');
+  await expect(page.locator('#err')).toHaveText('Incorrect code. Check the email and try again.');
+  await page.fill('#code', code);
+  await page.uncheck('#consent');
   await page.click('button[type="submit"]');
   await expect(page.locator('#err')).toHaveText('Read and agree to the terms of service and privacy policy first.');
   await expect(page.locator('#consent')).toBeFocused();
   await expect(page.locator('#form').getByRole('link', { name: 'Terms of service' })).toHaveAttribute('target', '_blank');
   await page.check('#consent');
   await page.click('button[type="submit"]');
-  await page.waitForURL(/\/verify\//);
+  await page.waitForURL(/\/account\//);
+
+  await context.clearCookies();
+  await page.goto('/en/signup/');
+  await page.fill('#email', email);
+  await page.getByRole('button', { name: 'Get a code' }).click();
+  await expect(page.locator('#err')).toHaveText('This email is already registered. Log in instead.');
+});
+
+test('subscribing to release news takes the emailed link, and the other link unsubscribes', async ({ page }) => {
+  const email = uniqueEmail();
+  await page.goto('/zh/changelog/');
+  await page.fill('#sub-email', email);
+  await page.getByRole('button', { name: '订阅', exact: true }).click();
+  await expect(page.locator('#sub-msg')).toHaveText(`确认邮件已发送至 ${email}，请点击邮件中的链接完成订阅。`);
+  const mail = await lastMail(email);
+  const path = (name: string) => mail.Text.match(new RegExp(`https?://\\S+\\?${name}=[\\w-]+`))![0].replace(/^https?:\/\/[^/]+/, '');
+  await page.goto(path('confirm'));
+  await expect(page.locator('#sub-msg')).toHaveText('订阅成功，您将收到 Folio 的版本更新通知。');
+  await expect(page).toHaveURL(/\/zh\/changelog\/$/);
+  await page.fill('#sub-email', email);
+  await page.getByRole('button', { name: '订阅', exact: true }).click();
+  await expect(page.locator('#sub-msg')).toHaveText('该邮箱已订阅更新通知。');
+  await page.goto(path('unsubscribe'));
+  await expect(page.locator('#sub-msg')).toHaveText('已退订，之后不再发送更新通知。');
 });
 
 test('logging in outlasts the browser only with “Remember me”', async ({ page, context }) => {
@@ -300,11 +345,7 @@ test('an emailed invitation leads a new person through sign-up into the workspac
   await expect(page.locator('#for')).toContainText(`Invited email: ${email} · Expires on `);
   await page.getByRole('link', { name: 'Create an account' }).click();
   await expect(page.locator('#email')).toHaveValue(email);
-  await page.fill('#password', PASSWORD);
-  await page.check('#consent');
-  await page.click('button[type="submit"]');
-  await page.waitForURL(/\/verify\//);
-  await page.fill('#code', await emailCode(email));
+  await fillSignUp(page, email);
   await page.click('button[type="submit"]');
 
   await page.waitForURL(/\/invite\//);

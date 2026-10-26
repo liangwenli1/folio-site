@@ -1,7 +1,8 @@
 ---
-// Signing up: an email and a password, and agreeing to the terms and the privacy policy (they open in a new tab, so
-// nothing typed is lost); the emailed code comes next, on the verify page. An invitation fills in the email (?email=),
-// and ?next= is kept for afterwards.
+// Signing up: the email, a code sent to it (a minute between codes), a password, and agreeing to the terms and the
+// privacy policy (they open in a new tab, so nothing typed is lost). The account it makes is already verified. An
+// invitation fills in the email (?email=), and ?next= is where it goes afterwards. A test server without email
+// verification asks for no code.
 import AuthPage from '../../layouts/AuthPage.astro';
 import Password from '../../components/Password.astro';
 import { langPaths, link, t, type Lang } from '../../lib/i18n';
@@ -14,10 +15,18 @@ const A = t(lang).auth;
   <div class="page-head"><h1>{A.signupTitle}</h1><p>{A.signupLead}</p></div>
   <form class="form" id="form" novalidate>
     <div class="notice error" id="err" role="alert" hidden></div>
+    <div class="notice ok" id="sent" role="status" hidden>{A.codeSent}</div>
     <div class="field"><label for="email">{A.email}</label><input id="email" name="email" type="email" autocomplete="email" placeholder={A.emailPh} required /></div>
+    <div class="field" id="code-field">
+      <label for="code">{A.code}</label>
+      <div class="code-row">
+        <input id="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder={A.codePh} required />
+        <button class="btn btn-secondary" type="button" id="get">{A.getCode}</button>
+      </div>
+    </div>
     <div class="field">
       <label for="password">{A.setPassword}</label>
-      <Password lang={lang} id="password" autocomplete="new-password" minlength={8} />
+      <Password lang={lang} id="password" autocomplete="new-password" minlength={8} placeholder={A.passwordPh} />
       <span class="hint">{A.passwordHint}</span>
     </div>
     <label class="check"><input type="checkbox" id="consent" required /><span>{A.consent[0]} <a href={link(lang, 'terms/')} target="_blank">{A.consent[1]}</a> {A.consent[2]} <a href={link(lang, 'privacy/')} target="_blank">{A.consent[3]}</a></span></label>
@@ -27,16 +36,38 @@ const A = t(lang).auth;
 </AuthPage>
 <script>
   import { api } from '../../lib/api';
-  import { $, d, lang, nextPath, onSubmit, param, to, withNext } from '../../scripts/session';
+  import { $, cooldown, d, lang, nextPath, onSubmit, param, showError, to, withNext } from '../../scripts/session';
+  const err = $('err'), email = $<HTMLInputElement>('email'), code = $<HTMLInputElement>('code');
   $<HTMLAnchorElement>('to-login').href = withNext(to('login/'));
-  if (param('email')) $<HTMLInputElement>('email').value = param('email')!;
-  onSubmit($<HTMLFormElement>('form'), $('err'), async () => {
-    const email = $<HTMLInputElement>('email').value.trim(), password = $<HTMLInputElement>('password').value;
-    if (!email) throw d.errors.emailMissing;
-    if (password.length < 8) throw d.errors.passwordShort;
+  if (param('email')) email.value = param('email')!;
+  let needCode = true;
+  api<{ emailVerification: boolean }>('GET', '/auth/options').then(o => { needCode = o.emailVerification; $('code-field').hidden = !needCode; }).catch(() => {});
+  const address = () => email.value.trim();
+  const needEmail = () => { if (!address() || !email.checkValidity()){ email.focus(); throw d.errors.emailMissing; } };
+
+  $('get').addEventListener('click', async () => {
+    const get = $<HTMLButtonElement>('get');
+    err.hidden = true;
+    try {
+      needEmail();
+      get.disabled = true;
+      await api('POST', '/auth/signup-code', { email: address(), locale: lang });
+      $('sent').hidden = false;
+      cooldown(get, d.auth.resendIn);
+      code.focus();
+    } catch (e){
+      get.disabled = false;
+      showError(err, e);
+    }
+  });
+
+  onSubmit($<HTMLFormElement>('form'), err, async () => {
+    needEmail();
+    if (needCode && !/^\d{6}$/.test(code.value.trim())){ code.focus(); throw d.errors.codeMissing; }
+    const password = $<HTMLInputElement>('password').value;
+    if (password.length < 8 || password.length > 64){ $('password').focus(); throw d.errors.passwordShort; }
     if (!$<HTMLInputElement>('consent').checked){ $('consent').focus(); throw d.errors.consentMissing; }
-    const { user } = await api<{ user: { emailVerified: boolean } }>('POST', '/auth/register', { email, password, locale: lang });
-    // A test server can skip email verification; then there is no code to enter.
-    location.assign(user.emailVerified ? nextPath() ?? to('account/') : withNext(to('verify/')));
+    await api('POST', '/auth/register', { email: address(), code: needCode ? code.value.trim() : undefined, password, locale: lang });
+    location.assign(nextPath() ?? to('account/'));
   });
 </script>

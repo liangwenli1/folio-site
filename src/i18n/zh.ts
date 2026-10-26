@@ -244,15 +244,15 @@ export const zh: typeof en = {
     },
     loginTitle: '登录 Folio', loginLead: '使用您的账号登录，继续管理浏览器环境。',
     signupTitle: '创建 Folio 账号', signupLead: '免费体验 5 个浏览器环境，无需绑定银行卡。',
-    email: '邮箱', emailPh: 'name@example.com', password: '密码', setPassword: '设置密码', passwordHint: '至少 8 位',
+    email: '邮箱', emailPh: 'name@example.com', password: '密码', setPassword: '设置密码', passwordPh: '请输入密码', passwordHint: '8 至 64 位，建议包含字母、数字和符号',
+    code: '邮箱验证码', codePh: '请输入 6 位验证码', getCode: '获取验证码', codeSent: '验证码已发送，15 分钟内有效。',
     remember: '记住登录', forgot: '忘记密码？',
     consent: ['我已阅读并同意', '服务条款', '和', '隐私政策'] as [string, string, string, string],
     signup: '注册账号', login: '登录', haveAccount: '已有账号？', noAccount: '没有账号？', toSignup: '注册',
-    verifyTitle: '验证邮箱', verifyLead: (email: string) => `验证码已发送至 ${email}，15 分钟内有效。`,
-    code: '验证码', verify: '验证', resend: '重新发送', resendIn: (s: number) => `${s} 秒后可重发`, resent: '新的验证码已发送。',
+    verifyTitle: '验证邮箱', verifyLead: (email: string) => `点击「发送验证码」，验证码将发送至 ${email}，15 分钟内有效。`,
+    verify: '验证', resend: '发送验证码', resendIn: (s: number) => `${s} 秒后可重发`, resent: '验证码已发送。',
     reset: {
       title: '重置密码', lead: '验证邮箱后设置新的登录密码。', steps: ['验证邮箱', '设置新密码', '完成'],
-      code: '邮箱验证码', codePh: '请输入 6 位验证码', getCode: '获取验证码',
       sent: '如该邮箱已注册，验证码将发送至该邮箱，15 分钟内有效。',
       next: '下一步', password: '新密码', confirm: '确认新密码', save: '保存新密码', back: '返回上一步',
       doneTitle: '密码已重置', doneText: '请使用新密码登录。', toLogin: '返回登录',
@@ -507,7 +507,11 @@ export const zh: typeof en = {
       { version: '0.1', date: '2026 年 10 月', area: 'site',
         added: ['注册、登录与邮箱验证', '套餐、结账与发票', '账户与团队邀请'], improved: [], fixed: [] }
     ] as { version: string; date: string; area: 'desktop' | 'site'; added: string[]; improved: string[]; fixed: string[] }[],
-    subscribe: { title: '订阅更新通知', body: '输入邮箱，获取 Folio 的版本更新与功能动态。', placeholder: '请输入邮箱地址', soon: '即将开放' }
+    subscribe: {
+      title: '订阅更新通知', body: '输入邮箱，获取 Folio 的版本更新与功能动态。', placeholder: '请输入邮箱地址', send: '订阅',
+      pending: (email: string) => `确认邮件已发送至 ${email}，请点击邮件中的链接完成订阅。`, subscribed: '该邮箱已订阅更新通知。',
+      confirmed: '订阅成功，您将收到 Folio 的版本更新通知。', unsubscribed: '已退订，之后不再发送更新通知。', badLink: '链接无效或已失效，请重新订阅。'
+    }
   },
 
   docs: {
@@ -570,6 +574,7 @@ export const zh: typeof en = {
             ['浏览器环境与代理', '环境名称、指纹参数、标签与备注；代理地址、账号密码与检测结果（出口 IP 与所在地区）；启用云端同步的环境，另含登录状态（Cookie、本地存储等）。', '代理密码与登录状态加密后存储。'],
             ['操作日志', '成员在团队内的操作及所用设备名称。', '按套餐保留：体验版 7 天、工作室版 30 天、公司版 1 年。'],
             ['官网 Cookie', '保持官网登录状态的会话 Cookie。', '勾选「记住登录」时保留 30 天，否则关闭浏览器后失效。'],
+            ['更新订阅', '订阅更新通知时填写的邮箱与界面语言。', '经邮件确认后才发送通知；退订即删除。'],
             ['联系与反馈', '联系表单中的姓名、邮箱、团队规模与需求描述；帮助文档的「是否有帮助」评价。', '文档评价不关联账号。']
           ] as string[][] } },
         { id: 'use', title: '使用目的', lead: '本节说明上述信息的用途。上述信息不用于广告投放。',
@@ -580,6 +585,7 @@ export const zh: typeof en = {
             ['团队与套餐', '按角色与分组控制访问范围、计算套餐额度、开具发票与处理退款。'],
             ['浏览器环境与代理', '在您的电脑上按配置打开浏览器环境、在团队成员之间同步登录状态，以及检测代理连接。'],
             ['操作日志', '供有相应权限的成员查看操作记录、排查问题。'],
+            ['更新订阅', '发送 Folio 的版本更新与功能动态。'],
             ['联系与反馈', '回复您的咨询，改进帮助文档。']
           ] as string[][] } },
         { id: 'store', title: '存储与保护', lead: '本节说明信息的存储方式与保护措施。',
@@ -600,7 +606,8 @@ export const zh: typeof en = {
             ['查看', '在账户页查看注册邮箱、所在团队与付款记录；有相应权限的成员可在工作台查看操作日志。'],
             ['更正', '在工作台修改浏览器环境、代理与团队信息；忘记密码时可通过邮箱验证重新设置。'],
             ['导出', '有导出权限的成员可将团队的浏览器环境导出为加密文件。'],
-            ['删除', '浏览器环境与代理可随时删除；注销账号请通过「联系我们」提交申请，处理时限待确认。']
+            ['删除', '浏览器环境与代理可随时删除；注销账号请通过「联系我们」提交申请，处理时限待确认。'],
+            ['退订', '订阅确认邮件中附有退订链接，打开即可退订更新通知。']
           ] as [string, string | null, string?][] },
         { id: 'contact', title: '联系我们', lead: '如对本政策或个人信息的处理有疑问，可通过以下方式联系我们。',
           items: [
@@ -659,10 +666,11 @@ export const zh: typeof en = {
     already_refunded: '该笔付款已退款。',
     payments_unavailable: '暂不支持付款。',
     rate_limited: '操作过于频繁，请一分钟后重试。',
+    too_soon: '邮件刚刚已发送，请一分钟后再试。',
     forbidden: '没有访问权限。',
     not_found: '未找到相关内容。',
     validation: '部分内容未填写或格式有误。',
-    emailMissing: '请填写邮箱。', passwordShort: '密码至少 8 位。',
+    emailMissing: '请填写邮箱。', passwordShort: '密码需为 8 至 64 位。',
     codeMissing: '请填写 6 位验证码。', passwordMismatch: '两次输入的密码不一致。', consentMissing: '请先阅读并同意服务条款和隐私政策。',
     network: '无法连接 Folio，请检查网络后重试。',
     wrong_account: '该邀请发送至其他邮箱。',

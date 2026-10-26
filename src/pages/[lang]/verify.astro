@@ -1,25 +1,28 @@
 ---
-// Verifying the email after signing up: the emailed code, or a new one (a minute apart). Done, it goes where the
-// visitor was headed (?next=), or to the account.
+// Verifying the email of an account made before sign-up codes (new accounts start verified): send a code, a minute
+// apart, and enter it. The account page, checkout and invitations lead here. Done, it goes where the visitor was
+// headed (?next=), or to the account.
 import AuthPage from '../../layouts/AuthPage.astro';
 import { langPaths, t, type Lang } from '../../lib/i18n';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
-const d = t(lang);
+const A = t(lang).auth;
 ---
-<AuthPage lang={lang} path="verify/" title={d.auth.verifyTitle}>
-  <div class="page-head"><h1>{d.auth.verifyTitle}</h1><p id="lead"></p></div>
+<AuthPage lang={lang} path="verify/" title={A.verifyTitle}>
+  <div class="page-head"><h1>{A.verifyTitle}</h1><p id="lead"></p></div>
   <form class="form" id="form" novalidate>
-    <div class="notice dev" id="dev" hidden>{d.auth.devNotice}</div>
-    <div class="notice ok" id="ok" hidden></div>
+    <div class="notice dev" id="dev" hidden>{A.devNotice}</div>
+    <div class="notice ok" id="ok" role="status" hidden></div>
     <div class="notice error" id="err" role="alert" hidden></div>
     <div class="field">
-      <label for="code">{d.auth.code}</label>
-      <input class="code-input" id="code" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required />
+      <label for="code">{A.code}</label>
+      <div class="code-row">
+        <input id="code" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder={A.codePh} required />
+        <button class="btn btn-secondary" type="button" id="resend">{A.resend}</button>
+      </div>
     </div>
-    <button class="btn btn-primary btn-lg full" type="submit">{d.auth.verify}</button>
-    <button class="linkish fine" id="resend" type="button">{d.auth.resend}</button>
+    <button class="btn btn-primary btn-lg full" type="submit">{A.verify}</button>
   </form>
 </AuthPage>
 <script>
@@ -31,15 +34,21 @@ const d = t(lang);
   $('lead').textContent = d.auth.verifyLead(me.user.email);
   $('dev').hidden = !devBuild;
   onSubmit($<HTMLFormElement>('form'), $('err'), async () => {
-    await api('POST', '/auth/verify-email', { code: $<HTMLInputElement>('code').value });
+    await api('POST', '/auth/verify-email', { code: $<HTMLInputElement>('code').value.trim() });
     done();
   });
   $('resend').addEventListener('click', async () => {
+    const send = $<HTMLButtonElement>('resend');
     $('err').hidden = true;
+    send.disabled = true;
     try {
       await api('POST', '/auth/resend-code');
       $('ok').textContent = d.auth.resent; $('ok').hidden = false;
-      cooldown($<HTMLButtonElement>('resend'), d.auth.resendIn);
-    } catch (e){ showError($('err'), e); }
+      cooldown(send, d.auth.resendIn);
+      $('code').focus();
+    } catch (e){
+      send.disabled = false;
+      showError($('err'), e);
+    }
   });
 </script>

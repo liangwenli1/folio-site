@@ -22,10 +22,10 @@ const A = t(lang).auth, R = A.reset;
     <div class="notice ok" id="sent" role="status" hidden>{R.sent}</div>
     <div class="field"><label for="email">{A.email}</label><input id="email" type="email" autocomplete="email" placeholder={A.emailPh} required /></div>
     <div class="field">
-      <label for="code">{R.code}</label>
-      <div class="rs-code">
-        <input id="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder={R.codePh} required />
-        <button class="btn btn-secondary" type="button" id="get">{R.getCode}</button>
+      <label for="code">{A.code}</label>
+      <div class="code-row">
+        <input id="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder={A.codePh} required />
+        <button class="btn btn-secondary" type="button" id="get">{A.getCode}</button>
       </div>
     </div>
     <button class="btn btn-primary btn-lg full" type="submit">{R.next}</button>
@@ -119,8 +119,6 @@ const A = t(lang).auth, R = A.reset;
   .rs-steps li.done .rs-n{background:var(--accent-soft);color:var(--accent-ink)}
   .rs-steps li.done .rs-n b{display:none}
   .rs-steps li.done .rs-n :global(.i){display:block}
-  .rs-code{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px}
-  .rs-code .btn{min-width:132px;height:var(--h-ctl)}
   .rs-help{padding-top:18px;border-top:1px solid var(--line);text-align:center;font-size:13.5px;color:var(--ink-3)}
   .rs-done{display:grid;justify-items:center;gap:10px;text-align:center}
   .rs-ok{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:var(--good-soft);color:var(--good)}
