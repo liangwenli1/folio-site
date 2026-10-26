@@ -15,9 +15,9 @@ test('the API reference lists the endpoints and both engines’ protocols, in En
   await expect(page.getByText('返回 WebDriver BiDi 地址。')).toBeVisible();
 });
 
-test('the homepage names the tools the local API works with', async ({ page }) => {
-  await page.goto('/en/');
-  await expect(page.locator('#auto .libs')).toContainText('CDP · WebDriver BiDi');
+test('the features page names the tools the local API works with', async ({ page }) => {
+  await page.goto('/en/features/');
+  await expect(page.locator('#automation')).toContainText('Playwright, Puppeteer and Selenium');
 });
 
 test('the docs search narrows the contents and the page headings, without a server', async ({ page }) => {

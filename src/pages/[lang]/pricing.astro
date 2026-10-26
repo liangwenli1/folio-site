@@ -1,0 +1,110 @@
+---
+// Plans and prices: the three plans with live prices from the server (scripts/pricing.ts), what each includes, the
+// calculator that finds the cheapest plan for a number of profiles, and questions about trying and paying.
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import PageHero from '../../components/PageHero.astro';
+import Shot from '../../components/Shot.astro';
+import Faq from '../../components/Faq.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { langPaths, link, t, type Lang } from '../../lib/i18n';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const d = t(lang), P = d.pricing, C = P.calc;
+const PLANS = ['free', 'studio', 'company'] as const;
+const start = { free: link(lang, 'signup/'), studio: link(lang, 'checkout/?plan=studio&trial=1'), company: link(lang, 'contact-sales/') };
+---
+<Base lang={lang} path="pricing/" title={P.title} description={P.lead}>
+  <PageHero lang={lang} title={P.h1} lead={P.lead}>
+    <p class="price-note"><Icon name="info" size={15} />{P.note}</p>
+    <Shot slot="vis" lang={lang} name="list" alt={P.shot} zoom={1.2} origin="100% 0" eager />
+  </PageHero>
+
+  <section class="msec">
+    <div class="wrap">
+      <div class="price-head">
+        <div class="seg" role="group" aria-label={P.period}>
+          <button type="button" data-period="monthly" aria-pressed="true">{P.monthly}</button>
+          <button type="button" data-period="yearly" aria-pressed="false">{P.yearly}<em>{P.save}</em></button>
+        </div>
+      </div>
+      <div class="plans">
+        {PLANS.map(id => (
+          <article class={id === 'studio' ? 'card plan featured' : 'card plan'} data-plan={id}>
+            <span class="plan-tag">{P.tags[id]}</span>
+            <h3>{d.plans[id]}</h3>
+            <p class="plan-for">{P.for[id]}</p>
+            <p class="price"><span class="amt" data-amt></span><span class="per" data-per></span></p>
+            <p class="plan-meta" data-perenv></p>
+            <p class="plan-note" data-note></p>
+            <p class="plan-fit" data-fit hidden></p>
+            <a class={id === 'studio' ? 'btn btn-primary full' : 'btn btn-secondary full'} data-cta href={start[id]}>{P.cta[id]}</a>
+            {id !== 'free' && <a class="buy" data-buy href={link(lang, `checkout/?plan=${id}&period=monthly`)}>{P.buy}</a>}
+            <ul class="feat">{P.features[id].map(f => <li><Icon name="check" size={12} />{f}</li>)}</ul>
+          </article>
+        ))}
+      </div>
+      <p class="price-foot" data-foot></p>
+
+      <div class="card cmp tbl-scroll">
+        <table>
+          <thead><tr><th scope="col">{P.compare.title}</th>{PLANS.map(id => <th scope="col">{d.plans[id]}</th>)}</tr></thead>
+          <tbody>
+            {P.compare.rows.map(([label, ...cells]) => (
+              <tr>
+                <th scope="row">{label}</th>
+                {cells.map(c => <td>{c === true
+                  ? <span class="yes" role="img" aria-label={P.compare.yes}><Icon name="check" /></span>
+                  : c === false ? <span class="no" role="img" aria-label={P.compare.no}>—</span> : c}</td>)}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card calc" id="calc" hidden>
+        <div class="calc-intro"><span class="plan-tag">{C.eyebrow}</span><h2>{C.title}</h2><p>{C.hint}</p></div>
+        <div>
+          <div class="calc-pick">
+            <label for="calc-n">{C.label}</label>
+            <div class="calc-track" id="calc-track">
+              <output id="calc-out" for="calc-n"></output>
+              <input type="range" id="calc-n" min="0" step="1" />
+            </div>
+            <div class="calc-ticks" id="calc-ticks" aria-hidden="true"></div>
+          </div>
+          <div class="calc-res" aria-live="polite">
+            <p class="fine">{C.best}</p>
+            <p class="calc-plan"><span id="calc-plan"></span><em id="calc-cheapest">{C.cheapest}</em></p>
+            <p class="price"><span class="amt" id="calc-amt"></span><span class="per" id="calc-per">{P.perMonth}</span></p>
+            <p class="calc-detail" id="calc-detail"></p>
+            <p class="fine" id="calc-alt"></p>
+            <a class="btn btn-primary btn-sm" id="calc-cta" href="#"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="msec alt">
+    <div class="wrap"><Faq title={P.faq.title} lead={P.faq.lead} contact={{ label: P.faq.contact, href: link(lang, 'contact-sales/') }} items={P.faq.items} /></div>
+  </section>
+
+  <section class="msec cta-sec">
+    <div class="wrap">
+      <CtaBand title={P.band.title} body={P.band.body}>
+        <a class="btn btn-primary btn-lg" href={link(lang, 'signup/')}>{P.cta.free}<Icon name="chevr" /></a>
+        <a class="btn btn-secondary btn-lg" href={link(lang, 'contact-sales/')}>{P.cta.company}</a>
+      </CtaBand>
+    </div>
+  </section>
+</Base>
+<style>
+  .price-note{display:flex;align-items:center;gap:8px;margin-top:28px;padding:10px 14px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);font-size:14px;color:var(--ink-2)}
+  .price-note .i{color:var(--accent)}
+</style>
+<script>
+  import { startPricing } from '../../scripts/pricing';
+  startPricing();
+</script>

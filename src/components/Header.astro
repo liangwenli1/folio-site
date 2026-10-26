@@ -1,29 +1,28 @@
 ---
+// The site's header: the brand, the five sections (the one this page is in marked), signing in and trying Folio — or
+// the account for someone signed in. Narrower than a tablet the sections fold into a menu under a button.
 import Mark from './Mark.astro';
+import Icon from './Icon.astro';
 import { link, t, type Lang } from '../lib/i18n';
 
-interface Props { lang: Lang }
-const { lang } = Astro.props;
-const d = t(lang);
+interface Props { lang: Lang; path: string }
+const { lang, path } = Astro.props;
+const d = t(lang), n = d.nav;
+const SECTIONS: [string, string][] = [[n.features, 'features/'], [n.solutions, 'solutions/'], [n.pricing, 'pricing/'], [n.download, 'download/'], [n.help, 'docs/']];
+const here = (p: string) => path.startsWith(p);
 ---
 <header class="top">
   <div class="wrap top-in">
     <a class="brand" href={link(lang)} aria-label="Folio"><Mark /><span class="brand-word">Folio</span></a>
-    <nav class="nav" aria-label={d.nav.menu}>
-      <a href={`${link(lang)}#who`}>{d.nav.who}</a>
-      <a href={`${link(lang)}#inside`}>{d.nav.inside}</a>
-      <a href={`${link(lang)}#team`}>{d.nav.teams}</a>
-      <a href={`${link(lang)}#auto`}>{d.nav.automation}</a>
-      <a href={`${link(lang)}#price`}>{d.nav.pricing}</a>
-      <a href={`${link(lang)}#faq`}>{d.nav.faq}</a>
-    </nav>
-    <div class="top-act">
-      <span class="row" data-auth="out">
-        <a class="quiet" href={link(lang, 'login/')}>{d.nav.login}</a>
-        <a class="btn btn-primary btn-sm" href={link(lang, 'signup/')}>{d.nav.start}</a>
+    <nav class="nav" id="site-nav" aria-label={n.menu}>
+      {SECTIONS.map(([label, p]) => <a href={link(lang, p)} aria-current={here(p) ? 'page' : undefined}>{label}</a>)}
+      <span class="nav-acts" data-auth="out">
+        <a class="quiet" href={link(lang, 'login/')}>{n.login}</a>
+        <a class="btn btn-primary btn-sm" href={link(lang, 'signup/')}>{n.start}</a>
       </span>
-      <span data-auth="in" hidden><a class="btn btn-secondary btn-sm" href={link(lang, 'account/')}>{d.nav.account}</a></span>
-    </div>
+      <span class="nav-acts" data-auth="in" hidden><a class="btn btn-secondary btn-sm" href={link(lang, 'account/')}>{n.account}</a></span>
+    </nav>
+    <button class="menu-btn icon-only" type="button" aria-label={n.menu} aria-expanded="false" aria-controls="site-nav"><Icon name="menu" size={20} /></button>
   </div>
 </header>
 <script>
@@ -32,10 +31,10 @@ const d = t(lang);
     document.querySelectorAll('[data-auth="out"]').forEach(e => e.setAttribute('hidden', ''));
     document.querySelectorAll('[data-auth="in"]').forEach(e => e.removeAttribute('hidden'));
   }).catch(() => {});
-  // Over the home page's gradient the header stays clear until the page scrolls (global.css .over-hero).
-  if (document.documentElement.classList.contains('over-hero')){
-    const scrolled = () => document.documentElement.classList.toggle('scrolled', scrollY > 8);
-    scrolled();
-    addEventListener('scroll', scrolled, { passive: true });
-  }
+  // The menu on narrow screens: opens under the header, closes again on a link or Escape.
+  const btn = document.querySelector<HTMLButtonElement>('.menu-btn')!;
+  const set = (open: boolean) => { btn.setAttribute('aria-expanded', String(open)); document.documentElement.classList.toggle('menu-open', open); };
+  btn.addEventListener('click', () => set(btn.getAttribute('aria-expanded') !== 'true'));
+  document.querySelectorAll('#site-nav a').forEach(a => a.addEventListener('click', () => set(false)));
+  addEventListener('keydown', e => { if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true'){ set(false); btn.focus(); } });
 </script>

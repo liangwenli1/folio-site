@@ -1,212 +1,111 @@
 ---
+// The home page: what Folio is beside the walkthrough of the real workbench, the four things it manages (each with a
+// small piece of the workbench), three steps to start, the kinds of work it suits, questions, and a way to start.
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
-import type { IconName } from '../../lib/icons';
+import PageHero from '../../components/PageHero.astro';
 import Showcase from '../../components/Showcase.astro';
-import SampleProfile from '../../components/SampleProfile.astro';
-import '../../styles/landing.css';
+import Faq from '../../components/Faq.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import type { IconName } from '../../lib/icons';
 import { langPaths, link, t, type Lang } from '../../lib/i18n';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
-const d = t(lang);
-const h = d.hero;
-const WHO: IconName[] = ['profiles', 'proxies', 'team'];
-const TRUST: IconName[] = ['dice', 'search', 'restore', 'upload'];
-const AVATARS = ['#D2445E', '#2F6FD6', '#1E8A63', '#C98A12'];
+const d = t(lang), H = d.home, K = H.cards;
+const POINTS: IconName[] = ['lock', 'proxies', 'team'];
+const CARDS: IconName[] = ['profiles', 'proxies', 'folder', 'team'];
+const USES: [IconName, string][] = [['cart', 'solutions/ecommerce/'], ['chat', 'solutions/'], ['code', 'solutions/']];
 ---
-<Base lang={lang} path="" overHero>
-  <section class="hero" id="top">
-    <div class="glow" aria-hidden="true"></div>
-    <div class="wrap hero-in">
-      <div class="hero-copy">
-        <p class="eyebrow">{h.eyebrow}</p>
-        <h1>{h.h1}</h1>
-        <p class="lead">{h.lead}</p>
-        <div class="cta-row">
-          <a class="btn btn-primary btn-lg" href={link(lang, 'signup/')}>{h.ctaStart}</a>
-          <a class="btn btn-secondary btn-lg" href={link(lang, 'download/')}><Icon name="windows" />{h.ctaDownload}</a>
-        </div>
-        <p class="fine">{h.fine}</p>
-      </div>
-      <div class="hero-vis">
-        <Showcase lang={lang} label={h.showcase.label} pause={h.showcase.pause} play={h.showcase.play} />
-        <SampleProfile lang={lang} />
-      </div>
+<Base lang={lang} path="">
+  <PageHero lang={lang} title={H.h1} lead={H.lead}>
+    <div class="cta-row">
+      <a class="btn btn-primary btn-lg" href={link(lang, 'signup/')}>{d.nav.start}<Icon name="chevr" /></a>
+      <a class="btn btn-secondary btn-lg" href={link(lang, 'features/')}>{H.features}</a>
     </div>
-  </section>
-  <div class="wrap"><div class="spec">{h.spec.map(([b, s]) => <div><b>{b}</b><span>{s}</span></div>)}</div></div>
+    <ul class="phero-pts">
+      {H.points.map(([b, s], i) => <li><span class="tile acc"><Icon name={POINTS[i]} size={18} /></span><span><b>{b}</b><small>{s}</small></span></li>)}
+    </ul>
+    <div slot="vis" class="home-vis"><Showcase lang={lang} label={d.demo.label} pause={d.demo.pause} play={d.demo.play} /></div>
+  </PageHero>
 
-  <section class="sec" id="who">
+  <section class="msec alt">
     <div class="wrap">
-      <div class="sec-head"><p class="eyebrow">{d.who.eyebrow}</p><h2>{d.who.title}</h2><p class="lead">{d.who.lead}</p></div>
-      <div class="who-grid">
-        {d.who.items.map((w, i) => (
-          <article class="card who">
-            <span class="tile"><Icon name={WHO[i]} size={18} /></span>
-            <p class="who-tag">{w.tag}</p>
-            <h3>{w.title}</h3>
-            <p>{w.body}</p>
-            <p class="who-fit"><Icon name="check" size={12} />{w.fit}</p>
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="sec sec-alt">
-    <div class="wrap rows">
-      <div class="frow" id="inside">
-        <div>
-          <p class="eyebrow">{d.inside.eyebrow}</p>
-          <h2>{d.inside.title}</h2>
-          <p class="lead">{d.inside.note}</p>
-          <div class="groups">
-            {d.inside.groups.map(([g, chips]) => (
-              <div class="grp"><b>{g}</b><ul>{chips.map(c => <li><Icon name="check" size={11} />{c}</li>)}</ul></div>
-            ))}
-          </div>
-        </div>
-        <figure class="shot"><picture><source srcset={`/demo/${lang}-dark/checkup.webp`} media="(prefers-color-scheme: dark)" /><img src={`/demo/${lang}-light/checkup.webp`} width="1920" height="1200" alt="" loading="lazy" style="object-position:50% 40%" /></picture></figure>
-      </div>
-
-      <div class="frow flip" id="team">
-        <div>
-          <p class="eyebrow">{d.team.eyebrow}</p>
-          <h2>{d.team.title}</h2>
-          <p class="lead">{d.team.lead}</p>
-          <ul class="pts">{d.team.points.map(([b, s]) => <li><span class="tick"><Icon name="check" size={12} /></span><div><b>{b}</b><p>{s}</p></div></li>)}</ul>
-        </div>
-        <figure class="card tpanel" aria-label={d.team.example}>
-          <div class="tpanel-head"><b>{d.team.panelTitle}</b><span class="mono">{d.team.panelMeta}</span></div>
-          {d.team.members.map(([ini, name, role, gone], i) => (
-            <div class={gone ? 'member gone' : 'member'}>
-              <span class="av" style={`--c:${AVATARS[i]}`} aria-hidden="true">{ini}</span>
-              <span class="mname"><b>{name}</b><small>{role}</small></span>
-              <span class={gone ? 'chip' : 'chip ok'}><Icon name={gone ? 'pause' : 'check'} size={12} />{gone ? d.team.left : d.team.active}</span>
+      <div class="msec-head"><h2>{H.cardsTitle}</h2><p>{H.cardsLead}</p></div>
+      <div class="grid-4">
+        {K.map((c, i) => (
+          <article class="card hcard">
+            <span class="tile acc"><Icon name={CARDS[i]} size={20} /></span>
+            <h3>{c.title}</h3>
+            <p>{c.body}</p>
+            <div class="mini" aria-hidden="true">
+              <b class="mini-t">{c.mini.title}</b>
+              {c.mini.rows.map(([k, v]) => k
+                ? <span class="mini-field"><small>{k}</small><span>{v}</span></span>
+                : <span class="mini-row">{v}</span>)}
+              <span class="mini-btn">{c.mini.button}</span>
             </div>
-          ))}
-          <div class="tlog">
-            <p>{d.team.logTitle}</p>
-            {d.team.log.map(([time, text]) => <div><time>{time}</time><span>{text}</span></div>)}
-          </div>
-        </figure>
-      </div>
-
-      <div class="frow" id="auto">
-        <div>
-          <p class="eyebrow">{d.auto.eyebrow}</p>
-          <h2>{d.auto.title}</h2>
-          <h3 class="sub-h">{d.auto.noCode}</h3>
-          <ul class="pts">{d.auto.noCodePoints.map(([b, s]) => <li><span class="tick"><Icon name="check" size={12} /></span><div><b>{b}</b><p>{s}</p></div></li>)}</ul>
-          <h3 class="sub-h">{d.auto.withCode}</h3>
-          <p class="lead">{d.auto.withCodeBody}</p>
-          <ul class="libs">{d.auto.libs.map(l => <li>{l}</li>)}</ul>
-        </div>
-        <figure class="shot"><picture><source srcset={`/demo/${lang}-dark/sync.webp`} media="(prefers-color-scheme: dark)" /><img src={`/demo/${lang}-light/sync.webp`} width="1920" height="1200" alt="" loading="lazy" style="object-position:30% 0" /></picture></figure>
-      </div>
-    </div>
-  </section>
-
-  <section class="sec">
-    <div class="wrap">
-      <figure class="card compare">
-        <figcaption><b>{d.inside.compareTitle}</b><span>{d.inside.compareHint}</span></figcaption>
-        <div class="tbl-scroll">
-          <table>
-            <thead><tr>{d.inside.cols.map(c => <th scope="col">{c}</th>)}</tr></thead>
-            <tbody>
-              {d.inside.rows.map(([k, a, b, marked]) => (
-                <tr>
-                  <th scope="row">{k}</th>
-                  <td class={marked ? 'bad' : ''}>{marked && <span class="mk" role="img" aria-label={d.inside.leak}><Icon name="x" size={11} /></span>}{a}</td>
-                  <td class="good">{marked && <span class="mk" role="img" aria-label={d.inside.match}><Icon name="check" size={11} /></span>}{b}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </figure>
-    </div>
-  </section>
-
-  <section class="sec sec-alt" id="trust">
-    <div class="wrap">
-      <div class="sec-head c"><p class="eyebrow">{d.trust.eyebrow}</p><h2>{d.trust.title}</h2></div>
-      <div class="trust-grid">{d.trust.items.map(([b, s], i) => <div class="card trust"><span class="tile"><Icon name={TRUST[i]} size={18} /></span><h3>{b}</h3><p>{s}</p></div>)}</div>
-    </div>
-  </section>
-
-  <section class="sec" id="price">
-    <div class="wrap">
-      <div class="price-head">
-        <div class="sec-head"><p class="eyebrow">{d.pricing.eyebrow}</p><h2>{d.pricing.title}</h2></div>
-        <div class="seg" role="group" aria-label={d.pricing.eyebrow}>
-          <button type="button" data-period="monthly" aria-pressed="true">{d.pricing.monthly}</button>
-          <button type="button" data-period="yearly" aria-pressed="false">{d.pricing.yearly}<em>{d.pricing.save}</em></button>
-        </div>
-      </div>
-      <div class="card calc" id="calc" hidden>
-        <div class="calc-pick">
-          <label for="calc-n"><b>{d.pricing.calc.title}</b><span>{d.pricing.calc.hint}</span></label>
-          <div class="calc-track" id="calc-track">
-            <output id="calc-out" for="calc-n"></output>
-            <input type="range" id="calc-n" min="0" step="1" />
-          </div>
-          <div class="calc-ticks" id="calc-ticks" aria-hidden="true"></div>
-        </div>
-        <div class="calc-res" aria-live="polite">
-          <p class="fine">{d.pricing.calc.best}</p>
-          <p class="calc-plan"><span id="calc-plan"></span><em id="calc-cheapest">{d.pricing.calc.cheapest}</em></p>
-          <p class="price"><span class="amt" id="calc-amt"></span><span class="per" id="calc-per">{d.pricing.perMonth}</span></p>
-          <p class="calc-detail" id="calc-detail"></p>
-          <p class="fine" id="calc-alt"></p>
-          <a class="btn btn-primary btn-sm" id="calc-cta" href="#"></a>
-        </div>
-      </div>
-      <div class="plans">
-        {(['free', 'studio', 'company'] as const).map(id => (
-          <article class={id === 'studio' ? 'card plan featured' : 'card plan'} data-plan={id}>
-            {id === 'studio' && <p class="plan-flag">{d.pricing.flag}</p>}
-            <h3>{d.plans[id]}</h3>
-            <p class="plan-for">{d.pricing.for[id]}</p>
-            <p class="price"><span class="amt" data-amt></span><span class="per" data-per></span></p>
-            <p class="plan-meta" data-perenv></p>
-            <p class="plan-note" data-note></p>
-            <p class="plan-fit" data-fit hidden></p>
-            <a class={id === 'studio' ? 'btn btn-primary full' : 'btn btn-secondary full'} data-cta
-              href={id === 'free' ? link(lang, 'signup/') : id === 'studio' ? link(lang, 'checkout/?plan=studio&trial=1') : link(lang, 'contact-sales/')}>{d.pricing.cta[id]}</a>
-            {id !== 'free' && <a class="buy" data-buy href={link(lang, `checkout/?plan=${id}&period=monthly`)}>{d.pricing.buy}</a>}
-            <ul class="feat">{d.pricing.features[id].map(f => <li><Icon name="check" size={12} />{f}</li>)}</ul>
           </article>
         ))}
       </div>
-      <p class="price-foot" data-foot></p>
     </div>
   </section>
 
-  <section class="sec sec-alt" id="faq">
+  <section class="msec">
     <div class="wrap">
-      <div class="sec-head"><p class="eyebrow">{d.faq.eyebrow}</p><h2>{d.faq.title}</h2><p class="lead">{d.faq.lead} <a href={link(lang, 'contact-sales/')}>{d.faq.contact}</a></p></div>
-      <div class="faq">{d.faq.items.map(([q, a], i) => <details open={i === 0}><summary>{q}<span class="faq-x"><Icon name="plus" size={14} /></span></summary><p>{a}</p></details>)}</div>
+      <div class="msec-head"><h2>{H.steps.title}</h2><p>{H.steps.lead}</p></div>
+      <ol class="steps-row">{H.steps.items.map(([b, s]) => <li><b>{b}</b><p>{s}</p></li>)}</ol>
     </div>
   </section>
 
-  <section class="sec" id="start">
+  <section class="msec alt">
     <div class="wrap">
-      <div class="band">
-        <div><h2>{d.band.title}</h2><p>{d.band.body}</p></div>
-        <div class="band-cta">
-          <a class="btn btn-primary btn-lg" href={link(lang, 'download/')}><Icon name="windows" />{d.band.windows}</a>
-          <a class="btn btn-secondary btn-lg" href={link(lang, 'download/')}><Icon name="apple" />{d.band.mac}</a>
-          <p class="mono">{d.band.fine}</p>
-        </div>
+      <div class="msec-head"><h2>{H.uses.title}</h2><p>{H.uses.lead}</p></div>
+      <div class="grid-3">
+        {H.uses.items.map((u, i) => (
+          <a class="card huse" href={link(lang, USES[i][1])}>
+            <div><span class="tile acc"><Icon name={USES[i][0]} size={20} /></span><h3>{u.title}</h3><p>{u.body}</p></div>
+            <ul class="huse-list" aria-hidden="true">{u.list.map(x => <li><Icon name="profiles" size={12} />{x}</li>)}</ul>
+          </a>
+        ))}
       </div>
+    </div>
+  </section>
+
+  <section class="msec">
+    <div class="wrap"><Faq title={H.faq.title} lead={H.faq.lead} contact={{ label: H.faq.contact, href: link(lang, 'contact-sales/') }} items={H.faq.items} /></div>
+  </section>
+
+  <section class="msec cta-sec">
+    <div class="wrap">
+      <CtaBand title={H.band.title} body={H.band.body}>
+        <a class="btn btn-primary btn-lg" href={link(lang, 'signup/')}>{d.nav.start}<Icon name="chevr" /></a>
+        <a class="btn btn-secondary btn-lg" href={link(lang, 'download/')}><Icon name="download" />{H.band.download}</a>
+      </CtaBand>
     </div>
   </section>
 </Base>
-
-<script>
-  import { startPricing } from '../../scripts/pricing';
-  startPricing();
-</script>
+<style>
+  .home-vis{position:relative}
+  .home-vis :global(.showcase){position:relative;width:100%}
+  .hcard{display:flex;flex-direction:column;gap:10px;padding:24px}
+  .hcard h3{margin-top:6px;font-size:18px}
+  .hcard > p{font-size:14px;line-height:1.7;color:var(--ink-2)}
+  /* a piece of the workbench, drawn small */
+  .mini{display:grid;gap:8px;margin-top:auto;padding:14px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line);font-size:12.5px}
+  .mini-t{font-size:13px}
+  .mini-row{display:flex;align-items:center;height:30px;padding:0 10px;border-radius:var(--r);background:var(--card);border:1px solid var(--line)}
+  .mini-field{display:grid;grid-template-columns:62px minmax(0,1fr);align-items:center;gap:8px}
+  html[lang="en"] .mini-field{grid-template-columns:66px minmax(0,1fr)}
+  .mini-field small{font-size:11.5px;color:var(--ink-2)}
+  .mini-field > span{height:28px;padding:0 9px;line-height:26px;border:1px solid var(--line);border-radius:var(--r);background:var(--card);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .mini-btn{justify-self:start;margin-top:2px;padding:5px 12px;border-radius:var(--r);background:var(--accent);color:var(--on-accent);font-weight:600;font-size:12px}
+  .huse{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:18px;padding:22px;text-decoration:none;color:inherit;transition:border-color .15s ease,box-shadow .15s ease}
+  .huse:hover{border-color:color-mix(in srgb,var(--accent) 40%,var(--line));box-shadow:var(--shadow-pop)}
+  .huse h3{margin-top:12px;font-size:18px}
+  .huse p{margin-top:6px;font-size:14px;line-height:1.7;color:var(--ink-2)}
+  .huse-list{display:grid;gap:6px;align-content:center;margin:0;padding:12px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line);list-style:none;font-size:12px}
+  .huse-list li{display:flex;align-items:center;gap:7px;height:28px;padding:0 9px;border-radius:6px;background:var(--card);border:1px solid var(--line);white-space:nowrap;overflow:hidden}
+  .huse-list .i{color:var(--ink-3)}
+  @media (max-width:560px){.huse{grid-template-columns:minmax(0,1fr)}}
+</style>

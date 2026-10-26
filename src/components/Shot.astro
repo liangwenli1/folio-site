@@ -1,0 +1,18 @@
+---
+// A picture of the real workbench in a window, in the visitor's colour scheme: one of those recorded by folio-desktop's
+// demo/capture.spec.ts (copied to public/demo/). The picture is the whole window, sidebar and all; `zoom` shows part of
+// it closer, from `origin` (CSS transform-origin), and `ratio` is the window's shape on the page.
+import type { Lang } from '../lib/i18n';
+
+interface Props { lang: Lang; name: string; alt: string; zoom?: number; origin?: string; ratio?: string; eager?: boolean }
+const { lang, name, alt, zoom = 1, origin = '0 0', ratio = '16/10', eager = false } = Astro.props;
+---
+<figure class="shot">
+  <div class="shot-bar" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="shot-view" style={`--z:${zoom};--o:${origin};--ar:${ratio}`}>
+    <picture>
+      <source srcset={`/demo/${lang}-dark/${name}.webp`} media="(prefers-color-scheme: dark)" />
+      <img src={`/demo/${lang}-light/${name}.webp`} width="1920" height="1200" alt={alt} loading={eager ? 'eager' : 'lazy'} />
+    </picture>
+  </div>
+</figure>

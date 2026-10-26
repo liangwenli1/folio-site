@@ -1,0 +1,104 @@
+---
+// Solutions: three ways of working Folio fits, each with what it needs and the features that answer it (the first has
+// a page of its own), the four steps a team takes to set it up, questions, and a way to talk it through.
+import Base from '../../../layouts/Base.astro';
+import Icon from '../../../components/Icon.astro';
+import PageHero from '../../../components/PageHero.astro';
+import Shot from '../../../components/Shot.astro';
+import Faq from '../../../components/Faq.astro';
+import CtaBand from '../../../components/CtaBand.astro';
+import type { IconName } from '../../../lib/icons';
+import { langPaths, link, t, type Lang } from '../../../lib/i18n';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const S = t(lang).solutions;
+const CASES: { icon: IconName; href: string }[] = [
+  { icon: 'cart', href: link(lang, 'solutions/ecommerce/') },
+  { icon: 'chat', href: link(lang, 'features/#automation') },
+  { icon: 'code', href: link(lang, 'features/#team') }
+];
+const STEPS: IconName[] = ['team', 'folder', 'profiles', 'proxies'];
+---
+<Base lang={lang} path="solutions/" title={S.title} description={S.lead}>
+  <PageHero lang={lang} title={S.h1} lead={S.lead}>
+    <div class="cta-row">
+      <a class="btn btn-primary btn-lg" href={link(lang, 'signup/')}>{S.start}<Icon name="chevr" /></a>
+      <a class="btn btn-secondary btn-lg" href={link(lang, 'features/')}>{S.features}</a>
+    </div>
+    <Shot slot="vis" lang={lang} name="list" alt={S.shot} zoom={1.2} origin="100% 0" eager />
+  </PageHero>
+
+  <section class="msec">
+    <div class="wrap">
+      <div class="msec-head"><h2>{S.casesTitle}</h2><p>{S.casesLead}</p></div>
+      <div class="grid-3">
+        {S.cases.map((c, i) => (
+          <article class="card case">
+            <header><span class="tile acc"><Icon name={CASES[i].icon} size={20} /></span><div><h3>{c.title}</h3><p>{c.lead}</p></div></header>
+            <div class="case-map" aria-hidden="true">
+              <div class="case-envs">{c.envs.map(e => <span><b>{e}</b></span>)}</div>
+              <span class="case-hub"><Icon name="proxies" size={18} />{S.hub}</span>
+            </div>
+            <div class="case-two">
+              <div><h4>{S.needs}</h4><ul class="dots">{c.needs.map(n => <li>{n}</li>)}</ul></div>
+              <div><h4>{S.answers}</h4><ul class="ticks">{c.answers.map(n => <li><Icon name="check" size={12} />{n}</li>)}</ul></div>
+            </div>
+            <a class="btn btn-secondary full" href={CASES[i].href}>{c.cta}<Icon name="chevr" /></a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="msec alt">
+    <div class="wrap">
+      <div class="msec-head"><h2>{S.flow.title}</h2><p>{S.flow.lead}</p></div>
+      <ol class="sflow">
+        {S.flow.steps.map(([title, body], i) => <li class="card"><span class="tile acc"><Icon name={STEPS[i]} size={20} /></span><b>{title}</b><p>{body}</p></li>)}
+      </ol>
+    </div>
+  </section>
+
+  <section class="msec">
+    <div class="wrap"><Faq title={S.faq.title} lead={S.faq.lead} items={S.faq.items} /></div>
+  </section>
+
+  <section class="msec cta-sec">
+    <div class="wrap">
+      <CtaBand title={S.band.title} body={S.band.body}>
+        <a class="btn btn-primary btn-lg" href={link(lang, 'contact-sales/')}>{S.band.contact}</a>
+        <a class="btn btn-secondary btn-lg" href={link(lang, 'signup/')}>{S.start}<Icon name="chevr" /></a>
+      </CtaBand>
+    </div>
+  </section>
+</Base>
+<style>
+  .case{display:flex;flex-direction:column;gap:20px;padding:24px}
+  .case header{display:flex;gap:14px;align-items:flex-start}
+  .case h3{font-family:var(--f-display);font-size:20px}
+  .case header p{margin-top:4px;font-size:14px;line-height:1.65;color:var(--ink-2)}
+  /* three browser profiles joined to one proxy */
+  .case-map{display:grid;justify-items:center;gap:22px;padding:20px 14px 16px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line)}
+  .case-envs{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%}
+  .case-envs span{position:relative;display:grid;justify-items:center;gap:6px;padding:8px 6px 10px;border-radius:8px;background:var(--card);border:1px solid var(--line);box-shadow:0 1px 2px rgba(29,28,43,.05)}
+  .case-envs span::after{content:'';position:absolute;left:50%;top:100%;width:1px;height:22px;background:color-mix(in srgb,var(--accent) 45%,transparent)}
+  .case-envs span::before{content:'';width:28px;height:5px;border-radius:3px;background:linear-gradient(90deg,#EE6A5F 0 5px,transparent 5px 8px,#F5BD4F 8px 13px,transparent 13px 16px,#61C454 16px 21px,transparent 21px);justify-self:start}
+  .case-envs b{font-size:12px;font-weight:600;text-align:center;line-height:1.35;white-space:pre-line}
+  .case-hub{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:99px;background:var(--accent-soft);color:var(--accent-ink);font-size:12.5px;font-weight:600}
+  .case-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .case h4{margin:0 0 10px;font-size:14px}
+  .case ul{display:grid;gap:8px;margin:0;padding:0;list-style:none;font-size:13.5px;color:var(--ink-2)}
+  .case .dots li{display:flex;gap:8px}
+  .case .dots li::before{content:'';width:5px;height:5px;margin-top:.62em;flex:none;border-radius:50%;background:var(--accent)}
+  .case .ticks li{display:flex;gap:8px;align-items:baseline}
+  .case .ticks .i{color:var(--accent);translate:0 1px}
+  .case .btn{margin-top:auto}
+  .sflow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px;margin:0;padding:0;list-style:none}
+  .sflow li{position:relative;display:grid;justify-items:center;gap:10px;padding:28px 20px;text-align:center}
+  .sflow li + li::before{content:'→';position:absolute;left:-22px;top:50%;translate:0 -50%;color:var(--accent);font-size:18px}
+  .sflow b{font-size:16px;font-weight:600}
+  .sflow p{font-size:14px;line-height:1.7;color:var(--ink-2)}
+  @media (max-width:960px){.sflow{grid-template-columns:repeat(2,minmax(0,1fr))}.sflow li + li::before{display:none}}
+  @media (max-width:560px){.sflow{grid-template-columns:minmax(0,1fr)}.case-two{grid-template-columns:minmax(0,1fr)}}
+</style>

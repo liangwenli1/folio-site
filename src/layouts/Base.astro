@@ -3,17 +3,17 @@ import '@fontsource-variable/manrope/wght.css';
 import '@fontsource-variable/inter/wght.css';
 import '@fontsource-variable/jetbrains-mono/wght.css';
 import '../styles/global.css';
+import '../styles/site.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { t, type Lang } from '../lib/i18n';
 
-// `overHero`: the page starts with the gradient hero, which runs up under a clear header.
-interface Props { lang: Lang; path: string; title?: string; description?: string; noindex?: boolean; overHero?: boolean }
-const { lang, path, title, description, noindex = false, overHero = false } = Astro.props;
+interface Props { lang: Lang; path: string; title?: string; description?: string; noindex?: boolean }
+const { lang, path, title, description, noindex = false } = Astro.props;
 const d = t(lang);
 ---
 <!doctype html>
-<html lang={lang} class={overHero ? 'over-hero' : undefined}>
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -25,7 +25,7 @@ const d = t(lang);
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>
   <body>
-    <Header lang={lang} />
+    <Header lang={lang} path={path} />
     <main><slot /></main>
     <Footer lang={lang} path={path} />
   </body>

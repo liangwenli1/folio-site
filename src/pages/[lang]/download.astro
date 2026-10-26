@@ -1,6 +1,10 @@
 ---
+// Downloads: the installers for Windows and macOS (disabled, and saying so, while no release is configured), the three
+// steps from installing to the first browser profile, and where to find help, what changed and how to stay safe.
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
+import PageHero from '../../components/PageHero.astro';
+import Shot from '../../components/Shot.astro';
 import { day } from '../../lib/format';
 import type { IconName } from '../../lib/icons';
 import { langPaths, link, t, type Lang } from '../../lib/i18n';
@@ -14,55 +18,81 @@ const repo = import.meta.env.PUBLIC_DESKTOP_REPO;
 const version = import.meta.env.PUBLIC_DESKTOP_VERSION;
 const released = import.meta.env.PUBLIC_DESKTOP_RELEASED;
 const latest = (file: string) => (repo ? `https://github.com/${repo}/releases/latest/download/${file}` : null);
-const systems: { os: string; icon: IconName; req: string; note: string; href: string | null }[] = [
-  { os: 'Windows', icon: 'windows', req: d.windows, note: d.winNote, href: latest('Folio-Setup-x64.exe') },
-  { os: 'macOS', icon: 'apple', req: d.mac, note: d.macNote, href: latest('Folio-arm64.dmg') }
+const systems: { os: string; icon: IconName; req: string; note: string; href: string | null; primary: boolean }[] = [
+  { os: d.windowsName, icon: 'windows', req: d.windows, note: d.winNote, href: latest('Folio-Setup-x64.exe'), primary: true },
+  { os: d.macName, icon: 'apple', req: d.mac, note: d.macNote, href: latest('Folio-arm64.dmg'), primary: false }
 ];
-const STEPS: IconName[] = ['download', 'user', 'engines'];
+const STEPS: IconName[] = ['download', 'user', 'profiles'];
+const HELP: [IconName, string | null][] = [['doc', link(lang, 'docs/')], ['clock', link(lang, 'changelog/')], ['lock', null]];
 ---
-<Base lang={lang} path="download/" title={d.title}>
-  <section class="wrap page">
-    <div class="page-head dl-head"><h1>{d.title}</h1><p>{d.lead}</p></div>
-    <div class="dl-os">
-      {systems.map(s => (
-        <div class="panel dl-card">
-          <span class="dl-ic"><Icon name={s.icon} size={26} /></span>
-          <h2>{s.os}</h2>
-          <p class="dl-req">{s.req}</p>
-          {version && <p class="dl-meta" data-version><span>{d.version(version)}</span>{released && <span>{d.released(day(released, lang))}</span>}</p>}
-          {s.href ? <a class="btn btn-primary btn-lg full" href={s.href}><Icon name="download" />{d.get}</a> : <button class="btn btn-secondary btn-lg full" type="button" disabled>{d.soon}</button>}
-          <details class="dl-note"><summary><Icon name="alert" size={13} />{d.notesTitle}</summary><p>{s.note}</p></details>
-        </div>
-      ))}
+<Base lang={lang} path="download/" title={d.title} description={d.lead}>
+  <PageHero lang={lang} title={d.h1} lead={d.lead}>
+    <p class="dl-status">{version ? <span data-version>{d.version(version)}{released && ` · ${d.released(day(released, lang))}`}</span> : d.pending}</p>
+    <Shot slot="vis" lang={lang} name="list" alt={d.shot} zoom={1.2} origin="100% 0" eager />
+  </PageHero>
+
+  <section class="msec">
+    <div class="wrap">
+      <div class="dl-os">
+        {systems.map(s => (
+          <div class="card dl-card">
+            <div class="dl-top"><span class="dl-ic"><Icon name={s.icon} size={28} /></span><div><h2>{s.os}</h2><p>{s.req}</p></div></div>
+            {s.href
+              ? <a class={`btn ${s.primary ? 'btn-primary' : 'btn-secondary'} btn-lg full`} href={s.href}><Icon name="download" />{d.get(s.os)}</a>
+              : <button class="btn btn-secondary btn-lg full" type="button" disabled>{d.soon}</button>}
+            <details class="dl-note"><summary><Icon name="alert" size={13} />{d.notesTitle}</summary><p>{s.note}</p></details>
+          </div>
+        ))}
+      </div>
+      <p class="dl-other">{d.other} <a href={link(lang, 'contact-sales/')}>{d.contact}</a></p>
     </div>
-    <h2 class="dl-h2">{d.stepsTitle}</h2>
-    <ol class="dl-steps">
-      {d.steps.map(([title, body], i) => (
-        <li class="panel"><span class="dl-n">{i + 1}</span><span class="tile"><Icon name={STEPS[i]} size={18} /></span><b>{title}</b><p>{body}</p></li>
-      ))}
-    </ol>
-    <p class="alt dl-already">{d.already} <a href={link(lang, 'account/')}>{t(lang).nav.account}</a></p>
+  </section>
+
+  <section class="msec alt">
+    <div class="wrap">
+      <div class="msec-head"><h2>{d.stepsTitle}</h2><p>{d.stepsLead}</p></div>
+      <ol class="dl-steps">
+        {d.steps.map(([title, body], i) => <li class="card"><span class="dl-n">{i + 1}</span><span class="tile acc"><Icon name={STEPS[i]} size={20} /></span><b>{title}</b><p>{body}</p></li>)}
+      </ol>
+    </div>
+  </section>
+
+  <section class="msec">
+    <div class="wrap">
+      <div class="dl-help">
+        {d.help.map(([title, body, cta], i) => (
+          <div><Icon name={HELP[i][0]} size={22} /><div><b>{title}</b><p>{body}</p>{HELP[i][1] && <a href={HELP[i][1]!}>{cta}<Icon name="chevr" size={12} /></a>}</div></div>
+        ))}
+      </div>
+    </div>
   </section>
 </Base>
 <style>
-  .dl-head{max-width:640px;margin:0 auto 36px;text-align:center}
-  .dl-head p{margin-inline:auto}
-  .dl-os{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:20px;max-width:980px;margin:0 auto}
-  .dl-card{display:grid;gap:14px;align-content:start;padding:30px}
-  .dl-ic{display:grid;place-items:center;width:56px;height:56px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
-  .dl-card h2{font-size:24px}
-  .dl-req{font-size:14px;color:var(--ink-2)}
-  .dl-meta{display:flex;flex-wrap:wrap;gap:4px 16px;font-family:var(--f-data);font-size:12.5px;color:var(--ink-3)}
-  .dl-note{padding-top:12px;border-top:1px dashed var(--line-2);font-size:13.5px;color:var(--ink-2)}
+  .dl-status{display:inline-flex;align-items:center;gap:8px;margin-top:28px;padding:6px 14px;border-radius:99px;background:var(--accent-soft);color:var(--accent-ink);font-size:13.5px;font-weight:600}
+  .dl-status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent)}
+  .dl-os{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:20px;max-width:900px;margin:0 auto}
+  .dl-card{display:grid;gap:18px;align-content:start;padding:28px}
+  .dl-top{display:flex;gap:16px;align-items:center}
+  .dl-ic{display:grid;place-items:center;width:56px;height:56px;flex:none;border-radius:14px;background:var(--panel);border:1px solid var(--line)}
+  .dl-card h2{font-size:22px}
+  .dl-top p{margin-top:2px;font-size:14px;color:var(--ink-2)}
+  .dl-note{padding-top:14px;border-top:1px dashed var(--line-2);font-size:13.5px;color:var(--ink-2)}
   .dl-note summary{display:flex;align-items:center;gap:6px;list-style:none;font-weight:600;color:var(--ink);cursor:pointer}
   .dl-note summary::-webkit-details-marker{display:none}
   .dl-note p{margin-top:8px;line-height:1.7;overflow-wrap:anywhere}
-  .dl-h2{margin:72px 0 22px;font-size:26px;text-align:center}
-  .dl-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:0;padding:0;list-style:none}
-  .dl-steps li{position:relative;display:grid;gap:10px;align-content:start;padding:24px;box-shadow:none}
-  .dl-steps b{font-family:var(--f-display);font-size:17px;font-weight:600}
+  .dl-other{margin-top:20px;text-align:center;font-size:14px;color:var(--ink-2)}
+  .dl-other a{color:var(--ink);text-underline-offset:3px}
+  .dl-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin:0;padding:0;list-style:none}
+  .dl-steps li{position:relative;display:grid;gap:10px;align-content:start;padding:26px}
+  .dl-steps b{font-size:17px;font-weight:600}
   .dl-steps p{font-size:14px;line-height:1.7;color:var(--ink-2)}
-  .dl-n{position:absolute;right:20px;top:18px;font:600 13px var(--f-data);color:var(--ink-3)}
-  .dl-already{margin-top:28px;text-align:center}
+  .dl-n{position:absolute;right:22px;top:20px;font:600 14px var(--f-data);color:var(--accent-ink)}
   @media (max-width:860px){.dl-steps{grid-template-columns:minmax(0,1fr)}}
+  .dl-help{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;padding:28px 32px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
+  .dl-help > div{display:flex;gap:14px;min-width:0}
+  .dl-help > div > .i{color:var(--ink-2);margin-top:2px}
+  .dl-help b{font-size:15px}
+  .dl-help p{margin-top:4px;font-size:13.5px;line-height:1.7;color:var(--ink-2)}
+  .dl-help a{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:14px;font-weight:600;color:var(--accent-ink);text-decoration:none}
+  @media (max-width:860px){.dl-help{grid-template-columns:minmax(0,1fr);padding:22px 20px}}
 </style>

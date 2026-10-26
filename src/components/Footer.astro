@@ -1,4 +1,5 @@
 ---
+// The site's footer: the brand and what Folio is, the product, resources and company links, and the language switch.
 import Mark from './Mark.astro';
 import Icon from './Icon.astro';
 import { link, otherLang, t, type Lang } from '../lib/i18n';
@@ -6,14 +7,14 @@ import { link, otherLang, t, type Lang } from '../lib/i18n';
 interface Props { lang: Lang; path: string }
 const { lang, path } = Astro.props;
 const d = t(lang);
-const f = d.footer;
+const f = d.footer, n = d.nav;
 const other = otherLang(lang);
 // The switch names the language the page is in; clicking it opens the same page in the other one.
 const names: Record<Lang, string> = { en: 'English', zh: '简体中文' };
 const cols: [string, [string, string][]][] = [
-  [f.product, [[d.nav.who, '#who'], [d.nav.inside, '#inside'], [d.nav.teams, '#team'], [d.nav.automation, '#auto'], [d.nav.pricing, '#price']].map(([l, h]): [string, string] => [l, link(lang) + h])],
-  [f.resources, [[f.docs, link(lang, 'docs/')], [f.api, link(lang, 'docs/api/')], [f.changelog, link(lang, 'changelog/')]]],
-  [f.company, [[f.sales, link(lang, 'contact-sales/')], [f.privacy, link(lang, 'privacy/')], [f.terms, link(lang, 'terms/')]]]
+  [f.product, [[n.features, 'features/'], [n.solutions, 'solutions/'], [n.pricing, 'pricing/'], [n.download, 'download/']]],
+  [f.resources, [[n.help, 'docs/'], [f.api, 'docs/api/'], [f.changelog, 'changelog/']]],
+  [f.company, [[f.contact, 'contact-sales/'], [f.privacy, 'privacy/'], [f.terms, 'terms/']]]
 ];
 ---
 <footer class="foot">
@@ -21,10 +22,11 @@ const cols: [string, [string, string][]][] = [
     <div class="foot-in">
       <div class="foot-brand">
         <a class="brand" href={link(lang)} aria-label="Folio"><Mark /><span class="brand-word">Folio</span></a>
-        <p>{d.meta.description}</p>
+        <b>{f.tagline}</b>
+        <p>{f.about}</p>
       </div>
       {cols.map(([title, links]) => (
-        <nav class="foot-col" aria-label={title}><b>{title}</b>{links.map(([label, href]) => <a href={href}>{label}</a>)}</nav>
+        <nav class="foot-col" aria-label={title}><b>{title}</b>{links.map(([label, p]) => <a href={link(lang, p)}>{label}</a>)}</nav>
       ))}
     </div>
     <div class="foot-end">
@@ -40,15 +42,17 @@ const cols: [string, [string, string][]][] = [
   });
 </script>
 <style>
-  .foot{padding:56px 0 30px;background:var(--foot);color:#E9E8F0}
+  .foot{padding:56px 0 28px;background:var(--panel);border-top:1px solid var(--line)}
   .foot-in{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px}
-  .foot-brand p{margin-top:14px;max-width:340px;font-size:13.5px;line-height:1.75;color:rgba(233,232,240,.62)}
+  .foot-brand{display:grid;gap:10px;align-content:start}
+  .foot-brand b{margin-top:6px;font-size:14px}
+  .foot-brand p{max-width:340px;font-size:13.5px;line-height:1.75;color:var(--ink-2)}
   .foot-col{display:grid;gap:10px;align-content:start;font-size:14px}
-  .foot-col b{margin-bottom:4px;font-size:13px;color:#fff}
-  .foot-col a{text-decoration:none;color:rgba(233,232,240,.62)}
-  .foot-col a:hover{color:#fff}
-  .foot-end{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;margin-top:44px;padding-top:20px;border-top:1px solid rgba(255,255,255,.1);font-size:13px;color:rgba(233,232,240,.5)}
-  .lang-switch{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border:1px solid rgba(255,255,255,.2);border-radius:99px;text-decoration:none;color:rgba(233,232,240,.8)}
-  .lang-switch:hover{color:#fff;border-color:rgba(255,255,255,.45)}
+  .foot-col b{margin-bottom:4px;font-size:13.5px;color:var(--ink)}
+  .foot-col a{text-decoration:none;color:var(--ink-2)}
+  .foot-col a:hover{color:var(--ink)}
+  .foot-end{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;margin-top:44px;padding-top:20px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-3)}
+  .lang-switch{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border:1px solid var(--line-2);border-radius:99px;background:var(--card);text-decoration:none;color:var(--ink-2)}
+  .lang-switch:hover{color:var(--ink);border-color:var(--ink-3)}
   @media (max-width:860px){.foot-in{grid-template-columns:repeat(3,minmax(0,1fr));gap:32px 20px}.foot-brand{grid-column:1/-1}}
 </style>

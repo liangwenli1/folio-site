@@ -48,6 +48,6 @@ test('with reduced motion the walkthrough shows the profile list, and even hover
   expect(await frameAfter(page, 3000)).toBe('0');
   await expect(demo.getByRole('button')).toBeHidden();
   expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
-  await expect(page.locator('.hero .btn-primary')).toHaveCSS('transition-duration', '0s');
+  await expect(page.locator('.phero .btn-primary')).toHaveCSS('transition-duration', '0s');
   await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'auto');
 });

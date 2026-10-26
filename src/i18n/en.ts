@@ -6,118 +6,177 @@ export const en = {
     title: 'Folio Browser',
     description: 'A fingerprint browser for teams running multiple stores, ad accounts and social accounts: a separate browser profile for each account, with configurable fingerprints, isolated cookies and a dedicated proxy IP.'
   },
-  nav: { who: 'Use cases', inside: 'Isolation', teams: 'Teams', automation: 'Automation', pricing: 'Pricing', faq: 'FAQ', login: 'Log in', start: 'Try free', account: 'Account', menu: 'Menu' },
+  nav: { features: 'Features', solutions: 'Solutions', pricing: 'Pricing', download: 'Download', help: 'Help center', login: 'Log in', start: 'Try free', account: 'Account', menu: 'Menu', crumbs: 'Breadcrumb' },
   plans: { free: 'Free', studio: 'Studio', company: 'Company' },
   periods: { monthly: 'monthly', yearly: 'yearly' },
 
-  hero: {
-    eyebrow: 'Fingerprint browser for multi-account teams',
-    h1: 'Isolated browser profiles for every account.',
-    lead: 'Folio provides a separate browser profile for each account, with configurable fingerprints, isolated cookies and a dedicated proxy IP, so many accounts can run independently and be managed in one place.',
-    ctaStart: 'Try 5 browser profiles free', ctaDownload: 'Download the app',
-    fine: 'Windows 10 and later · macOS 12 and later · No card required',
-    showcase: { label: 'Workbench walkthrough: checking proxies, opening a browser profile, restoring tabs, a health check, installing an extension, batch opening, window sync and teamwork.', pause: 'Pause walkthrough', play: 'Play walkthrough' },
-    sample: { name: 'UK-Shop-01', place: 'London · Firefox 156', status: 'Running' },
-    spec: [
-      ['Chromium 150 · Firefox 156', 'two engines, selectable per profile'],
-      ['Canvas, WebGL, audio, fonts', 'generated independently per profile'],
-      ['HTTP · HTTPS · SOCKS5', 'connectivity checked before use'],
-      ['CDP · WebDriver BiDi', 'local API for automation scripts']
-    ]
+  demo: {
+    label: 'Workbench walkthrough: checking proxies, opening a browser profile, restoring tabs, a health check, installing an extension, batch opening, window sync and teamwork.', pause: 'Pause walkthrough', play: 'Play walkthrough',
+    sample: { name: 'UK-Shop-01', place: 'London · Firefox 156', status: 'Running' }
   },
 
-  who: {
-    eyebrow: 'Use cases',
-    title: 'Account linking is the main risk of running many accounts',
-    lead: 'When linking accounts, platforms look beyond the IP address at a range of device details exposed by the browser. A separate browser profile for each account reduces how much of that information overlaps.',
-    items: [
-      { tag: 'E-commerce sellers', title: 'Run stores independently and limit the impact of one store’s issues on the others.', body: 'Assign each store a fixed browser profile and proxy line, keeping its sign-in location and device details consistent.', fit: 'For seller teams operating several stores' },
-      { tag: 'Ad agencies', title: 'Separate browser profiles per client keep ad accounts apart.', body: 'Hand browser profiles over between team members with sign-ins and settings intact, reducing repeated logins and verification and speeding up handovers.', fit: 'For agencies serving multiple clients' },
-      { tag: 'Social teams', title: 'Maintain many social accounts with less routine work.', body: 'Sync a single action across several windows, and let scheduled tasks handle routine sign-ins and checks.', fit: 'For content teams managing large numbers of accounts' }
-    ]
-  },
-
-  inside: {
-    eyebrow: 'Isolation',
-    title: 'Fingerprints configured independently, signal by signal',
-    groups: [
-      ['Device', ['User-Agent', 'Client hints', 'CPU cores', 'Device memory', 'Touch support']],
-      ['Rendering', ['Canvas', 'WebGL image', 'WebGL renderer', 'AudioContext', 'Font list']],
-      ['Network', ['Proxy IP', 'WebRTC', 'DNS']],
-      ['Region', ['Time zone', 'Language', 'Geolocation']],
-      ['Storage', ['Cookies', 'LocalStorage', 'IndexedDB', 'Cache', 'Extensions']]
-    ] as [string, string[]][],
-    note: 'Fingerprints are built from real device parameter combinations, so the system, GPU and fonts are consistent and implausible combinations are avoided.',
-    compareTitle: 'One proxy: a regular browser compared with a Folio browser profile',
-    compareHint: 'Mismatches in the left column can be used by platforms to link accounts.',
-    cols: ['Check', 'Regular browser with a proxy', 'Folio browser profile'],
-    rows: [
-      ['Exit IP', 'Seattle', 'Seattle', false],
-      ['Time zone', 'Asia/Shanghai', 'America/Los_Angeles', true],
-      ['Language', 'zh-CN', 'en-US', true],
-      ['WebRTC', 'Exposes the real IP', 'Real IP not exposed', true],
-      ['Geolocation', 'Returns the real location', 'Near Seattle', true],
-      ['Canvas hash', 'Identical across accounts', 'Unique to this profile', true],
-      ['Cookies', 'Shared across accounts', 'Stored per browser profile', true]
-    ] as [string, string, string, boolean][],
-    leak: 'Mismatch', match: 'Match'
-  },
-
-  team: {
-    eyebrow: 'Teams',
-    title: 'Browser profiles managed centrally by the team',
-    lead: 'Accounts and browser profiles belong to the team, not to an individual’s device.',
-    points: [
-      ['Assigned by person', 'Members can access only the browser profiles assigned to them.'],
-      ['Password-free access', 'Members use saved sign-ins without needing account passwords.'],
-      ['Immediate handover', 'When a member is removed, their browser profiles can be reassigned right away.'],
-      ['Traceable activity', 'Opening, editing and handing over browser profiles is recorded for review.']
+  home: {
+    h1: 'Separate profiles,\nmanaged as one',
+    lead: 'Folio manages browser profiles, proxies and team access in one place, so many accounts are set up centrally and worked on in an orderly way.',
+    features: 'See the features',
+    points: [['Kept apart', 'Each account runs on its own'], ['Proxies', 'HTTP, HTTPS and SOCKS5'], ['Teams', 'Access under control']] as [string, string][],
+    cardsTitle: 'Built for working with many accounts', cardsLead: 'From the first browser profile to the whole team, with everything in between.',
+    cards: [
+      { title: 'Browser profiles', body: 'Set up separate browser profiles and see their status and key settings in one place.', mini: { title: 'New profile', rows: [['Name', 'US-Store-01'], ['System', 'Windows'], ['Engine', 'Chromium 150']] as [string, string][], button: 'Create profile' } },
+      { title: 'Proxies', body: 'Set up proxies in one place, with their checks and the profiles that use them.', mini: { title: 'New proxy', rows: [['Type', 'SOCKS5'], ['Host', '203.0.113.24'], ['Port', '1080']] as [string, string][], button: 'Check connection' } },
+      { title: 'Groups', body: 'Organise browser profiles by business, region or project.', mini: { title: 'Groups', rows: [['', 'US stores · 3'], ['', 'EU shops · 2'], ['', 'Social · 2']] as [string, string][], button: 'New group' } },
+      { title: 'Teams', body: 'Give members roles and the groups they reach, so everyone knows what is theirs.', mini: { title: 'Members', rows: [['Ava', 'Owner'], ['Jordan', 'Admin'], ['Riley', 'Member']] as [string, string][], button: 'Invite people' } }
     ],
-    panelTitle: 'US operations', panelMeta: '3 active · 46 profiles', active: 'Active', left: 'Left',
-    members: [
-      ['MC', 'Maya Chen', 'Stores and social · 24 profiles', false],
-      ['DO', 'Daniel Okafor', 'Media buyer · 12 profiles', false],
-      ['SR', 'Sofia Ruiz', 'EU stores · 10 profiles', false],
-      ['JP', 'Jonah Park', 'Stores · 18 profiles reassigned', true]
-    ] as [string, string, string, boolean][],
-    logTitle: 'Activity',
-    log: [
-      ['10-21 09:12', 'Maya Chen opened US-Store-07'],
-      ['10-21 08:55', 'Daniel Okafor changed the proxy on Ads-Client-03'],
-      ['10-20 18:40', 'Admin removed Jonah Park and reassigned 18 profiles to Maya Chen']
-    ],
-    example: 'Example'
+    steps: {
+      title: 'Three steps to start', lead: 'Sign up, create browser profiles and bring in your team.',
+      items: [['Create profiles', 'Set the fingerprint and basics of a separate browser profile.'], ['Add proxies', 'Bring in your proxies and check that they answer.'], ['Bring in the team', 'Invite members and give them the access they need.']] as [string, string][]
+    },
+    uses: {
+      title: 'For many kinds of work', lead: 'Browser profiles organised for the way each business works.',
+      items: [
+        { title: 'Cross-border e-commerce', body: 'Shops on several marketplaces, each account kept apart, run by one team.', list: ['US-Store-01', 'UK-Shop-01', 'JP-Shop-01', 'DE-Shop-01'] },
+        { title: 'Social media', body: 'Many social accounts at once, with teamwork and access control.', list: ['Social-01', 'Social-02', 'Social-03', 'Social-04'] },
+        { title: 'Testing', body: 'Separate test environments for development and QA teams.', list: ['Test-Env-A', 'Test-Env-B', 'Staging-01', 'Staging-02'] }
+      ]
+    },
+    faq: {
+      title: 'Questions', lead: 'What people ask most. For anything else,', contact: 'contact us',
+      items: [
+        ['Can Folio guarantee that accounts will not be banned?', 'No. Folio reduces the risk of several accounts being identified as the same device. Accounts that break platform rules, or that use low-quality proxy IPs, may still be restricted. A dedicated residential or ISP proxy for each browser profile is recommended.'],
+        ['Are my own proxies required?', 'Yes. HTTP, HTTPS and SOCKS5 proxies are supported and can be added one by one or imported in bulk. Each is checked for connectivity and exit location, and the time zone and language are set to match.'],
+        ['Should I use Chromium or Firefox?', 'Chromium is recommended for most accounts; each Chromium browser profile has a stable, distinct fingerprint. Firefox suits sites that expect Firefox users. Firefox browser profiles on the same computer share more of their fingerprint, so many accounts on one platform should not all use Firefox.'],
+        ['Where is browser profile data stored?', 'By default it is encrypted and synced to the cloud, so work can continue on another computer. Individual browser profiles can also be kept on one computer only. All data can be exported at any time.'],
+        ['How are the engines updated?', 'Folio uses open-source fingerprint engines and releases new versions after testing. Existing browser profiles keep their engine version and can be upgraded when convenient.']
+      ] as [string, string][]
+    },
+    band: { title: 'Get started with Folio', body: 'Try 5 browser profiles free, with no card required.', download: 'Download the app' }
   },
 
-  auto: {
-    eyebrow: 'Automation',
-    title: 'Bulk actions and automation reduce repetitive work',
-    noCode: 'No code',
-    noCodePoints: [
-      ['Window sync', 'Sync clicks, typing and scrolling from a leading window to other windows.'],
-      ['Bulk actions', 'Import browser profiles from a spreadsheet, and change proxies or import cookies in bulk.'],
-      ['Scheduled tasks', 'Open browser profiles on a schedule, check their sign-in status and receive alerts when something is wrong.']
+  features: {
+    title: 'Features', h1: 'Everything it takes to run\nbrowser profiles',
+    lead: 'Folio starts from the browser profile and connects it to proxies, groups, members and what was done: creating profiles, setting up proxies, working as a team and keeping engines up to date, in one set of tools.',
+    shot: 'The list of browser profiles in the Folio workbench', tabsLabel: 'Areas',
+    blocks: [
+      { title: 'Browser profiles', lead: 'Set up browser profiles for each line of work, with their fingerprints and status in one place.', shot: 'The new profile form: basics, proxy, fingerprint and opening settings',
+        points: [
+          ['Their own fingerprint and storage', 'Each browser profile has its own Canvas, WebGL, audio and font fingerprint, and keeps its cookies and storage apart.'],
+          ['Two engines', 'Chromium and Firefox, with the version chosen per browser profile; existing profiles keep theirs.'],
+          ['Bulk actions and a Trash', 'Open, stop, move and edit many at once; deleted browser profiles go to the Trash and can be restored while they are kept.']
+        ] as [string, string][] },
+      { title: 'Proxies', lead: 'Connection details, check history and which browser profiles use each proxy.', shot: 'The proxy list: type, address, exit location, status and latency',
+        points: [
+          ['HTTP, HTTPS and SOCKS5', 'Add proxies one by one or import a list, with each line previewed before it comes in.'],
+          ['Connection checks', 'Checks reach, latency and exit location, and sets the time zone and language to match; proxies that stop answering are flagged.'],
+          ['Assign and replace', 'One proxy can serve several browser profiles; replace a profile’s proxy or unassign many at once.']
+        ] as [string, string][] },
+      { title: 'Teams', lead: 'Groups and roles decide what each member reaches and may do.', shot: 'Groups: the group tree, a group’s browser profiles and its settings',
+        points: [
+          ['Nested groups', 'Group browser profiles by business, region or project, at several levels; on Company, give members access by group.'],
+          ['Roles and permissions', 'Owner, Admin, Member and Viewer are built in; make your own roles and set each of the 13 permissions.'],
+          ['Activity log', 'Records opening, changing and handing over browser profiles, searchable by person, kind and date.']
+        ] as [string, string][] },
+      { title: 'Engines', lead: 'Engine versions, what is downloaded and which browser profiles use each.', shot: 'Engines: the default engine, each version’s download state and the profiles using it',
+        points: [
+          ['Several versions side by side', 'Keep more than one version of an engine; existing browser profiles stay on theirs until upgraded.'],
+          ['Downloads', 'Download, pause and resume, download only while idle, and clean up versions nothing uses.'],
+          ['A default engine', 'Set the workspace’s default engine; new browser profiles start with it.']
+        ] as [string, string][] },
+      { title: 'Automation', lead: 'Less repetitive work, with the results of batch operations in the task center.', shot: 'Window sync: what is done in the leading window repeats in the others',
+        points: [
+          ['Window sync', 'Clicks, typing and scrolling in the leading window repeat in the others.'],
+          ['Flows and scheduled tasks', 'Build flows step by step and run them over a set of browser profiles a few at a time, on a schedule, with every run’s results kept.'],
+          ['Local API and extensions', 'The local API works with Playwright, Puppeteer and Selenium; extensions are kept in one library and installed in many profiles at once.']
+        ] as [string, string][] }
     ],
-    withCode: 'With code',
-    withCodeBody: 'A local API starts browser profiles and returns their debugging address, for use with Playwright, Puppeteer, Selenium and similar tools.',
-    libs: ['Playwright', 'Puppeteer', 'Selenium', 'CDP · WebDriver BiDi']
+    flow: {
+      title: 'From the first profile to the whole team, in one place',
+      steps: [
+        ['Create profiles', 'Set up browser profiles and their fingerprints.'],
+        ['Add proxies', 'Choose the protocol and check the connection.'],
+        ['Bring in members', 'Set their roles and the groups they reach.'],
+        ['Get to work', 'Manage every browser profile from one workbench.']
+      ] as [string, string][],
+      cta: 'Try the whole workflow'
+    }
   },
 
-  trust: {
-    eyebrow: 'Free trial',
-    title: 'Try first, then choose a plan',
-    items: [
-      ['5 browser profiles, free', 'No card required and no time limit; enough to validate a complete workflow.'],
-      ['Verify it yourself', 'Open fingerprint test sites inside a browser profile to check its configuration and isolation.'],
-      ['7-day refund', 'A full refund can be requested within 7 days of payment.'],
-      ['Export at any time', 'Browser profile settings and cookies can be exported at any time.']
-    ]
+  solutions: {
+    title: 'Solutions', h1: 'Browser profiles,\norganised for the way you work',
+    lead: 'Folio organises browser profiles, proxies and member access around how your business is structured, so people and teams have a clear way of working in each line of business.',
+    shot: 'The list of browser profiles in the Folio workbench', start: 'Try free', features: 'See the features',
+    casesTitle: 'For different lines of business', casesLead: 'Start from what the work needs and set up the browser profiles, proxies and access to match.',
+    hub: 'Proxy', needs: 'What it needs', answers: 'What helps',
+    cases: [
+      { title: 'Cross-border e-commerce', lead: 'Browser profiles organised by marketplace and shop, with proxies and member access managed in one place.', envs: ['Shop\nUS', 'Shop\nEU', 'Shop\nJapan'],
+        needs: ['Shops on several marketplaces at once', 'Each account’s environment kept apart', 'Work divided across the team'], answers: ['Browser profiles created in bulk', 'Proxies set up and checked', 'Roles and access by group'], cta: 'See the solution' },
+      { title: 'Social media', lead: 'Accounts grouped by project, set up and run together.', envs: ['Account\nProject A', 'Account\nProject B', 'Account\nProject C'],
+        needs: ['Many social accounts', 'Each account signed in on its own', 'Posting and day-to-day work shared'], answers: ['Separate browser profiles', 'Window sync for bulk work', 'Groups and permissions'], cta: 'See the features' },
+      { title: 'Testing', lead: 'Test environments kept apart, with what was done and batch results on record.', envs: ['Dev', 'Test', 'Staging'],
+        needs: ['Several people testing at once', 'Projects kept apart', 'Environments easy to manage and clean up'], answers: ['Browser profiles in groups', 'Access by member', 'Activity log and task records'], cta: 'See the features' }
+    ],
+    flow: {
+      title: 'From members to proxies, in four steps', lead: 'Set up and run a team’s browser profiles.',
+      steps: [
+        ['Invite members', 'Bring the team in and give each a role.'],
+        ['Grant groups', 'Create groups for the business and decide who reaches them.'],
+        ['Create profiles', 'A separate browser profile for each line of work.'],
+        ['Add proxies', 'Assign proxies to the browser profiles and check them.']
+      ] as [string, string][]
+    },
+    faq: {
+      title: 'Questions', lead: 'About setting up browser profiles for your work.',
+      items: [
+        ['What kind of work is Folio for?', 'People and teams running several accounts at once: shops on several marketplaces, social media accounts, ad accounts for clients, and testing in several environments. Each account gets its own browser profile, so less device information is shared between them.'],
+        ['How are members’ permissions managed?', 'Admins invite members and give each a role: Owner, Admin, Member and Viewer are built in, and roles of your own can set each permission. On Company, members can also be given access to browser profiles by group.'],
+        ['Can browser profiles be created in bulk?', 'Yes. Import browser profiles from a spreadsheet, import proxies from a list, and change the group, proxy or engine version of many at once; the task center shows how each batch went.']
+      ] as [string, string][]
+    },
+    band: { title: 'Find the right setup for your team', body: 'Tell us what you need and get advice on setting up browser profiles.', contact: 'Contact us' }
+  },
+
+  ecommerce: {
+    title: 'Cross-border e-commerce', crumb: 'Cross-border e-commerce', h1: 'Shops in many regions,\nrun by one team',
+    lead: 'Organise browser profiles by shop and region, and set up proxies and member access in one place.',
+    shot: 'Groups: browser profiles organised by region, and the group’s settings', features: 'See the features',
+    pains: {
+      title: 'What gets in the way', lead: 'With several marketplaces in several regions, browser profiles, proxies and people get harder to keep track of.',
+      items: [
+        ['Too many setups', 'Each shop, region and way of working needs its own browser profile, and keeping them straight by hand gets messy.', 'Browser profiles in groups', 'Organised by shop and region'],
+        ['Scattered proxies', 'Proxies from several providers, set up in different ways, are hard to keep up and switch.', 'Proxies set up in the workbench', 'Checked, then assigned to profiles'],
+        ['Hard handovers', 'Access and account details sit in different places, so new people and changes take long to hand over.', 'Access by role and group', 'Clear about who reaches what']
+      ] as [string, string, string, string][]
+    },
+    flow: {
+      title: 'How to set it up', lead: 'Four steps to a cross-border e-commerce setup the whole team can work in.',
+      steps: ['Create groups', 'Set up profiles', 'Check proxies', 'Grant access'],
+      mini: {
+        groups: { title: 'Groups', items: ['US stores', 'Japan stores'], add: 'New group' },
+        profile: { title: 'New profile', fields: [['Name', 'US-Shop-A'], ['Group', 'US stores'], ['Notes', 'Main US shop']] as [string, string][], create: 'Create profile' },
+        proxy: { title: 'Proxy check', fields: [['Type', 'HTTP'], ['Address', '203.0.113.24:8080']] as [string, string][], check: 'Check connection', ok: 'Answering', exit: 'Exit: Seattle, United States' },
+        access: { title: 'US stores · member access', people: [['Jordan', 'Member', true], ['Riley', 'Viewer', true], ['Sam', 'Member', false]] as [string, string, boolean][], save: 'Save settings' }
+      }
+    },
+    compare: {
+      title: 'Before and after', lead: 'From scattered and messy to one orderly place.',
+      before: 'Before', beforeSub: 'Scattered, costly to manage', after: 'After', afterSub: 'In one place, easier to share',
+      afterShot: 'The list of browser profiles in the Folio workbench: groups, proxies and status',
+      cols: ['Shop', 'Marketplace', 'Proxy', 'Owner', 'State'],
+      rows: [
+        ['US-Shop-A', 'Marketplace A', 'US IP, set up alone', 'Alex', 'Messy setup'],
+        ['US-Shop-B', 'Marketplace B', 'Proxy kept in a doc', 'Sam', 'Hard to trace'],
+        ['JP-Shop-A', 'Marketplace C', 'Japan IP, another tool', 'Jo', 'Hard to hand over'],
+        ['JP-Shop-B', 'Marketplace D', 'Proxy switched by hand', 'Lee', 'Easy to get wrong']
+      ]
+    },
+    note: 'Each marketplace’s own rules for accounts and verification apply.'
   },
 
   pricing: {
-    eyebrow: 'Pricing',
-    title: 'Priced by browser profile, with unlimited members',
-    monthly: 'Monthly', yearly: 'Yearly', save: 'save 20%',
+    title: 'Pricing', h1: 'Plans that fit\nthe size of your work',
+    lead: 'Priced by the number of browser profiles, with unlimited members on paid plans. From trying Folio on your own to several teams working together, pick the plan that fits today and change it anytime.',
+    note: 'Free is free forever, with no card required. Payments can be refunded within 7 days.',
+    shot: 'The list of browser profiles in the Folio workbench',
+    period: 'Billing period', monthly: 'Monthly', yearly: 'Yearly', save: 'save 20%',
     perMonth: '/ month', forever: 'free forever',
     perProfile: (amount: string) => `${amount} per profile a month`,
     billedMonthly: 'Billed monthly, cancel anytime',
@@ -125,47 +184,57 @@ export const en = {
     noCard: 'No card required',
     profilesMembers: (p: number, m: string) => `${p} profiles · ${m}`,
     oneMember: '1 member', unlimitedMembers: 'unlimited members',
-    flag: 'For teams of 3–20',
+    tags: { free: 'On your own', studio: 'For teams of 3–20', company: 'For several teams' },
     for: { free: 'Core features', studio: 'Day-to-day work for one team', company: 'Several teams and business lines' },
     cta: { free: 'Try free', studio: 'Try free for 7 days', company: 'Contact sales' },
     features: {
       free: ['Chromium and Firefox engines, full fingerprint settings', 'Proxy checks with automatic time zone and language', 'Local API', 'Docs and community support'],
-      studio: ['Unlimited members', 'Window sync and bulk actions', 'Team permissions and browser profile handover', '30-day activity log', 'Live chat on weekdays'],
-      company: ['Everything in Studio', 'Browser profiles grouped by department', '1-year activity log with export', 'Dedicated support channel, 12 hours a day', 'Unthrottled API']
+      studio: ['Unlimited members', 'Window sync and bulk actions', 'Roles, permissions and browser profile handover', '30-day activity log', 'Live chat on weekdays'],
+      company: ['Everything in Studio', 'Members given access by group', '1-year activity log with export', 'Dedicated support channel, 12 hours a day', 'Unthrottled API']
     },
     buy: 'Buy now', soon: 'Coming soon',
+    compare: {
+      title: 'Compare plans', yes: 'Included', no: 'Not included',
+      rows: [
+        ['Browser profiles', '5', '100, more with add-ons', '500, more with add-ons'],
+        ['Members', '1', 'Unlimited', 'Unlimited'],
+        ['Chromium and Firefox engines', true, true, true],
+        ['Proxy management and checks', true, true, true],
+        ['Sign-ins synced to the cloud, data export', true, true, true],
+        ['Window sync', false, true, true],
+        ['Roles and permissions', false, true, true],
+        ['Members given access by group', false, false, true],
+        ['Activity log', 'Kept 7 days', 'Kept 30 days', 'Kept 1 year, with export'],
+        ['Local API', '60 requests a minute', '60 requests a minute', 'Unthrottled'],
+        ['Support', 'Docs and community', 'Live chat on weekdays', 'Dedicated channel, 12 hours a day']
+      ] as [string, ...(string | boolean)[]][]
+    },
     calc: {
-      title: 'Select the number of browser profiles', hint: 'Adjust the slider to see the matching plan and price.',
+      eyebrow: 'Estimate', title: 'Choose by the number of browser profiles', label: 'Browser profiles needed',
+      hint: 'Drag the slider to the number of browser profiles you need to see the lowest-cost plan and its price.',
       best: 'Recommended', cheapest: 'Lowest cost',
       profiles: (n: number) => `${n} profiles`,
       withPacks: (plan: string, packs: number) => `${plan} + ${packs} add-on ${packs === 1 ? 'pack' : 'packs'}`,
       fit: (n: number, pick: string) => `${n} profiles: ${pick}`,
-      company: (amount: string) => `Company costs ${amount} a month for the same number and adds departments, a 1-year activity log and an unthrottled API.`,
+      company: (amount: string) => `Company costs ${amount} a month for the same number and adds group access, a 1-year activity log and an unthrottled API.`,
       custom: (max: number) => `More than ${max.toLocaleString('en-US')} profiles`, customBody: 'A custom quote is available for your team.',
       buy: 'Buy this plan'
     },
+    faq: {
+      title: 'Questions', lead: 'About trying Folio, billing and plans. For anything else,', contact: 'contact us',
+      items: [
+        ['What does Free include?', 'Five browser profiles, free forever: both engines, full fingerprint settings, proxy checks and the local API. No card is required and there is no time limit, so a whole way of working can be tried out.'],
+        ['Can I try Studio first?', 'Yes. Each workspace can try Studio free for 7 days, with members and window sync; afterwards, buy it or carry on with Free.'],
+        ['How do I upgrade or change plans?', 'From the account page. An upgrade starts the same day, and the time left on the current plan is credited; a downgrade starts when the current period ends.'],
+        ['What if I need more browser profiles?', 'Paid plans take add-on packs of 100 browser profiles each, up to 2,000 in total; above that, contact us for a quote.'],
+        ['Are refunds and invoices available?', 'The latest payment can be refunded within 7 days, which puts the plan back as it was before it. Every payment comes with an invoice, which the account page shows and prints.']
+      ] as [string, string][]
+    },
+    band: { title: 'Start free, upgrade when you need to', body: 'Sign up to use 5 browser profiles, with no card required.' },
     foot: (pack: string) => `Additional browser profiles cost ${pack} a month per 100; above 2,000, a custom quote is available. Prices exclude local taxes, and an invoice is issued for every payment.`
   },
 
-  faq: {
-    eyebrow: 'FAQ', title: 'Frequently asked questions', lead: 'For other questions,', contact: 'contact us',
-    items: [
-      ['Can Folio guarantee that accounts will not be banned?', 'No. Folio reduces the risk of several accounts being identified as the same device. Accounts that break platform rules, or that use low-quality proxy IPs, may still be restricted. A dedicated residential or ISP proxy for each browser profile is recommended.'],
-      ['Are my own proxies required?', 'Yes. HTTP, HTTPS and SOCKS5 proxies are supported and can be added one by one or imported in bulk. Each is checked for connectivity and exit location, and the time zone and language are set to match.'],
-      ['Should I use Chromium or Firefox?', 'Chromium is recommended for most accounts; each Chromium browser profile has a stable, distinct fingerprint. Firefox suits sites that expect Firefox users. Firefox browser profiles on the same computer share more of their fingerprint, so many accounts on one platform should not all use Firefox.'],
-      ['Where is browser profile data stored?', 'By default it is encrypted and synced to the cloud, so work can continue on another computer. Individual browser profiles can also be kept on one computer only. All data can be exported at any time.'],
-      ['How are the engines updated?', 'Folio uses open-source fingerprint engines and releases new versions after testing. Existing browser profiles keep their engine version and can be upgraded when convenient.']
-    ] as [string, string][]
-  },
-
-  band: {
-    title: 'Try 5 browser profiles free',
-    body: 'Create an account and download the app to start setting up browser profiles.',
-    windows: 'Download for Windows', mac: 'Download for macOS',
-    fine: 'Beta · Chromium 150 and Firefox 156 engines'
-  },
-
-  footer: { docs: 'Docs', api: 'API reference', changelog: 'Changelog', privacy: 'Privacy', terms: 'Terms', sales: 'Contact sales', rights: '© 2026 Folio', product: 'Product', resources: 'Resources', company: 'Company' },
+  footer: { product: 'Product', resources: 'Resources', company: 'Company', api: 'API reference', changelog: 'Changelog', contact: 'Contact us', privacy: 'Privacy', terms: 'Terms', tagline: 'Separate profiles, managed as one', about: 'Folio manages browser profiles, proxies and team access in one place.', rights: '© 2026 Folio' },
 
   auth: {
     signupTitle: 'Create a Folio account', signupLead: 'Try 5 browser profiles free. No card required.',
@@ -255,10 +324,10 @@ export const en = {
   },
 
   sales: {
-    title: 'Contact sales', lead: 'For more than 500 browser profiles, several departments or a custom plan, submit your requirements and the sales team will reply within one working day.',
+    title: 'Contact sales', lead: 'For more than 500 browser profiles, access by group for several teams or a custom plan, submit your requirements and the sales team will reply within one working day.',
     points: [
       ['More than 500 browser profiles', 'Custom quotes by volume, including above 2,000.'],
-      ['Department management', 'Browser profiles grouped by department, with a 1-year activity log and export.'],
+      ['Access by group', 'Members given access to browser profiles by group, with a 1-year activity log and export.'],
       ['Reply within one working day', 'A dedicated contact on working days; product demos available.']
     ] as [string, string][],
     name: 'Name', email: 'Work email', company: 'Company', teamSize: 'Team size', message: 'Requirements',
@@ -266,19 +335,28 @@ export const en = {
   },
 
   download: {
-    title: 'Download Folio', lead: 'Install the desktop app and log in with your Folio account; plan, team and browser profiles sync automatically.',
-    windows: 'Windows 10 and later, 64-bit', mac: 'macOS 12 and later, Apple silicon (M1 and newer)', get: 'Download', soon: 'Coming soon',
-    version: (v: string) => `Version ${v}`, released: (date: string) => `Released ${date}`,
-    notesTitle: 'First-time installation',
-    winNote: 'Folio is not code-signed yet. If SmartScreen blocks the installer, click “More info”, then “Run anyway”.',
-    macNote: 'Folio is not code-signed yet. Drag Folio into Applications. If macOS does not open it the first time, go to System Settings › Privacy & Security and click “Open Anyway”. If it reports that the app is damaged, run xattr -cr /Applications/Folio.app in Terminal and open it again.',
-    stepsTitle: 'Three steps after installation',
+    title: 'Download Folio', h1: 'Download Folio and\nstart running browser profiles',
+    lead: 'Install the Folio app on your computer and sign in with your Folio account to create and run browser profiles; your plan, team and browser profiles sync automatically.',
+    shot: 'The list of browser profiles in the Folio workbench', pending: 'Installers coming soon',
+    windowsName: 'Windows', macName: 'macOS',
+    windows: 'Windows 10 or later (64-bit)', mac: 'macOS 12 or later (Apple silicon, M1 or newer)',
+    get: (os: string) => `Download for ${os}`, soon: 'Coming soon',
+    version: (v: string) => `Version ${v}`, released: (date: string) => `released ${date}`,
+    notesTitle: 'First install',
+    winNote: 'Folio is not code-signed yet. If SmartScreen blocks the installer, choose More info, then Run anyway.',
+    macNote: 'Folio is not code-signed yet. Drag Folio into Applications. If it will not open the first time, go to System Settings › Privacy & Security and choose Open Anyway; if macOS says the app is damaged, run xattr -cr /Applications/Folio.app in Terminal and open it again.',
+    other: 'Installers for other systems are not available. If you need one,', contact: 'contact us',
+    stepsTitle: 'Three steps to get started', stepsLead: 'Download and install the app, sign in, and create browser profiles.',
     steps: [
-      ['Download and install', 'On Windows, run the installer; on macOS, drag Folio into Applications.'],
-      ['Log in with your Folio account', 'Plan, team and browser profiles sync automatically.'],
-      ['Engines download on first use', 'Engines come from each project’s official releases on GitHub and are checked against their published checksums.']
+      ['Download the app', 'Pick your system: on Windows run the installer; on macOS drag Folio into Applications.'],
+      ['Sign in', 'Sign in with your Folio account; your plan, team and browser profiles sync automatically.'],
+      ['Create profiles', 'Create browser profiles and add proxies; the first time one opens, its engine downloads and is checked against the official checksum.']
     ] as [string, string][],
-    already: 'Existing plans apply automatically after logging in to the app.'
+    help: [
+      ['Installing', 'For installation steps and common questions, see the docs.', 'Read the docs'],
+      ['What’s new', 'New features and fixes in each version of the Folio app.', 'See the changelog'],
+      ['Stay safe', 'Get installers from this page or other official channels, so you know where they come from.', '']
+    ] as [string, string, string][]
   },
 
   docs: {

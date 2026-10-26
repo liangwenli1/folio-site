@@ -16,12 +16,28 @@ const sideways = (page: Page) => page.evaluate(() => document.documentElement.sc
 
 for (const lang of ['en', 'zh']){
   test(`no sideways scrolling on a phone (${lang})`, async ({ page }) => {
-    for (const path of ['', 'login/', 'signup/', 'forgot/', 'reset/', 'download/', 'docs/', 'docs/api/', 'changelog/', 'privacy/', 'terms/', 'contact-sales/', 'invite/']){
+    for (const path of ['', 'features/', 'solutions/', 'solutions/ecommerce/', 'pricing/', 'login/', 'signup/', 'forgot/', 'reset/', 'download/', 'docs/', 'docs/api/', 'changelog/', 'privacy/', 'terms/', 'contact-sales/', 'invite/']){
       await page.goto(`/${lang}/${path}`);
       expect(await sideways(page), `/${lang}/${path}`).toBe(0);
     }
   });
 }
+
+test('on a phone the sections fold into a menu, with the current one marked', async ({ page }) => {
+  await page.goto('/en/pricing/');
+  const nav = page.getByRole('navigation', { name: 'Menu' });
+  await expect(nav).toBeHidden();
+  await page.getByRole('button', { name: 'Menu' }).click();
+  await expect(nav.getByRole('link', { name: 'Pricing' })).toHaveAttribute('aria-current', 'page');
+  await expect(nav.getByRole('link', { name: 'Try free' })).toBeVisible();
+  expect(await sideways(page)).toBe(0);
+  await page.keyboard.press('Escape');
+  await expect(nav).toBeHidden();
+  await page.getByRole('button', { name: 'Menu' }).click();
+  await nav.getByRole('link', { name: 'Features' }).click();
+  await expect(page).toHaveURL(/\/en\/features\/$/);
+  await expect(page.getByRole('navigation', { name: 'Menu' })).toBeHidden();
+});
 
 test('no sideways scrolling on a phone behind an account: verify, checkout, account, invoice', async ({ page }) => {
   const email = `e2e${Date.now().toString(36)}layout@example.com`;

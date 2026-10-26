@@ -4,7 +4,7 @@ import Icon from './Icon.astro';
 import { t, type Lang } from '../lib/i18n';
 
 interface Props { lang: Lang }
-const s = t(Astro.props.lang).hero.sample;
+const s = t(Astro.props.lang).demo.sample;
 ---
 <div class="sample" aria-hidden="true">
   <img class="flag" src="/flags/gb.svg" width="40" height="40" alt="" />

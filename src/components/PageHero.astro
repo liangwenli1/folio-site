@@ -1,0 +1,23 @@
+---
+// The first screen of a marketing page: a breadcrumb when the page sits under another, the title (a line break where
+// the copy has "\n"), what the page is about, its actions (the default slot) and, beside them, the product ("vis").
+import { t, type Lang } from '../lib/i18n';
+
+interface Props { lang: Lang; title: string; lead: string; crumbs?: [string, string | null][] }
+const { lang, title, lead, crumbs } = Astro.props;
+---
+<section class="phero">
+  <div class="wrap phero-in">
+    <div class="phero-copy">
+      {crumbs && (
+        <nav class="crumbs" aria-label={t(lang).nav.crumbs}>
+          {crumbs.map(([label, href], i) => <>{i > 0 && <span aria-hidden="true">/</span>}{href ? <a href={href}>{label}</a> : <span aria-current="page">{label}</span>}</>)}
+        </nav>
+      )}
+      <h1>{title.split('\n').map((line, i) => <>{i > 0 && <> <br /></>}{line}</>)}</h1>
+      <p class="lead">{lead}</p>
+      <slot />
+    </div>
+    <div class="phero-vis"><slot name="vis" /></div>
+  </div>
+</section>

@@ -57,22 +57,24 @@ async function payWith(page: Page, number: string){
   await page.click('#pay');
 }
 
-test('landing page shows live prices in both languages', async ({ page }) => {
-  await page.goto('/en/');
-  await expect(page.locator('h1')).toHaveText('Isolated browser profiles for every account.');
+test('the pricing page shows live prices in both languages', async ({ page }) => {
+  await page.goto('/en/pricing/');
+  await expect(page.locator('h1')).toHaveText('Plans that fit the size of your work');
   const studio = page.locator('[data-plan="studio"]');
   await expect(studio.locator('[data-amt]')).toHaveText('$29');
   await page.click('[data-period="yearly"]');
   await expect(studio.locator('[data-amt]')).toHaveText('$23');
   await expect(studio.locator('[data-note]')).toContainText('$276');
 
-  await page.goto('/zh/');
-  await expect(page.locator('h1')).toHaveText('账号环境相互隔离。');
+  await page.goto('/zh/pricing/');
+  await expect(page.locator('h1')).toHaveText('按业务规模 选择配置');
   await expect(page.locator('[data-plan="company"] [data-amt]')).toHaveText('US$99');
+  // What each plan includes, side by side.
+  await expect(page.getByRole('row', { name: /按分组授权成员/ }).getByRole('img', { name: '包含', exact: true })).toHaveCount(1);
 });
 
 test('the calculator finds the cheapest plan and takes its add-on packs to checkout', async ({ page }) => {
-  await page.goto('/en/');
+  await page.goto('/en/pricing/');
   const $ = (id: string) => page.locator(`#${id}`);
   // 180 profiles: Studio with one pack is cheaper than Company.
   await expect($('calc-out')).toHaveText('180');
@@ -151,7 +153,7 @@ test('the Studio trial starts from the pricing link', async ({ page }) => {
 test('while payments are off, paid plans say coming soon and the free trial still starts', async ({ page }) => {
   // The server says it can't take payments (as in production until a gateway is in).
   await page.route('**/plans', async r => { const res = await r.fetch(); await r.fulfill({ response: res, json: { ...await res.json(), payments: false } }); });
-  await page.goto('/zh/');
+  await page.goto('/zh/pricing/');
   await expect(page.locator('[data-plan="studio"] .buy')).toHaveText('即将开放');
   await expect(page.locator('[data-plan="company"] .buy')).toHaveText('即将开放');
   await expect(page.locator('[data-buy]')).toHaveCount(0);

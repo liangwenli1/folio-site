@@ -41,9 +41,9 @@ html[lang="zh"]{--w-display:400}
   }
 }
 
-/* The site's own surfaces: white pages in light mode, sections alternating with the panel colour, a dark footer. */
-:root{--page:#FFFFFF; --foot:#1D1C2B; --hd:64px}
-@media (prefers-color-scheme: dark){ :root{--page:var(--bg); --foot:#0B0A0F} }
+/* The site's own surfaces: white pages in light mode, sections alternating with the panel colour. */
+:root{--page:#FFFFFF; --hd:64px}
+@media (prefers-color-scheme: dark){ :root{--page:var(--bg)} }
 
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:calc(var(--hd) + 12px)}
@@ -99,21 +99,30 @@ h3{font-weight:600}
 .seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(29,28,43,.12)}
 .seg em{font-style:normal;font-size:12px;margin-left:6px;color:var(--ink-3)}
 
-/* header */
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--page) 82%,transparent);-webkit-backdrop-filter:saturate(1.4) blur(12px);backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
-/* Over the home page's gradient the header is clear until the page scrolls. */
-html.over-hero:not(.scrolled) .top{background:transparent;border-bottom-color:transparent;-webkit-backdrop-filter:none;backdrop-filter:none}
-.top-in{display:flex;align-items:center;gap:30px;height:var(--hd)}
+/* header: the sections in a row, the current one underlined; narrower than a tablet they fold into a menu */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--page) 88%,transparent);-webkit-backdrop-filter:saturate(1.4) blur(12px);backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;gap:40px;height:var(--hd)}
 .brand{display:flex;align-items:center;gap:9px;text-decoration:none}
 .seal{width:28px;height:28px;flex:none;color:var(--accent)}
 .brand-word{font-family:var(--f-display);font-weight:700;font-size:22px;line-height:1;letter-spacing:-.02em}
-.nav{display:flex;gap:24px;font-size:14px;color:var(--ink-2)}
-.nav a{text-decoration:none}
-.nav a:hover{color:var(--ink)}
-.top-act{margin-left:auto;display:flex;align-items:center;gap:16px;font-size:14px}
+.nav{display:flex;align-items:center;gap:28px;flex:1;font-size:14.5px;color:var(--ink-2)}
+.nav > a{position:relative;display:flex;align-items:center;height:var(--hd);text-decoration:none}
+.nav > a:hover{color:var(--ink)}
+.nav > a[aria-current="page"]{color:var(--ink);font-weight:600}
+.nav > a[aria-current="page"]::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:2px;border-radius:2px;background:var(--accent)}
+.nav-acts{display:flex;align-items:center;gap:18px;margin-left:auto}
 .quiet{text-decoration:none;color:var(--ink-2)}
 .quiet:hover{color:var(--ink)}
-@media (max-width:1000px){.nav{display:none}}
+.menu-btn{display:none;place-items:center;width:40px;height:40px;margin-left:auto;border:1px solid var(--line-2);border-radius:var(--r);background:var(--card);color:var(--ink);cursor:pointer}
+@media (max-width:1000px){
+  .menu-btn{display:grid}
+  .nav{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;align-items:stretch;gap:0;padding:4px 20px 20px;background:var(--page);border-bottom:1px solid var(--line);box-shadow:var(--shadow-pop)}
+  html.menu-open .nav{display:flex}
+  .nav > a{height:auto;padding:14px 2px;border-bottom:1px solid var(--line);font-size:16px}
+  .nav > a[aria-current="page"]::after{display:none}
+  .nav-acts{margin:18px 0 0;gap:12px}
+  .nav-acts .btn,.nav-acts .quiet{flex:1;justify-content:center;text-align:center}
+}
 
 /* sections */
 .sec{padding-block:104px}
