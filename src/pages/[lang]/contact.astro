@@ -110,7 +110,7 @@ const MORE: [IconName, string][] = [['book', 'help/'], ['billing', 'pricing/'], 
 </style>
 <script>
   import { api, type Inquiry } from '../../lib/api';
-  import { $, d, lang, showError } from '../../scripts/session';
+  import { $, busy, d, lang, showError } from '../../scripts/session';
   const form = $<HTMLFormElement>('form'), err = $('err');
   const kind = $<HTMLSelectElement>('kind'), message = $<HTMLTextAreaElement>('message');
   // The cards and the type field are one choice.
@@ -127,7 +127,7 @@ const MORE: [IconName, string][] = [['book', 'help/'], ['billing', 'pricing/'], 
       .find(f => (f.type === 'checkbox' ? !f.checked : !f.value.trim() || !f.checkValidity()));
     if (missing){ showError(err, d.errors.validation); missing.focus(); return; }
     const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
-    btn.disabled = true;
+    busy(btn, true);
     try {
       const { number } = await api<Inquiry>('POST', '/sales-inquiries', {
         kind: kind.value, name: $<HTMLInputElement>('name').value.trim(), email: $<HTMLInputElement>('email').value.trim(),
@@ -138,7 +138,7 @@ const MORE: [IconName, string][] = [['book', 'help/'], ['billing', 'pricing/'], 
       $('done').hidden = false;
     } catch {
       showError(err, d.contact.failed);
-    } finally { btn.disabled = false; }
+    } finally { busy(btn, false); }
   });
   $('again').addEventListener('click', () => { form.reset(); message.dispatchEvent(new Event('input')); pick('product'); form.hidden = false; $('done').hidden = true; });
 </script>

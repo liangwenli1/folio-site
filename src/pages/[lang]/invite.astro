@@ -23,7 +23,7 @@ const d = t(lang);
 <script>
   import { api, ApiFailure, roleLabel, type Me } from '../../lib/api';
   import { day } from '../../lib/format';
-  import { $, d, here, lang, param, showError, to } from '../../scripts/session';
+  import { $, busy, d, here, lang, param, showError, to } from '../../scripts/session';
 
   interface Preview { id: string; workspaceName: string; inviter: string | null; email: string; role: { key: string | null; name: string }; expired: boolean; expiresAt: string }
   const actions = $('actions');
@@ -39,7 +39,8 @@ const d = t(lang);
     b.addEventListener('click', async () => {
       $('err').hidden = true;
       actions.querySelectorAll('button').forEach(x => { x.disabled = true; });
-      try { await run(); } catch (e){ showError($('err'), e); } finally { actions.querySelectorAll('button').forEach(x => { x.disabled = false; }); }
+      busy(b, true);
+      try { await run(); } catch (e){ showError($('err'), e); } finally { actions.querySelectorAll('button').forEach(x => { busy(x, false); }); }
     });
     return b;
   }

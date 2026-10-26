@@ -94,7 +94,7 @@ const a = d.account;
   import { api, canManage, roleLabel, type Me, type Payment, type Workspace } from '../../lib/api';
   import { day, money } from '../../lib/format';
   import { ICONS } from '../../lib/icons';
-  import { $, d, esc, lang, param, requireMe, showError, to } from '../../scripts/session';
+  import { $, busy, d, esc, lang, param, requireMe, showError, to } from '../../scripts/session';
 
   const a = d.account;
   // The status labels' icons (components/Icon.astro draws the same paths at build time).
@@ -145,7 +145,7 @@ const a = d.account;
   $('inv-list').addEventListener('click', async ev => {
     const b = (ev.target as HTMLElement).closest<HTMLButtonElement>('button[data-accept],button[data-decline]');
     if (!b) return;
-    b.disabled = true;
+    busy(b, true);
     try {
       if (b.dataset.accept){
         const ws = await api<{ id: string }>('POST', `/invitations/${b.dataset.accept}/accept`);
@@ -154,7 +154,7 @@ const a = d.account;
         await api('POST', `/invitations/${b.dataset.decline}/decline`);
         await renderInvitations();
       }
-    } catch (e){ fail(e); b.disabled = false; }
+    } catch (e){ fail(e); busy(b, false); }
   });
 
   function renderPlan(){

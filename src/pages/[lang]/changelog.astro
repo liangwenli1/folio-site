@@ -61,6 +61,7 @@ const KINDS: ['added' | 'improved' | 'fixed', IconName][] = [['added', 'plus'], 
 <script>
   import { api, errorText } from '../../lib/api';
   import { pageLang, t } from '../../lib/i18n';
+  import { busy } from '../../scripts/session';
   // One part of Folio at a time, or everything.
   const tabs = document.querySelectorAll<HTMLButtonElement>('.cl-tabs button');
   tabs.forEach(b => b.addEventListener('click', () => {
@@ -78,11 +79,11 @@ const KINDS: ['added' | 'improved' | 'fixed', IconName][] = [['added', 'plus'], 
     const email = field.value.trim();
     if (!email || !field.checkValidity()){ say(d.errors.emailMissing, false); field.focus(); return; }
     const send = form.querySelector('button')!;
-    send.disabled = true;
+    busy(send, true);
     try {
       const { status } = await api<{ status: 'pending' | 'subscribed' }>('POST', '/news/subscribe', { email, locale: lang });
       say(status === 'subscribed' ? S.subscribed : S.pending(email), true);
-    } catch (e){ say(errorText(d, e), false); } finally { send.disabled = false; }
+    } catch (e){ say(errorText(d, e), false); } finally { busy(send, false); }
   });
   // The email's links: confirming or unsubscribing happens here, and the box says how it went.
   const query = new URLSearchParams(location.search);

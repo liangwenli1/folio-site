@@ -36,7 +36,7 @@ const A = t(lang).auth;
 </AuthPage>
 <script>
   import { api } from '../../lib/api';
-  import { $, cooldown, d, lang, nextPath, onSubmit, param, showError, to, withNext } from '../../scripts/session';
+  import { $, busy, cooldown, d, lang, nextPath, onSubmit, param, showError, to, withNext } from '../../scripts/session';
   const err = $('err'), email = $<HTMLInputElement>('email'), code = $<HTMLInputElement>('code');
   $<HTMLAnchorElement>('to-login').href = withNext(to('login/'));
   if (param('email')) email.value = param('email')!;
@@ -50,13 +50,14 @@ const A = t(lang).auth;
     err.hidden = true;
     try {
       needEmail();
-      get.disabled = true;
+      busy(get, true);
       await api('POST', '/auth/signup-code', { email: address(), locale: lang });
       $('sent').hidden = false;
+      busy(get, false);
       cooldown(get, d.auth.resendIn);
       code.focus();
     } catch (e){
-      get.disabled = false;
+      busy(get, false);
       showError(err, e);
     }
   });

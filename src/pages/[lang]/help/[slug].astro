@@ -47,18 +47,21 @@ const pictures = PICTURES[slug] ?? {};
 <script>
   import { api } from '../../../lib/api';
   import { pageLang } from '../../../lib/i18n';
+  import { busy } from '../../../scripts/session';
   // Whether it helped: kept on the server; the answer stays once it is in, and a failure says so and lets them try again.
   const box = document.querySelector<HTMLElement>('.fb')!;
   const msg = box.querySelector<HTMLElement>('.fb-msg')!;
   box.querySelectorAll<HTMLButtonElement>('button').forEach(b => b.addEventListener('click', async () => {
     box.querySelectorAll('button').forEach(x => { x.disabled = true; });
+    busy(b, true);
     try {
       await api('POST', '/doc-feedback', { page: box.dataset.page, helpful: b.dataset.helpful === 'true', locale: pageLang() });
+      b.removeAttribute('aria-busy');
       b.setAttribute('aria-pressed', 'true');
       msg.textContent = msg.dataset.thanks!;
       msg.className = 'fb-msg ok';
     } catch {
-      box.querySelectorAll('button').forEach(x => { x.disabled = false; });
+      box.querySelectorAll('button').forEach(x => { busy(x, false); });
       msg.textContent = msg.dataset.failed!;
       msg.className = 'fb-msg bad';
     }

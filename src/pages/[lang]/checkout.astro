@@ -92,7 +92,7 @@ const c = d.checkout;
 <script>
   import { api, canManage, type CheckoutStarted, type Paid, type Plans, type Quote, type Workspace } from '../../lib/api';
   import { lineLabel, money } from '../../lib/format';
-  import { $, d, here, lang, param, requireMe, showError, to, withNext } from '../../scripts/session';
+  import { $, busy, d, here, lang, param, requireMe, showError, to, withNext } from '../../scripts/session';
 
   type PlanId = 'studio' | 'company'; type Period = 'monthly' | 'yearly';
   const c = d.checkout;
@@ -223,7 +223,7 @@ const c = d.checkout;
     ev.preventDefault();
     if (!quote) return;
     $('err').hidden = true;
-    const btn = $<HTMLButtonElement>('pay'); btn.disabled = true;
+    const btn = $<HTMLButtonElement>('pay'); busy(btn, true);
     try {
       const started = await api<CheckoutStarted>('POST', `/workspaces/${ws.id}/billing/checkout`, { plan: sel.plan, period: sel.period, addonPacks: sel.packs });
       if (!started.checkoutId) return finish(c.applied);
@@ -233,7 +233,7 @@ const c = d.checkout;
       finish(c.success);
     } catch (e){
       showError($('err'), e);
-    } finally { btn.disabled = false; }
+    } finally { busy(btn, false); }
   });
 
   await loadWorkspace();

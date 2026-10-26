@@ -30,14 +30,20 @@ export function showError(box: HTMLElement, e: unknown){
   box.hidden = false;
 }
 
-// Runs a submit handler with the button disabled and errors shown in `box`.
+// A button while its request runs: a spinner in place of the label (aria-busy), the width kept, no more clicks.
+export function busy(btn: HTMLButtonElement, on: boolean){
+  btn.disabled = on;
+  if (on) btn.setAttribute('aria-busy', 'true'); else btn.removeAttribute('aria-busy');
+}
+
+// Runs a submit handler with the button busy and errors shown in `box`.
 export function onSubmit(form: HTMLFormElement, box: HTMLElement, run: () => Promise<void>){
   form.addEventListener('submit', async ev => {
     ev.preventDefault();
     box.hidden = true;
     const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
-    if (btn) btn.disabled = true;
-    try { await run(); } catch (e){ showError(box, e); } finally { if (btn) btn.disabled = false; }
+    if (btn) busy(btn, true);
+    try { await run(); } catch (e){ showError(box, e); } finally { if (btn) busy(btn, false); }
   });
 }
 

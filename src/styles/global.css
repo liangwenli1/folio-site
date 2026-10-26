@@ -65,7 +65,7 @@ a{color:inherit}
 .mono{font-family:var(--f-data)}
 /* The spec asks for a 1.75px stroke on a 24×24 viewBox; our icons are drawn on 16×16, so the same rendered
    weight is 1.75 × 16/24. */
-.i{flex:none;fill:none;stroke:currentColor;stroke-width:1.17;stroke-linecap:round;stroke-linejoin:round}
+.i{flex:none;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
 .row{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
 .spacer{flex:1}
 
@@ -78,12 +78,22 @@ h3{font-weight:600}
 .fine{font-size:13px;color:var(--ink-3)}
 
 /* buttons: primary (one per area, the accent), secondary and text, as in the workbench, at the site's sizes */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--h-ctl);padding:0 16px;border-radius:var(--r);border:1px solid transparent;font:inherit;font-size:14px;font-weight:600;line-height:1;text-decoration:none;white-space:nowrap;cursor:pointer;transition:background-color .15s ease,border-color .15s ease,color .15s ease}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--h-ctl);padding:0 16px;border-radius:var(--r);border:1px solid transparent;font:inherit;font-size:14px;font-weight:600;line-height:1;text-decoration:none;white-space:nowrap;cursor:pointer;transition:background-color .15s ease,border-color .15s ease,color .15s ease,transform .08s ease}
+/* Pressed: the button sinks a little. Submitting (aria-busy): a spinner in place of the label, the width kept, and no
+   more clicks until it is done. */
+.btn:active:not(:disabled){transform:translateY(1px) scale(.985)}
+.btn[aria-busy="true"]{position:relative;color:transparent!important;opacity:1;cursor:progress}
+.btn[aria-busy="true"] > *{visibility:hidden}
+.btn[aria-busy="true"]::after{content:'';position:absolute;inset:0;width:16px;height:16px;margin:auto;border:2px solid var(--busy,var(--ink-2));border-right-color:transparent;border-radius:50%;animation:btn-spin .8s linear infinite}
+@keyframes btn-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.btn:active:not(:disabled){transform:none}}
 .btn:disabled{opacity:.55;cursor:default}
 .btn-sm{height:var(--h-sm);padding:0 12px;font-size:13px}
 .btn-lg{height:var(--h-lg);padding:0 22px;font-size:15px}
 .btn-primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);box-shadow:0 6px 14px -8px var(--accent)}
 .btn-primary:hover:not(:disabled){background:color-mix(in srgb,var(--accent) 88%,var(--ink));border-color:color-mix(in srgb,var(--accent) 88%,var(--ink))}
+.btn-primary:active:not(:disabled){background:color-mix(in srgb,var(--accent) 78%,var(--ink));border-color:color-mix(in srgb,var(--accent) 78%,var(--ink))}
+.btn-primary{--busy:var(--on-accent)}
 .btn-secondary{background:var(--card);border-color:var(--line-2);color:var(--ink)}
 .btn-secondary:hover:not(:disabled){border-color:var(--ink-3);background:var(--hover)}
 .btn-text{background:transparent;color:var(--ink-2)}

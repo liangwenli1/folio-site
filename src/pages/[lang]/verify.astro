@@ -27,7 +27,7 @@ const A = t(lang).auth;
 </AuthPage>
 <script>
   import { api } from '../../lib/api';
-  import { $, cooldown, d, devBuild, nextPath, onSubmit, requireMe, showError, to } from '../../scripts/session';
+  import { $, busy, cooldown, d, devBuild, nextPath, onSubmit, requireMe, showError, to } from '../../scripts/session';
   const done = () => location.replace(nextPath() ?? to('account/'));
   const me = await requireMe();
   if (me.user.emailVerified) done();
@@ -40,14 +40,15 @@ const A = t(lang).auth;
   $('resend').addEventListener('click', async () => {
     const send = $<HTMLButtonElement>('resend');
     $('err').hidden = true;
-    send.disabled = true;
+    busy(send, true);
     try {
       await api('POST', '/auth/resend-code');
       $('ok').textContent = d.auth.resent; $('ok').hidden = false;
+      busy(send, false);
       cooldown(send, d.auth.resendIn);
       $('code').focus();
     } catch (e){
-      send.disabled = false;
+      busy(send, false);
       showError($('err'), e);
     }
   });

@@ -12,7 +12,7 @@ const L = t(lang).legal, T = L.terms;
 <Base lang={lang} path="terms/" title={T.title} description={T.lead}>
   <section class="wrap lt">
     <header class="lt-head"><h1>{T.title}</h1><p class="lead">{T.lead}</p></header>
-    <div class="lt-draft" role="note"><span class="lt-ic"><Icon name="alert" size={18} /></span><div><b>{T.draft[0]}</b><p>{T.draft[1]}</p></div></div>
+    <div class="lt-draft" role="note"><span class="lt-ic"><Icon name="alert" size={34} /></span><div><b>{T.draft[0]}</b><p>{T.draft[1]}</p></div></div>
     <ol class="lt-list">
       {T.sections.map((s, i) => (
         <li class="card lt-sec">
@@ -29,7 +29,7 @@ const L = t(lang).legal, T = L.terms;
   .lt-head h1{font-size:clamp(2rem,4.4vw,3.25rem);line-height:1.15}
   .lt-head .lead{max-width:640px;margin-top:14px;font-size:16px}
   .lt-draft{display:flex;align-items:center;gap:16px;margin-top:28px;padding:18px 22px;border-radius:var(--r-card);background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 16%,transparent)}
-  .lt-ic{display:grid;place-items:center;width:36px;height:36px;flex:none;border:2px solid var(--accent);border-radius:50%;color:var(--accent)}
+  .lt-ic{display:grid;place-items:center;flex:none;color:var(--accent)}
   .lt-draft b{font-size:15px}
   .lt-draft p{margin-top:2px;font-size:13.5px;color:var(--ink-2)}
   .lt-list{display:grid;gap:16px;margin:24px 0 0;padding:0;list-style:none}

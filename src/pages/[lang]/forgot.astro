@@ -51,7 +51,7 @@ const A = t(lang).auth, R = A.reset;
 </AuthPage>
 <script>
   import { api, ApiFailure } from '../../lib/api';
-  import { $, cooldown, d, devBuild, onSubmit, param, showError, to } from '../../scripts/session';
+  import { $, busy, cooldown, d, devBuild, onSubmit, param, showError, to } from '../../scripts/session';
   const err = $('err'), email = $<HTMLInputElement>('email'), code = $<HTMLInputElement>('code');
   $('dev').hidden = !devBuild;
   email.value = param('email') ?? '';
@@ -72,13 +72,14 @@ const A = t(lang).auth, R = A.reset;
     err.hidden = true;
     try {
       needEmail();
-      get.disabled = true;
+      busy(get, true);
       await api('POST', '/auth/password/forgot', { email: address() });
       $('sent').hidden = false;
+      busy(get, false);
       cooldown(get, d.auth.resendIn);
       code.focus();
     } catch (e){
-      get.disabled = false;
+      busy(get, false);
       showError(err, e);
     }
   });
