@@ -36,11 +36,21 @@ const KINDS: ['added' | 'improved' | 'fixed', IconName][] = [['added', 'plus'], 
         ))}
       </ol>
       <div class="cl-sub">
-        <span class="tile acc"><Icon name="mail" size={22} /></span>
+        <svg class="cl-env" viewBox="0 0 80 72" width="80" height="72" aria-hidden="true">
+          <defs>
+            <linearGradient id="cl-env-front" x1="0" y1="0" x2="0" y2="1"><stop class="hi" offset="0" /><stop class="lo" offset="1" /></linearGradient>
+          </defs>
+          <ellipse class="shade" cx="40" cy="68" rx="28" ry="3" />
+          <path class="back" d="M8 31 37 10.5a5 5 0 0 1 6 0L72 31v27a6 6 0 0 1-6 6H14a6 6 0 0 1-6-6z" />
+          <rect class="letter" x="18" y="15" width="44" height="38" rx="4" />
+          <path class="lines" d="M26 26h28M26 33h22M26 40h15" />
+          <path class="front" d="M8 33 40 53 72 33v25a6 6 0 0 1-6 6H14a6 6 0 0 1-6-6z" />
+          <path class="folds" d="M10 62 33 47.5M70 62 47 47.5" />
+        </svg>
         <div><h2>{L.subscribe.title}</h2><p>{L.subscribe.body}</p></div>
         <form class="cl-sub-form" aria-disabled="true">
           <input type="email" placeholder={L.subscribe.placeholder} aria-label={L.subscribe.placeholder} disabled />
-          <button class="btn btn-primary" type="button" disabled>{L.subscribe.soon}</button>
+          <span class="cl-soon">{L.subscribe.soon}</span>
         </form>
       </div>
     </div>
@@ -85,11 +95,24 @@ const KINDS: ['added' | 'improved' | 'fixed', IconName][] = [['added', 'plus'], 
   .cl-ic.fixed{background:var(--good-soft);color:var(--good-ink)}
   .cl-cols ul{display:grid;gap:8px;margin:0;padding-left:18px;list-style:disc;font-size:14px;line-height:1.65;color:var(--ink-2)}
   .cl-cols li::marker{color:var(--ink-3)}
-  .cl-sub{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:center;margin-top:44px;padding:28px 32px;border-radius:16px;background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 16%,transparent)}
-  .cl-sub h2{font-size:20px}
-  .cl-sub p{margin-top:4px;font-size:14px;color:var(--ink-2)}
-  .cl-sub-form{display:flex;gap:10px}
-  .cl-sub-form input{flex:1;min-width:0;height:var(--h-ctl);padding:0 12px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--card);font:inherit;font-size:14px}
-  @media (max-width:860px){.cl-list > li{grid-template-columns:minmax(0,1fr)}.cl-list > li::before{display:none}.cl-sub{grid-template-columns:minmax(0,1fr);padding:22px 20px}}
+  .cl-sub{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:28px;align-items:center;margin-top:44px;padding:26px 40px;border-radius:var(--r-lg);background:color-mix(in srgb,var(--accent) 7%,var(--card));border:1px solid color-mix(in srgb,var(--accent) 14%,var(--line))}
+  .cl-env{display:block}
+  .cl-env .shade{fill:color-mix(in srgb,var(--accent) 22%,transparent)}
+  .cl-env .back{fill:color-mix(in srgb,var(--accent) 82%,#000)}
+  .cl-env .letter{fill:#fff}
+  .cl-env .lines{fill:none;stroke:color-mix(in srgb,var(--accent) 30%,#fff);stroke-width:3;stroke-linecap:round}
+  .cl-env .front{fill:url(#cl-env-front)}
+  .cl-env .hi{stop-color:color-mix(in srgb,var(--accent) 70%,#fff)}
+  .cl-env .lo{stop-color:var(--accent)}
+  .cl-env .folds{fill:none;stroke:rgba(255,255,255,.28);stroke-width:2;stroke-linecap:round}
+  .cl-sub h2{font:600 19px/1.4 var(--f-body);letter-spacing:0}
+  .cl-sub p{margin-top:6px;font-size:14px;color:var(--ink-2)}
+  .cl-sub-form{display:flex;gap:10px;width:380px}
+  .cl-sub-form input{flex:1;min-width:0;height:var(--h-lg);padding:0 14px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--card);font:inherit;font-size:14px;color:var(--ink);cursor:not-allowed}
+  .cl-sub-form input::placeholder{color:var(--ink-3)}
+  .cl-soon{display:inline-flex;align-items:center;justify-content:center;flex:none;min-width:112px;height:var(--h-lg);padding:0 18px;border-radius:var(--r);background:var(--accent-soft);color:var(--accent-ink);font-size:14px;font-weight:600;white-space:nowrap}
+  @media (max-width:980px){.cl-sub{grid-template-columns:auto minmax(0,1fr);padding:24px 28px}.cl-sub-form{grid-column:1 / -1;width:auto}}
+  @media (max-width:860px){.cl-list > li{grid-template-columns:minmax(0,1fr)}.cl-list > li::before{display:none}}
+  @media (max-width:560px){.cl-sub{gap:18px;padding:22px 20px}.cl-env{width:60px;height:54px}}
   @media (max-width:720px){.cl-cols > section,.cl-cols > section + section{padding:0;border:0}}
 </style>
