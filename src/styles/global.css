@@ -12,7 +12,10 @@
   --overlay:rgba(29,28,43,.32);
   --shadow:0 1px 2px rgba(29,28,43,.04),0 12px 30px -18px rgba(60,40,80,.26);
   --shadow-pop:0 2px 6px rgba(29,28,43,.06),0 24px 48px -20px rgba(60,40,80,.38);
-  --r-sm:6px; --r:8px; --r-lg:12px; --r-xl:16px;
+  /* Delivery spec: controls 8, cards 10, dialogs 12. */
+  --r:8px; --r-card:10px; --r-lg:12px;
+  /* Controls: 40px by default, 32 small, 48 large. */
+  --h-ctl:40px; --h-sm:32px; --h-lg:48px;
   --f-display:"Manrope Variable","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
   --f-body:"Inter Variable","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
   --f-data:"JetBrains Mono Variable",ui-monospace,Menlo,Consolas,"PingFang SC","Microsoft YaHei",monospace;
@@ -57,10 +60,12 @@ a{color:inherit}
 [hidden]{display:none!important}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
 ::selection{background:var(--accent-soft)}
-.wrap{max-width:1200px;margin-inline:auto;padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
-@media (max-width:480px){.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}}
+.wrap{max-width:1200px;margin-inline:auto;padding-left:max(32px,env(safe-area-inset-left,0px));padding-right:max(32px,env(safe-area-inset-right,0px))}
+@media (max-width:768px){.wrap{padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}}
 .mono{font-family:var(--f-data)}
-.i{flex:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+/* The spec asks for a 1.75px stroke on a 24×24 viewBox; our icons are drawn on 16×16, so the same rendered
+   weight is 1.75 × 16/24. */
+.i{flex:none;fill:none;stroke:currentColor;stroke-width:1.17;stroke-linecap:round;stroke-linejoin:round}
 .row{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
 .spacer{flex:1}
 
@@ -73,10 +78,10 @@ h3{font-weight:600}
 .fine{font-size:13px;color:var(--ink-3)}
 
 /* buttons: primary (one per area, the accent), secondary and text, as in the workbench, at the site's sizes */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 16px;border-radius:10px;border:1px solid transparent;font:inherit;font-size:14px;font-weight:600;line-height:1;text-decoration:none;white-space:nowrap;cursor:pointer;transition:background-color .15s ease,border-color .15s ease,color .15s ease}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--h-ctl);padding:0 16px;border-radius:var(--r);border:1px solid transparent;font:inherit;font-size:14px;font-weight:600;line-height:1;text-decoration:none;white-space:nowrap;cursor:pointer;transition:background-color .15s ease,border-color .15s ease,color .15s ease}
 .btn:disabled{opacity:.55;cursor:default}
-.btn-sm{height:34px;padding:0 13px;font-size:13px;border-radius:var(--r)}
-.btn-lg{height:48px;padding:0 22px;font-size:15px;border-radius:12px}
+.btn-sm{height:var(--h-sm);padding:0 12px;font-size:13px}
+.btn-lg{height:var(--h-lg);padding:0 22px;font-size:15px}
 .btn-primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);box-shadow:0 6px 14px -8px var(--accent)}
 .btn-primary:hover:not(:disabled){background:color-mix(in srgb,var(--accent) 88%,var(--ink));border-color:color-mix(in srgb,var(--accent) 88%,var(--ink))}
 .btn-secondary{background:var(--card);border-color:var(--line-2);color:var(--ink)}
@@ -88,8 +93,8 @@ h3{font-weight:600}
 .linkish.fine{font-size:13px;color:var(--ink-2)}
 
 /* monthly / yearly and other two-way choices */
-.seg{display:inline-flex;gap:2px;padding:4px;border-radius:12px;background:var(--seg)}
-.seg button{font:inherit;font-size:14px;line-height:1.4;border:0;background:transparent;color:var(--ink-2);padding:7px 16px;border-radius:9px;cursor:pointer;white-space:nowrap}
+.seg{display:inline-flex;gap:2px;padding:4px;border-radius:var(--r-lg);background:var(--seg)}
+.seg button{font:inherit;font-size:14px;line-height:1;border:0;background:transparent;color:var(--ink-2);height:var(--h-sm);padding:0 16px;border-radius:var(--r);cursor:pointer;white-space:nowrap}
 .seg button:hover{color:var(--ink)}
 .seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(29,28,43,.12)}
 .seg em{font-style:normal;font-size:12px;margin-left:6px;color:var(--ink-3)}
@@ -120,8 +125,8 @@ html.over-hero:not(.scrolled) .top{background:transparent;border-bottom-color:tr
 @media (max-width:720px){.sec{padding-block:64px}.sec-head{margin-bottom:36px}}
 
 /* cards, icon tiles, ticked lists and status labels (white capsules with a small icon, as in the workbench) */
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--shadow);min-width:0}
-.tile{display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:12px;background:var(--panel);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);box-shadow:var(--shadow);min-width:0}
+.tile{display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:var(--r-card);background:var(--panel);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
 .pts{list-style:none;margin:28px 0 0;padding:0;display:grid;gap:18px}
 .pts li{display:flex;gap:12px}
 .pts .tick{display:grid;place-items:center;width:22px;height:22px;margin-top:2px;flex:none;border-radius:50%;background:var(--seg);color:var(--ink)}
@@ -138,13 +143,13 @@ html.over-hero:not(.scrolled) .top{background:transparent;border-bottom-color:tr
 .page{padding-block:56px 96px}
 .page-head{margin-bottom:28px}
 .page-head h1{font-size:clamp(1.9rem,4vw,2.4rem);line-height:1.25}
-.page-head p{margin-top:10px;color:var(--ink-2);max-width:640px}
-.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r-xl);padding:26px 28px;min-width:0;box-shadow:var(--shadow)}
+.page-head p{margin-top:10px;color:var(--ink-2);max-width:720px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:26px 28px;min-width:0;box-shadow:var(--shadow)}
 .panel-t{margin-bottom:14px;font-size:13px;font-weight:600;color:var(--ink-3)}
 .form{display:grid;gap:16px}
 .field{display:grid;gap:7px;min-width:0}
 .field label{font-size:13.5px;font-weight:600}
-.field input,.field select,.field textarea{width:100%;height:44px;padding:0 14px;border:1px solid var(--line-2);border-radius:10px;background:var(--card);color:var(--ink);font:inherit;font-size:15px}
+.field input,.field select,.field textarea{width:100%;height:var(--h-ctl);padding:0 14px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--card);color:var(--ink);font:inherit;font-size:15px}
 .field textarea{height:auto;min-height:120px;padding:12px 14px;resize:vertical}
 .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--ink-2);box-shadow:0 0 0 3px var(--seg)}
 .field .hint{font-size:12.5px;color:var(--ink-3)}
@@ -152,10 +157,10 @@ html.over-hero:not(.scrolled) .top{background:transparent;border-bottom-color:tr
 /* A password with a show/hide button inside the box. */
 .pw{position:relative}
 .pw input{padding-right:46px}
-.pw button{position:absolute;right:6px;top:50%;translate:0 -50%;display:grid;place-items:center;width:34px;height:34px;border:0;border-radius:8px;background:transparent;color:var(--ink-3);cursor:pointer}
+.pw button{position:absolute;right:4px;top:50%;translate:0 -50%;display:grid;place-items:center;width:var(--h-sm);height:var(--h-sm);border:0;border-radius:var(--r);background:transparent;color:var(--ink-3);cursor:pointer}
 .pw button:hover,.pw button[aria-pressed="true"]{color:var(--ink);background:var(--seg)}
 .code-input{font-family:var(--f-data)!important;font-size:22px!important;letter-spacing:.4em;text-align:center}
-.notice{padding:12px 14px;border-radius:12px;font-size:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink-2)}
+.notice{padding:12px 14px;border-radius:var(--r-card);font-size:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink-2)}
 .notice.error{border-color:color-mix(in srgb,var(--bad) 40%,transparent);background:var(--bad-soft);color:var(--bad-ink)}
 .notice.ok{border-color:color-mix(in srgb,var(--good) 40%,transparent);background:var(--good-soft);color:var(--good-ink)}
 .notice.dev{border-style:dashed;font-family:var(--f-data);font-size:12px}
@@ -166,10 +171,10 @@ html.over-hero:not(.scrolled) .top{background:transparent;border-bottom-color:tr
 .kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
 .tbl-scroll{overflow-x:auto}
 table.list{width:100%;border-collapse:collapse;font-size:14px}
-table.list th{height:40px;text-align:left;font-size:12px;font-weight:500;color:var(--ink-3);border-bottom:1px solid var(--line);padding:0 12px 0 0}
-table.list td{height:52px;border-bottom:1px solid var(--line);padding:6px 12px 6px 0;vertical-align:middle}
+table.list th{height:44px;text-align:left;font-size:12px;font-weight:500;color:var(--ink-3);border-bottom:1px solid var(--line);padding:0 12px 0 0}
+table.list td{height:56px;border-bottom:1px solid var(--line);padding:6px 12px 6px 0;vertical-align:middle}
 table.list tr:last-child td{border-bottom:0}
-.confirm{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:var(--panel);border:1px solid var(--line);font-size:14px}
+.confirm{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line);font-size:14px}
 
 /* sign-in pages: the form, and beside it the product on a soft gradient (hidden on narrow screens) */
 .auth{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:64px;align-items:center;padding-block:56px 96px}
@@ -191,5 +196,8 @@ table.list tr:last-child td{border-bottom:0}
 /* the soft brand gradient behind the home page's first screen and the sign-in pages' product picture */
 .glow{position:absolute;inset:0 0 auto 0;height:820px;pointer-events:none;background:radial-gradient(40% 55% at 10% 10%,rgba(240,128,106,.42),transparent 70%),radial-gradient(45% 60% at 55% 0%,rgba(255,190,150,.38),transparent 70%),radial-gradient(40% 50% at 95% 30%,rgba(210,68,94,.30),transparent 70%);filter:blur(8px);-webkit-mask:linear-gradient(#000 55%,transparent);mask:linear-gradient(#000 55%,transparent)}
 @media (prefers-color-scheme: dark){ .glow{opacity:.45} }
+
+/* Phones: every button is a comfortable touch target. */
+@media (max-width:768px){.btn{min-height:44px}}
 
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}

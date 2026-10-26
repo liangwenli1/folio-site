@@ -4,7 +4,7 @@
 /* first screen: the copy, and the workbench tilted away with a profile card floating over it */
 .hero{position:relative;overflow:hidden;margin-top:calc(-1 * var(--hd));padding-top:var(--hd)}
 .hero-in{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 600px;gap:40px;align-items:center;padding-block:70px 80px}
-.hero h1{font-size:clamp(2.4rem,4.6vw,3.5rem);line-height:1.14}
+.hero h1{font-size:clamp(2rem,4.6vw,3.5rem);line-height:1.15}
 .hero .lead{margin-top:22px;font-size:18px;max-width:600px}
 .cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
 .hero-copy .fine{margin-top:14px}
@@ -45,7 +45,7 @@
 .frow .sub-h{margin-top:26px;font-size:14px;color:var(--ink-3)}
 .frow .sub-h + .pts{margin-top:14px}
 .frow .sub-h + .lead{margin-top:8px;font-size:15.5px}
-.shot{margin:0;height:420px;border-radius:16px;overflow:hidden;background:var(--card);box-shadow:0 0 0 1px rgba(29,28,43,.08),0 50px 100px -40px rgba(80,30,50,.45)}
+.shot{margin:0;height:420px;border-radius:var(--r-card);overflow:hidden;background:var(--card);box-shadow:0 0 0 1px rgba(29,28,43,.08),0 50px 100px -40px rgba(80,30,50,.45)}
 .shot picture{display:contents}
 .shot img{display:block;width:100%;height:100%;object-fit:cover}
 .groups{display:grid;gap:14px;margin-top:22px}
@@ -83,8 +83,8 @@ html[lang="en"] .grp{grid-template-columns:84px minmax(0,1fr)}
 .compare figcaption b{font-family:var(--f-display);font-size:19px;font-weight:600}
 .compare figcaption span{font-size:13.5px;color:var(--ink-2)}
 .compare table{width:100%;min-width:560px;border-collapse:collapse;font-size:13.5px}
-.compare th,.compare td{height:46px;padding:0 18px;text-align:left;border-bottom:1px solid var(--line)}
-.compare thead th{height:40px;font-size:12px;font-weight:500;color:var(--ink-3);background:var(--panel)}
+.compare th,.compare td{height:56px;padding:0 18px;text-align:left;border-bottom:1px solid var(--line)}
+.compare thead th{height:44px;font-size:12px;font-weight:500;color:var(--ink-3);background:var(--panel)}
 .compare tbody th{font-weight:500;white-space:nowrap}
 .compare tbody tr:last-child > *{border-bottom:0}
 .mk{display:inline-grid;place-items:center;width:18px;height:18px;margin-right:8px;border-radius:50%;vertical-align:-4px}
@@ -142,7 +142,7 @@ html[lang="en"] .grp{grid-template-columns:84px minmax(0,1fr)}
 .plan .price{margin-top:16px;min-height:50px}
 .plan-meta{font-size:13.5px;color:var(--ink-2);white-space:pre-line}
 .plan-note{font-size:13px;color:var(--ink-3);min-height:1.6em}
-.plan-fit{margin-top:6px;padding:7px 12px;border-radius:10px;background:var(--seg);color:var(--ink);font-size:13px;font-weight:600}
+.plan-fit{margin-top:6px;padding:7px 12px;border-radius:var(--r-card);background:var(--seg);color:var(--ink);font-size:13px;font-weight:600}
 .plan .btn{margin-top:14px}
 .plan .buy{align-self:center;margin-top:8px;font-size:13px;color:var(--ink-2)}
 .plan .buy.soon{opacity:.65}
@@ -154,7 +154,7 @@ html[lang="en"] .grp{grid-template-columns:84px minmax(0,1fr)}
 
 /* questions */
 .faq{display:grid;gap:12px}
-.faq details{padding:0 20px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.faq details{padding:0 20px;border:1px solid var(--line);border-radius:var(--r-card);background:var(--card)}
 .faq details[open]{box-shadow:var(--shadow)}
 .faq summary{display:flex;justify-content:space-between;align-items:center;gap:20px;list-style:none;padding:18px 0;font-size:16px;font-weight:600;cursor:pointer}
 .faq summary::-webkit-details-marker{display:none}
