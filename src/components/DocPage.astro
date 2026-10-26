@@ -18,11 +18,11 @@ const other: [string, string][] = [['changelog/', D.changelogTitle], ['privacy/'
     <nav class="doc-nav" aria-label={D.title}>
       <label class="doc-search"><Icon name="search" size={14} /><input type="search" placeholder={D.search} aria-label={D.search} data-doc-search /></label>
       <section data-group><b>{N.guides}</b>{guides.map(g => <span class="doc-item soon" data-item>{g}<small>{D.soon}</small></span>)}</section>
-      <section data-group><b>{N.api}</b>{api.map(([id, label]) => <a class="doc-item" href={`${link(lang, 'docs/api/')}#${id}`} data-item>{label}</a>)}</section>
+      <section data-group><b>{N.api}</b>{api.map(([id, label]) => <a class="doc-item" href={`${link(lang, 'help/api/')}#${id}`} data-item>{label}</a>)}</section>
       <section data-group><b>{N.other}</b>{other.map(([p, label]) => <a class:list={['doc-item', { on: p === path }]} href={link(lang, p)} aria-current={p === path ? 'page' : undefined} data-item>{label}</a>)}</section>
     </nav>
     <article class="doc">
-      {path !== 'docs/' && <p class="doc-crumb"><a href={link(lang, 'docs/')}>{D.home}</a><Icon name="chevr" size={11} /><span>{title}</span></p>}
+      {<p class="doc-crumb"><a href={link(lang, 'help/')}>{t(lang).help.home}</a><Icon name="chevr" size={11} /><span>{title}</span></p>}
       <div class="page-head"><h1>{title}</h1>{lead && <p>{lead}</p>}</div>
       {draft && <p class="notice doc-draft">{draft}</p>}
       <slot />

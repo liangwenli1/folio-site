@@ -8,7 +8,7 @@ import { link, t, type Lang } from '../lib/i18n';
 interface Props { lang: Lang; path: string }
 const { lang, path } = Astro.props;
 const d = t(lang), n = d.nav;
-const SECTIONS: [string, string][] = [[n.features, 'features/'], [n.solutions, 'solutions/'], [n.pricing, 'pricing/'], [n.download, 'download/'], [n.help, 'docs/']];
+const SECTIONS: [string, string][] = [[n.features, 'features/'], [n.solutions, 'solutions/'], [n.pricing, 'pricing/'], [n.download, 'download/'], [n.help, 'help/']];
 const here = (p: string) => path.startsWith(p);
 ---
 <header class="top">

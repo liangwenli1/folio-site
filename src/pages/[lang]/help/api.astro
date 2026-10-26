@@ -1,0 +1,112 @@
+---
+// The local API reference, among the guides: turning it on, its limits, both engines' protocols, the endpoints and
+// errors, examples for the usual tools, and what to keep in mind.
+import HelpPage from '../../../layouts/HelpPage.astro';
+import { apiSections } from '../../../lib/docs';
+import { langPaths, link, t, type Lang } from '../../../lib/i18n';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const d = t(lang);
+const A = d.docs.api;
+
+const start = `const res = await fetch('http://127.0.0.1:47210/api/v1/profiles/0042/start', {
+  method: 'POST', headers: { authorization: 'Bearer <token>' }
+});
+const { wsEndpoint } = await res.json();`;
+const examples: [keyof typeof A.examples, string][] = [
+  ['playwright', `import { chromium } from 'playwright';
+
+${start}
+const browser = await chromium.connectOverCDP(wsEndpoint);
+const page = browser.contexts()[0].pages()[0];
+await page.goto('https://seller.example.com');`],
+  ['puppeteer', `import puppeteer from 'puppeteer-core';
+
+${start}
+const browser = await puppeteer.connect({ browserWSEndpoint: wsEndpoint });
+const [page] = await browser.pages();
+await page.goto('https://seller.example.com');`],
+  ['selenium', `import requests
+from selenium import webdriver
+
+r = requests.post('http://127.0.0.1:47210/api/v1/profiles/0042/start',
+                  headers={'Authorization': 'Bearer <token>'}).json()
+options = webdriver.ChromeOptions()
+options.debugger_address = r['debuggerAddress']
+driver = webdriver.Chrome(options=options)
+driver.get('https://seller.example.com')`],
+  ['firefox', `import puppeteer from 'puppeteer-core';
+
+${start}  // ws://127.0.0.1:…/session
+const browser = await puppeteer.connect({ browserWSEndpoint: wsEndpoint, protocol: 'webDriverBiDi' });
+const [page] = await browser.pages();
+await page.goto('https://seller.example.com');`]
+];
+---
+<HelpPage lang={lang} path="help/api/" title={d.docs.apiTitle} description={d.docs.apiLead} toc={apiSections(d)}
+  crumbs={[[d.help.home, link(lang, 'help/')], [d.help.developers, null], [d.docs.apiTitle, null]]}>
+  <header class="api-head"><h1>{d.docs.apiTitle}</h1><p class="lead">{d.docs.apiLead}</p></header>
+  <h2 id="setup">{A.setupTitle}</h2>
+  <ol class="steps-list">{A.setup.map(p => <li>{p}</li>)}</ol>
+
+  <h2 id="limits">{A.limitsTitle}</h2>
+  <p class="doc-body">{A.limits}</p>
+
+  <h2 id="engines">{A.enginesTitle}</h2>
+  <dl class="entries">{A.engines.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+
+  <h2 id="endpoints">{A.endpointsTitle}</h2>
+  <p class="doc-body">{A.endpointsLead}</p>
+  <table class="ref">
+    <tbody>{A.endpoints.map(([m, path, what]) => <tr><td class="route"><span class={`method ${m.toLowerCase()}`}>{m}</span> <code>{path}</code></td><td>{what}</td></tr>)}</tbody>
+  </table>
+
+  <h2 id="errors">{A.errorsTitle}</h2>
+  <p class="doc-body">{A.errorsLead}</p>
+  <table class="ref">
+    <tbody>{A.errors.map(([status, code, what]) => <tr><td class="route"><span class="method">{status}</span> <code>{code}</code></td><td>{what}</td></tr>)}</tbody>
+  </table>
+
+  <h2 id="examples">{A.examplesTitle}</h2>
+  <div class="tabs" role="tablist" aria-label={A.examplesTitle}>
+    {examples.map(([k], i) => <button type="button" role="tab" id={`tab-${k}`} aria-controls={`ex-${k}`} aria-selected={i === 0 ? 'true' : 'false'}>{A.examples[k]}</button>)}
+  </div>
+  {examples.map(([k, code], i) => <pre class="code" id={`ex-${k}`} role="tabpanel" aria-labelledby={`tab-${k}`} hidden={i > 0}><code>{code}</code></pre>)}
+
+  <h2 id="security">{A.securityTitle}</h2>
+  <p class="doc-body">{A.security}</p>
+</HelpPage>
+<script>
+  // The examples: one tab at a time.
+  const tabs = document.querySelectorAll<HTMLButtonElement>('[role="tab"]');
+  tabs.forEach(tab => tab.addEventListener('click', () => tabs.forEach(t => {
+    const on = t === tab;
+    t.setAttribute('aria-selected', String(on));
+    document.getElementById(t.getAttribute('aria-controls')!)!.hidden = !on;
+  })));
+</script>
+<style>
+  .api-head{display:grid;gap:10px}
+  .api-head .lead{font-size:16px}
+  h2{margin:40px 0 12px;font-size:22px;line-height:1.3}
+  .doc-body{color:var(--ink-2);line-height:1.8}
+  .entries{display:grid;gap:18px;margin:0}
+  .entries dt{font-family:var(--f-data);font-size:12.5px;color:var(--ink-3)}
+  .entries dd{margin:4px 0 0;color:var(--ink-2);line-height:1.75}
+  .steps-list{margin:0;padding-left:20px;display:grid;gap:10px;line-height:1.8;color:var(--ink-2)}
+  .ref{width:100%;border-collapse:separate;border-spacing:0;font-size:13.5px;margin-top:12px;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .ref td{padding:12px 16px;border-top:1px solid var(--line);vertical-align:top;color:var(--ink-2)}
+  .ref tr:first-child td{border-top:0}
+  .ref .route{white-space:nowrap;color:var(--ink)}
+  .ref code{font-size:12.5px}
+  .method{display:inline-grid;place-items:center;min-width:46px;height:22px;margin-right:6px;padding:0 6px;border-radius:6px;background:var(--seg);color:var(--ink-2);font:700 11px var(--f-data)}
+  .method.get{background:var(--info-soft);color:var(--info)}
+  .method.post{background:var(--good-soft);color:var(--good-ink)}
+  .tabs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
+  .tabs button{padding:6px 12px;border:0;border-radius:9px;background:transparent;font:inherit;font-size:13px;color:var(--ink-2);white-space:nowrap;cursor:pointer}
+  .tabs button:hover{color:var(--ink)}
+  .tabs button[aria-selected="true"]{background:var(--panel);color:var(--ink);font-weight:600;box-shadow:inset 0 0 0 1px var(--line)}
+  .code{margin:0;background:var(--code-bg);color:var(--code-ink);border-radius:var(--r-card);padding:18px 20px;overflow-x:auto;font-family:var(--f-data);font-size:12.5px;line-height:1.8}
+  @media (max-width:700px){ .ref .route{white-space:normal} .ref td{display:block;border-top:0;padding:4px 14px} .ref tr{display:block;padding:8px 0;border-top:1px solid var(--line)} .ref tr:first-child{border-top:0} }
+</style>

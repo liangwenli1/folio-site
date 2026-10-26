@@ -323,15 +323,23 @@ export const en = {
     seller: 'Folio', sellerNote: 'Test invoice. No payment was made.'
   },
 
-  sales: {
-    title: 'Contact sales', lead: 'For more than 500 browser profiles, access by group for several teams or a custom plan, submit your requirements and the sales team will reply within one working day.',
-    points: [
-      ['More than 500 browser profiles', 'Custom quotes by volume, including above 2,000.'],
-      ['Access by group', 'Members given access to browser profiles by group, with a 1-year activity log and export.'],
-      ['Reply within one working day', 'A dedicated contact on working days; product demos available.']
-    ] as [string, string][],
-    name: 'Name', email: 'Work email', company: 'Company', teamSize: 'Team size', message: 'Requirements',
-    send: 'Submit', sent: 'Requirements received. The sales team will contact you within one working day.'
+  contact: {
+    title: 'Contact us', h1: 'Talk to the Folio team', lead: 'Ask about the product, tell us how it’s going, or propose working together, and we’ll get back to you as soon as we can.',
+    kinds: {
+      product: ['About the product', 'Features, which kinds of work it suits, and advice on setting it up.'],
+      support: ['Support', 'Something isn’t working, or you need help using it.'],
+      partner: ['Partnerships', 'Business or channel partnerships, and anything else.']
+    },
+    formTitle: 'Send a question', formLead: 'Fill in the form and we’ll get back to you as soon as we can.',
+    name: 'Name', namePh: 'Your name', email: 'Work email', emailPh: 'you@company.com', kind: 'About',
+    teamSize: 'Team size', teamPh: 'Choose a size', sizes: [['1-5', '1–5 people'], ['6-20', '6–20 people'], ['21-100', '21–100 people'], ['100+', 'More than 100']] as [string, string][],
+    message: 'What you need', messagePh: 'Your needs, how you would use Folio, or what you want to know', consent: 'I have read and agree to the', privacy: 'privacy policy',
+    send: 'Send', done: 'Sent', doneText: 'Keep the reference number to refer to this later.', number: 'Reference', again: 'Send another',
+    failed: 'That didn’t go through. Try again later; what you wrote is still here.',
+    more: {
+      eyebrow: 'More', title: 'Other places to look', lead: 'Find out more about the product, or get help using it.',
+      items: [['Help center', 'Guides, common questions and the local API reference.'], ['Pricing', 'What each plan includes and costs.'], ['Download', 'Get the app and start using Folio.']] as [string, string][]
+    }
   },
 
   download: {
@@ -357,6 +365,118 @@ export const en = {
       ['What’s new', 'New features and fixes in each version of the Folio app.', 'See the changelog'],
       ['Stay safe', 'Get installers from this page or other official channels, so you know where they come from.', '']
     ] as [string, string, string][]
+  },
+
+  help: {
+    title: 'Help center', lead: 'Find setup guides and answers to common questions.',
+    search: 'Type a question or a keyword', searchBtn: 'Search', examplesLabel: 'For example:', examples: ['create a profile', 'proxies', 'import cookies', 'teams'],
+    shot: 'The list of browser profiles in the Folio workbench',
+    results: { one: '1 guide about “{q}”', many: '{n} guides about “{q}”', none: 'No guides about “{q}”' },
+    noneText: 'Try another keyword, for example:', noneMore: 'Still no answer?', contact: 'Contact us',
+    categories: {
+      start: { title: 'Getting started', body: 'From installing the app to your first browser profile: how Folio is used.' },
+      profiles: { title: 'Browser profiles', body: 'Creating and setting up browser profiles, their screen, window and cookies.' },
+      proxies: { title: 'Proxies', body: 'Adding and importing proxies, checking them and assigning them to profiles.' },
+      team: { title: 'Teams', body: 'Groups, access for members, and roles and permissions.' },
+      account: { title: 'Account and plans', body: 'What each plan includes, the free trial, upgrades, refunds and invoices.' }
+    },
+    popular: 'Popular guides', developers: 'Developers', apiLink: 'Local API reference',
+    faq: {
+      title: 'Questions',
+      items: [
+        ['What kind of work is Folio for?', 'People and teams running several accounts at once: shops on several marketplaces, social media accounts, ad accounts for clients, and testing in several environments. Each account gets its own browser profile, so less device information is shared between them.'],
+        ['How do I change the proxy of a profile I already made?', 'Choose Change proxy from the profile’s ⋯ menu in the list, its proxy card on its page, or the profiles table on the proxy’s page. A profile running on this computer has to be stopped first.'],
+        ['Can members’ permissions be customised?', 'Yes. Besides the built-in Owner, Admin, Member and Viewer, make roles of your own and set each of the 13 permissions; a role applies across the workspace.']
+      ] as [string, string][]
+    },
+    contactCard: { title: 'Contact us', body: 'If the answer isn’t here, our team can help.', cta: 'Send a question' },
+    home: 'Help center', searchDocs: 'Search the guides', toc: 'On this page', updated: (date: string) => `Updated ${date}`, prev: 'Previous', next: 'Next', note: 'Note',
+    feedback: { ask: 'Was this guide helpful?', yes: 'Yes', no: 'No', thanks: 'Thank you for the feedback.', failed: 'That didn’t go through. Try again later.' },
+    articles: {
+      install: {
+        cat: 'start', title: 'Install the Folio app', summary: 'Download and install the app, then sign in.',
+        lead: 'Install the Folio app on a Windows or macOS computer and sign in with your Folio account to get started.',
+        sections: [
+          { title: 'Download the installer', body: ['On the Download page, pick the installer for your system: Windows 10 or later (64-bit), or macOS 12 or later (Apple silicon, M1 or newer). Get installers only from the website or other official channels.'] },
+          { title: 'Install the app', body: ['Windows: run the installer and follow its steps. Folio is not code-signed yet; if SmartScreen blocks the installer, choose More info, then Run anyway.', 'macOS: open the disk image and drag Folio into Applications. If it will not open the first time, go to System Settings › Privacy & Security and choose Open Anyway; if macOS says the app is damaged, run xattr -cr /Applications/Folio.app in Terminal and open it again.'] },
+          { title: 'Sign in', body: ['Sign in with the Folio account you made on the website; your plan, team and browser profiles sync automatically. If the account is in several teams, switch workspace at the top of the sidebar.'] },
+          { title: 'Engines download when needed', body: ['The first time a profile on an engine version opens, Folio downloads that version and checks it against the official checksum; versions can also be downloaded ahead of time on the Engines page.'] }
+        ],
+        note: 'When a new version is out, the app says so and links to the new installer.'
+      },
+      'create-profile': {
+        cat: 'start', title: 'Create your first browser profile', summary: 'Fill in the basics, set up its proxy and fingerprint, then create and open it.',
+        lead: 'How to create and open your first browser profile, and with it the core of how Folio is used.',
+        sections: [
+          { title: 'Fill in the basics', body: ['On the Profiles page, choose New profile. Give it a name and pick its group, browser engine and version, and operating system; add tags and assign it to a member if you like.'] },
+          { title: 'Choose a proxy and check it', body: ['Under Proxy, pick a saved proxy, enter a new one, or choose No proxy. With a proxy chosen, Check connection confirms it answers and shows its exit location and latency.'] },
+          { title: 'Look over the fingerprint and opening', body: ['Folio makes a fingerprint of its own for each browser profile; Fingerprint shows a summary that opens up for changes. Time zone and language follow the proxy by default.', 'Opening sets the start page, the window size, the search engine and whether the last tabs come back. Screen resolution and window size are separate settings; see Screen resolution and window size.'] },
+          { title: 'Create and open it', body: ['Choose Create profile. Open it from the list, or from its own page; the first profile on an engine version downloads the engine first. If it doesn’t start, its page says why and offers to try again.'] }
+        ],
+        note: 'Without a proxy, a browser profile uses this computer’s network.'
+      },
+      'screen-and-window': {
+        cat: 'profiles', title: 'Screen resolution and window size', summary: 'How the two differ, where each is set, and how they fit together.',
+        lead: 'Screen resolution is what a browser profile tells websites about its screen; window size is how big the browser window opens. They are set separately and don’t affect each other.',
+        sections: [
+          { title: 'Screen resolution', body: ['Set under the profile’s Fingerprint. On Firefox, choose a resolution from the list; on Chromium, the screen resolution follows this computer’s screen and can’t be set on its own.'] },
+          { title: 'Window size', body: ['Under Opening, choose Default, Custom or Maximized, and enter a width and height for Custom. Window size only decides how big the window opens; it doesn’t change the screen resolution.'] },
+          { title: 'How they fit together', body: ['Keep the window no bigger than this computer’s screen, or it runs off the screen. The screen resolution websites read always comes from the fingerprint, whatever the window’s size.'] }
+        ],
+        note: 'Changes to these take effect the next time the profile opens.'
+      },
+      'import-cookies': {
+        cat: 'profiles', title: 'Import cookies', summary: 'Bring existing sign-ins into a browser profile instead of signing in again.',
+        lead: 'Bring existing sign-ins into a browser profile instead of signing in again.',
+        sections: [
+          { title: 'Open the Cookies tab', body: ['On the profile’s page, switch to Cookies. It lists the cookies the profile keeps (name, domain, path, expiry), with their values hidden.'] },
+          { title: 'Choose how to import', body: ['Choose Import cookies and paste text or pick a file. JSON (as common browser extensions export it) and cookies.txt (Netscape format) are recognised automatically.'] },
+          { title: 'Check the preview', body: ['Before anything comes in, each cookie is shown as valid or not, with why. For cookies with the same name, domain and path, choose whether to replace or skip them.'] },
+          { title: 'Import', body: ['Confirm to import. If the profile is running on this computer, the cookies go into the running browser too; while it is in use on another computer, nothing can be imported.'] }
+        ],
+        note: 'Importing needs the Import cookies permission; seeing or exporting values needs Export cookies, and every read is recorded in the activity log.'
+      },
+      proxies: {
+        cat: 'proxies', title: 'Set up and check proxies', summary: 'Add proxies or import a list, check them and assign them to browser profiles.',
+        lead: 'Add proxies on the Proxies page, check that they answer, and assign them to browser profiles.',
+        sections: [
+          { title: 'Add a proxy', body: ['Choose Add proxy, pick the protocol (HTTP, HTTPS or SOCKS5), and enter the host and port, with a username and password if it needs them. Add a backup line too: when the main line doesn’t answer, opening a profile uses the backup.'] },
+          { title: 'Import a list', body: ['Choose Import and paste your provider’s list or pick a file, one proxy per line: host:port:user:pass, user:pass@host:port, socks5://user:pass@host:port or host:port.', 'Each line is previewed before it comes in, and lines that can’t be read say why; skip proxies already saved, and name the rest from a pattern such as US-{n}.'] },
+          { title: 'Check the connection', body: ['Choose Check all, or Check on a single proxy, to see whether it answers, its latency and its exit location. A check of more than five shows its progress at the bottom right, and the task center has the results; proxies that don’t answer are flagged.'] },
+          { title: 'Assign to browser profiles', body: ['Pick a proxy when creating or editing a profile, or choose Change proxy from the list or the profile’s page. A proxy’s page lists the profiles using it and can unassign many at once.'] }
+        ],
+        note: 'A profile running on this computer can’t change its proxy; stop it first.'
+      },
+      'group-access': {
+        cat: 'team', title: 'Give access by group', summary: 'Organise browser profiles in groups and decide who reaches them.',
+        lead: 'Groups decide which browser profiles members reach; roles decide what they may do.',
+        sections: [
+          { title: 'Create a group', body: ['On the Groups page, choose New group and give it a name, a parent group (groups nest), a colour and a description.'] },
+          { title: 'Give members access', body: ['Under Member access in the group’s settings, add members; they then reach the browser profiles in that group. Giving access by group is part of the Company plan.'] },
+          { title: 'Inherit the parent’s access', body: ['With Inherit parent group access on, members given access to the parent group also reach this group’s profiles.'] },
+          { title: 'Roles and permissions', body: ['What members may do (create, open or delete profiles, import or export cookies, and so on) comes from their role, which applies across the workspace. Change the built-in roles, or make your own and set each of the 13 permissions, under Team › Roles.'] }
+        ],
+        note: 'Owners and admins reach every browser profile; members and viewers reach the profiles assigned to them and those in their groups.'
+      },
+      'plans-and-billing': {
+        cat: 'account', title: 'Plans and billing', summary: 'What each plan includes, the free trial, upgrades, refunds and invoices.',
+        lead: 'What each plan includes, and how trying, upgrading, refunds and invoices work.',
+        sections: [
+          { title: 'Plans and limits', body: ['Free has 5 browser profiles; Studio includes 100 and Company 500. Paid plans have unlimited members and take add-on packs of 100 browser profiles each, up to 2,000 in total.'] },
+          { title: 'Try Studio free', body: ['Each workspace can try Studio free for 7 days; afterwards, buy it or carry on with Free.'] },
+          { title: 'Upgrade or change plans', body: ['Go to checkout from the account page on the website or Plan & billing in the app. An upgrade starts the same day, with the time left on the current plan credited; a downgrade starts when the current period ends. Only owners and admins can change a workspace’s plan.'] },
+          { title: 'Refunds and invoices', body: ['The latest payment can be refunded within 7 days, which puts the plan back as it was before it. Every payment comes with an invoice, which the account page shows and prints.'] }
+        ],
+        note: 'The pricing page has each plan’s current price.'
+      }
+    },
+    minis: {
+      'create-profile': { title: 'New profile', rows: [['Name', 'Test profile 01'], ['Group', 'US stores']] as [string, string][], button: 'Create profile' },
+      proxies: { title: 'Proxy', rows: [['Type', 'HTTP'], ['Address', '203.0.113.24:8080']] as [string, string][], button: 'Check connection' },
+      'screen-and-window': { title: 'Opening', rows: [['Resolution', '1920 × 1080'], ['Window', '1280 × 800']] as [string, string][], button: 'Save' },
+      'import-cookies': { title: 'Import cookies', rows: [['', 'session=…; domain=shop.example'], ['', 'lang=en; domain=shop.example']] as [string, string][], button: 'Import' },
+      'group-access': { title: 'US stores · member access', rows: [['Jordan', 'Member'], ['Riley', 'Viewer']] as [string, string][], button: 'Save settings' }
+    }
   },
 
   docs: {

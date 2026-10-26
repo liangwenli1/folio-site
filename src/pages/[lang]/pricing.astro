@@ -13,7 +13,7 @@ export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
 const d = t(lang), P = d.pricing, C = P.calc;
 const PLANS = ['free', 'studio', 'company'] as const;
-const start = { free: link(lang, 'signup/'), studio: link(lang, 'checkout/?plan=studio&trial=1'), company: link(lang, 'contact-sales/') };
+const start = { free: link(lang, 'signup/'), studio: link(lang, 'checkout/?plan=studio&trial=1'), company: link(lang, 'contact/') };
 ---
 <Base lang={lang} path="pricing/" title={P.title} description={P.lead}>
   <PageHero lang={lang} title={P.h1} lead={P.lead}>
@@ -88,21 +88,21 @@ const start = { free: link(lang, 'signup/'), studio: link(lang, 'checkout/?plan=
   </section>
 
   <section class="msec alt">
-    <div class="wrap"><Faq title={P.faq.title} lead={P.faq.lead} contact={{ label: P.faq.contact, href: link(lang, 'contact-sales/') }} items={P.faq.items} /></div>
+    <div class="wrap"><Faq title={P.faq.title} lead={P.faq.lead} contact={{ label: P.faq.contact, href: link(lang, 'contact/') }} items={P.faq.items} /></div>
   </section>
 
   <section class="msec cta-sec">
     <div class="wrap">
       <CtaBand title={P.band.title} body={P.band.body}>
         <a class="btn btn-primary btn-lg" href={link(lang, 'signup/')}>{P.cta.free}<Icon name="chevr" /></a>
-        <a class="btn btn-secondary btn-lg" href={link(lang, 'contact-sales/')}>{P.cta.company}</a>
+        <a class="btn btn-secondary btn-lg" href={link(lang, 'contact/')}>{P.cta.company}</a>
       </CtaBand>
     </div>
   </section>
 </Base>
 <style>
   .price-note{display:flex;align-items:center;gap:8px;margin-top:28px;padding:10px 14px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);font-size:14px;color:var(--ink-2)}
-  .price-note .i{color:var(--accent)}
+  .price-note :global(.i){color:var(--accent)}
 </style>
 <script>
   import { startPricing } from '../../scripts/pricing';

@@ -1,0 +1,17 @@
+---
+// An address that moved: sends the visitor on at once, and tells search engines where the page lives now.
+interface Props { to: string }
+const { to } = Astro.props;
+---
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="refresh" content={`0;url=${to}`} />
+    <link rel="canonical" href={to} />
+    <title>Folio</title>
+    <script is:inline define:vars={{ to }}>location.replace(to + location.hash);</script>
+  </head>
+  <body><p><a href={to}>{to}</a></p></body>
+</html>

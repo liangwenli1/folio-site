@@ -23,6 +23,7 @@ export type CheckoutStarted = Ok<'/workspaces/{id}/billing/checkout', 'post'>;
 export type Paid = Ok<'/billing/checkouts/{id}/pay', 'post'>;
 export type Payment = Paid['payment'];
 export type Invoice = Ok<'/payments/{id}', 'get'>;
+export type Inquiry = Ok<'/sales-inquiries', 'post'>;
 
 const BASE = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:47110';
 

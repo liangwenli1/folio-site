@@ -64,7 +64,7 @@ const FLOW: IconName[] = ['profiles', 'proxies', 'team', 'play'];
   .ftabs{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:32px;padding-top:20px;border-top:1px solid var(--line)}
   .ftabs a{display:inline-flex;align-items:center;gap:7px;padding-bottom:6px;font-size:14.5px;font-weight:600;text-decoration:none;color:var(--ink-2);border-bottom:2px solid transparent}
   .ftabs a:hover{color:var(--accent-ink);border-bottom-color:var(--accent)}
-  .ftabs .i{color:var(--accent)}
+  .ftabs :global(.i){color:var(--accent)}
   .fblock{padding-block:72px;border-bottom:1px solid var(--line)}
   .fblock-in{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:56px;align-items:center}
   .fnum{font:600 15px var(--f-data);color:var(--accent-ink)}

@@ -16,7 +16,7 @@ const sideways = (page: Page) => page.evaluate(() => document.documentElement.sc
 
 for (const lang of ['en', 'zh']){
   test(`no sideways scrolling on a phone (${lang})`, async ({ page }) => {
-    for (const path of ['', 'features/', 'solutions/', 'solutions/ecommerce/', 'pricing/', 'login/', 'signup/', 'forgot/', 'reset/', 'download/', 'docs/', 'docs/api/', 'changelog/', 'privacy/', 'terms/', 'contact-sales/', 'invite/']){
+    for (const path of ['', 'features/', 'solutions/', 'solutions/ecommerce/', 'pricing/', 'login/', 'signup/', 'forgot/', 'reset/', 'download/', 'help/', 'help/install/', 'help/api/', 'changelog/', 'privacy/', 'terms/', 'contact/', 'invite/']){
       await page.goto(`/${lang}/${path}`);
       expect(await sideways(page), `/${lang}/${path}`).toBe(0);
     }

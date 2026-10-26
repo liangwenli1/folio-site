@@ -67,7 +67,7 @@ const STEPS: IconName[] = ['team', 'folder', 'profiles', 'proxies'];
   <section class="msec cta-sec">
     <div class="wrap">
       <CtaBand title={S.band.title} body={S.band.body}>
-        <a class="btn btn-primary btn-lg" href={link(lang, 'contact-sales/')}>{S.band.contact}</a>
+        <a class="btn btn-primary btn-lg" href={link(lang, 'contact/')}>{S.band.contact}</a>
         <a class="btn btn-secondary btn-lg" href={link(lang, 'signup/')}>{S.start}<Icon name="chevr" /></a>
       </CtaBand>
     </div>
@@ -92,7 +92,7 @@ const STEPS: IconName[] = ['team', 'folder', 'profiles', 'proxies'];
   .case .dots li{display:flex;gap:8px}
   .case .dots li::before{content:'';width:5px;height:5px;margin-top:.62em;flex:none;border-radius:50%;background:var(--accent)}
   .case .ticks li{display:flex;gap:8px;align-items:baseline}
-  .case .ticks .i{color:var(--accent);translate:0 1px}
+  .case .ticks :global(.i){color:var(--accent);translate:0 1px}
   .case .btn{margin-top:auto}
   .sflow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px;margin:0;padding:0;list-style:none}
   .sflow li{position:relative;display:grid;justify-items:center;gap:10px;padding:28px 20px;text-align:center}

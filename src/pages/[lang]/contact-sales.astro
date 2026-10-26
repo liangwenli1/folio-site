@@ -1,60 +1,9 @@
 ---
-import Base from '../../layouts/Base.astro';
-import Icon from '../../components/Icon.astro';
-import type { IconName } from '../../lib/icons';
-import { langPaths, t, type Lang } from '../../lib/i18n';
+// The sales form became the contact page.
+import Redirect from '../../components/Redirect.astro';
+import { langPaths, link, type Lang } from '../../lib/i18n';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
-const d = t(lang);
-const s = d.sales;
-const POINTS: IconName[] = ['profiles', 'team', 'clock'];
 ---
-<Base lang={lang} path="contact-sales/" title={s.title}>
-  <section class="wrap page sales">
-    <div>
-      <div class="page-head"><h1>{s.title}</h1><p>{s.lead}</p></div>
-      <ul class="sales-pts">
-        {s.points.map(([title, body], i) => <li><span class="tile"><Icon name={POINTS[i]} size={18} /></span><div><b>{title}</b><p>{body}</p></div></li>)}
-      </ul>
-    </div>
-    <div class="panel sales-form">
-      <div class="notice ok" id="ok" hidden>{s.sent}</div>
-      <form class="form" id="form" novalidate>
-        <div class="notice error" id="err" role="alert" hidden></div>
-        <div class="field-row">
-          <div class="field"><label for="name">{s.name}</label><input id="name" autocomplete="name" maxlength="100" required /></div>
-          <div class="field"><label for="email">{s.email}</label><input id="email" type="email" autocomplete="email" required /></div>
-        </div>
-        <div class="field-row">
-          <div class="field"><label for="company">{s.company}</label><input id="company" autocomplete="organization" maxlength="120" /></div>
-          <div class="field">
-            <label for="team">{s.teamSize}</label>
-            <select id="team"><option value="1-5">1–5</option><option value="6-20">6–20</option><option value="21-100">21–100</option><option value="100+">100+</option></select>
-          </div>
-        </div>
-        <div class="field"><label for="message">{s.message}</label><textarea id="message" maxlength="4000" required></textarea></div>
-        <button class="btn btn-primary btn-lg full" type="submit">{s.send}</button>
-      </form>
-    </div>
-  </section>
-</Base>
-<style>
-  .sales{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,560px);gap:64px;align-items:start}
-  .sales-pts{list-style:none;margin:36px 0 0;padding:0;display:grid;gap:22px}
-  .sales-pts li{display:flex;gap:14px}
-  .sales-pts b{font-size:16px}
-  .sales-pts p{margin-top:4px;color:var(--ink-2);line-height:1.7}
-  @media (max-width:900px){.sales{grid-template-columns:minmax(0,1fr);gap:36px}}
-</style>
-<script>
-  import { api } from '../../lib/api';
-  import { $, d, lang, onSubmit } from '../../scripts/session';
-  const val = (id: string) => $<HTMLInputElement>(id).value.trim();
-  onSubmit($<HTMLFormElement>('form'), $('err'), async () => {
-    if (!val('name') || !val('email') || !val('message')) throw d.errors.validation;
-    await api('POST', '/sales-inquiries', { name: val('name'), email: val('email'), company: val('company') || undefined, teamSize: val('team'), message: val('message'), locale: lang });
-    $('form').hidden = true;
-    $('ok').hidden = false;
-  });
-</script>
+<Redirect to={link(lang, 'contact/')} />

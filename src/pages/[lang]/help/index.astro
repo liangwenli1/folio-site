@@ -1,0 +1,178 @@
+---
+// The help center: a search over the guides (in the browser; nothing found suggests other words and a way to ask),
+// the five categories, the popular guides, questions, and a way to reach the team.
+import Base from '../../../layouts/Base.astro';
+import Icon from '../../../components/Icon.astro';
+import PageHero from '../../../components/PageHero.astro';
+import Shot from '../../../components/Shot.astro';
+import Faq from '../../../components/Faq.astro';
+import { CATEGORIES, ORDER, POPULAR, categoryOf, inCategory } from '../../../lib/help';
+import { langPaths, link, t, type Lang } from '../../../lib/i18n';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const d = t(lang), H = d.help;
+const index = ORDER.map(s => {
+  const a = H.articles[s];
+  return { href: link(lang, `help/${s}/`), title: a.title, summary: a.summary, cat: H.categories[categoryOf(d, s)].title, text: [a.lead, ...a.sections.flatMap(x => [x.title, ...x.body])].join(' ') };
+});
+---
+<Base lang={lang} path="help/" title={H.title} description={H.lead}>
+  <PageHero lang={lang} title={H.title} lead={H.lead}>
+    <form class="hsearch" role="search" data-help-search>
+      <Icon name="search" size={18} />
+      <input type="search" name="q" placeholder={H.search} aria-label={H.search} autocomplete="off" />
+      <button class="btn btn-primary" type="submit" aria-label={H.searchBtn}><Icon name="search" size={18} /></button>
+    </form>
+    <p class="hexamples">{H.examplesLabel}{H.examples.map(e => <button type="button" class="linkish" data-example={e}>{e}</button>)}</p>
+    <Shot slot="vis" lang={lang} name="list" alt={H.shot} zoom={1.2} origin="100% 0" eager />
+  </PageHero>
+
+  <section class="msec hresults" id="results" hidden aria-live="polite">
+    <div class="wrap">
+      <h2 data-results-title data-one={H.results.one} data-many={H.results.many} data-zero={H.results.none}></h2>
+      <ul class="hlist" data-results></ul>
+      <div class="hnone" data-none hidden>
+        <p>{H.noneText}{H.examples.map(e => <button type="button" class="linkish" data-example={e}>{e}</button>)}</p>
+        <p>{H.noneMore} <a href={link(lang, 'contact/')}>{H.contact}</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="msec">
+    <div class="wrap">
+      <div class="hcats">
+        {CATEGORIES.map(c => (
+          <a class="card hcat" id={c.id} href={link(lang, `help/${inCategory(d, c.id)[0]}/`)}>
+            <span class="tile acc"><Icon name={c.icon} size={22} /></span>
+            <h2>{H.categories[c.id].title}</h2>
+            <p>{H.categories[c.id].body}</p>
+            <Icon name="chevr" size={16} />
+          </a>
+        ))}
+      </div>
+      <p class="hapi"><Icon name="code" size={15} /><span>{H.developers}</span><a href={link(lang, 'help/api/')}>{H.apiLink}</a></p>
+    </div>
+  </section>
+
+  <section class="msec alt">
+    <div class="wrap">
+      <h2 class="hpop-title">{H.popular}</h2>
+      <div class="hpop">
+        {POPULAR.map(s => {
+          const m = H.minis[s];
+          return (
+            <a class="card hguide" href={link(lang, `help/${s}/`)}>
+              <div class="mini" aria-hidden="true">
+                <b class="mini-t">{m.title}</b>
+                {m.rows.map(([k, v]) => k ? <span class="mini-field"><small>{k}</small><span>{v}</span></span> : <span class="mini-row mono">{v}</span>)}
+                <span class="mini-btn">{m.button}</span>
+              </div>
+              <h3>{H.articles[s].title}</h3>
+              <p>{H.articles[s].summary}</p>
+              <Icon name="chevr" size={16} />
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <section class="msec">
+    <div class="wrap hbottom">
+      <Faq title={H.faq.title} items={H.faq.items} />
+      <div class="card hcontact">
+        <span class="tile acc"><Icon name="chat" size={22} /></span>
+        <h2>{H.contactCard.title}</h2>
+        <p>{H.contactCard.body}</p>
+        <a class="btn btn-primary" href={link(lang, 'contact/')}><Icon name="mail" />{H.contactCard.cta}</a>
+      </div>
+    </div>
+  </section>
+</Base>
+<script type="application/json" id="help-index" set:html={JSON.stringify(index)}></script>
+<script>
+  // The search over the guides, listed by how well they match; nothing found suggests other words.
+  type Item = { href: string; title: string; summary: string; cat: string; text: string };
+  const items = JSON.parse(document.getElementById('help-index')!.textContent!) as Item[];
+  const form = document.querySelector<HTMLFormElement>('[data-help-search]')!;
+  const input = form.querySelector('input')!;
+  const box = document.getElementById('results')!;
+  const title = box.querySelector<HTMLElement>('[data-results-title]')!;
+  const list = box.querySelector<HTMLElement>('[data-results]')!;
+  const none = box.querySelector<HTMLElement>('[data-none]')!;
+  function search(q: string){
+    q = q.trim();
+    box.hidden = !q;
+    if (!q) return;
+    // Every word somewhere in a guide; those with it in the title come first, then the category, the summary, the text.
+    const words = q.toLowerCase().split(/\s+/);
+    const has = (text: string, w: string) => text.toLowerCase().includes(w);
+    const score = (i: Item) => words.reduce((n, w) => n + (has(i.title, w) ? 8 : 0) + (has(i.cat, w) ? 4 : 0) + (has(i.summary, w) ? 2 : 0) + (has(i.text, w) ? 1 : 0), 0);
+    const found = items.filter(i => words.every(w => has(`${i.title} ${i.cat} ${i.summary} ${i.text}`, w)))
+      .map(i => ({ i, n: score(i) })).sort((a, b) => b.n - a.n).map(x => x.i);
+    const said = found.length === 0 ? title.dataset.zero! : found.length === 1 ? title.dataset.one! : title.dataset.many!;
+    title.textContent = said.replace('{n}', String(found.length)).replace('{q}', q);
+    list.replaceChildren(...found.map(i => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = i.href;
+      a.innerHTML = '<small></small><b></b><span></span>';
+      a.querySelector('small')!.textContent = i.cat;
+      a.querySelector('b')!.textContent = i.title;
+      a.querySelector('span')!.textContent = i.summary;
+      li.append(a);
+      return li;
+    }));
+    none.hidden = found.length > 0;
+    box.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+  }
+  form.addEventListener('submit', e => { e.preventDefault(); search(input.value); });
+  document.querySelectorAll<HTMLButtonElement>('[data-example]').forEach(b => b.addEventListener('click', () => { input.value = b.dataset.example!; search(input.value); }));
+</script>
+<style>
+  .hsearch{position:relative;display:flex;align-items:center;max-width:540px;margin-top:28px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--card);box-shadow:var(--shadow)}
+  .hsearch > :global(.i){position:absolute;left:16px;color:var(--ink-3)}
+  .hsearch input{flex:1;min-width:0;height:var(--h-lg);padding:0 12px 0 46px;border:0;background:none;font:inherit;font-size:15px;color:var(--ink);outline:none}
+  .hsearch:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .hsearch .btn{height:var(--h-lg);border-radius:0 var(--r) var(--r) 0;padding:0 18px}
+  .hexamples{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:14px;font-size:13.5px;color:var(--ink-3)}
+  .hexamples .linkish,.hnone .linkish{color:var(--ink-2);text-decoration:none}
+  .hexamples .linkish:hover,.hnone .linkish:hover{color:var(--accent-ink)}
+  .hresults{padding-bottom:0}
+  .hresults h2{font-size:20px}
+  .hlist{display:grid;gap:10px;margin:18px 0 0;padding:0;list-style:none}
+  .hlist a{display:grid;gap:2px;padding:14px 18px;border:1px solid var(--line);border-radius:var(--r-card);background:var(--card);text-decoration:none}
+  .hlist a:hover{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
+  .hlist small{font-size:12px;color:var(--accent-ink)}
+  .hlist b{font-size:15.5px}
+  .hlist span{font-size:13.5px;color:var(--ink-2)}
+  .hnone{display:grid;gap:8px;margin-top:14px;padding:18px 20px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line);color:var(--ink-2)}
+  .hnone p{display:flex;flex-wrap:wrap;gap:6px 12px}
+  .hnone a{color:var(--accent-ink)}
+  .hcats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px}
+  .hcat{display:grid;gap:10px;align-content:start;padding:22px;text-decoration:none;color:inherit;scroll-margin-top:calc(var(--hd) + 16px);transition:border-color .15s ease}
+  .hcat:hover{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
+  .hcat h2{margin-top:6px;font-size:18px}
+  .hcat p{font-size:13.5px;line-height:1.7;color:var(--ink-2)}
+  .hcat > :global(.i),.hguide > :global(.i){color:var(--accent)}
+  .hapi{display:flex;align-items:center;gap:6px;margin-top:18px;font-size:14px;color:var(--ink-2)}
+  .hapi a{color:var(--accent-ink)}
+  .hpop-title{margin-bottom:24px;font-size:clamp(1.5rem,2.6vw,2rem)}
+  .hpop{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px}
+  .hguide{display:flex;flex-direction:column;gap:10px;padding:16px;text-decoration:none;color:inherit;transition:border-color .15s ease}
+  .hguide:hover{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
+  .hguide .mini{margin:0 0 6px}
+  .hguide .mini-field{grid-template-columns:minmax(0,1fr);gap:4px}
+  .hguide h3{font-size:16px}
+  .hguide p{font-size:13px;line-height:1.65;color:var(--ink-2)}
+  .hbottom{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(0,1fr);gap:28px;align-items:start}
+  .hbottom :global(.faq-split){grid-template-columns:minmax(0,1fr);gap:20px}
+  .hcontact{display:grid;gap:10px;justify-items:start;padding:26px;background:color-mix(in srgb,var(--accent-soft) 55%,var(--card))}
+  .hcontact h2{margin-top:6px;font-size:20px}
+  .hcontact p{font-size:14px;line-height:1.7;color:var(--ink-2)}
+  .hcontact .btn{margin-top:6px}
+  @media (max-width:1100px){.hcats,.hpop{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  @media (max-width:860px){.hbottom{grid-template-columns:minmax(0,1fr)}}
+  @media (max-width:640px){.hcats,.hpop{grid-template-columns:minmax(0,1fr)}}
+</style>

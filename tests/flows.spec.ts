@@ -192,13 +192,27 @@ test('logging in from checkout brings you back to checkout', async ({ page, cont
   await expect(page.locator('#total')).toHaveText('$99');
 });
 
-test('the sales form sends an inquiry', async ({ page }) => {
+test('the contact form gives a reference number, and keeps what was written when it can’t send', async ({ page }) => {
+  // The old sales form's address leads to it.
   await page.goto('/en/contact-sales/');
+  await expect(page).toHaveURL(/\/en\/contact\/$/);
+  await page.getByRole('radio', { name: /Support/ }).click();
+  await expect(page.locator('#kind')).toHaveValue('support');
   await page.fill('#name', 'Maya Chen');
   await page.fill('#email', uniqueEmail());
+  await page.selectOption('#team', '21-100');
   await page.fill('#message', 'We run 1,200 profiles across three teams.');
+  await expect(page.locator('#count')).toHaveText('41 / 500');
+  // Not agreeing to the privacy policy stops it there.
   await page.click('button[type="submit"]');
-  await expect(page.locator('#ok')).toBeVisible();
+  await expect(page.locator('#consent')).toBeFocused();
+  await page.check('#consent');
+  await page.route('**/sales-inquiries', r => r.abort(), { times: 1 });
+  await page.click('button[type="submit"]');
+  await expect(page.locator('#err')).toHaveText('That didn’t go through. Try again later; what you wrote is still here.');
+  await expect(page.locator('#message')).toHaveValue('We run 1,200 profiles across three teams.');
+  await page.click('button[type="submit"]');
+  await expect(page.locator('#number')).toHaveText(/^Reference #\d{6}$/);
 });
 
 test('an emailed invitation leads a new person through sign-up into the workspace', async ({ page }) => {

@@ -90,7 +90,7 @@ export async function startPricing(){
     cta.hidden = false;
     if (n === Infinity){
       show('calc-plan', c.custom(plans.maxProfiles)); show('calc-amt', ''); show('calc-detail', c.customBody); show('calc-alt', '');
-      cta.textContent = d.cta.company; cta.href = link(lang, 'contact-sales/');
+      cta.textContent = d.cta.company; cta.href = link(lang, 'contact/');
       return;
     }
     if (n <= free.profiles){

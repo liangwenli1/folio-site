@@ -40,6 +40,18 @@
 @media (max-width:1000px){.grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:860px){.grid-3,.grid-4{grid-template-columns:minmax(0,1fr)}}
 
+/* a piece of the workbench, drawn small (home cards, popular guides, the e-commerce steps) */
+.mini{display:grid;gap:8px;padding:14px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line);font-size:12.5px}
+.mini-t{font-size:13px}
+.mini-row{display:flex;align-items:center;gap:8px;height:30px;padding:0 10px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);white-space:nowrap;overflow:hidden}
+.mini-row .i{color:var(--ink-3)}
+.mini-row em{margin-left:auto;font-style:normal;font-size:12px;color:var(--ink-3)}
+.mini-field{display:grid;grid-template-columns:62px minmax(0,1fr);align-items:center;gap:8px}
+html[lang="en"] .mini-field{grid-template-columns:66px minmax(0,1fr)}
+.mini-field small{font-size:11.5px;color:var(--ink-2)}
+.mini-field > span{height:28px;padding:0 9px;line-height:26px;border:1px solid var(--line);border-radius:var(--r);background:var(--card);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.mini-btn{justify-self:start;display:inline-flex;align-items:center;gap:6px;margin-top:2px;padding:5px 12px;border-radius:var(--r);background:var(--accent);color:var(--on-accent);font-weight:600;font-size:12px}
+
 /* numbered steps along a row, joined by arrows */
 .steps-row{display:grid;grid-template-columns:repeat(var(--n,3),minmax(0,1fr));gap:20px;margin:0;padding:0;list-style:none;counter-reset:step}
 .steps-row > li{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;align-content:start;counter-increment:step}

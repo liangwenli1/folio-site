@@ -23,7 +23,7 @@ const systems: { os: string; icon: IconName; req: string; note: string; href: st
   { os: d.macName, icon: 'apple', req: d.mac, note: d.macNote, href: latest('Folio-arm64.dmg'), primary: false }
 ];
 const STEPS: IconName[] = ['download', 'user', 'profiles'];
-const HELP: [IconName, string | null][] = [['doc', link(lang, 'docs/')], ['clock', link(lang, 'changelog/')], ['lock', null]];
+const HELP: [IconName, string | null][] = [['doc', link(lang, 'help/install/')], ['clock', link(lang, 'changelog/')], ['lock', null]];
 ---
 <Base lang={lang} path="download/" title={d.title} description={d.lead}>
   <PageHero lang={lang} title={d.h1} lead={d.lead}>
@@ -44,7 +44,7 @@ const HELP: [IconName, string | null][] = [['doc', link(lang, 'docs/')], ['clock
           </div>
         ))}
       </div>
-      <p class="dl-other">{d.other} <a href={link(lang, 'contact-sales/')}>{d.contact}</a></p>
+      <p class="dl-other">{d.other} <a href={link(lang, 'contact/')}>{d.contact}</a></p>
     </div>
   </section>
 
@@ -90,7 +90,7 @@ const HELP: [IconName, string | null][] = [['doc', link(lang, 'docs/')], ['clock
   @media (max-width:860px){.dl-steps{grid-template-columns:minmax(0,1fr)}}
   .dl-help{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;padding:28px 32px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
   .dl-help > div{display:flex;gap:14px;min-width:0}
-  .dl-help > div > .i{color:var(--ink-2);margin-top:2px}
+  .dl-help > div > :global(.i){color:var(--ink-2);margin-top:2px}
   .dl-help b{font-size:15px}
   .dl-help p{margin-top:4px;font-size:13.5px;line-height:1.7;color:var(--ink-2)}
   .dl-help a{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:14px;font-weight:600;color:var(--accent-ink);text-decoration:none}
