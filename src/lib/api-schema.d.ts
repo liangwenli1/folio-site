@@ -90,6 +90,8 @@ export interface paths {
                         deviceName?: string;
                         /** Format: uuid */
                         deviceId?: string;
+                        /** @default true */
+                        remember?: boolean;
                     };
                 };
             };
@@ -484,6 +486,7 @@ export interface paths {
                                 openDetailAfterLaunch: boolean;
                                 stopOnWindowClose: boolean;
                                 expiryReminder: boolean;
+                                trashDays: 7 | 15 | 30 | 60 | 90;
                             };
                             usage: {
                                 profiles: number;
@@ -521,6 +524,7 @@ export interface paths {
                             openDetailAfterLaunch?: boolean;
                             stopOnWindowClose?: boolean;
                             expiryReminder?: boolean;
+                            trashDays?: 7 | 15 | 30 | 60 | 90;
                         };
                     };
                 };
@@ -544,6 +548,7 @@ export interface paths {
                                 openDetailAfterLaunch: boolean;
                                 stopOnWindowClose: boolean;
                                 expiryReminder: boolean;
+                                trashDays: 7 | 15 | 30 | 60 | 90;
                             };
                         };
                     };
@@ -1508,12 +1513,62 @@ export interface paths {
             requestBody: {
                 content: {
                     "application/json": {
+                        /** @enum {string} */
+                        kind: "product" | "support" | "partner";
                         name: string;
                         /** Format: email */
                         email: string;
-                        company?: string;
-                        teamSize?: string;
+                        teamSize: string;
                         message: string;
+                        /**
+                         * @default en
+                         * @enum {string}
+                         */
+                        locale?: "en" | "zh";
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            number: number;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/doc-feedback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        page: string;
+                        helpful: boolean;
                         /**
                          * @default en
                          * @enum {string}
@@ -4002,6 +4057,7 @@ export interface paths {
                                 joinedAt: string;
                                 groupIds: string[];
                                 profiles: number;
+                                lastActiveAt: string | null;
                             }[];
                         };
                     };
@@ -4067,7 +4123,8 @@ export interface paths {
                 content: {
                     "application/json": {
                         /** Format: uuid */
-                        roleId: string;
+                        roleId?: string;
+                        groupIds?: string[];
                     };
                 };
             };
@@ -4187,6 +4244,8 @@ export interface paths {
                         groupIds?: string[];
                         /** @default true */
                         notify?: boolean;
+                        /** @default 7 */
+                        days?: 1 | 3 | 7 | 30;
                     };
                 };
             };
@@ -4481,6 +4540,7 @@ export interface paths {
                                 name: string;
                                 permissions: ("profiles.view" | "profiles.create" | "profiles.edit" | "profiles.open" | "profiles.delete" | "cookies.import" | "cookies.export" | "profiles.export" | "proxies.view" | "proxies.bind" | "proxies.edit" | "team.manage" | "activity.view")[];
                                 members: number;
+                                defaults: ("profiles.view" | "profiles.create" | "profiles.edit" | "profiles.open" | "profiles.delete" | "cookies.import" | "cookies.export" | "profiles.export" | "proxies.view" | "proxies.bind" | "proxies.edit" | "team.manage" | "activity.view")[] | null;
                             }[];
                         };
                     };
@@ -4519,6 +4579,7 @@ export interface paths {
                             name: string;
                             permissions: ("profiles.view" | "profiles.create" | "profiles.edit" | "profiles.open" | "profiles.delete" | "cookies.import" | "cookies.export" | "profiles.export" | "proxies.view" | "proxies.bind" | "proxies.edit" | "team.manage" | "activity.view")[];
                             members: number;
+                            defaults: ("profiles.view" | "profiles.create" | "profiles.edit" | "profiles.open" | "profiles.delete" | "cookies.import" | "cookies.export" | "profiles.export" | "proxies.view" | "proxies.bind" | "proxies.edit" | "team.manage" | "activity.view")[] | null;
                         };
                     };
                 };
@@ -4595,6 +4656,7 @@ export interface paths {
                             name: string;
                             permissions: ("profiles.view" | "profiles.create" | "profiles.edit" | "profiles.open" | "profiles.delete" | "cookies.import" | "cookies.export" | "profiles.export" | "proxies.view" | "proxies.bind" | "proxies.edit" | "team.manage" | "activity.view")[];
                             members: number;
+                            defaults: ("profiles.view" | "profiles.create" | "profiles.edit" | "profiles.open" | "profiles.delete" | "cookies.import" | "cookies.export" | "profiles.export" | "proxies.view" | "proxies.bind" | "proxies.edit" | "team.manage" | "activity.view")[] | null;
                         };
                     };
                 };
@@ -4615,7 +4677,11 @@ export interface paths {
                     profileId?: string;
                     actorId?: string;
                     kind?: "open" | "profiles" | "trash" | "proxies" | "cookies" | "team" | "extensions" | "automation";
-                    before?: number;
+                    q?: string;
+                    from?: unknown;
+                    to?: unknown;
+                    order?: "desc" | "asc";
+                    offset?: number;
                     limit?: number;
                 };
                 header?: never;
@@ -4639,7 +4705,7 @@ export interface paths {
                                 actor: string | null;
                                 deviceName: string | null;
                                 /** @enum {string} */
-                                action: "profile.create" | "profile.update" | "profile.move" | "profile.tag" | "profile.untag" | "profile.set-proxy" | "profile.assign" | "profile.trash" | "profile.restore" | "profile.purge" | "profile.open" | "profile.close" | "profile.takeover" | "proxy.create" | "proxy.import" | "proxy.update" | "proxy.delete" | "group.create" | "group.rename" | "group.delete" | "group.members" | "member.invite" | "member.join" | "member.role" | "member.remove" | "member.leave" | "invitation.withdraw" | "role.create" | "role.update" | "role.delete" | "cookies.export" | "cookies.import" | "cookies.delete" | "workspace.export" | "workspace.import" | "flow.create" | "flow.update" | "flow.delete" | "task.create" | "task.update" | "task.delete" | "run.start" | "run.finish" | "extension.add" | "extension.update" | "extension.delete" | "profile.add-extension" | "profile.remove-extension" | "profile.set-kernel" | "profile.set-browser";
+                                action: "profile.create" | "profile.update" | "profile.move" | "profile.tag" | "profile.untag" | "profile.set-proxy" | "profile.assign" | "profile.trash" | "profile.restore" | "profile.purge" | "profile.open" | "profile.close" | "profile.takeover" | "proxy.create" | "proxy.import" | "proxy.update" | "proxy.delete" | "group.create" | "group.rename" | "group.delete" | "group.members" | "member.invite" | "member.join" | "member.role" | "member.groups" | "member.remove" | "member.leave" | "invitation.withdraw" | "role.create" | "role.update" | "role.delete" | "cookies.export" | "cookies.import" | "cookies.delete" | "workspace.export" | "workspace.import" | "flow.create" | "flow.update" | "flow.delete" | "task.create" | "task.update" | "task.delete" | "run.start" | "run.finish" | "extension.add" | "extension.update" | "extension.delete" | "profile.add-extension" | "profile.remove-extension" | "profile.set-kernel" | "profile.set-browser";
                                 profile: {
                                     id: string | null;
                                     name: string;
@@ -4649,6 +4715,7 @@ export interface paths {
                                     [key: string]: unknown;
                                 };
                             }[];
+                            total: number;
                             retentionDays: number;
                         };
                     };
@@ -4676,6 +4743,9 @@ export interface paths {
                     profileId?: string;
                     actorId?: string;
                     kind?: "open" | "profiles" | "trash" | "proxies" | "cookies" | "team" | "extensions" | "automation";
+                    q?: string;
+                    from?: unknown;
+                    to?: unknown;
                 };
                 header?: never;
                 path: {
@@ -5915,6 +5985,386 @@ export interface paths {
         };
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/workspaces/{id}/jobs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    since?: unknown;
+                    kind?: "proxy.check" | "profile.open" | "proxy.import" | "profile.edit" | "kernel.download";
+                };
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            jobs: {
+                                id: string;
+                                /** @enum {string} */
+                                kind: "proxy.check" | "profile.open" | "proxy.import" | "profile.edit" | "kernel.download";
+                                detail: {
+                                    [key: string]: unknown;
+                                };
+                                /** @enum {string} */
+                                status: "running" | "done" | "partial" | "canceled";
+                                startedBy: string | null;
+                                startedById: string | null;
+                                deviceId: string | null;
+                                deviceName: string | null;
+                                total: number;
+                                ok: number;
+                                failed: number;
+                                canceled: number;
+                                createdAt: string;
+                                finishedAt: string | null;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        kind: "proxy.check" | "profile.open" | "proxy.import" | "profile.edit" | "kernel.download";
+                        /** @default {} */
+                        detail?: {
+                            [key: string]: unknown;
+                        };
+                        items: {
+                            targetId?: string | null;
+                            name: string;
+                            result?: {
+                                ok: boolean;
+                                error?: string | null;
+                            };
+                        }[];
+                        /** @default false */
+                        finish?: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            /** @enum {string} */
+                            kind: "proxy.check" | "profile.open" | "proxy.import" | "profile.edit" | "kernel.download";
+                            detail: {
+                                [key: string]: unknown;
+                            };
+                            /** @enum {string} */
+                            status: "running" | "done" | "partial" | "canceled";
+                            startedBy: string | null;
+                            startedById: string | null;
+                            deviceId: string | null;
+                            deviceName: string | null;
+                            total: number;
+                            ok: number;
+                            failed: number;
+                            canceled: number;
+                            createdAt: string;
+                            finishedAt: string | null;
+                            items: {
+                                seq: number;
+                                targetId: string | null;
+                                name: string;
+                                /** @enum {string} */
+                                status: "pending" | "ok" | "failed" | "canceled";
+                                error: string | null;
+                                attempts: number;
+                                at: string | null;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/jobs/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            /** @enum {string} */
+                            kind: "proxy.check" | "profile.open" | "proxy.import" | "profile.edit" | "kernel.download";
+                            detail: {
+                                [key: string]: unknown;
+                            };
+                            /** @enum {string} */
+                            status: "running" | "done" | "partial" | "canceled";
+                            startedBy: string | null;
+                            startedById: string | null;
+                            deviceId: string | null;
+                            deviceName: string | null;
+                            total: number;
+                            ok: number;
+                            failed: number;
+                            canceled: number;
+                            createdAt: string;
+                            finishedAt: string | null;
+                            items: {
+                                seq: number;
+                                targetId: string | null;
+                                name: string;
+                                /** @enum {string} */
+                                status: "pending" | "ok" | "failed" | "canceled";
+                                error: string | null;
+                                attempts: number;
+                                at: string | null;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/jobs/{id}/results": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        results: {
+                            seq: number;
+                            ok: boolean;
+                            error?: string | null;
+                        }[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": null;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/jobs/{id}/finish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @default false */
+                        canceled?: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            /** @enum {string} */
+                            kind: "proxy.check" | "profile.open" | "proxy.import" | "profile.edit" | "kernel.download";
+                            detail: {
+                                [key: string]: unknown;
+                            };
+                            /** @enum {string} */
+                            status: "running" | "done" | "partial" | "canceled";
+                            startedBy: string | null;
+                            startedById: string | null;
+                            deviceId: string | null;
+                            deviceName: string | null;
+                            total: number;
+                            ok: number;
+                            failed: number;
+                            canceled: number;
+                            createdAt: string;
+                            finishedAt: string | null;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/jobs/{id}/retry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        seqs?: number[];
+                    } | null;
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            /** @enum {string} */
+                            kind: "proxy.check" | "profile.open" | "proxy.import" | "profile.edit" | "kernel.download";
+                            detail: {
+                                [key: string]: unknown;
+                            };
+                            /** @enum {string} */
+                            status: "running" | "done" | "partial" | "canceled";
+                            startedBy: string | null;
+                            startedById: string | null;
+                            deviceId: string | null;
+                            deviceName: string | null;
+                            total: number;
+                            ok: number;
+                            failed: number;
+                            canceled: number;
+                            createdAt: string;
+                            finishedAt: string | null;
+                            items: {
+                                seq: number;
+                                targetId: string | null;
+                                name: string;
+                                /** @enum {string} */
+                                status: "pending" | "ok" | "failed" | "canceled";
+                                error: string | null;
+                                attempts: number;
+                                at: string | null;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
