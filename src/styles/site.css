@@ -144,3 +144,6 @@ html[lang="en"] .mini-field{grid-template-columns:66px minmax(0,1fr)}
 .calc-detail{font-size:14px}
 .calc-res .btn{margin-top:10px}
 @media (max-width:860px){.calc{grid-template-columns:minmax(0,1fr);padding:24px 20px}}
+
+/* the legal pages are drafts: what is not settled yet is marked as such */
+.tbc{display:inline-flex;align-items:center;height:22px;margin-left:6px;padding:0 9px;border-radius:99px;background:var(--warn-soft);color:var(--warn-ink);font-size:12px;font-weight:600;white-space:nowrap;vertical-align:1px}

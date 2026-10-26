@@ -2,13 +2,14 @@
 // The local API reference, among the guides: turning it on, its limits, both engines' protocols, the endpoints and
 // errors, examples for the usual tools, and what to keep in mind.
 import HelpPage from '../../../layouts/HelpPage.astro';
-import { apiSections } from '../../../lib/docs';
 import { langPaths, link, t, type Lang } from '../../../lib/i18n';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
 const d = t(lang);
 const A = d.docs.api;
+// The page's sections, as [anchor, heading], for the contents beside it.
+const sections: [string, string][] = [['setup', A.setupTitle], ['limits', A.limitsTitle], ['engines', A.enginesTitle], ['endpoints', A.endpointsTitle], ['errors', A.errorsTitle], ['examples', A.examplesTitle], ['security', A.securityTitle]];
 
 const start = `const res = await fetch('http://127.0.0.1:47210/api/v1/profiles/0042/start', {
   method: 'POST', headers: { authorization: 'Bearer <token>' }
@@ -44,7 +45,7 @@ const [page] = await browser.pages();
 await page.goto('https://seller.example.com');`]
 ];
 ---
-<HelpPage lang={lang} path="help/api/" title={d.docs.apiTitle} description={d.docs.apiLead} toc={apiSections(d)}
+<HelpPage lang={lang} path="help/api/" title={d.docs.apiTitle} description={d.docs.apiLead} toc={sections}
   crumbs={[[d.help.home, link(lang, 'help/')], [d.help.developers, null], [d.docs.apiTitle, null]]}>
   <header class="api-head"><h1>{d.docs.apiTitle}</h1><p class="lead">{d.docs.apiLead}</p></header>
   <h2 id="setup">{A.setupTitle}</h2>

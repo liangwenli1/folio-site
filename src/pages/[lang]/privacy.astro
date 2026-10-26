@@ -1,11 +1,118 @@
 ---
-import DocPage from '../../components/DocPage.astro';
-import { langPaths, t, type Lang } from '../../lib/i18n';
+// The privacy policy, still a draft: what Folio keeps and why, how it is protected, who else sees it, what you can do
+// about it and how to reach us. Items not settled yet say so. The contents follow the reading (and fold on a phone).
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { langPaths, link, t, type Lang } from '../../lib/i18n';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
-const l = t(lang).legal;
+const L = t(lang).legal, P = L.privacy;
 ---
-<DocPage lang={lang} path="privacy/" title={l.privacyTitle} draft={l.draft}>
-  {l.privacyBody.map(p => <p class="doc-body">{p}</p>)}
-</DocPage>
+<Base lang={lang} path="privacy/" title={P.title} description={P.sections[0].lead}>
+  <section class="lg-hero">
+    <div class="wrap"><h1>{P.title}</h1><p class="lg-draft"><Icon name="info" />{P.draft}</p></div>
+  </section>
+  <div class="wrap lg-grid">
+    <details class="lg-toc" open>
+      <summary>{P.toc}<Icon name="chev" /></summary>
+      <nav aria-label={P.toc}>{P.sections.map((s, i) => <a href={`#${s.id}`} aria-current={i === 0 ? 'true' : undefined}>{s.title}</a>)}</nav>
+    </details>
+    <div class="lg-body">
+      {P.sections.map((s, i) => (
+        <section class="card lg-sec" id={s.id} aria-labelledby={`${s.id}-h`}>
+          <h2 id={`${s.id}-h`}><span class="lg-n">{i + 1}</span>{s.title}</h2>
+          <p class="lg-lead">{s.lead}</p>
+          {s.table && (
+            <table class="lg-table">
+              <thead><tr>{s.table.head.map(h => <th scope="col">{h}</th>)}</tr></thead>
+              <tbody>{s.table.rows.map(([label, ...cells]) => <tr><th scope="row">{label}</th>{cells.map((c, k) => <td data-h={s.table.head[k + 1]}>{c}</td>)}</tr>)}</tbody>
+            </table>
+          )}
+          {s.items && (
+            <ul class="lg-list">
+              {s.items.map(([label, text, href]) => (
+                <li><b>{label}</b>{text === null ? <span class="tbc">{L.tbc}</span> : href ? <a href={link(lang, href)}>{text}</a> : <span>{text}</span>}</li>
+              ))}
+            </ul>
+          )}
+        </section>
+      ))}
+      <p class="lg-meta"><Icon name="doc" /><span>{P.version}<span class="tbc">{L.tbc}</span></span><span>{P.effective}<span class="tbc">{L.tbc}</span></span></p>
+    </div>
+  </div>
+</Base>
+<script>
+  // The contents mark the section being read; on a phone they fold away, and picking one folds them again.
+  const toc = document.querySelector<HTMLDetailsElement>('.lg-toc')!;
+  const links = [...toc.querySelectorAll<HTMLAnchorElement>('a')];
+  const sections = links.map(a => document.getElementById(a.hash.slice(1))!);
+  const wide = matchMedia('(min-width: 861px)');
+  const fold = () => { toc.open = wide.matches; };
+  fold();
+  wide.addEventListener('change', fold);
+  links.forEach(a => a.addEventListener('click', () => { if (!wide.matches) toc.open = false; }));
+  const mark = () => {
+    const end = innerHeight + scrollY >= document.documentElement.scrollHeight - 4;
+    let at = 0;
+    sections.forEach((s, i) => { if (s.getBoundingClientRect().top <= 160) at = i; });
+    if (end) at = sections.length - 1;
+    links.forEach((a, i) => { if (i === at) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+  };
+  addEventListener('scroll', mark, { passive: true });
+  mark();
+</script>
+<style>
+  .lg-hero{padding-block:52px 44px;background:var(--panel);border-bottom:1px solid var(--line)}
+  .lg-hero h1{font-size:clamp(2rem,4.4vw,3.25rem);line-height:1.15}
+  .lg-draft{display:flex;gap:10px;max-width:720px;margin-top:22px;padding:13px 16px;border-radius:var(--r-card);background:var(--seg);font-size:14px;line-height:1.7;color:var(--ink-2)}
+  .lg-draft :global(.i){flex:none;margin-top:4px;color:var(--ink-3)}
+  .lg-grid{display:grid;grid-template-columns:200px minmax(0,1fr);gap:32px;align-items:start;padding-block:36px 88px}
+  .lg-toc{position:sticky;top:calc(var(--hd) + 24px)}
+  .lg-toc summary{display:none}
+  .lg-toc nav{display:grid;gap:4px}
+  .lg-toc a{padding:10px 16px;border-radius:var(--r);font-size:14.5px;color:var(--ink-2);text-decoration:none}
+  .lg-toc a:hover{background:var(--panel);color:var(--ink)}
+  .lg-toc a[aria-current]{background:var(--accent-soft);color:var(--accent-ink);font-weight:600;box-shadow:inset 3px 0 0 var(--accent)}
+  .lg-body{display:grid;gap:20px;min-width:0}
+  .lg-sec{padding:22px 24px 24px}
+  .lg-sec h2{display:flex;align-items:center;gap:12px;font-size:21px;line-height:1.35}
+  .lg-n{display:grid;place-items:center;width:28px;height:28px;flex:none;border-radius:50%;background:var(--accent);color:var(--on-accent);font:600 14px var(--f-data)}
+  .lg-lead{margin:8px 0 16px 40px;font-size:14px;line-height:1.7;color:var(--ink-2)}
+  .lg-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden;font-size:14px;line-height:1.65}
+  .lg-table :is(th,td){padding:11px 16px;border-top:1px solid var(--line);text-align:left;vertical-align:top}
+  .lg-table thead th{border-top:0;background:var(--panel);font-size:13px;font-weight:600;color:var(--ink-2)}
+  .lg-table tbody th{width:150px;font-weight:600;color:var(--ink)}
+  .lg-table td{color:var(--ink-2)}
+  .lg-table :is(th,td) + :is(th,td){border-left:1px solid var(--line)}
+  .lg-list{display:grid;gap:10px;margin:0;padding:16px 20px;border-radius:var(--r-card);background:var(--panel);list-style:none;font-size:14px;line-height:1.7;color:var(--ink-2)}
+  .lg-list li{position:relative;padding-left:18px}
+  .lg-list li::before{content:'';position:absolute;left:2px;top:.65em;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+  .lg-list b{font-weight:600;color:var(--ink)}
+  .lg-list b::after{content:'：'}
+  html[lang="en"] .lg-list b{margin-right:6px}
+  html[lang="en"] .lg-list b::after{content:':'}
+  .lg-list a{color:var(--accent-ink)}
+  .lg-list b + .tbc{margin-left:0}
+  .lg-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;padding:14px 20px;border-radius:var(--r-card);background:var(--panel);font-size:13.5px;color:var(--ink-2)}
+  .lg-meta :global(.i){color:var(--ink-3)}
+  @media (max-width:860px){
+    .lg-grid{grid-template-columns:minmax(0,1fr);gap:20px;padding-top:24px}
+    .lg-toc{position:static;border:1px solid var(--line);border-radius:var(--r-card);background:var(--card)}
+    .lg-toc summary{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;font-weight:600;cursor:pointer;list-style:none}
+    .lg-toc summary::-webkit-details-marker{display:none}
+    .lg-toc[open] summary :global(.i){rotate:180deg}
+    .lg-toc nav{padding:0 8px 8px}
+  }
+  @media (max-width:700px){
+    .lg-sec{padding:18px 16px 20px}
+    .lg-lead{margin-left:0}
+    .lg-table thead{display:none}
+    .lg-table :is(tr,th,td){display:block}
+    .lg-table tr + tr{border-top:1px solid var(--line)}
+    .lg-table :is(th,td){padding:4px 14px;border:0!important}
+    .lg-table tbody th{width:auto;padding-top:12px}
+    .lg-table tr td:last-child{padding-bottom:12px}
+    .lg-table td::before{content:attr(data-h);display:block;font-size:12px;font-weight:600;color:var(--ink-3)}
+  }
+</style>

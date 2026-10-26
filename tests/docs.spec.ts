@@ -1,4 +1,5 @@
-// The docs: the API reference in both languages, the search over the contents, and the download page.
+// The pages for reading: the API reference in both languages, the search over the contents, the download page, the
+// changelog, the legal drafts and the page for addresses that lead nowhere.
 import { expect, test } from '@playwright/test';
 
 test('the API reference lists the endpoints and both engines’ protocols, in English and Chinese', async ({ page }) => {
@@ -69,4 +70,49 @@ test('without a release configured, the download page shows no version and says 
   await page.goto('/zh/download/');
   await expect(page.locator('[data-version]')).toHaveCount(0);
   await expect(page.getByRole('button', { name: '即将推出' })).toHaveCount(2);
+});
+
+test('the changelog shows one part of Folio at a time', async ({ page }) => {
+  await page.goto('/zh/changelog/');
+  const desktop = page.locator('.cl-list > li[data-area="desktop"]'), site = page.locator('.cl-list > li[data-area="site"]');
+  await page.getByRole('button', { name: '官网', exact: true }).click();
+  await expect(page.getByRole('button', { name: '官网', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await expect(desktop.first()).toBeHidden();
+  await expect(site.first()).toBeVisible();
+  await page.getByRole('button', { name: '全部' }).click();
+  await expect(desktop.first()).toBeVisible();
+  await expect(site.first()).toBeVisible();
+});
+
+test('the privacy policy’s contents follow the reading and fold away on a phone; what is not settled says so', async ({ page }) => {
+  await page.goto('/en/privacy/');
+  const toc = page.getByRole('navigation', { name: 'Contents' });
+  await expect(toc.getByRole('link', { name: 'Information we collect' })).toHaveAttribute('aria-current', 'true');
+  await toc.getByRole('link', { name: 'Your rights' }).click();
+  await expect(toc.getByRole('link', { name: 'Your rights' })).toHaveAttribute('aria-current', 'true');
+  await expect(toc.getByRole('link', { name: 'Information we collect' })).not.toHaveAttribute('aria-current');
+  await expect(page.locator('#share').getByText('To be confirmed')).toHaveCount(2);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(toc).toBeHidden();
+  await page.locator('.lg-toc summary').click();
+  await toc.getByRole('link', { name: 'Sharing' }).click();
+  await expect(toc).toBeHidden();
+  await expect(page.locator('#share')).toBeInViewport();
+});
+
+test('the page for an address that leads nowhere offers the way on, in that language', async ({ page }) => {
+  await page.goto('/zh/404/');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('页面未找到');
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
+  await page.getByRole('navigation', { name: '常用页面' }).getByRole('link', { name: '下载客户端' }).click();
+  await expect(page).toHaveURL(/\/zh\/download\/$/);
+});
+
+test('behind nginx, an address that leads nowhere gets that page with a 404, in the language of the address', async ({ page }) => {
+  test.skip(!process.env.SITE_URL, 'nginx picks the page (deploy/nginx.conf); astro preview does not');
+  for (const [path, title] of [['/zh/no-such-page/', '页面未找到'], ['/en/no-such-page/', 'Page not found'], ['/no-such-page', 'Page not found']]){
+    const res = await page.goto(path);
+    expect(res!.status(), path).toBe(404);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(title);
+  }
 });

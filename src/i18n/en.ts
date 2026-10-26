@@ -479,10 +479,28 @@ export const en = {
     }
   },
 
+  changelog: {
+    title: 'Changelog', h1: 'What’s new in Folio', lead: 'Each release of Folio: what was added, what got better and what was fixed.',
+    filter: 'Show for', areas: { all: 'Everything', desktop: 'Workbench', site: 'Website' },
+    kinds: { added: 'Added', improved: 'Improved', fixed: 'Fixed' },
+    releases: [
+      { version: 'Next', date: 'Coming soon', area: 'desktop',
+        added: ['Task center: the results of checking proxies, opening profiles, importing proxies and editing in bulk, target by target, with failed ones retried', 'Groups: nested groups, and on Company, access for members by group', 'Roles of your own besides the four built in, each of the 13 permissions set one by one', 'A page for each profile: overview, fingerprint, cookies and activity'],
+        improved: ['One design across the workbench: lists, forms, empty states and feedback', 'A profile can keep running after its last window closes, and Go to window brings it back', 'Engines: a default engine, automatic downloads and version notes', 'How long the Trash keeps profiles is a setting'],
+        fixed: ['Lists that fail to load, or that the role may not see, say so instead of showing as empty', 'Row actions and proxy addresses no longer wrap in narrow windows'] },
+      { version: 'Next', date: 'Coming soon', area: 'site',
+        added: ['Pages of their own for features, solutions, pricing, downloads, help and contact', 'A help center with guides, a search and feedback on each guide'],
+        improved: ['New sign-in, sign-up and password reset pages, the reset in three steps', 'The contact form asks what it is about and gives a reference number'],
+        fixed: ['The Company plan on the pricing page now says “members given access by group”'] },
+      { version: '0.1', date: 'October 2026', area: 'desktop',
+        added: ['Chromium and Firefox engines, each browser profile with its own fingerprint', 'Proxies and connection checks', 'Sign-ins encrypted and synced to the cloud', 'Flows, scheduled tasks and window sync', 'An extension library and the local API'], improved: [], fixed: [] },
+      { version: '0.1', date: 'October 2026', area: 'site',
+        added: ['Sign-up, sign-in and email verification', 'Plans, checkout and invoices', 'The account page and team invitations'], improved: [], fixed: [] }
+    ] as { version: string; date: string; area: 'desktop' | 'site'; added: string[]; improved: string[]; fixed: string[] }[],
+    subscribe: { title: 'Get release news', body: 'Leave your email to hear about new releases and features.', placeholder: 'Your email address', soon: 'Coming soon' }
+  },
+
   docs: {
-    title: 'Docs', lead: 'Guides for browser profiles, proxies and teams will be published here.',
-    search: 'Search docs', toc: 'On this page', soon: 'Coming soon', home: 'Docs',
-    nav: { guides: 'Guides', api: 'API reference', other: 'More', start: 'Quick start', profiles: 'Browser profiles and fingerprints', proxies: 'Proxies', team: 'Teams' },
     apiTitle: 'API reference', apiLead: 'Folio’s local API lets scripts on the same computer open browser profiles and hand them to existing automation tools. It runs inside the Folio app and is available on that computer only.',
     api: {
       setupTitle: 'Enabling the API',
@@ -523,23 +541,85 @@ export const en = {
       examples: { playwright: 'Playwright · Chromium profile', puppeteer: 'Puppeteer · Chromium profile', selenium: 'Selenium (Python) · Chromium profile', firefox: 'Puppeteer · Firefox profile' },
       securityTitle: 'Security',
       security: 'The debugging address has no password. While a profile opened through the API is running, any program on that computer can control it, as with any browser debugging port. Profiles opened manually have no debugging address, and the API listens on 127.0.0.1 only.'
-    },
-    changelogTitle: 'Changelog',
-    changelog: [['0.1 · October 2026', 'Accounts, workspaces, plans and the first release of the desktop app.']] as [string, string][]
+    }
   },
 
   legal: {
-    privacyTitle: 'Privacy policy', termsTitle: 'Terms of service',
-    draft: 'Draft. The final text is in preparation and will replace this page before launch.',
-    privacyBody: [
-      'We collect the email address and password used to register, the workspaces created and the plan selected.',
-      'Browser profile data selected for sync is encrypted before it is stored.',
-      'We do not sell user data.'
-    ],
-    termsBody: [
-      'Folio is a tool for managing multiple browser profiles. Users are responsible for following the rules of the platforms they use.',
-      'Paid plans renew until cancelled. The most recent payment can be refunded within 7 days.'
-    ]
+    tbc: 'To be confirmed',
+    privacy: {
+      title: 'Privacy policy',
+      draft: 'Draft. This page describes how Folio handles data today; items marked “To be confirmed” are not settled yet. The final text will be published after review.',
+      toc: 'Contents',
+      sections: [
+        { id: 'collect', title: 'Information we collect', lead: 'The kinds of information Folio handles when you use it.',
+          table: { head: ['Category', 'What it includes', 'How it is kept'],
+          rows: [
+            ['Account', 'Your email address, password, interface language and whether the address is verified.', 'Only a one-way hash of the password is kept.'],
+            ['Signed-in devices', 'The kind of client, the device name and when it was last used.', 'Only a digest of the sign-in token is kept; signing out ends it.'],
+            ['Workspace and plan', 'The workspace’s name, its members and roles, group access, the plan and payments.', 'Payments keep only the card brand and last four digits.'],
+            ['Profiles and proxies', 'Profile names, fingerprint settings, tags and notes; proxy addresses, credentials and check results (exit IP and location); for profiles synced to the cloud, their sign-in state (cookies, local storage and the like).', 'Proxy passwords and sign-in state are encrypted before they are stored.'],
+            ['Activity log', 'What members did in the workspace, and on which device.', 'Kept according to the plan: 7 days on Free, 30 days on Studio, 1 year on Company.'],
+            ['Website cookie', 'The session cookie that keeps you signed in to the website.', 'With “Remember me” it lasts 30 days; otherwise it ends when the browser closes.'],
+            ['Contact and feedback', 'The name, email address, team size and message sent through the contact form; whether a help article helped.', 'Article feedback is not linked to an account.']
+          ] as string[][] } },
+        { id: 'use', title: 'How we use it', lead: 'What the information above is used for. It is not used for advertising.',
+          table: { head: ['Category', 'Purpose'],
+          rows: [
+            ['Account', 'Signing up and in, verifying the email address, resetting the password, and sending codes and workspace invitations.'],
+            ['Signed-in devices', 'Showing which computer a profile is in use on, and running scheduled tasks on the computer they belong to.'],
+            ['Workspace and plan', 'Limiting access by role and group, counting what the plan includes, issuing invoices and handling refunds.'],
+            ['Profiles and proxies', 'Opening profiles on your computer as they are set up, syncing sign-in state between members, and checking proxy connections.'],
+            ['Activity log', 'Letting members with the permission see what happened and look into problems.'],
+            ['Contact and feedback', 'Answering your enquiry and improving the help articles.']
+          ] as string[][] } },
+        { id: 'store', title: 'Storage and protection', lead: 'Where and how the information is kept.',
+          items: [
+            ['Where it is stored', null],
+            ['Protection', 'Passwords are kept only as hashes; proxy passwords and browser sign-in state are encrypted with AES-256-GCM before they are stored; exported files are encrypted with a passphrase you choose, which the server never keeps.'],
+            ['How long it is kept', 'The activity log follows the plan; profiles moved to the Trash are deleted for good after the set number of days (30 by default); how long other information is kept is to be confirmed.']
+          ] as [string, string | null, string?][] },
+        { id: 'share', title: 'Sharing', lead: 'Whether information is passed on to anyone else.',
+          items: [
+            ['Selling data', 'We do not sell user data.'],
+            ['Within your workspace', 'Profiles and proxies you create in a workspace can be seen and used by its members who have the permission.'],
+            ['Email, storage and payment providers', null],
+            ['Disclosure required by law', null]
+          ] as [string, string | null, string?][] },
+        { id: 'rights', title: 'Your rights', lead: 'How you can see, correct, export and delete your information.',
+          items: [
+            ['See', 'Your email address, workspaces and payments are on the account page; members with the permission can see the activity log in the app.'],
+            ['Correct', 'Profiles, proxies and workspace details can be changed in the app; a forgotten password can be reset by email.'],
+            ['Export', 'Members with the export permission can export the workspace’s profiles as an encrypted file.'],
+            ['Delete', 'Profiles and proxies can be deleted at any time. To close your account, write to us through the contact page; how long that takes is to be confirmed.']
+          ] as [string, string | null, string?][] },
+        { id: 'contact', title: 'Contact us', lead: 'Questions about this policy or about your information can reach us here.',
+          items: [
+            ['Contact form', 'The “Contact us” page', 'contact/'],
+            ['Email', null],
+            ['Operator', null]
+          ] as [string, string | null, string?][] }
+      ],
+      version: 'Version', effective: 'Effective date'
+    },
+    terms: {
+      title: 'Terms of service', lead: 'Your rights and obligations when you use Folio and its services.',
+      draft: ['Draft. The final terms will be published after review.', 'This page follows Folio’s current product rules; items marked “To be confirmed” are not settled yet.'],
+      sections: [
+        { title: 'The service', body: ['Folio is a service for managing browser profiles: the Windows and macOS app, profile and proxy management, sign-in state synced to the cloud, team collaboration and the local API.', 'What each plan includes is set out on the pricing page.'] },
+        { title: 'Your account', body: ['Sign up with a valid email address of your own and verify it. Keep your password safe: the account holder is responsible for what is done with the account.', 'Workspace owners decide members’ roles and what they can reach. If something looks wrong with your account, reset your password and contact us.'] },
+        { title: 'Acceptable use', body: ['When you use Folio to visit other websites and platforms, follow the applicable laws and those platforms’ rules.', 'Do not use Folio for anything unlawful, to infringe the rights of others, or to disrupt the service.'] },
+        { title: 'Plans and fees', body: ['Free costs nothing. Paid plans are billed monthly or yearly and renew until cancelled; once cancelled, the plan stops renewing at the end of the current period.', 'Each workspace can try Studio free for 7 days. The most recent payment can be refunded within 7 days of payment, and the plan goes back to what it was before that payment.', 'Prices are those on the pricing page and exclude local taxes.'] },
+        { title: 'Changes and termination', body: ['We may change the product or these terms; how significant changes are announced, and when they take effect, is to be confirmed.', 'You can stop using Folio and cancel your subscription at any time. The rules for suspending or ending the service after a breach of these terms are to be confirmed.'] },
+        { title: 'Liability and disputes', body: ['Limits of liability, the governing law and how disputes are resolved are to be confirmed.'] }
+      ],
+      note: 'Draft section; the final wording is subject to review.',
+      effective: 'Effective date', effectiveBody: 'The effective date will be set when the final terms are published.'
+    }
+  },
+
+  notFound: {
+    title: 'Page not found', lead: 'The page may have moved, or the link may be wrong.',
+    home: 'Back to home', help: 'Visit the help center', more: 'Popular pages', links: ['Features', 'Download the app', 'Contact us']
   },
 
   errors: {
