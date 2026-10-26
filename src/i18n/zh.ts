@@ -289,7 +289,7 @@ export const zh: typeof en = {
   },
 
   account: {
-    title: '账户', profile: '个人信息', language: '语言', emailStatus: '邮箱验证',
+    title: '账户', profile: '个人信息', language: '语言', langs: { zh: '简体中文', en: 'English' }, emailStatus: '邮箱验证',
     verified: '已验证', unverified: '未验证', verifyNow: '立即验证',
     workspaces: '团队', newWorkspace: '新建团队', create: '创建', rename: '重命名', save: '保存', cancel: '取消', current: '当前',
     roles: { owner: '所有者', admin: '管理员', member: '成员', viewer: '仅查看' } as Record<string, string>,
@@ -314,7 +314,7 @@ export const zh: typeof en = {
     missing: '链接中缺少邀请信息，请重新打开邮件中的链接。',
     gone: '该邀请已失效：已被接受、撤回或被新的邀请替代。',
     lead: (inviter: string, workspace: string, role: string) => `${inviter} 邀请您以${role}身份加入 Folio 团队「${workspace}」。`,
-    roles: { admin: '管理员', member: '成员' }, forEmail: (email: string) => `受邀邮箱：${email}`,
+    roles: { admin: '管理员', member: '成员', viewer: '仅查看' }, forEmail: (email: string) => `受邀邮箱：${email}`,
     expires: (date: string) => `${date} 过期`,
     expired: '该邀请已过期，请联系邀请人重新发送。',
     login: '登录后接受', signup: '注册账号',

@@ -230,7 +230,7 @@ test('signing up takes the code sent to the address and the terms agreed to; an 
   await page.click('button[type="submit"]');
   await expect(page.locator('#err')).toHaveText('Read and agree to the terms of service and privacy policy first.');
   await expect(page.locator('#consent')).toBeFocused();
-  await expect(page.locator('#form').getByRole('link', { name: 'Terms of service' })).toHaveAttribute('target', '_blank');
+  await expect(page.locator('#form').getByRole('link', { name: 'terms of service' })).toHaveAttribute('target', '_blank');
   await page.check('#consent');
   await page.click('button[type="submit"]');
   await page.waitForURL(/\/account\//);
@@ -342,8 +342,8 @@ test('an emailed invitation leads a new person through sign-up into the workspac
 
   await page.goto(link.replace(/^https?:\/\/[^/]+/, ''));
   await expect(page.locator('#lead')).toHaveText(`${host.email} invited you to join the Folio workspace Larkspur Trading as a member.`);
-  await expect(page.locator('#for')).toContainText(`Invited email: ${email} · Expires on `);
-  await page.getByRole('link', { name: 'Create an account' }).click();
+  await expect(page.locator('#for')).toContainText(`Invitation for ${email} · Expires on `);
+  await page.getByRole('link', { name: 'Create account' }).click();
   await expect(page.locator('#email')).toHaveValue(email);
   await fillSignUp(page, email);
   await page.click('button[type="submit"]');
