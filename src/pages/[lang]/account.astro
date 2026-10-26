@@ -91,7 +91,7 @@ const a = d.account;
   </section>
 </Base>
 <script>
-  import { api, type Me, type Payment, type Workspace } from '../../lib/api';
+  import { api, canManage, roleLabel, type Me, type Payment, type Workspace } from '../../lib/api';
   import { day, money } from '../../lib/format';
   import { ICONS } from '../../lib/icons';
   import { $, d, esc, lang, param, requireMe, showError, to } from '../../scripts/session';
@@ -124,20 +124,20 @@ const a = d.account;
     $('ws-list').innerHTML = me.workspaces.map(w => `
       <li class="${w.id === ws.id ? 'current' : ''}" data-id="${w.id}">
         <span class="ac-letter" aria-hidden="true">${esc([...w.name][0] ?? '')}</span>
-        <span class="ac-name"><a href="?ws=${w.id}">${esc(w.name)}</a><small>${a.roles[w.role]} · ${d.plans[w.plan]}</small></span>
+        <span class="ac-name"><a href="?ws=${w.id}">${esc(w.name)}</a><small>${roleLabel(w.role, a.roles)} · ${d.plans[w.plan]}</small></span>
         ${w.id === ws.id ? `<span class="tag">${a.current}</span>` : ''}
-        ${w.role !== 'member' ? `<button class="btn btn-text btn-sm" type="button" data-rename="${w.id}">${a.rename}</button>` : ''}
+        ${canManage(w.role) ? `<button class="btn btn-text btn-sm" type="button" data-rename="${w.id}">${a.rename}</button>` : ''}
       </li>`).join('');
   }
 
   // Invitations sent to this address, joined or declined right here.
   async function renderInvitations(){
-    const { invitations } = await api<{ invitations: { id: string; workspaceName: string; inviter: string | null; role: 'admin' | 'member' }[] }>('GET', '/me/invitations');
+    const { invitations } = await api<{ invitations: { id: string; workspaceName: string; inviter: string | null; role: { key: string | null; name: string } }[] }>('GET', '/me/invitations');
     $('inv-panel').hidden = !invitations.length;
     $('inv-list').innerHTML = invitations.map(i => `
       <li data-inv="${i.id}">
         <span class="ac-letter" aria-hidden="true">${esc([...i.workspaceName][0] ?? '')}</span>
-        <span class="ac-name"><b>${esc(i.workspaceName)}</b><small>${esc(a.invitedBy(i.inviter ?? 'Folio', a.roles[i.role]))}</small></span>
+        <span class="ac-name"><b>${esc(i.workspaceName)}</b><small>${esc(a.invitedBy(i.inviter ?? 'Folio', roleLabel(i.role, a.roles)))}</small></span>
         <button class="btn btn-text btn-sm" type="button" data-decline="${i.id}">${a.decline}</button>
         <button class="btn btn-primary btn-sm" type="button" data-accept="${i.id}">${a.accept}</button>
       </li>`).join('');
@@ -158,7 +158,7 @@ const a = d.account;
   });
 
   function renderPlan(){
-    const s = ws.subscription, manager = ws.role !== 'member';
+    const s = ws.subscription, manager = canManage(ws.role);
     const paid = s.status === 'active' && s.plan !== 'free';
     $('plan-ws').textContent = ws.name;
     $('plan-name').textContent = s.addonPacks ? d.pricing.calc.withPacks(d.plans[s.plan], s.addonPacks) : d.plans[s.plan];
@@ -183,7 +183,7 @@ const a = d.account;
   }
 
   async function renderPayments(){
-    if (ws.role === 'member') return;
+    if (!canManage(ws.role)) return;
     const { payments } = await api<{ payments: Payment[] }>('GET', `/workspaces/${ws.id}/payments`);
     $('no-pay').hidden = payments.length > 0;
     $('pay-table').hidden = payments.length === 0;

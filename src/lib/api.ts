@@ -9,6 +9,11 @@ type Ok<P extends keyof paths, M extends 'get' | 'post' | 'patch'> =
 export type Me = Ok<'/me', 'get'>;
 export type User = Me['user'];
 export type WorkspaceSummary = Me['workspaces'][number];
+export type MyRole = WorkspaceSummary['role'];
+// Administering a workspace — members, roles, settings, the subscription — goes with managing its members.
+export const canManage = (role: { permissions: readonly string[] }) => role.permissions.includes('team.manage');
+// The four roles every workspace starts with are translated; a workspace's own keeps the name it was given.
+export const roleLabel = (role: { key: string | null; name: string }, names: Record<string, string>) => (role.key ? names[role.key] : role.name);
 export type Workspace = Ok<'/workspaces/{id}', 'get'>;
 export type Subscription = Workspace['subscription'];
 export type Plans = Ok<'/plans', 'get'>;

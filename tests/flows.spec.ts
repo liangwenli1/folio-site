@@ -27,7 +27,9 @@ async function owner(){
   const { checkoutId } = await (await api.post(`workspaces/${workspaceId}/billing/checkout`, { data: { plan: 'studio', period: 'monthly', addonPacks: 0 } })).json();
   await api.post(`billing/checkouts/${checkoutId}/pay`, { data: { card: { number: '4242424242424242', expMonth: 12, expYear: 2030, cvc: '123' } } });
   await api.patch(`workspaces/${workspaceId}`, { data: { name: 'Larkspur Trading' } });
-  return { email, api, workspaceId };
+  // Invitations name a role by id; every workspace starts with the same four.
+  const roleId = async (key: string) => ((await (await api.get(`workspaces/${workspaceId}/roles`)).json()).roles as { id: string; key: string }[]).find(r => r.key === key)!.id;
+  return { email, api, workspaceId, roleId };
 }
 
 // Keep tests independent of the network: no web fonts.
@@ -200,7 +202,7 @@ test('the sales form sends an inquiry', async ({ page }) => {
 test('an emailed invitation leads a new person through sign-up into the workspace', async ({ page }) => {
   const host = await owner();
   const email = uniqueEmail();
-  await host.api.post(`workspaces/${host.workspaceId}/invitations`, { data: { email, role: 'member' } });
+  await host.api.post(`workspaces/${host.workspaceId}/invitations`, { data: { email, roleId: await host.roleId('member') } });
   const mail = await lastMail(email);
   expect(mail.Subject).toBe(`${host.email} invited you to Larkspur Trading on Folio`);
   const link = mail.Text.match(/https?:\/\/\S+\/invite\/\?token=[\w-]+/)![0];
@@ -227,7 +229,7 @@ test('an emailed invitation leads a new person through sign-up into the workspac
 test('pending invitations show on the account page in Chinese and can be joined there', async ({ page }) => {
   const host = await owner();
   const email = await signUp(page, 'zh');
-  await host.api.post(`workspaces/${host.workspaceId}/invitations`, { data: { email, role: 'admin' } });
+  await host.api.post(`workspaces/${host.workspaceId}/invitations`, { data: { email, roleId: await host.roleId('admin') } });
   await page.reload();
   const invite = page.locator('#inv-list li');
   await expect(invite).toContainText('Larkspur Trading');

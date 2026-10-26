@@ -213,7 +213,7 @@ export const en = {
     title: 'Account', profile: 'Profile', language: 'Language', emailStatus: 'Email verification',
     verified: 'Verified', unverified: 'Not verified', verifyNow: 'Verify now',
     workspaces: 'Workspaces', newWorkspace: 'New workspace', create: 'Create', rename: 'Rename', save: 'Save', cancel: 'Cancel', current: 'Current',
-    roles: { owner: 'Owner', admin: 'Admin', member: 'Member' },
+    roles: { owner: 'Owner', admin: 'Admin', member: 'Member', viewer: 'Viewer' } as Record<string, string>,
     plan: 'Plan', usage: (used: number, limit: number) => `${used} of ${limit} profiles used`,
     unlimited: 'Unlimited members',
     renews: (date: string) => `Renews on ${date}`, ends: (date: string) => `Ends on ${date}`,

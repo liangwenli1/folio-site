@@ -215,7 +215,7 @@ export const zh: typeof en = {
     title: '账户', profile: '个人信息', language: '语言', emailStatus: '邮箱验证',
     verified: '已验证', unverified: '未验证', verifyNow: '立即验证',
     workspaces: '团队', newWorkspace: '新建团队', create: '创建', rename: '重命名', save: '保存', cancel: '取消', current: '当前',
-    roles: { owner: '所有者', admin: '管理员', member: '成员' },
+    roles: { owner: '所有者', admin: '管理员', member: '成员', viewer: '仅查看' } as Record<string, string>,
     plan: '套餐', usage: (used: number, limit: number) => `已用 ${used} / ${limit} 个环境`,
     unlimited: '成员不限',
     renews: (date: string) => `${date} 自动续费`, ends: (date: string) => `${date} 到期`,

@@ -358,13 +358,19 @@ export interface paths {
                             workspaces: {
                                 id: string;
                                 name: string;
-                                /** @enum {string} */
-                                role: "owner" | "admin" | "member";
+                                role: {
+                                    id: string;
+                                    /** @enum {string|null} */
+                                    key: "owner" | "admin" | "member" | "viewer" | null;
+                                    name: string;
+                                    permissions: ("profiles.view" | "profiles.create" | "profiles.edit" | "profiles.open" | "profiles.delete" | "cookies.import" | "cookies.export" | "profiles.export" | "proxies.view" | "proxies.bind" | "proxies.edit" | "team.manage" | "activity.view")[];
+                                };
                                 /** @enum {string} */
                                 plan: "free" | "studio" | "company";
                                 /** @enum {string} */
                                 status: "active" | "trialing";
                             }[];
+                            admin: boolean;
                         };
                     };
                 };
@@ -439,8 +445,13 @@ export interface paths {
                         "application/json": {
                             id: string;
                             name: string;
-                            /** @enum {string} */
-                            role: "owner" | "admin" | "member";
+                            role: {
+                                id: string;
+                                /** @enum {string|null} */
+                                key: "owner" | "admin" | "member" | "viewer" | null;
+                                name: string;
+                                permissions: ("profiles.view" | "profiles.create" | "profiles.edit" | "profiles.open" | "profiles.delete" | "cookies.import" | "cookies.export" | "profiles.export" | "proxies.view" | "proxies.bind" | "proxies.edit" | "team.manage" | "activity.view")[];
+                            };
                             subscription: {
                                 /** @enum {string} */
                                 plan: "free" | "studio" | "company";
@@ -544,8 +555,13 @@ export interface paths {
                         "application/json": {
                             id: string;
                             name: string;
-                            /** @enum {string} */
-                            role: "owner" | "admin" | "member";
+                            role: {
+                                id: string;
+                                /** @enum {string|null} */
+                                key: "owner" | "admin" | "member" | "viewer" | null;
+                                name: string;
+                                permissions: ("profiles.view" | "profiles.create" | "profiles.edit" | "profiles.open" | "profiles.delete" | "cookies.import" | "cookies.export" | "profiles.export" | "proxies.view" | "proxies.bind" | "proxies.edit" | "team.manage" | "activity.view")[];
+                            };
                             /** @enum {string} */
                             plan: "free" | "studio" | "company";
                             /** @enum {string} */
@@ -1525,6 +1541,8 @@ export interface paths {
                             groups: {
                                 id: string;
                                 name: string;
+                                /** @enum {string} */
+                                color: "red" | "blue" | "green" | "amber" | "purple" | "teal" | "gray";
                                 profiles: number;
                             }[];
                         };
@@ -1546,6 +1564,8 @@ export interface paths {
                 content: {
                     "application/json": {
                         name: string;
+                        /** @enum {string} */
+                        color?: "red" | "blue" | "green" | "amber" | "purple" | "teal" | "gray";
                     };
                 };
             };
@@ -1559,6 +1579,8 @@ export interface paths {
                         "application/json": {
                             id: string;
                             name: string;
+                            /** @enum {string} */
+                            color: "red" | "blue" | "green" | "amber" | "purple" | "teal" | "gray";
                             profiles: number;
                         };
                     };
@@ -1617,7 +1639,9 @@ export interface paths {
             requestBody: {
                 content: {
                     "application/json": {
-                        name: string;
+                        name?: string;
+                        /** @enum {string} */
+                        color?: "red" | "blue" | "green" | "amber" | "purple" | "teal" | "gray";
                     };
                 };
             };
@@ -1631,6 +1655,8 @@ export interface paths {
                         "application/json": {
                             id: string;
                             name: string;
+                            /** @enum {string} */
+                            color: "red" | "blue" | "green" | "amber" | "purple" | "teal" | "gray";
                         };
                     };
                 };
@@ -1684,22 +1710,32 @@ export interface paths {
                                     kind: "chromium";
                                     seed: number;
                                     hardwareConcurrency: number;
+                                    /** @enum {string} */
+                                    canvas?: "noise" | "real";
+                                    /** @enum {string} */
+                                    webgl?: "spoof" | "real";
                                 } | {
                                     /** @enum {string} */
                                     kind: "firefox";
                                     config: {
                                         [key: string]: unknown;
                                     };
+                                    /** @enum {string} */
+                                    webrtc?: "replace" | "block";
                                 };
                                 proxyId: string | null;
                                 timezoneOverride: string | null;
                                 localeOverride: string | null;
                                 notes: string | null;
+                                /** @enum {string} */
+                                searchEngine: "none" | "google" | "bing" | "baidu" | "duckduckgo" | "yahoo" | "yandex";
+                                restoreTabs: boolean;
                                 lastOpenedAt: string | null;
                                 lastOpenedBy: string | null;
                                 createdAt: string;
                                 updatedAt: string;
                                 deletedAt: string | null;
+                                deletedBy: string | null;
                                 version: number;
                                 /** @enum {string} */
                                 syncMode: "cloud" | "local";
@@ -1719,6 +1755,47 @@ export interface paths {
                                     since: string;
                                     self: boolean;
                                 } | null;
+                                lastExit: {
+                                    ip: string;
+                                    geo: {
+                                        country: string;
+                                        countryName: string;
+                                        region: string | null;
+                                        city: string | null;
+                                        lat: number;
+                                        lon: number;
+                                        timezone: string;
+                                        locale: string;
+                                    } | null;
+                                    at: string;
+                                } | null;
+                                prevExit: {
+                                    ip: string;
+                                    geo: {
+                                        country: string;
+                                        countryName: string;
+                                        region: string | null;
+                                        city: string | null;
+                                        lat: number;
+                                        lon: number;
+                                        timezone: string;
+                                        locale: string;
+                                    } | null;
+                                    at: string;
+                                } | null;
+                                report: {
+                                    at: string;
+                                    checks: {
+                                        /** @enum {string} */
+                                        id: "webrtc" | "timezone" | "language" | "ua" | "canvas" | "webgl";
+                                        ok: boolean;
+                                        seen: string;
+                                        want: string | null;
+                                    }[];
+                                    canvas: string | null;
+                                    webgl: string | null;
+                                } | null;
+                                starred: boolean;
                             }[];
                         };
                     };
@@ -1757,12 +1834,18 @@ export interface paths {
                             kind: "chromium";
                             seed: number;
                             hardwareConcurrency: number;
+                            /** @enum {string} */
+                            canvas?: "noise" | "real";
+                            /** @enum {string} */
+                            webgl?: "spoof" | "real";
                         } | {
                             /** @enum {string} */
                             kind: "firefox";
                             config: {
                                 [key: string]: unknown;
                             };
+                            /** @enum {string} */
+                            webrtc?: "replace" | "block";
                         };
                         /** Format: uuid */
                         proxyId?: string | null;
@@ -1772,6 +1855,9 @@ export interface paths {
                         /** @enum {string} */
                         syncMode?: "cloud" | "local";
                         extensionIds?: string[];
+                        /** @enum {string} */
+                        searchEngine?: "none" | "google" | "bing" | "baidu" | "duckduckgo" | "yahoo" | "yandex";
+                        restoreTabs?: boolean;
                     };
                 };
             };
@@ -1801,22 +1887,32 @@ export interface paths {
                                 kind: "chromium";
                                 seed: number;
                                 hardwareConcurrency: number;
+                                /** @enum {string} */
+                                canvas?: "noise" | "real";
+                                /** @enum {string} */
+                                webgl?: "spoof" | "real";
                             } | {
                                 /** @enum {string} */
                                 kind: "firefox";
                                 config: {
                                     [key: string]: unknown;
                                 };
+                                /** @enum {string} */
+                                webrtc?: "replace" | "block";
                             };
                             proxyId: string | null;
                             timezoneOverride: string | null;
                             localeOverride: string | null;
                             notes: string | null;
+                            /** @enum {string} */
+                            searchEngine: "none" | "google" | "bing" | "baidu" | "duckduckgo" | "yahoo" | "yandex";
+                            restoreTabs: boolean;
                             lastOpenedAt: string | null;
                             lastOpenedBy: string | null;
                             createdAt: string;
                             updatedAt: string;
                             deletedAt: string | null;
+                            deletedBy: string | null;
                             version: number;
                             /** @enum {string} */
                             syncMode: "cloud" | "local";
@@ -1836,6 +1932,47 @@ export interface paths {
                                 since: string;
                                 self: boolean;
                             } | null;
+                            lastExit: {
+                                ip: string;
+                                geo: {
+                                    country: string;
+                                    countryName: string;
+                                    region: string | null;
+                                    city: string | null;
+                                    lat: number;
+                                    lon: number;
+                                    timezone: string;
+                                    locale: string;
+                                } | null;
+                                at: string;
+                            } | null;
+                            prevExit: {
+                                ip: string;
+                                geo: {
+                                    country: string;
+                                    countryName: string;
+                                    region: string | null;
+                                    city: string | null;
+                                    lat: number;
+                                    lon: number;
+                                    timezone: string;
+                                    locale: string;
+                                } | null;
+                                at: string;
+                            } | null;
+                            report: {
+                                at: string;
+                                checks: {
+                                    /** @enum {string} */
+                                    id: "webrtc" | "timezone" | "language" | "ua" | "canvas" | "webgl";
+                                    ok: boolean;
+                                    seen: string;
+                                    want: string | null;
+                                }[];
+                                canvas: string | null;
+                                webgl: string | null;
+                            } | null;
+                            starred: boolean;
                         };
                     };
                 };
@@ -1888,12 +2025,18 @@ export interface paths {
                                 kind: "chromium";
                                 seed: number;
                                 hardwareConcurrency: number;
+                                /** @enum {string} */
+                                canvas?: "noise" | "real";
+                                /** @enum {string} */
+                                webgl?: "spoof" | "real";
                             } | {
                                 /** @enum {string} */
                                 kind: "firefox";
                                 config: {
                                     [key: string]: unknown;
                                 };
+                                /** @enum {string} */
+                                webrtc?: "replace" | "block";
                             };
                             /** Format: uuid */
                             proxyId?: string | null;
@@ -1903,6 +2046,9 @@ export interface paths {
                             /** @enum {string} */
                             syncMode?: "cloud" | "local";
                             extensionIds?: string[];
+                            /** @enum {string} */
+                            searchEngine?: "none" | "google" | "bing" | "baidu" | "duckduckgo" | "yahoo" | "yandex";
+                            restoreTabs?: boolean;
                         }[];
                     };
                 };
@@ -1934,22 +2080,32 @@ export interface paths {
                                     kind: "chromium";
                                     seed: number;
                                     hardwareConcurrency: number;
+                                    /** @enum {string} */
+                                    canvas?: "noise" | "real";
+                                    /** @enum {string} */
+                                    webgl?: "spoof" | "real";
                                 } | {
                                     /** @enum {string} */
                                     kind: "firefox";
                                     config: {
                                         [key: string]: unknown;
                                     };
+                                    /** @enum {string} */
+                                    webrtc?: "replace" | "block";
                                 };
                                 proxyId: string | null;
                                 timezoneOverride: string | null;
                                 localeOverride: string | null;
                                 notes: string | null;
+                                /** @enum {string} */
+                                searchEngine: "none" | "google" | "bing" | "baidu" | "duckduckgo" | "yahoo" | "yandex";
+                                restoreTabs: boolean;
                                 lastOpenedAt: string | null;
                                 lastOpenedBy: string | null;
                                 createdAt: string;
                                 updatedAt: string;
                                 deletedAt: string | null;
+                                deletedBy: string | null;
                                 version: number;
                                 /** @enum {string} */
                                 syncMode: "cloud" | "local";
@@ -1969,6 +2125,47 @@ export interface paths {
                                     since: string;
                                     self: boolean;
                                 } | null;
+                                lastExit: {
+                                    ip: string;
+                                    geo: {
+                                        country: string;
+                                        countryName: string;
+                                        region: string | null;
+                                        city: string | null;
+                                        lat: number;
+                                        lon: number;
+                                        timezone: string;
+                                        locale: string;
+                                    } | null;
+                                    at: string;
+                                } | null;
+                                prevExit: {
+                                    ip: string;
+                                    geo: {
+                                        country: string;
+                                        countryName: string;
+                                        region: string | null;
+                                        city: string | null;
+                                        lat: number;
+                                        lon: number;
+                                        timezone: string;
+                                        locale: string;
+                                    } | null;
+                                    at: string;
+                                } | null;
+                                report: {
+                                    at: string;
+                                    checks: {
+                                        /** @enum {string} */
+                                        id: "webrtc" | "timezone" | "language" | "ua" | "canvas" | "webgl";
+                                        ok: boolean;
+                                        seen: string;
+                                        want: string | null;
+                                    }[];
+                                    canvas: string | null;
+                                    webgl: string | null;
+                                } | null;
+                                starred: boolean;
                             }[];
                         };
                     };
@@ -2025,12 +2222,18 @@ export interface paths {
                             kind: "chromium";
                             seed: number;
                             hardwareConcurrency: number;
+                            /** @enum {string} */
+                            canvas?: "noise" | "real";
+                            /** @enum {string} */
+                            webgl?: "spoof" | "real";
                         } | {
                             /** @enum {string} */
                             kind: "firefox";
                             config: {
                                 [key: string]: unknown;
                             };
+                            /** @enum {string} */
+                            webrtc?: "replace" | "block";
                         };
                         timezoneOverride?: string | null;
                         localeOverride?: string | null;
@@ -2038,6 +2241,9 @@ export interface paths {
                         /** @enum {string} */
                         syncMode?: "cloud" | "local";
                         extensionIds?: string[];
+                        /** @enum {string} */
+                        searchEngine?: "none" | "google" | "bing" | "baidu" | "duckduckgo" | "yahoo" | "yandex";
+                        restoreTabs?: boolean;
                     };
                 };
             };
@@ -2067,22 +2273,32 @@ export interface paths {
                                 kind: "chromium";
                                 seed: number;
                                 hardwareConcurrency: number;
+                                /** @enum {string} */
+                                canvas?: "noise" | "real";
+                                /** @enum {string} */
+                                webgl?: "spoof" | "real";
                             } | {
                                 /** @enum {string} */
                                 kind: "firefox";
                                 config: {
                                     [key: string]: unknown;
                                 };
+                                /** @enum {string} */
+                                webrtc?: "replace" | "block";
                             };
                             proxyId: string | null;
                             timezoneOverride: string | null;
                             localeOverride: string | null;
                             notes: string | null;
+                            /** @enum {string} */
+                            searchEngine: "none" | "google" | "bing" | "baidu" | "duckduckgo" | "yahoo" | "yandex";
+                            restoreTabs: boolean;
                             lastOpenedAt: string | null;
                             lastOpenedBy: string | null;
                             createdAt: string;
                             updatedAt: string;
                             deletedAt: string | null;
+                            deletedBy: string | null;
                             version: number;
                             /** @enum {string} */
                             syncMode: "cloud" | "local";
@@ -2102,6 +2318,47 @@ export interface paths {
                                 since: string;
                                 self: boolean;
                             } | null;
+                            lastExit: {
+                                ip: string;
+                                geo: {
+                                    country: string;
+                                    countryName: string;
+                                    region: string | null;
+                                    city: string | null;
+                                    lat: number;
+                                    lon: number;
+                                    timezone: string;
+                                    locale: string;
+                                } | null;
+                                at: string;
+                            } | null;
+                            prevExit: {
+                                ip: string;
+                                geo: {
+                                    country: string;
+                                    countryName: string;
+                                    region: string | null;
+                                    city: string | null;
+                                    lat: number;
+                                    lon: number;
+                                    timezone: string;
+                                    locale: string;
+                                } | null;
+                                at: string;
+                            } | null;
+                            report: {
+                                at: string;
+                                checks: {
+                                    /** @enum {string} */
+                                    id: "webrtc" | "timezone" | "language" | "ua" | "canvas" | "webgl";
+                                    ok: boolean;
+                                    seen: string;
+                                    want: string | null;
+                                }[];
+                                canvas: string | null;
+                                webgl: string | null;
+                            } | null;
+                            starred: boolean;
                         };
                     };
                 };
@@ -2132,7 +2389,7 @@ export interface paths {
                     "application/json": {
                         ids: string[];
                         /** @enum {string} */
-                        action: "move" | "tag" | "untag" | "set-proxy" | "assign" | "set-department" | "add-extension" | "remove-extension" | "trash" | "restore" | "purge";
+                        action: "move" | "tag" | "untag" | "set-proxy" | "assign" | "set-department" | "add-extension" | "remove-extension" | "set-kernel" | "set-browser" | "trash" | "restore" | "purge";
                         /** Format: uuid */
                         groupId?: string | null;
                         tag?: string;
@@ -2144,6 +2401,12 @@ export interface paths {
                         departmentId?: string | null;
                         /** Format: uuid */
                         extensionId?: string;
+                        /** @enum {string} */
+                        kernel?: "chromium" | "firefox";
+                        kernelVersion?: string;
+                        /** @enum {string} */
+                        searchEngine?: "none" | "google" | "bing" | "baidu" | "duckduckgo" | "yahoo" | "yandex";
+                        restoreTabs?: boolean;
                     };
                 };
             };
@@ -2162,6 +2425,168 @@ export interface paths {
             };
         };
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/profiles/{id}/exit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        ip: string;
+                        geo: {
+                            country: string;
+                            countryName: string;
+                            region: string | null;
+                            city: string | null;
+                            lat: number;
+                            lon: number;
+                            timezone: string;
+                            locale: string;
+                        } | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": null;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/profiles/{id}/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        checks: {
+                            /** @enum {string} */
+                            id: "webrtc" | "timezone" | "language" | "ua" | "canvas" | "webgl";
+                            ok: boolean;
+                            seen: string;
+                            want: string | null;
+                        }[];
+                        canvas: string | null;
+                        webgl: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": null;
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/profiles/{id}/star": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": null;
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": null;
+                    };
+                };
+            };
+        };
         options?: never;
         head?: never;
         patch?: never;
@@ -2211,22 +2636,32 @@ export interface paths {
                                     kind: "chromium";
                                     seed: number;
                                     hardwareConcurrency: number;
+                                    /** @enum {string} */
+                                    canvas?: "noise" | "real";
+                                    /** @enum {string} */
+                                    webgl?: "spoof" | "real";
                                 } | {
                                     /** @enum {string} */
                                     kind: "firefox";
                                     config: {
                                         [key: string]: unknown;
                                     };
+                                    /** @enum {string} */
+                                    webrtc?: "replace" | "block";
                                 };
                                 proxyId: string | null;
                                 timezoneOverride: string | null;
                                 localeOverride: string | null;
                                 notes: string | null;
+                                /** @enum {string} */
+                                searchEngine: "none" | "google" | "bing" | "baidu" | "duckduckgo" | "yahoo" | "yandex";
+                                restoreTabs: boolean;
                                 lastOpenedAt: string | null;
                                 lastOpenedBy: string | null;
                                 createdAt: string;
                                 updatedAt: string;
                                 deletedAt: string | null;
+                                deletedBy: string | null;
                                 version: number;
                                 /** @enum {string} */
                                 syncMode: "cloud" | "local";
@@ -2246,6 +2681,47 @@ export interface paths {
                                     since: string;
                                     self: boolean;
                                 } | null;
+                                lastExit: {
+                                    ip: string;
+                                    geo: {
+                                        country: string;
+                                        countryName: string;
+                                        region: string | null;
+                                        city: string | null;
+                                        lat: number;
+                                        lon: number;
+                                        timezone: string;
+                                        locale: string;
+                                    } | null;
+                                    at: string;
+                                } | null;
+                                prevExit: {
+                                    ip: string;
+                                    geo: {
+                                        country: string;
+                                        countryName: string;
+                                        region: string | null;
+                                        city: string | null;
+                                        lat: number;
+                                        lon: number;
+                                        timezone: string;
+                                        locale: string;
+                                    } | null;
+                                    at: string;
+                                } | null;
+                                report: {
+                                    at: string;
+                                    checks: {
+                                        /** @enum {string} */
+                                        id: "webrtc" | "timezone" | "language" | "ua" | "canvas" | "webgl";
+                                        ok: boolean;
+                                        seen: string;
+                                        want: string | null;
+                                    }[];
+                                    canvas: string | null;
+                                    webgl: string | null;
+                                } | null;
+                                starred: boolean;
                             };
                             proxy: {
                                 id: string;
@@ -2279,6 +2755,7 @@ export interface paths {
                                 /** @enum {string} */
                                 source: "upload" | "store";
                                 storeId: string | null;
+                                icon: string | null;
                                 createdAt: string;
                                 updatedAt: string;
                                 profiles: number;
@@ -2348,6 +2825,25 @@ export interface paths {
                                     error: string | null;
                                     checkedAt: string;
                                 } | null;
+                                history: {
+                                    at: string;
+                                    ok: boolean;
+                                    ms: number | null;
+                                }[];
+                                lastExit: {
+                                    ip: string | null;
+                                    geo: {
+                                        country: string;
+                                        countryName: string;
+                                        region: string | null;
+                                        city: string | null;
+                                        lat: number;
+                                        lon: number;
+                                        timezone: string;
+                                        locale: string;
+                                    } | null;
+                                    at: string;
+                                } | null;
                                 profiles: number;
                                 createdAt: string;
                                 updatedAt: string;
@@ -2415,6 +2911,25 @@ export interface paths {
                                 } | null;
                                 error: string | null;
                                 checkedAt: string;
+                            } | null;
+                            history: {
+                                at: string;
+                                ok: boolean;
+                                ms: number | null;
+                            }[];
+                            lastExit: {
+                                ip: string | null;
+                                geo: {
+                                    country: string;
+                                    countryName: string;
+                                    region: string | null;
+                                    city: string | null;
+                                    lat: number;
+                                    lon: number;
+                                    timezone: string;
+                                    locale: string;
+                                } | null;
+                                at: string;
                             } | null;
                             profiles: number;
                             createdAt: string;
@@ -2494,6 +3009,25 @@ export interface paths {
                                     } | null;
                                     error: string | null;
                                     checkedAt: string;
+                                } | null;
+                                history: {
+                                    at: string;
+                                    ok: boolean;
+                                    ms: number | null;
+                                }[];
+                                lastExit: {
+                                    ip: string | null;
+                                    geo: {
+                                        country: string;
+                                        countryName: string;
+                                        region: string | null;
+                                        city: string | null;
+                                        lat: number;
+                                        lon: number;
+                                        timezone: string;
+                                        locale: string;
+                                    } | null;
+                                    at: string;
                                 } | null;
                                 profiles: number;
                                 createdAt: string;
@@ -2607,6 +3141,25 @@ export interface paths {
                                 error: string | null;
                                 checkedAt: string;
                             } | null;
+                            history: {
+                                at: string;
+                                ok: boolean;
+                                ms: number | null;
+                            }[];
+                            lastExit: {
+                                ip: string | null;
+                                geo: {
+                                    country: string;
+                                    countryName: string;
+                                    region: string | null;
+                                    city: string | null;
+                                    lat: number;
+                                    lon: number;
+                                    timezone: string;
+                                    locale: string;
+                                } | null;
+                                at: string;
+                            } | null;
                             profiles: number;
                             createdAt: string;
                             updatedAt: string;
@@ -2688,6 +3241,25 @@ export interface paths {
                                 } | null;
                                 error: string | null;
                                 checkedAt: string;
+                            } | null;
+                            history: {
+                                at: string;
+                                ok: boolean;
+                                ms: number | null;
+                            }[];
+                            lastExit: {
+                                ip: string | null;
+                                geo: {
+                                    country: string;
+                                    countryName: string;
+                                    region: string | null;
+                                    city: string | null;
+                                    lat: number;
+                                    lon: number;
+                                    timezone: string;
+                                    locale: string;
+                                } | null;
+                                at: string;
                             } | null;
                             profiles: number;
                             createdAt: string;
@@ -3152,8 +3724,12 @@ export interface paths {
                             members: {
                                 userId: string;
                                 email: string;
-                                /** @enum {string} */
-                                role: "owner" | "admin" | "member";
+                                role: {
+                                    id: string;
+                                    /** @enum {string|null} */
+                                    key: "owner" | "admin" | "member" | "viewer" | null;
+                                    name: string;
+                                };
                                 joinedAt: string;
                                 departmentIds: string[];
                                 profiles: number;
@@ -3221,8 +3797,8 @@ export interface paths {
             requestBody: {
                 content: {
                     "application/json": {
-                        /** @enum {string} */
-                        role: "admin" | "member";
+                        /** Format: uuid */
+                        roleId: string;
                     };
                 };
             };
@@ -3305,8 +3881,12 @@ export interface paths {
                             invitations: {
                                 id: string;
                                 email: string;
-                                /** @enum {string} */
-                                role: "admin" | "member";
+                                role: {
+                                    id: string;
+                                    /** @enum {string|null} */
+                                    key: "owner" | "admin" | "member" | "viewer" | null;
+                                    name: string;
+                                };
                                 departmentIds: string[];
                                 invitedBy: string | null;
                                 createdAt: string;
@@ -3332,10 +3912,12 @@ export interface paths {
                     "application/json": {
                         /** Format: email */
                         email: string;
-                        /** @enum {string} */
-                        role: "admin" | "member";
+                        /** Format: uuid */
+                        roleId: string;
                         /** @default [] */
                         departmentIds?: string[];
+                        /** @default true */
+                        notify?: boolean;
                     };
                 };
             };
@@ -3350,8 +3932,12 @@ export interface paths {
                             invitation: {
                                 id: string;
                                 email: string;
-                                /** @enum {string} */
-                                role: "admin" | "member";
+                                role: {
+                                    id: string;
+                                    /** @enum {string|null} */
+                                    key: "owner" | "admin" | "member" | "viewer" | null;
+                                    name: string;
+                                };
                                 departmentIds: string[];
                                 invitedBy: string | null;
                                 createdAt: string;
@@ -3436,9 +4022,14 @@ export interface paths {
                             workspaceName: string;
                             inviter: string | null;
                             email: string;
-                            /** @enum {string} */
-                            role: "admin" | "member";
+                            role: {
+                                id: string;
+                                /** @enum {string|null} */
+                                key: "owner" | "admin" | "member" | "viewer" | null;
+                                name: string;
+                            };
                             expired: boolean;
+                            expiresAt: string;
                         };
                     };
                 };
@@ -3480,8 +4071,12 @@ export interface paths {
                                 workspaceId: string;
                                 workspaceName: string;
                                 inviter: string | null;
-                                /** @enum {string} */
-                                role: "admin" | "member";
+                                role: {
+                                    id: string;
+                                    /** @enum {string|null} */
+                                    key: "owner" | "admin" | "member" | "viewer" | null;
+                                    name: string;
+                                };
                                 expiresAt: string;
                             }[];
                         };
@@ -3526,8 +4121,13 @@ export interface paths {
                         "application/json": {
                             id: string;
                             name: string;
-                            /** @enum {string} */
-                            role: "owner" | "admin" | "member";
+                            role: {
+                                id: string;
+                                /** @enum {string|null} */
+                                key: "owner" | "admin" | "member" | "viewer" | null;
+                                name: string;
+                                permissions: ("profiles.view" | "profiles.create" | "profiles.edit" | "profiles.open" | "profiles.delete" | "cookies.import" | "cookies.export" | "profiles.export" | "proxies.view" | "proxies.bind" | "proxies.edit" | "team.manage" | "activity.view")[];
+                            };
                             /** @enum {string} */
                             plan: "free" | "studio" | "company";
                             /** @enum {string} */
@@ -3578,6 +4178,159 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/workspaces/{id}/roles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            roles: {
+                                id: string;
+                                /** @enum {string|null} */
+                                key: "owner" | "admin" | "member" | "viewer" | null;
+                                name: string;
+                                permissions: ("profiles.view" | "profiles.create" | "profiles.edit" | "profiles.open" | "profiles.delete" | "cookies.import" | "cookies.export" | "profiles.export" | "proxies.view" | "proxies.bind" | "proxies.edit" | "team.manage" | "activity.view")[];
+                                members: number;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        name: string;
+                        permissions: ("profiles.view" | "profiles.create" | "profiles.edit" | "profiles.open" | "profiles.delete" | "cookies.import" | "cookies.export" | "profiles.export" | "proxies.view" | "proxies.bind" | "proxies.edit" | "team.manage" | "activity.view")[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            /** @enum {string|null} */
+                            key: "owner" | "admin" | "member" | "viewer" | null;
+                            name: string;
+                            permissions: ("profiles.view" | "profiles.create" | "profiles.edit" | "profiles.open" | "profiles.delete" | "cookies.import" | "cookies.export" | "profiles.export" | "proxies.view" | "proxies.bind" | "proxies.edit" | "team.manage" | "activity.view")[];
+                            members: number;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/roles/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": null;
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        name?: string;
+                        permissions?: ("profiles.view" | "profiles.create" | "profiles.edit" | "profiles.open" | "profiles.delete" | "cookies.import" | "cookies.export" | "profiles.export" | "proxies.view" | "proxies.bind" | "proxies.edit" | "team.manage" | "activity.view")[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            /** @enum {string|null} */
+                            key: "owner" | "admin" | "member" | "viewer" | null;
+                            name: string;
+                            permissions: ("profiles.view" | "profiles.create" | "profiles.edit" | "profiles.open" | "profiles.delete" | "cookies.import" | "cookies.export" | "profiles.export" | "proxies.view" | "proxies.bind" | "proxies.edit" | "team.manage" | "activity.view")[];
+                            members: number;
+                        };
+                    };
+                };
+            };
+        };
         trace?: never;
     };
     "/workspaces/{id}/departments": {
@@ -3758,7 +4511,7 @@ export interface paths {
                                 actor: string | null;
                                 deviceName: string | null;
                                 /** @enum {string} */
-                                action: "profile.create" | "profile.update" | "profile.move" | "profile.tag" | "profile.untag" | "profile.set-proxy" | "profile.assign" | "profile.set-department" | "profile.trash" | "profile.restore" | "profile.purge" | "profile.open" | "profile.close" | "profile.takeover" | "proxy.create" | "proxy.import" | "proxy.update" | "proxy.delete" | "group.create" | "group.rename" | "group.delete" | "member.invite" | "member.join" | "member.role" | "member.remove" | "member.leave" | "invitation.withdraw" | "department.create" | "department.update" | "department.delete" | "cookies.export" | "cookies.import" | "workspace.export" | "workspace.import" | "flow.create" | "flow.update" | "flow.delete" | "task.create" | "task.update" | "task.delete" | "run.start" | "run.finish" | "extension.add" | "extension.update" | "extension.delete" | "profile.add-extension" | "profile.remove-extension";
+                                action: "profile.create" | "profile.update" | "profile.move" | "profile.tag" | "profile.untag" | "profile.set-proxy" | "profile.assign" | "profile.set-department" | "profile.trash" | "profile.restore" | "profile.purge" | "profile.open" | "profile.close" | "profile.takeover" | "proxy.create" | "proxy.import" | "proxy.update" | "proxy.delete" | "group.create" | "group.rename" | "group.delete" | "member.invite" | "member.join" | "member.role" | "member.remove" | "member.leave" | "invitation.withdraw" | "role.create" | "role.update" | "role.delete" | "department.create" | "department.update" | "department.delete" | "cookies.export" | "cookies.import" | "workspace.export" | "workspace.import" | "flow.create" | "flow.update" | "flow.delete" | "task.create" | "task.update" | "task.delete" | "run.start" | "run.finish" | "extension.add" | "extension.update" | "extension.delete" | "profile.add-extension" | "profile.remove-extension" | "profile.set-kernel" | "profile.set-browser";
                                 profile: {
                                     id: string | null;
                                     name: string;
@@ -3872,18 +4625,27 @@ export interface paths {
                                     kind: "chromium";
                                     seed: number;
                                     hardwareConcurrency: number;
+                                    /** @enum {string} */
+                                    canvas?: "noise" | "real";
+                                    /** @enum {string} */
+                                    webgl?: "spoof" | "real";
                                 } | {
                                     /** @enum {string} */
                                     kind: "firefox";
                                     config: {
                                         [key: string]: unknown;
                                     };
+                                    /** @enum {string} */
+                                    webrtc?: "replace" | "block";
                                 };
                                 timezoneOverride?: string | null;
                                 localeOverride?: string | null;
                                 notes?: string | null;
                                 /** @enum {string} */
                                 syncMode?: "cloud" | "local";
+                                /** @enum {string} */
+                                searchEngine?: "none" | "google" | "bing" | "baidu" | "duckduckgo" | "yahoo" | "yandex";
+                                restoreTabs?: boolean;
                                 ref: string;
                                 group: string | null;
                                 proxyRef: string | null;
@@ -3962,18 +4724,27 @@ export interface paths {
                                 kind: "chromium";
                                 seed: number;
                                 hardwareConcurrency: number;
+                                /** @enum {string} */
+                                canvas?: "noise" | "real";
+                                /** @enum {string} */
+                                webgl?: "spoof" | "real";
                             } | {
                                 /** @enum {string} */
                                 kind: "firefox";
                                 config: {
                                     [key: string]: unknown;
                                 };
+                                /** @enum {string} */
+                                webrtc?: "replace" | "block";
                             };
                             timezoneOverride?: string | null;
                             localeOverride?: string | null;
                             notes?: string | null;
                             /** @enum {string} */
                             syncMode?: "cloud" | "local";
+                            /** @enum {string} */
+                            searchEngine?: "none" | "google" | "bing" | "baidu" | "duckduckgo" | "yahoo" | "yandex";
+                            restoreTabs?: boolean;
                             ref: string;
                             group: string | null;
                             proxyRef: string | null;
@@ -5049,6 +5820,7 @@ export interface paths {
                                 /** @enum {string} */
                                 source: "upload" | "store";
                                 storeId: string | null;
+                                icon: string | null;
                                 createdAt: string;
                                 updatedAt: string;
                                 profiles: number;
@@ -5094,6 +5866,7 @@ export interface paths {
                             /** @enum {string} */
                             source: "upload" | "store";
                             storeId: string | null;
+                            icon: string | null;
                             createdAt: string;
                             updatedAt: string;
                             profiles: number;
@@ -5169,6 +5942,7 @@ export interface paths {
                             /** @enum {string} */
                             source: "upload" | "store";
                             storeId: string | null;
+                            icon: string | null;
                             createdAt: string;
                             updatedAt: string;
                             profiles: number;
@@ -5256,6 +6030,298 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/kernels": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            kernels: {
+                                id: string;
+                                /** @enum {string} */
+                                kind: "chromium" | "firefox";
+                                version: string;
+                                /** @enum {string} */
+                                platform: "win32-x64" | "darwin-arm64" | "darwin-x64" | "linux-x64";
+                                /** @enum {string} */
+                                archive: "zip" | "tar.xz" | "dmg";
+                                size: number;
+                                sha256: string;
+                                recommended: boolean;
+                                /** @enum {string} */
+                                source: "upstream" | "folio";
+                                ready: boolean;
+                                createdAt: string;
+                                recommendedAt: string | null;
+                                note: string | null;
+                                profiles: number | null;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        kind: "chromium" | "firefox";
+                        /** @enum {string} */
+                        platform: "win32-x64" | "darwin-arm64" | "darwin-x64" | "linux-x64";
+                        /** @enum {string} */
+                        archive: "zip" | "tar.xz" | "dmg";
+                        version: string;
+                        size: number;
+                        sha256: string;
+                        note?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            kernel: {
+                                id: string;
+                                /** @enum {string} */
+                                kind: "chromium" | "firefox";
+                                version: string;
+                                /** @enum {string} */
+                                platform: "win32-x64" | "darwin-arm64" | "darwin-x64" | "linux-x64";
+                                /** @enum {string} */
+                                archive: "zip" | "tar.xz" | "dmg";
+                                size: number;
+                                sha256: string;
+                                recommended: boolean;
+                                /** @enum {string} */
+                                source: "upstream" | "folio";
+                                ready: boolean;
+                                createdAt: string;
+                                recommendedAt: string | null;
+                                note: string | null;
+                                profiles: number | null;
+                            };
+                            uploadUrl: string;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/kernels/{id}/download": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            url: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/kernels/{id}/complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            /** @enum {string} */
+                            kind: "chromium" | "firefox";
+                            version: string;
+                            /** @enum {string} */
+                            platform: "win32-x64" | "darwin-arm64" | "darwin-x64" | "linux-x64";
+                            /** @enum {string} */
+                            archive: "zip" | "tar.xz" | "dmg";
+                            size: number;
+                            sha256: string;
+                            recommended: boolean;
+                            /** @enum {string} */
+                            source: "upstream" | "folio";
+                            ready: boolean;
+                            createdAt: string;
+                            recommendedAt: string | null;
+                            note: string | null;
+                            profiles: number | null;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/kernels/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {boolean} */
+                        recommended: true;
+                        note?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            kernels: {
+                                id: string;
+                                /** @enum {string} */
+                                kind: "chromium" | "firefox";
+                                version: string;
+                                /** @enum {string} */
+                                platform: "win32-x64" | "darwin-arm64" | "darwin-x64" | "linux-x64";
+                                /** @enum {string} */
+                                archive: "zip" | "tar.xz" | "dmg";
+                                size: number;
+                                sha256: string;
+                                recommended: boolean;
+                                /** @enum {string} */
+                                source: "upstream" | "folio";
+                                ready: boolean;
+                                createdAt: string;
+                                recommendedAt: string | null;
+                                note: string | null;
+                                profiles: number | null;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
         trace?: never;
     };
 }

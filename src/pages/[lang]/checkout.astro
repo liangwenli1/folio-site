@@ -90,7 +90,7 @@ const c = d.checkout;
   </section>
 </Base>
 <script>
-  import { api, type CheckoutStarted, type Paid, type Plans, type Quote, type Workspace } from '../../lib/api';
+  import { api, canManage, type CheckoutStarted, type Paid, type Plans, type Quote, type Workspace } from '../../lib/api';
   import { lineLabel, money } from '../../lib/format';
   import { $, d, here, lang, param, requireMe, showError, to, withNext } from '../../scripts/session';
 
@@ -98,7 +98,7 @@ const c = d.checkout;
   const c = d.checkout;
   const me = await requireMe();
   if (!me.user.emailVerified) location.replace(withNext(to('verify/'), here()));
-  const managed = me.workspaces.filter(w => w.role !== 'member');
+  const managed = me.workspaces.filter(w => canManage(w.role));
   if (!managed.length){ $('no-manage').hidden = false; throw new Error('no managed workspace'); }
 
   const plans = await api<Plans>('GET', '/plans');
