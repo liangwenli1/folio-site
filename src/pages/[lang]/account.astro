@@ -98,7 +98,7 @@ const a = d.account;
 
   const a = d.account;
   // The status labels' icons (components/Icon.astro draws the same paths at build time).
-  const icon = (path: string) => `<svg class="i" width="12" height="12" viewBox="0 0 16 16" aria-hidden="true"><path d="${path}"/></svg>`;
+  const icon = (path: string) => `<svg class="i" width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="${path}"/></svg>`;
   const CHECK = icon(ICONS.check), ALERT = icon(ICONS.alert), UNDO = icon(ICONS.back);
   let me: Me, ws: Workspace;
   const fail = (e: unknown) => showError($('err'), e);
