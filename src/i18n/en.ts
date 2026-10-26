@@ -6,13 +6,12 @@ export const en = {
     title: 'Folio Browser',
     description: 'A fingerprint browser for teams running multiple stores, ad accounts and social accounts: a separate browser profile for each account, with configurable fingerprints, isolated cookies and a dedicated proxy IP.'
   },
-  nav: { features: 'Features', solutions: 'Solutions', pricing: 'Pricing', download: 'Download', help: 'Help center', login: 'Log in', start: 'Try free', account: 'Account', menu: 'Menu', crumbs: 'Breadcrumb' },
+  nav: { features: 'Features', solutions: 'Solutions', pricing: 'Pricing', download: 'Download', help: 'Help center', site: 'Back to the website', login: 'Log in', start: 'Try free', account: 'Account', menu: 'Menu', crumbs: 'Breadcrumb' },
   plans: { free: 'Free', studio: 'Studio', company: 'Company' },
   periods: { monthly: 'monthly', yearly: 'yearly' },
 
   demo: {
-    label: 'Workbench walkthrough: checking proxies, opening a browser profile, restoring tabs, a health check, installing an extension, batch opening, window sync and teamwork.', pause: 'Pause walkthrough', play: 'Play walkthrough',
-    sample: { name: 'UK-Shop-01', place: 'London · Firefox 156', status: 'Running' }
+    label: 'Workbench walkthrough: checking proxies, opening a browser profile, restoring tabs, a health check, installing an extension, batch opening, window sync and teamwork.', pause: 'Pause walkthrough', play: 'Play walkthrough'
   },
 
   home: {
@@ -237,20 +236,29 @@ export const en = {
   footer: { product: 'Product', resources: 'Resources', company: 'Company', api: 'API reference', changelog: 'Changelog', contact: 'Contact us', privacy: 'Privacy', terms: 'Terms', tagline: 'Separate profiles, managed as one', about: 'Folio manages browser profiles, proxies and team access in one place.', rights: '© 2026 Folio' },
 
   auth: {
+    panel: {
+      title: 'Separate profiles, managed as one', lead: 'A separate browser profile for each business, all managed in one workspace, with accounts, data and actions kept apart.',
+      points: [['Separate browser profiles', 'Each business runs on its own'], ['Managed in one place', 'Shared settings, quick switching'], ['Team collaboration', 'Access by role and group']] as [string, string][]
+    },
+    loginTitle: 'Log in to Folio', loginLead: 'Log in with your account to get back to your browser profiles.',
     signupTitle: 'Create a Folio account', signupLead: 'Try 5 browser profiles free. No card required.',
-    loginTitle: 'Log in to Folio', email: 'Email', password: 'Password', passwordHint: 'At least 8 characters',
-    signup: 'Create account', login: 'Log in', haveAccount: 'Already have an account?', noAccount: 'New to Folio?',
-    forgot: 'Forgot password?',
+    email: 'Email', emailPh: 'name@example.com', password: 'Password', setPassword: 'Choose a password', passwordHint: 'At least 8 characters',
+    remember: 'Remember me', forgot: 'Forgot password?',
+    consent: ['I have read and agree to the', 'Terms of service', 'and the', 'Privacy policy'] as [string, string, string, string],
+    signup: 'Create account', login: 'Log in', haveAccount: 'Already have an account?', noAccount: 'New to Folio?', toSignup: 'Sign up',
     verifyTitle: 'Verify your email', verifyLead: (email: string) => `A 6-digit code was sent to ${email}. It is valid for 15 minutes.`,
-    code: 'Code', verify: 'Verify', resend: 'Send a new code', resent: 'A new code has been sent.',
-    verified: 'Email verified.',
-    forgotTitle: 'Reset password', forgotLead: 'Enter the account email to receive a code.',
-    sendCode: 'Send code', resetTitle: 'Set a new password', newPassword: 'New password', reset: 'Save',
-    resetDone: 'Password updated. Log in with the new password.',
+    code: 'Code', verify: 'Verify', resend: 'Send a new code', resendIn: (s: number) => `Resend in ${s}s`, resent: 'A new code has been sent.',
+    reset: {
+      title: 'Reset your password', lead: 'Verify your email, then choose a new password.', steps: ['Verify email', 'New password', 'Done'],
+      code: 'Email code', codePh: 'The 6-digit code', getCode: 'Get a code',
+      sent: 'If this email has an account, a code is on its way. It is valid for 15 minutes.',
+      next: 'Next', password: 'New password', confirm: 'Confirm the new password', save: 'Save the new password', back: 'Back',
+      doneTitle: 'Password reset', doneText: 'Log in with your new password.', toLogin: 'Back to log in',
+      noCode: 'No code? Check your spam folder, or', contact: 'contact us'
+    },
     devNotice: 'Development build: emails go to the local test inbox at http://127.0.0.1:47125.',
     logout: 'Log out',
-    showPassword: 'Show password',
-    points: ['Download the app after signing up', 'One account for the website and the app', 'Export data at any time']
+    showPassword: 'Show password'
   },
 
   checkout: {
@@ -624,7 +632,7 @@ export const en = {
 
   errors: {
     email_taken: 'This email is already registered. Log in instead.',
-    invalid_credentials: 'Incorrect email or password.',
+    invalid_credentials: 'The email or password is not right. Check them and try again.',
     unauthenticated: 'Log in to continue.',
     code_invalid: 'Incorrect code. Check the email and try again.',
     code_expired: 'The code has expired. Request a new one.',
@@ -653,6 +661,7 @@ export const en = {
     not_found: 'Not found.',
     validation: 'Some fields are missing or invalid.',
     emailMissing: 'Enter an email address.', passwordShort: 'The password must be at least 8 characters.',
+    codeMissing: 'Enter the 6-digit code.', passwordMismatch: 'The two passwords don’t match.', consentMissing: 'Read and agree to the terms of service and privacy policy first.',
     network: 'Folio cannot be reached. Check the network connection and try again.',
     wrong_account: 'This invitation was sent to a different email address.',
     email_unverified: 'Verify the email address first.',

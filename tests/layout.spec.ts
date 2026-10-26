@@ -16,7 +16,7 @@ const sideways = (page: Page) => page.evaluate(() => document.documentElement.sc
 
 for (const lang of ['en', 'zh']){
   test(`no sideways scrolling on a phone (${lang})`, async ({ page }) => {
-    for (const path of ['', 'features/', 'solutions/', 'solutions/ecommerce/', 'pricing/', 'login/', 'signup/', 'forgot/', 'reset/', 'download/', 'help/', 'help/install/', 'help/api/', 'changelog/', 'privacy/', 'terms/', 'contact/', 'invite/', '404/']){
+    for (const path of ['', 'features/', 'solutions/', 'solutions/ecommerce/', 'pricing/', 'login/', 'signup/', 'forgot/', 'download/', 'help/', 'help/install/', 'help/api/', 'changelog/', 'privacy/', 'terms/', 'contact/', 'invite/', '404/']){
       await page.goto(`/${lang}/${path}`);
       expect(await sideways(page), `/${lang}/${path}`).toBe(0);
     }
@@ -44,6 +44,7 @@ test('no sideways scrolling on a phone behind an account: verify, checkout, acco
   await page.goto('/zh/signup/');
   await page.fill('#email', email);
   await page.fill('#password', 'correct horse battery');
+  await page.check('#consent');
   await page.click('button[type="submit"]');
   await page.waitForURL(/\/verify\//);
   expect(await sideways(page), 'verify').toBe(0);

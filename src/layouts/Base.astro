@@ -8,8 +8,9 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { t, type Lang } from '../lib/i18n';
 
-interface Props { lang: Lang; path: string; title?: string; description?: string; noindex?: boolean }
-const { lang, path, title, description, noindex = false } = Astro.props;
+// `simple`: the sign-in pages' header (components/Header.astro).
+interface Props { lang: Lang; path: string; title?: string; description?: string; noindex?: boolean; simple?: boolean }
+const { lang, path, title, description, noindex = false, simple = false } = Astro.props;
 const d = t(lang);
 ---
 <!doctype html>
@@ -25,7 +26,7 @@ const d = t(lang);
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>
   <body>
-    <Header lang={lang} path={path} />
+    <Header lang={lang} path={path} simple={simple} />
     <main><slot /></main>
     <Footer lang={lang} path={path} />
   </body>

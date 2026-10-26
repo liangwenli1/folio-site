@@ -1,25 +1,130 @@
 ---
+// Resetting a forgotten password, in three steps on one page: verify the email with an emailed code (checked before
+// going on), choose the new password twice, done. If the code stops working on the way (expired, used up), it is back
+// to the first step with the reason. The desktop app's "Forgot password?" opens this page.
 import AuthPage from '../../layouts/AuthPage.astro';
-import { langPaths, t, type Lang } from '../../lib/i18n';
+import Icon from '../../components/Icon.astro';
+import Password from '../../components/Password.astro';
+import { langPaths, link, t, type Lang } from '../../lib/i18n';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
-const d = t(lang);
+const A = t(lang).auth, R = A.reset;
 ---
-<AuthPage lang={lang} path="forgot/" title={d.auth.forgotTitle}>
-  <div class="page-head"><h1>{d.auth.forgotTitle}</h1><p>{d.auth.forgotLead}</p></div>
-  <form class="form" id="form" novalidate>
-    <div class="notice error" id="err" role="alert" hidden></div>
-    <div class="field"><label for="email">{d.auth.email}</label><input id="email" name="email" type="email" autocomplete="email" required /></div>
-    <button class="btn btn-primary full" type="submit">{d.auth.sendCode}</button>
+<AuthPage lang={lang} path="forgot/" title={R.title}>
+  <div class="page-head"><h1>{R.title}</h1><p>{R.lead}</p></div>
+  <ol class="rs-steps">
+    {R.steps.map((s, i) => <li aria-current={i === 0 ? 'step' : undefined}><span class="rs-n"><b>{i + 1}</b><Icon name="check" size={14} /></span>{s}</li>)}
+  </ol>
+  <div class="notice error" id="err" role="alert" hidden></div>
+  <form class="form" id="verify" novalidate>
+    <div class="notice dev" id="dev" hidden>{A.devNotice}</div>
+    <div class="notice ok" id="sent" role="status" hidden>{R.sent}</div>
+    <div class="field"><label for="email">{A.email}</label><input id="email" type="email" autocomplete="email" placeholder={A.emailPh} required /></div>
+    <div class="field">
+      <label for="code">{R.code}</label>
+      <div class="rs-code">
+        <input id="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder={R.codePh} required />
+        <button class="btn btn-secondary" type="button" id="get">{R.getCode}</button>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-lg full" type="submit">{R.next}</button>
+    <p class="alt"><a href={link(lang, 'login/')}>{R.toLogin}</a></p>
+    <p class="rs-help">{R.noCode} <a href={link(lang, 'contact/')}>{R.contact}</a></p>
   </form>
+  <form class="form" id="choose" novalidate hidden>
+    <div class="field">
+      <label for="password">{R.password}</label>
+      <Password lang={lang} id="password" autocomplete="new-password" minlength={8} />
+      <span class="hint">{A.passwordHint}</span>
+    </div>
+    <div class="field"><label for="confirm">{R.confirm}</label><Password lang={lang} id="confirm" autocomplete="new-password" minlength={8} /></div>
+    <button class="btn btn-primary btn-lg full" type="submit">{R.save}</button>
+    <p class="alt"><button class="linkish" type="button" id="back">{R.back}</button></p>
+  </form>
+  <div class="rs-done" id="done" hidden>
+    <span class="rs-ok"><Icon name="check" size={22} /></span>
+    <h2>{R.doneTitle}</h2>
+    <p>{R.doneText}</p>
+    <a class="btn btn-primary btn-lg full" id="to-login" href={link(lang, 'login/')}>{R.toLogin}</a>
+  </div>
 </AuthPage>
 <script>
-  import { api } from '../../lib/api';
-  import { $, onSubmit, to } from '../../scripts/session';
-  onSubmit($<HTMLFormElement>('form'), $('err'), async () => {
-    const email = $<HTMLInputElement>('email').value.trim();
-    await api('POST', '/auth/password/forgot', { email });
-    location.assign(`${to('reset/')}?email=${encodeURIComponent(email)}`);
+  import { api, ApiFailure } from '../../lib/api';
+  import { $, cooldown, d, devBuild, onSubmit, param, showError, to } from '../../scripts/session';
+  const err = $('err'), email = $<HTMLInputElement>('email'), code = $<HTMLInputElement>('code');
+  $('dev').hidden = !devBuild;
+  email.value = param('email') ?? '';
+  const address = () => email.value.trim();
+  // One step at a time; the steps above say which one this is and which are done.
+  const go = (step: number) => {
+    err.hidden = true;
+    $('verify').hidden = step !== 1; $('choose').hidden = step !== 2; $('done').hidden = step !== 3;
+    document.querySelectorAll<HTMLElement>('.rs-steps li').forEach((li, i) => {
+      li.classList.toggle('done', i + 1 < step);
+      if (i + 1 === step) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current');
+    });
+  };
+  const needEmail = () => { if (!address() || !email.checkValidity()){ email.focus(); throw d.errors.emailMissing; } };
+
+  $('get').addEventListener('click', async () => {
+    const get = $<HTMLButtonElement>('get');
+    err.hidden = true;
+    try {
+      needEmail();
+      get.disabled = true;
+      await api('POST', '/auth/password/forgot', { email: address() });
+      $('sent').hidden = false;
+      cooldown(get, d.auth.resendIn);
+      code.focus();
+    } catch (e){
+      get.disabled = false;
+      showError(err, e);
+    }
   });
+
+  onSubmit($<HTMLFormElement>('verify'), err, async () => {
+    needEmail();
+    if (!/^\d{6}$/.test(code.value.trim())){ code.focus(); throw d.errors.codeMissing; }
+    await api('POST', '/auth/password/check', { email: address(), code: code.value.trim() });
+    go(2);
+    $('password').focus();
+  });
+
+  onSubmit($<HTMLFormElement>('choose'), err, async () => {
+    const password = $<HTMLInputElement>('password').value;
+    if (password.length < 8) throw d.errors.passwordShort;
+    if (password !== $<HTMLInputElement>('confirm').value) throw d.errors.passwordMismatch;
+    try {
+      await api('POST', '/auth/password/reset', { email: address(), code: code.value.trim(), password });
+    } catch (e){
+      // The code no longer works: back to getting a new one.
+      if (e instanceof ApiFailure && ['code_invalid', 'code_expired', 'too_many_attempts'].includes(e.code)) go(1);
+      throw e;
+    }
+    $<HTMLAnchorElement>('to-login').href = `${to('login/')}?email=${encodeURIComponent(address())}`;
+    go(3);
+  });
+  $('back').addEventListener('click', () => go(1));
 </script>
+<style>
+  .rs-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:0;padding:0;list-style:none;font-size:13.5px;color:var(--ink-3);text-align:center}
+  .rs-steps li{position:relative;display:grid;justify-items:center;gap:8px}
+  .rs-steps li + li::before{content:'';position:absolute;top:15px;left:calc(-50% + 26px);right:calc(50% + 26px);height:1px;background:var(--line-2)}
+  .rs-steps li.done + li::before{background:var(--accent)}
+  .rs-n{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--seg);color:var(--ink-3);font:600 13px var(--f-data)}
+  .rs-n :global(.i){display:none}
+  .rs-steps li[aria-current="step"]{color:var(--ink);font-weight:600}
+  .rs-steps li[aria-current="step"] .rs-n{background:var(--accent);color:var(--on-accent)}
+  .rs-steps li.done .rs-n{background:var(--accent-soft);color:var(--accent-ink)}
+  .rs-steps li.done .rs-n b{display:none}
+  .rs-steps li.done .rs-n :global(.i){display:block}
+  .rs-code{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px}
+  .rs-code .btn{min-width:132px;height:var(--h-ctl)}
+  .rs-help{padding-top:18px;border-top:1px solid var(--line);text-align:center;font-size:13.5px;color:var(--ink-3)}
+  .rs-done{display:grid;justify-items:center;gap:10px;text-align:center}
+  .rs-ok{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:var(--good-soft);color:var(--good)}
+  .rs-done h2{font-size:22px}
+  .rs-done p{color:var(--ink-2)}
+  .rs-done .btn{margin-top:12px}
+</style>

@@ -8,13 +8,12 @@ export const zh: typeof en = {
     title: 'Folio 指纹浏览器',
     description: '面向多店铺、多广告账户与多社媒账号团队的指纹浏览器，为每个账号提供独立的浏览器环境，支持差异化指纹配置、Cookie 隔离与独立代理 IP。'
   },
-  nav: { features: '产品功能', solutions: '解决方案', pricing: '价格', download: '下载', help: '帮助中心', login: '登录', start: '免费体验', account: '账户', menu: '菜单', crumbs: '面包屑导航' },
+  nav: { features: '产品功能', solutions: '解决方案', pricing: '价格', download: '下载', help: '帮助中心', site: '返回官网', login: '登录', start: '免费体验', account: '账户', menu: '菜单', crumbs: '面包屑导航' },
   plans: { free: '体验版', studio: '工作室版', company: '公司版' },
   periods: { monthly: '月付', yearly: '年付' },
 
   demo: {
-    label: '工作台操作演示：检查代理、打开浏览器环境、恢复标签页、体检、安装扩展、批量打开、窗口同步与团队协作。', pause: '暂停演示', play: '播放演示',
-    sample: { name: 'UK-Shop-01', place: '伦敦 · Firefox 156', status: '运行中' }
+    label: '工作台操作演示：检查代理、打开浏览器环境、恢复标签页、体检、安装扩展、批量打开、窗口同步与团队协作。', pause: '暂停演示', play: '播放演示'
   },
 
   home: {
@@ -239,20 +238,29 @@ export const zh: typeof en = {
   footer: { product: '产品', resources: '资源', company: '公司', api: 'API 参考', changelog: '更新日志', contact: '联系我们', privacy: '隐私政策', terms: '服务条款', tagline: '独立环境，统一管理', about: 'Folio 提供浏览器环境、代理资源与团队权限的一体化管理。', rights: '© 2026 Folio' },
 
   auth: {
+    panel: {
+      title: '独立环境，统一管理', lead: '为不同业务创建独立的浏览器环境，在一个工作空间中集中管理，账号、数据与操作清晰隔离。',
+      points: [['独立浏览器环境', '每个业务独立运行'], ['集中管理', '统一配置，快速切换'], ['团队协作', '按角色与分组授权']] as [string, string][]
+    },
+    loginTitle: '登录 Folio', loginLead: '使用您的账号登录，继续管理浏览器环境。',
     signupTitle: '创建 Folio 账号', signupLead: '免费体验 5 个浏览器环境，无需绑定银行卡。',
-    loginTitle: '登录 Folio', email: '邮箱', password: '密码', passwordHint: '至少 8 位',
-    signup: '创建账号', login: '登录', haveAccount: '已有账号？', noAccount: '还没有账号？',
-    forgot: '忘记密码？',
+    email: '邮箱', emailPh: 'name@example.com', password: '密码', setPassword: '设置密码', passwordHint: '至少 8 位',
+    remember: '记住登录', forgot: '忘记密码？',
+    consent: ['我已阅读并同意', '服务条款', '和', '隐私政策'] as [string, string, string, string],
+    signup: '注册账号', login: '登录', haveAccount: '已有账号？', noAccount: '没有账号？', toSignup: '注册',
     verifyTitle: '验证邮箱', verifyLead: (email: string) => `验证码已发送至 ${email}，15 分钟内有效。`,
-    code: '验证码', verify: '验证', resend: '重新发送', resent: '新的验证码已发送。',
-    verified: '邮箱已验证。',
-    forgotTitle: '重设密码', forgotLead: '输入账号邮箱，系统将发送验证码。',
-    sendCode: '发送验证码', resetTitle: '设置新密码', newPassword: '新密码', reset: '保存',
-    resetDone: '密码已更新，请使用新密码登录。',
+    code: '验证码', verify: '验证', resend: '重新发送', resendIn: (s: number) => `${s} 秒后可重发`, resent: '新的验证码已发送。',
+    reset: {
+      title: '重置密码', lead: '验证邮箱后设置新的登录密码。', steps: ['验证邮箱', '设置新密码', '完成'],
+      code: '邮箱验证码', codePh: '请输入 6 位验证码', getCode: '获取验证码',
+      sent: '如该邮箱已注册，验证码将发送至该邮箱，15 分钟内有效。',
+      next: '下一步', password: '新密码', confirm: '确认新密码', save: '保存新密码', back: '返回上一步',
+      doneTitle: '密码已重置', doneText: '请使用新密码登录。', toLogin: '返回登录',
+      noCode: '未收到验证码？请检查垃圾邮件，或', contact: '联系我们'
+    },
     devNotice: '开发版本：邮件发送至本机测试收件箱 http://127.0.0.1:47125。',
     logout: '退出登录',
-    showPassword: '显示密码',
-    points: ['注册后即可下载客户端', '官网与客户端使用同一账号', '支持随时导出数据']
+    showPassword: '显示密码'
   },
 
   checkout: {
@@ -626,7 +634,7 @@ export const zh: typeof en = {
 
   errors: {
     email_taken: '该邮箱已注册，请直接登录。',
-    invalid_credentials: '邮箱或密码错误。',
+    invalid_credentials: '邮箱或密码不正确，请检查后重试。',
     unauthenticated: '请先登录。',
     code_invalid: '验证码错误，请核对邮件后重试。',
     code_expired: '验证码已过期，请重新获取。',
@@ -655,6 +663,7 @@ export const zh: typeof en = {
     not_found: '未找到相关内容。',
     validation: '部分内容未填写或格式有误。',
     emailMissing: '请填写邮箱。', passwordShort: '密码至少 8 位。',
+    codeMissing: '请填写 6 位验证码。', passwordMismatch: '两次输入的密码不一致。', consentMissing: '请先阅读并同意服务条款和隐私政策。',
     network: '无法连接 Folio，请检查网络后重试。',
     wrong_account: '该邀请发送至其他邮箱。',
     email_unverified: '请先验证邮箱。',

@@ -1,4 +1,6 @@
 ---
+// Verifying the email after signing up: the emailed code, or a new one (a minute apart). Done, it goes where the
+// visitor was headed (?next=), or to the account.
 import AuthPage from '../../layouts/AuthPage.astro';
 import { langPaths, t, type Lang } from '../../lib/i18n';
 
@@ -16,13 +18,13 @@ const d = t(lang);
       <label for="code">{d.auth.code}</label>
       <input class="code-input" id="code" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required />
     </div>
-    <button class="btn btn-primary full" type="submit">{d.auth.verify}</button>
+    <button class="btn btn-primary btn-lg full" type="submit">{d.auth.verify}</button>
     <button class="linkish fine" id="resend" type="button">{d.auth.resend}</button>
   </form>
 </AuthPage>
 <script>
   import { api } from '../../lib/api';
-  import { $, d, devBuild, nextPath, onSubmit, requireMe, showError, to } from '../../scripts/session';
+  import { $, cooldown, d, devBuild, nextPath, onSubmit, requireMe, showError, to } from '../../scripts/session';
   const done = () => location.replace(nextPath() ?? to('account/'));
   const me = await requireMe();
   if (me.user.emailVerified) done();
@@ -37,6 +39,7 @@ const d = t(lang);
     try {
       await api('POST', '/auth/resend-code');
       $('ok').textContent = d.auth.resent; $('ok').hidden = false;
+      cooldown($<HTMLButtonElement>('resend'), d.auth.resendIn);
     } catch (e){ showError($('err'), e); }
   });
 </script>

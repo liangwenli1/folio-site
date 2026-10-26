@@ -1,25 +1,29 @@
 ---
+// Signing up: an email and a password, and agreeing to the terms and the privacy policy (they open in a new tab, so
+// nothing typed is lost); the emailed code comes next, on the verify page. An invitation fills in the email (?email=),
+// and ?next= is kept for afterwards.
 import AuthPage from '../../layouts/AuthPage.astro';
 import Password from '../../components/Password.astro';
 import { langPaths, link, t, type Lang } from '../../lib/i18n';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
-const d = t(lang);
+const A = t(lang).auth;
 ---
-<AuthPage lang={lang} path="signup/" title={d.auth.signupTitle} points>
-  <div class="page-head"><h1>{d.auth.signupTitle}</h1><p>{d.auth.signupLead}</p></div>
+<AuthPage lang={lang} path="signup/" title={A.signupTitle}>
+  <div class="page-head"><h1>{A.signupTitle}</h1><p>{A.signupLead}</p></div>
   <form class="form" id="form" novalidate>
     <div class="notice error" id="err" role="alert" hidden></div>
-    <div class="field"><label for="email">{d.auth.email}</label><input id="email" name="email" type="email" autocomplete="email" required /></div>
+    <div class="field"><label for="email">{A.email}</label><input id="email" name="email" type="email" autocomplete="email" placeholder={A.emailPh} required /></div>
     <div class="field">
-      <label for="password">{d.auth.password}</label>
+      <label for="password">{A.setPassword}</label>
       <Password lang={lang} id="password" autocomplete="new-password" minlength={8} />
-      <span class="hint">{d.auth.passwordHint}</span>
+      <span class="hint">{A.passwordHint}</span>
     </div>
-    <button class="btn btn-primary full" type="submit">{d.auth.signup}</button>
+    <label class="check"><input type="checkbox" id="consent" required /><span>{A.consent[0]} <a href={link(lang, 'terms/')} target="_blank">{A.consent[1]}</a> {A.consent[2]} <a href={link(lang, 'privacy/')} target="_blank">{A.consent[3]}</a></span></label>
+    <button class="btn btn-primary btn-lg full" type="submit">{A.signup}</button>
   </form>
-  <p class="alt">{d.auth.haveAccount} <a id="to-login" href={link(lang, 'login/')}>{d.nav.login}</a></p>
+  <p class="alt">{A.haveAccount} <a id="to-login" href={link(lang, 'login/')}>{A.login}</a></p>
 </AuthPage>
 <script>
   import { api } from '../../lib/api';
@@ -30,6 +34,7 @@ const d = t(lang);
     const email = $<HTMLInputElement>('email').value.trim(), password = $<HTMLInputElement>('password').value;
     if (!email) throw d.errors.emailMissing;
     if (password.length < 8) throw d.errors.passwordShort;
+    if (!$<HTMLInputElement>('consent').checked){ $('consent').focus(); throw d.errors.consentMissing; }
     const { user } = await api<{ user: { emailVerified: boolean } }>('POST', '/auth/register', { email, password, locale: lang });
     // A test server can skip email verification; then there is no code to enter.
     location.assign(user.emailVerified ? nextPath() ?? to('account/') : withNext(to('verify/')));

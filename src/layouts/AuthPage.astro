@@ -1,27 +1,33 @@
 ---
-// Sign-in, sign-up and the email/password steps around them: the form, and beside it the workbench on the brand
-// gradient, as on the home page. `points` lists what the account gets (sign-up only).
+// The sign-in pages (log in, sign up, verify the email, reset the password): the simple header, then the product on
+// the left — what Folio is, the workbench walkthrough and three things it does — and the form on the right. On a phone
+// the form comes first, and the walkthrough stays out.
 import Base from './Base.astro';
 import Icon from '../components/Icon.astro';
 import Showcase from '../components/Showcase.astro';
-import SampleProfile from '../components/SampleProfile.astro';
+import type { IconName } from '../lib/icons';
 import { t, type Lang } from '../lib/i18n';
 
-interface Props { lang: Lang; path: string; title: string; points?: boolean }
-const { lang, path, title, points = false } = Astro.props;
-const d = t(lang);
+interface Props { lang: Lang; path: string; title: string }
+const { lang, path, title } = Astro.props;
+const d = t(lang), P = d.auth.panel;
+const ICONS: IconName[] = ['globe', 'layers', 'team'];
 ---
-<Base lang={lang} path={path} title={title} noindex>
-  <section class="wrap auth">
-    <div class="auth-main">
-      <div class="auth-form"><slot /></div>
-      {points && <ul class="auth-pts">{d.auth.points.map(p => <li><Icon name="check" size={12} />{p}</li>)}</ul>}
+<Base lang={lang} path={path} title={title} noindex simple>
+  <section class="auth">
+    <div class="auth-panel">
+      <div class="auth-panel-in">
+        <p class="auth-title display">{P.title}</p>
+        <p class="auth-lead">{P.lead}</p>
+        <div class="auth-vis">
+          <Showcase lang={lang} label={d.demo.label} pause={d.demo.pause} play={d.demo.play} />
+          <ul class="auth-pts">
+            {P.points.map(([title, text], i) => <li><span class="tile acc"><Icon name={ICONS[i]} size={18} /></span><span><b>{title}</b><small>{text}</small></span></li>)}
+          </ul>
+        </div>
+      </div>
     </div>
-    <div class="auth-aside">
-      <div class="glow" aria-hidden="true"></div>
-      <Showcase lang={lang} label={d.demo.label} pause={d.demo.pause} play={d.demo.play} />
-      <SampleProfile lang={lang} />
-    </div>
+    <div class="auth-main"><div class="auth-form"><slot /></div></div>
   </section>
 </Base>
 <script>

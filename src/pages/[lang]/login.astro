@@ -1,32 +1,38 @@
 ---
+// Logging in: email and password, whether to stay signed in after the browser closes, and the ways to a forgotten
+// password or a new account. Afterwards it goes where the visitor was headed (?next=), or to the account.
 import AuthPage from '../../layouts/AuthPage.astro';
 import Password from '../../components/Password.astro';
 import { langPaths, link, t, type Lang } from '../../lib/i18n';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
-const d = t(lang);
+const A = t(lang).auth;
 ---
-<AuthPage lang={lang} path="login/" title={d.auth.loginTitle}>
-  <div class="page-head"><h1>{d.auth.loginTitle}</h1></div>
+<AuthPage lang={lang} path="login/" title={A.loginTitle}>
+  <div class="page-head"><h1>{A.loginTitle}</h1><p>{A.loginLead}</p></div>
   <form class="form" id="form" novalidate>
-    <div class="notice ok" id="ok" hidden></div>
     <div class="notice error" id="err" role="alert" hidden></div>
-    <div class="field"><label for="email">{d.auth.email}</label><input id="email" name="email" type="email" autocomplete="email" required /></div>
-    <div class="field"><label for="password">{d.auth.password}</label><Password lang={lang} id="password" autocomplete="current-password" /></div>
-    <button class="btn btn-primary full" type="submit">{d.auth.login}</button>
-    <a class="fine" href={link(lang, 'forgot/')}>{d.auth.forgot}</a>
+    <div class="field"><label for="email">{A.email}</label><input id="email" name="email" type="email" autocomplete="email" placeholder={A.emailPh} required /></div>
+    <div class="field"><label for="password">{A.password}</label><Password lang={lang} id="password" autocomplete="current-password" /></div>
+    <div class="auth-row">
+      <label class="check"><input type="checkbox" id="remember" />{A.remember}</label>
+      <a href={link(lang, 'forgot/')}>{A.forgot}</a>
+    </div>
+    <button class="btn btn-primary btn-lg full" type="submit">{A.login}</button>
   </form>
-  <p class="alt">{d.auth.noAccount} <a id="to-signup" href={link(lang, 'signup/')}>{d.auth.signup}</a></p>
+  <p class="alt">{A.noAccount} <a id="to-signup" href={link(lang, 'signup/')}>{A.toSignup}</a></p>
 </AuthPage>
 <script>
   import { api } from '../../lib/api';
-  import { $, d, nextPath, onSubmit, param, to, withNext } from '../../scripts/session';
+  import { $, nextPath, onSubmit, param, to, withNext } from '../../scripts/session';
   $<HTMLAnchorElement>('to-signup').href = withNext(to('signup/'));
-  if (param('reset') === '1'){ $('ok').textContent = d.auth.resetDone; $('ok').hidden = false; }
   if (param('email')) $<HTMLInputElement>('email').value = param('email')!;
   onSubmit($<HTMLFormElement>('form'), $('err'), async () => {
-    await api('POST', '/auth/login', { email: $<HTMLInputElement>('email').value.trim(), password: $<HTMLInputElement>('password').value, client: 'web' });
+    await api('POST', '/auth/login', {
+      email: $<HTMLInputElement>('email').value.trim(), password: $<HTMLInputElement>('password').value,
+      client: 'web', remember: $<HTMLInputElement>('remember').checked
+    });
     location.assign(nextPath() ?? to('account/'));
   });
 </script>

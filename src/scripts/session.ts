@@ -41,6 +41,18 @@ export function onSubmit(form: HTMLFormElement, box: HTMLElement, run: () => Pro
   });
 }
 
+// After a code is sent: the button rests for a minute before it can send another, saying how long is left.
+export function cooldown(btn: HTMLButtonElement, label: (seconds: number) => string, seconds = 60){
+  const text = btn.textContent;
+  btn.disabled = true;
+  const tick = () => {
+    if (seconds === 0){ clearInterval(timer); btn.disabled = false; btn.textContent = text; return; }
+    btn.textContent = label(seconds--);
+  };
+  const timer = setInterval(tick, 1000);
+  tick();
+}
+
 export const devBuild = import.meta.env.DEV || import.meta.env.PUBLIC_DEV_NOTICE === '1';
 
 export const esc = (s: string) => s.replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]!));

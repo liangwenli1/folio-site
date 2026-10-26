@@ -185,26 +185,46 @@ table.list td{height:56px;border-bottom:1px solid var(--line);padding:6px 12px 6
 table.list tr:last-child td{border-bottom:0}
 .confirm{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line);font-size:14px}
 
-/* sign-in pages: the form, and beside it the product on a soft gradient (hidden on narrow screens) */
-.auth{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:64px;align-items:center;padding-block:56px 96px}
-.auth-main{display:grid;gap:28px;min-width:0}
-.auth-form{display:grid;gap:22px}
-.auth-main .page-head{margin-bottom:0}
-.auth-main .page-head h1{font-size:30px}
-.auth-main .page-head p{font-size:15px}
-.auth-pts{list-style:none;margin:0;padding:18px 0 0;border-top:1px solid var(--line);display:grid;gap:10px;font-size:14px;color:var(--ink-2)}
-.auth-pts li{display:flex;gap:8px;align-items:center}
-.auth-pts .i{color:var(--ink-3)}
-.auth-aside{position:relative;height:600px;border-radius:26px;overflow:hidden;background:#FFF7F5;border:1px solid var(--line)}
-.auth-aside .glow{height:100%;-webkit-mask:none;mask:none}
-.auth-aside .showcase{position:absolute;left:40px;right:40px;top:50%;translate:0 -58%}
-.auth-aside .sample{left:40px;bottom:40px}
-@media (prefers-color-scheme: dark){ .auth-aside{background:var(--panel)} }
-@media (max-width:900px){.auth{grid-template-columns:minmax(0,460px);justify-content:center;padding-block:40px 72px}.auth-aside{display:none}}
-
-/* the soft brand gradient behind the home page's first screen and the sign-in pages' product picture */
-.glow{position:absolute;inset:0 0 auto 0;height:820px;pointer-events:none;background:radial-gradient(40% 55% at 10% 10%,rgba(240,128,106,.42),transparent 70%),radial-gradient(45% 60% at 55% 0%,rgba(255,190,150,.38),transparent 70%),radial-gradient(40% 50% at 95% 30%,rgba(210,68,94,.30),transparent 70%);filter:blur(8px);-webkit-mask:linear-gradient(#000 55%,transparent);mask:linear-gradient(#000 55%,transparent)}
-@media (prefers-color-scheme: dark){ .glow{opacity:.45} }
+/* sign-in pages: the simple header's links; the product on a soft accent panel on the left and the form on the right.
+   On a phone the form comes first and the panel follows, without the walkthrough. */
+.top-links{display:flex;gap:28px;margin-left:auto;font-size:14.5px}
+.top-links a{color:var(--ink-2);text-decoration:none}
+.top-links a:hover{color:var(--ink)}
+.auth{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);min-height:calc(100svh - var(--hd))}
+.auth-panel{display:flex;justify-content:flex-end;align-items:center;padding:56px 64px 80px max(32px,calc((100vw - 1200px) / 2 + 32px));background:linear-gradient(165deg,var(--accent-soft),var(--page) 88%);border-right:1px solid var(--line)}
+.auth-panel-in{width:100%;max-width:600px}
+.auth-title{font-size:clamp(1.75rem,2.8vw,2.375rem);line-height:1.2}
+.auth-lead{max-width:520px;margin-top:14px;font-size:15.5px;line-height:1.75;color:var(--ink-2)}
+.auth-vis{position:relative;margin:60px 0 32px}
+.auth-pts{margin:0;padding:0;list-style:none}
+.auth-pts li{position:absolute;display:flex;align-items:center;gap:10px;padding:9px 16px 9px 9px;border-radius:14px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-pop);line-height:1.4}
+.auth-pts li > span:last-child{display:grid}
+.auth-pts b{font-size:13.5px;font-weight:600}
+.auth-pts small{font-size:12px;color:var(--ink-2)}
+.auth-pts li:nth-child(1){top:-36px;right:-12px}
+.auth-pts li:nth-child(2){bottom:-32px;left:-20px}
+.auth-pts li:nth-child(3){bottom:-36px;right:76px}
+.auth-main{display:flex;align-items:center;padding:56px max(32px,calc((100vw - 1200px) / 2 + 32px)) 80px 72px}
+.auth-form{display:grid;gap:22px;width:100%;max-width:420px}
+.auth-form .page-head{margin-bottom:0}
+.auth-form .page-head h1{font-size:32px}
+.auth-form .page-head p{font-size:15px}
+.auth-form a:not(.btn){color:var(--accent-ink);text-decoration:none}
+.auth-form a:not(.btn):hover{text-decoration:underline}
+.auth-form .alt{text-align:center}
+.auth-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 16px;font-size:14px}
+.check{display:inline-flex;align-items:flex-start;gap:8px;font-size:14px;line-height:1.6;color:var(--ink-2);cursor:pointer}
+.check input{width:16px;height:16px;flex:none;margin:3px 0 0;accent-color:var(--accent)}
+@media (max-width:960px){
+  .auth{grid-template-columns:minmax(0,1fr)}
+  .auth-main{order:1;justify-content:center;padding:40px 20px 48px}
+  .auth-panel{order:2;justify-content:center;padding:40px 20px 56px;border-right:0;border-top:1px solid var(--line)}
+  .auth-panel-in{max-width:460px}
+  .auth-vis{margin:28px 0 0}
+  .auth-vis .showcase{display:none}
+  .auth-pts{display:grid;gap:10px}
+  .auth-pts li{position:static;box-shadow:none}
+}
 
 /* Phones: every button is a comfortable touch target. */
 @media (max-width:768px){.btn{min-height:44px}}

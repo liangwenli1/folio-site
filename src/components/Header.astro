@@ -1,12 +1,13 @@
 ---
 // The site's header: the brand, the five sections (the one this page is in marked), signing in and trying Folio — or
-// the account for someone signed in. Narrower than a tablet the sections fold into a menu under a button.
+// the account for someone signed in. Narrower than a tablet the sections fold into a menu under a button. The sign-in
+// pages have a simple one instead: the brand, the way back to the website and the help center.
 import Mark from './Mark.astro';
 import Icon from './Icon.astro';
 import { link, t, type Lang } from '../lib/i18n';
 
-interface Props { lang: Lang; path: string }
-const { lang, path } = Astro.props;
+interface Props { lang: Lang; path: string; simple?: boolean }
+const { lang, path, simple = false } = Astro.props;
 const d = t(lang), n = d.nav;
 const SECTIONS: [string, string][] = [[n.features, 'features/'], [n.solutions, 'solutions/'], [n.pricing, 'pricing/'], [n.download, 'download/'], [n.help, 'help/']];
 const here = (p: string) => path.startsWith(p);
@@ -14,27 +15,36 @@ const here = (p: string) => path.startsWith(p);
 <header class="top">
   <div class="wrap top-in">
     <a class="brand" href={link(lang)} aria-label="Folio"><Mark /><span class="brand-word">Folio</span></a>
-    <nav class="nav" id="site-nav" aria-label={n.menu}>
-      {SECTIONS.map(([label, p]) => <a href={link(lang, p)} aria-current={here(p) ? 'page' : undefined}>{label}</a>)}
-      <span class="nav-acts" data-auth="out">
-        <a class="quiet" href={link(lang, 'login/')}>{n.login}</a>
-        <a class="btn btn-primary btn-sm" href={link(lang, 'signup/')}>{n.start}</a>
-      </span>
-      <span class="nav-acts" data-auth="in" hidden><a class="btn btn-secondary btn-sm" href={link(lang, 'account/')}>{n.account}</a></span>
-    </nav>
-    <button class="menu-btn icon-only" type="button" aria-label={n.menu} aria-expanded="false" aria-controls="site-nav"><Icon name="menu" size={20} /></button>
+    {simple ? (
+      <nav class="top-links" aria-label={n.menu}><a href={link(lang)}>{n.site}</a><a href={link(lang, 'help/')}>{n.help}</a></nav>
+    ) : (
+      <>
+        <nav class="nav" id="site-nav" aria-label={n.menu}>
+          {SECTIONS.map(([label, p]) => <a href={link(lang, p)} aria-current={here(p) ? 'page' : undefined}>{label}</a>)}
+          <span class="nav-acts" data-auth="out">
+            <a class="quiet" href={link(lang, 'login/')}>{n.login}</a>
+            <a class="btn btn-primary btn-sm" href={link(lang, 'signup/')}>{n.start}</a>
+          </span>
+          <span class="nav-acts" data-auth="in" hidden><a class="btn btn-secondary btn-sm" href={link(lang, 'account/')}>{n.account}</a></span>
+        </nav>
+        <button class="menu-btn icon-only" type="button" aria-label={n.menu} aria-expanded="false" aria-controls="site-nav"><Icon name="menu" size={20} /></button>
+      </>
+    )}
   </div>
 </header>
 <script>
   import { api } from '../lib/api';
-  api('GET', '/me').then(() => {
-    document.querySelectorAll('[data-auth="out"]').forEach(e => e.setAttribute('hidden', ''));
-    document.querySelectorAll('[data-auth="in"]').forEach(e => e.removeAttribute('hidden'));
-  }).catch(() => {});
-  // The menu on narrow screens: opens under the header, closes again on a link or Escape.
-  const btn = document.querySelector<HTMLButtonElement>('.menu-btn')!;
-  const set = (open: boolean) => { btn.setAttribute('aria-expanded', String(open)); document.documentElement.classList.toggle('menu-open', open); };
-  btn.addEventListener('click', () => set(btn.getAttribute('aria-expanded') !== 'true'));
-  document.querySelectorAll('#site-nav a').forEach(a => a.addEventListener('click', () => set(false)));
-  addEventListener('keydown', e => { if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true'){ set(false); btn.focus(); } });
+  // The full header only (the simple one has no menu and no account).
+  const btn = document.querySelector<HTMLButtonElement>('.menu-btn');
+  if (btn){
+    api('GET', '/me').then(() => {
+      document.querySelectorAll('[data-auth="out"]').forEach(e => e.setAttribute('hidden', ''));
+      document.querySelectorAll('[data-auth="in"]').forEach(e => e.removeAttribute('hidden'));
+    }).catch(() => {});
+    // The menu on narrow screens: opens under the header, closes again on a link or Escape.
+    const set = (open: boolean) => { btn.setAttribute('aria-expanded', String(open)); document.documentElement.classList.toggle('menu-open', open); };
+    btn.addEventListener('click', () => set(btn.getAttribute('aria-expanded') !== 'true'));
+    document.querySelectorAll('#site-nav a').forEach(a => a.addEventListener('click', () => set(false)));
+    addEventListener('keydown', e => { if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true'){ set(false); btn.focus(); } });
+  }
 </script>

@@ -15,6 +15,15 @@ async function lastMail(email: string){
   throw new Error(`No email for ${email}`);
 }
 const emailCode = async (email: string) => (await lastMail(email)).Text.match(/\b\d{6}\b/)![0];
+// The code in the password reset email, once that one (not the sign-up code before it) has arrived.
+async function resetCode(email: string){
+  for (let i = 0; i < 50; i++){
+    const m = await lastMail(email);
+    if (/重设密码|reset/i.test(m.Subject)) return m.Text.match(/\b\d{6}\b/)![0];
+    await new Promise(r => setTimeout(r, 100));
+  }
+  throw new Error(`No reset email for ${email}`);
+}
 
 // An account made through the API, with a paid plan: someone who will invite people.
 async function owner(){
@@ -42,6 +51,7 @@ async function signUp(page: Page, lang: 'en' | 'zh', next = ''){
   await page.goto(`/${lang}/signup/${next ? `?next=${encodeURIComponent(next)}` : ''}`);
   await page.fill('#email', email);
   await page.fill('#password', PASSWORD);
+  await page.check('#consent');
   await page.click('button[type="submit"]');
   await page.waitForURL(/\/verify\//);
   await page.fill('#code', await emailCode(email));
@@ -192,6 +202,68 @@ test('logging in from checkout brings you back to checkout', async ({ page, cont
   await expect(page.locator('#total')).toHaveText('$99');
 });
 
+test('signing up needs the terms and privacy policy agreed to, which open beside the form', async ({ page }) => {
+  await page.goto('/en/signup/');
+  await page.fill('#email', uniqueEmail());
+  await page.fill('#password', PASSWORD);
+  await page.click('button[type="submit"]');
+  await expect(page.locator('#err')).toHaveText('Read and agree to the terms of service and privacy policy first.');
+  await expect(page.locator('#consent')).toBeFocused();
+  await expect(page.locator('#form').getByRole('link', { name: 'Terms of service' })).toHaveAttribute('target', '_blank');
+  await page.check('#consent');
+  await page.click('button[type="submit"]');
+  await page.waitForURL(/\/verify\//);
+});
+
+test('logging in outlasts the browser only with “Remember me”', async ({ page, context }) => {
+  const email = await signUp(page, 'en');
+  for (const remember of [false, true]){
+    await context.clearCookies();
+    await page.goto('/en/login/');
+    await page.fill('#email', email);
+    await page.fill('#password', PASSWORD);
+    if (remember) await page.check('#remember');
+    await page.click('button[type="submit"]');
+    await page.waitForURL(/\/account\//);
+    const { expires } = (await context.cookies()).find(c => c.name === 'folio_session')!;
+    if (remember) expect(expires * 1000).toBeGreaterThan(Date.now() + 29 * 86_400_000);
+    else expect(expires).toBe(-1);
+  }
+});
+
+test('a forgotten password is reset in three steps; a wrong code stops the first, passwords that differ the second', async ({ page, context }) => {
+  const email = await signUp(page, 'zh');
+  await context.clearCookies();
+  await page.goto('/zh/login/');
+  await page.getByRole('link', { name: '忘记密码？' }).click();
+  await page.fill('#email', email);
+  await page.getByRole('button', { name: '获取验证码' }).click();
+  await expect(page.locator('#sent')).toBeVisible();
+  await expect(page.locator('#get')).toBeDisabled();
+  const code = await resetCode(email);
+  const steps = page.locator('.rs-steps li');
+  await page.fill('#code', code === '000000' ? '111111' : '000000');
+  await page.getByRole('button', { name: '下一步' }).click();
+  await expect(page.locator('#err')).toHaveText('验证码错误，请核对邮件后重试。');
+  await expect(steps.first()).toHaveAttribute('aria-current', 'step');
+  await page.fill('#code', code);
+  await page.getByRole('button', { name: '下一步' }).click();
+  await expect(steps.nth(1)).toHaveAttribute('aria-current', 'step');
+  await page.fill('#password', 'a brand new secret');
+  await page.fill('#confirm', 'a brand new secrets');
+  await page.getByRole('button', { name: '保存新密码' }).click();
+  await expect(page.locator('#err')).toHaveText('两次输入的密码不一致。');
+  await page.fill('#confirm', 'a brand new secret');
+  await page.getByRole('button', { name: '保存新密码' }).click();
+  await expect(page.getByRole('heading', { name: '密码已重置' })).toBeVisible();
+  await expect(steps.nth(2)).toHaveAttribute('aria-current', 'step');
+  await page.getByRole('link', { name: '返回登录' }).click();
+  await expect(page.locator('#email')).toHaveValue(email);
+  await page.fill('#password', 'a brand new secret');
+  await page.click('button[type="submit"]');
+  await page.waitForURL(/\/account\//);
+});
+
 test('the contact form gives a reference number, and keeps what was written when it can’t send', async ({ page }) => {
   // The old sales form's address leads to it.
   await page.goto('/en/contact-sales/');
@@ -229,6 +301,7 @@ test('an emailed invitation leads a new person through sign-up into the workspac
   await page.getByRole('link', { name: 'Create an account' }).click();
   await expect(page.locator('#email')).toHaveValue(email);
   await page.fill('#password', PASSWORD);
+  await page.check('#consent');
   await page.click('button[type="submit"]');
   await page.waitForURL(/\/verify\//);
   await page.fill('#code', await emailCode(email));
