@@ -31,8 +31,13 @@ test('the guides’ search narrows the list and the page’s headings, without a
   await page.fill('[data-doc-search]', 'rate');
   await expect(toc.getByRole('link', { name: 'Rate limits' })).toBeVisible();
   await expect(toc.getByRole('link', { name: 'Security' })).toBeHidden();
+  // No guide matches: the list says so and offers the contact page.
+  await page.fill('[data-doc-search]', 'zzzz');
+  await expect(nav.getByText('No matching articles')).toBeVisible();
+  await expect(nav.getByRole('link', { name: 'Contact us' })).toHaveAttribute('href', '/en/contact/');
   await page.fill('[data-doc-search]', '');
   await expect(nav.getByRole('link', { name: 'Install the Folio app' })).toBeVisible();
+  await expect(nav.getByText('No matching articles')).toBeHidden();
 });
 
 test('the help center finds guides by a word, and suggests others when nothing matches', async ({ page }) => {
@@ -84,7 +89,7 @@ test('the changelog shows one part of Folio at a time', async ({ page }) => {
   await expect(site.first()).toBeVisible();
 });
 
-test('the privacy policy’s contents follow the reading and fold away on a phone; what is not settled says so', async ({ page }) => {
+test('the privacy policy’s and the terms’ contents follow the reading and fold away on a phone; what is not settled says so', async ({ page }) => {
   await page.goto('/en/privacy/');
   const toc = page.getByRole('navigation', { name: 'Contents' });
   await expect(toc.getByRole('link', { name: 'Information we collect' })).toHaveAttribute('aria-current', 'true');
@@ -98,6 +103,11 @@ test('the privacy policy’s contents follow the reading and fold away on a phon
   await toc.getByRole('link', { name: 'Sharing' }).click();
   await expect(toc).toBeHidden();
   await expect(page.locator('#share')).toBeInViewport();
+  // The terms have the same contents.
+  await page.goto('/en/terms/');
+  await page.locator('.lg-toc summary').click();
+  await page.getByRole('navigation', { name: 'Contents' }).getByRole('link', { name: 'Plans and fees' }).click();
+  await expect(page.getByRole('heading', { name: 'Plans and fees' })).toBeInViewport();
 });
 
 test('the page for an address that leads nowhere offers the way on, in that language', async ({ page }) => {

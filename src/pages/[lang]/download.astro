@@ -33,14 +33,14 @@ const HELP: [IconName, string | null][] = [['doc', link(lang, 'help/install/')],
 
   <section class="msec">
     <div class="wrap">
-      <div class="dl-os">
+      <div class="cols dl-os">
         {systems.map(s => (
           <div class="card dl-card">
-            <div class="dl-top"><span class="dl-ic"><Icon name={s.icon} size={28} /></span><div><h2>{s.os}</h2><p>{s.req}</p></div></div>
+            <div class="dl-top"><span class="dl-ic"><Icon name={s.icon} size={24} /></span><div><h2>{s.os}</h2><p>{s.req}</p></div></div>
             {s.href
               ? <a class={`btn ${s.primary ? 'btn-primary' : 'btn-secondary'} btn-lg full`} href={s.href}><Icon name="download" />{d.get(s.os)}</a>
               : <button class="btn btn-secondary btn-lg full" type="button" disabled>{d.soon}</button>}
-            <details class="dl-note"><summary><Icon name="alert" size={13} />{d.notesTitle}</summary><p>{s.note}</p></details>
+            <details class="dl-note"><summary><Icon name="alert" />{d.notesTitle}</summary><p>{s.note}</p></details>
           </div>
         ))}
       </div>
@@ -51,7 +51,7 @@ const HELP: [IconName, string | null][] = [['doc', link(lang, 'help/install/')],
   <section class="msec alt">
     <div class="wrap">
       <div class="msec-head"><h2>{d.stepsTitle}</h2><p>{d.stepsLead}</p></div>
-      <ol class="dl-steps">
+      <ol class="cols dl-steps">
         {d.steps.map(([title, body], i) => <li class="card"><span class="dl-n">{i + 1}</span><span class="tile acc"><Icon name={STEPS[i]} size={20} /></span><b>{title}</b><p>{body}</p></li>)}
       </ol>
     </div>
@@ -61,38 +61,40 @@ const HELP: [IconName, string | null][] = [['doc', link(lang, 'help/install/')],
     <div class="wrap">
       <div class="dl-help">
         {d.help.map(([title, body, cta], i) => (
-          <div><Icon name={HELP[i][0]} size={22} /><div><b>{title}</b><p>{body}</p>{HELP[i][1] && <a href={HELP[i][1]!}>{cta}<Icon name="chevr" size={12} /></a>}</div></div>
+          <div><Icon name={HELP[i][0]} size={24} /><div><b>{title}</b><p>{body}</p>{HELP[i][1] && <a href={HELP[i][1]!}>{cta}<Icon name="chevr" /></a>}</div></div>
         ))}
       </div>
     </div>
   </section>
 </Base>
 <style>
-  .dl-status{display:inline-flex;align-items:center;gap:8px;margin-top:28px;padding:6px 14px;border-radius:99px;background:var(--accent-soft);color:var(--accent-ink);font-size:13.5px;font-weight:600}
+  .dl-status{display:inline-flex;align-items:center;gap:8px;margin-top:28px;padding:6px 14px;border-radius:99px;background:var(--accent-soft);color:var(--accent-ink);font-size:14px;font-weight:600}
   .dl-status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent)}
-  .dl-os{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:20px;max-width:900px;margin:0 auto}
+  /* the two installers side by side on the page grid, a third of it each in the middle of a wide screen */
+  @media (min-width:769px){.dl-card{grid-column:span 6}}
+  @media (min-width:1101px){.dl-card{grid-column:span 4}.dl-card:first-child{grid-column:3 / span 4}}
   .dl-card{display:grid;gap:18px;align-content:start;padding:28px}
   .dl-top{display:flex;gap:16px;align-items:center}
-  .dl-ic{display:grid;place-items:center;width:56px;height:56px;flex:none;border-radius:14px;background:var(--panel);border:1px solid var(--line)}
+  .dl-ic{display:grid;place-items:center;width:56px;height:56px;flex:none;border-radius:var(--r-lg);background:var(--panel);border:1px solid var(--line)}
   .dl-card h2{font-size:22px}
   .dl-top p{margin-top:2px;font-size:14px;color:var(--ink-2)}
-  .dl-note{padding-top:14px;border-top:1px dashed var(--line-2);font-size:13.5px;color:var(--ink-2)}
+  .dl-note{padding-top:14px;border-top:1px dashed var(--line-2);font-size:14px;color:var(--ink-2)}
   .dl-note summary{display:flex;align-items:center;gap:6px;list-style:none;font-weight:600;color:var(--ink);cursor:pointer}
   .dl-note summary::-webkit-details-marker{display:none}
   .dl-note p{margin-top:8px;line-height:1.7;overflow-wrap:anywhere}
   .dl-other{margin-top:20px;text-align:center;font-size:14px;color:var(--ink-2)}
   .dl-other a{color:var(--ink);text-underline-offset:3px}
-  .dl-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin:0;padding:0;list-style:none}
+  .dl-steps{margin:0;padding:0;list-style:none}
+  @media (min-width:861px){.dl-steps > li{grid-column:span 4}}
   .dl-steps li{position:relative;display:grid;gap:10px;align-content:start;padding:26px}
-  .dl-steps b{font-size:17px;font-weight:600}
+  .dl-steps b{font-size:16px;font-weight:600}
   .dl-steps p{font-size:14px;line-height:1.7;color:var(--ink-2)}
   .dl-n{position:absolute;right:22px;top:20px;font:600 14px var(--f-data);color:var(--accent-ink)}
-  @media (max-width:860px){.dl-steps{grid-template-columns:minmax(0,1fr)}}
-  .dl-help{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;padding:28px 32px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
+  .dl-help{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;padding:28px 32px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line)}
   .dl-help > div{display:flex;gap:14px;min-width:0}
   .dl-help > div > :global(.i){color:var(--ink-2);margin-top:2px}
-  .dl-help b{font-size:15px}
-  .dl-help p{margin-top:4px;font-size:13.5px;line-height:1.7;color:var(--ink-2)}
+  .dl-help b{font-size:16px}
+  .dl-help p{margin-top:4px;font-size:14px;line-height:1.7;color:var(--ink-2)}
   .dl-help a{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:14px;font-weight:600;color:var(--accent-ink);text-decoration:none}
   @media (max-width:860px){.dl-help{grid-template-columns:minmax(0,1fr);padding:22px 20px}}
 </style>

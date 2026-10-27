@@ -5,12 +5,12 @@ import Icon from './Icon.astro';
 interface Props { title: string; lead?: string; contact?: { label: string; href: string }; items: [string, string][] }
 const { title, lead, contact, items } = Astro.props;
 ---
-<div class="faq-split">
+<div class="cols faq-split">
   <div>
     <h2>{title}</h2>
     {lead && <p>{lead}{contact && <> <a href={contact.href}>{contact.label}</a></>}</p>}
   </div>
   <div class="faq">
-    {items.map(([q, a], i) => <details open={i === 0}><summary>{q}<span class="faq-x"><Icon name="chev" size={14} /></span></summary><p>{a}</p></details>)}
+    {items.map(([q, a], i) => <details open={i === 0}><summary>{q}<span class="faq-x"><Icon name="chev" /></span></summary><p>{a}</p></details>)}
   </div>
 </div>

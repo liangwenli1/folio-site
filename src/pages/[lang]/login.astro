@@ -1,6 +1,7 @@
 ---
-// Logging in: email and password, whether to stay signed in after the browser closes, and the ways to a forgotten
-// password or a new account. Afterwards it goes where the visitor was headed (?next=), or to the account.
+// Logging in: email and password (each checked on submit, the reason under the field), whether to stay signed in after
+// the browser closes, and the ways to a forgotten password or a new account. Afterwards it goes where the visitor was
+// headed (?next=), or to the account.
 import AuthPage from '../../layouts/AuthPage.astro';
 import Password from '../../components/Password.astro';
 import { langPaths, link, t, type Lang } from '../../lib/i18n';
@@ -25,12 +26,14 @@ const A = t(lang).auth;
 </AuthPage>
 <script>
   import { api } from '../../lib/api';
-  import { $, nextPath, onSubmit, param, to, withNext } from '../../scripts/session';
+  import { $, d, emailProblem, invalid, nextPath, onSubmit, param, to, withNext } from '../../scripts/session';
+  const email = $<HTMLInputElement>('email'), password = $<HTMLInputElement>('password');
   $<HTMLAnchorElement>('to-signup').href = withNext(to('signup/'));
-  if (param('email')) $<HTMLInputElement>('email').value = param('email')!;
+  if (param('email')) email.value = param('email')!;
   onSubmit($<HTMLFormElement>('form'), $('err'), async () => {
+    if (invalid([[email, emailProblem(email)], [password, password.value ? '' : d.errors.passwordMissing]])) return;
     await api('POST', '/auth/login', {
-      email: $<HTMLInputElement>('email').value.trim(), password: $<HTMLInputElement>('password').value,
+      email: email.value.trim(), password: password.value,
       client: 'web', remember: $<HTMLInputElement>('remember').checked
     });
     location.assign(nextPath() ?? to('account/'));

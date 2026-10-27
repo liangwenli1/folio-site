@@ -7,14 +7,14 @@ interface Props { lang: Lang; title: string; lead: string; crumbs?: [string, str
 const { lang, title, lead, crumbs } = Astro.props;
 ---
 <section class="phero">
-  <div class="wrap phero-in">
+  <div class="wrap cols phero-in">
     <div class="phero-copy">
       {crumbs && (
         <nav class="crumbs" aria-label={t(lang).nav.crumbs}>
           {crumbs.map(([label, href], i) => <>{i > 0 && <span aria-hidden="true">/</span>}{href ? <a href={href}>{label}</a> : <span aria-current="page">{label}</span>}</>)}
         </nav>
       )}
-      <h1>{title.split('\n').map((line, i) => <>{i > 0 && <> <br /></>}{line}</>)}</h1>
+      <h1 class="hero-title">{title.split('\n').map((line, i) => <>{i > 0 && <> <br /></>}{line}</>)}</h1>
       <p class="lead">{lead}</p>
       <slot />
     </div>

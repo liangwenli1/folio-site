@@ -8,14 +8,16 @@
   --warn:#B7791F; --warn-ink:#8A5A12; --warn-soft:#FBF1DD;
   --bad:#C83E3E; --bad-ink:#A83131; --bad-soft:#FBE8E8;
   --info:#2F6FD6; --info-soft:#E5EEFC;
-  --grad:radial-gradient(120% 110% at 0% 0%,#F0806A 0%,#D2445E 52%,#9C2D48 100%);
   --overlay:rgba(29,28,43,.32);
-  --shadow:0 1px 2px rgba(29,28,43,.04),0 12px 30px -18px rgba(60,40,80,.26);
-  --shadow-pop:0 2px 6px rgba(29,28,43,.06),0 24px 48px -20px rgba(60,40,80,.38);
+  /* Delivery spec: cards have only their border; what floats over the page (popovers, dialogs, the menu drawer) has
+     this one shadow. */
+  --shadow-pop:0 12px 32px rgba(16,24,40,.12);
   /* Delivery spec: controls 8, cards 10, dialogs 12. */
   --r:8px; --r-card:10px; --r-lg:12px;
   /* Controls: 40px by default, 32 small, 48 large. */
   --h-ctl:40px; --h-sm:32px; --h-lg:48px;
+  /* Motion: 120ms for small changes (hover, press), 180ms for things that move. */
+  --t-fast:120ms; --t:180ms;
   --f-display:"Manrope Variable","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
   --f-body:"Inter Variable","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
   --f-data:"JetBrains Mono Variable",ui-monospace,Menlo,Consolas,"PingFang SC","Microsoft YaHei",monospace;
@@ -34,22 +36,22 @@ html[lang="zh"]{--w-display:400}
     --bad:#EF6B6B; --bad-ink:#F59292; --bad-soft:rgba(239,107,107,.15);
     --info:#7FA8E6; --info-soft:rgba(127,168,230,.15);
     --overlay:rgba(0,0,0,.55);
-    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px -18px rgba(0,0,0,.7);
-    --shadow-pop:0 2px 6px rgba(0,0,0,.35),0 24px 48px -16px rgba(0,0,0,.75);
+    --shadow-pop:0 12px 32px rgba(0,0,0,.5);
     --code-bg:#0E0D12; --code-ink:#ECEBF2;
     color-scheme:dark;
   }
 }
 
-/* The site's own surfaces: white pages in light mode, sections alternating with the panel colour. */
-:root{--page:#FFFFFF; --hd:64px}
+/* The site's own surfaces: white pages in light mode, sections alternating with the panel colour. The header is 76px
+   (delivery tokens: height.websiteHeader). */
+:root{--page:#FFFFFF; --hd:76px}
 @media (prefers-color-scheme: dark){ :root{--page:var(--bg)} }
 
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:calc(var(--hd) + 12px)}
-body{display:flex;flex-direction:column;min-height:100svh;margin:0;background:var(--page);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+/* Type (spec 2): paragraphs 16 / 1.75 in both languages, UI text 14, helper text 12; nothing smaller. */
+body{display:flex;flex-direction:column;min-height:100svh;margin:0;background:var(--page);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.75;-webkit-font-smoothing:antialiased}
 body > main{flex:1}
-html[lang="zh"] body{line-height:1.75}
 /* Browsers give code its own generic monospace (NSimSun on Chinese Windows); everything mono uses the bundled font. */
 code,kbd,pre,samp{font-family:var(--f-data);font-size:1em}
 h1,h2,h3{margin:0;text-wrap:balance}
@@ -60,25 +62,32 @@ a{color:inherit}
 [hidden]{display:none!important}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
 ::selection{background:var(--accent-soft)}
-.wrap{max-width:1200px;margin-inline:auto;padding-left:max(32px,env(safe-area-inset-left,0px));padding-right:max(32px,env(safe-area-inset-right,0px))}
+/* The content is at most 1200 wide (spec 2), with the page margins outside it: 32px, 20 on a phone. */
+.wrap{box-sizing:content-box;max-width:1200px;margin-inline:auto;padding-left:max(32px,env(safe-area-inset-left,0px));padding-right:max(32px,env(safe-area-inset-right,0px))}
 @media (max-width:768px){.wrap{padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}}
+/* The page grid (spec 2): 12 columns with 24px gutters. Each layout says how many columns its children span; a child
+   without a span takes the whole row, which is how the layouts stack on narrow screens. */
+.cols{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px}
+.cols > *{grid-column:1 / -1}
 .mono{font-family:var(--f-data)}
-/* The spec asks for a 1.75px stroke on a 24×24 viewBox; our icons are drawn on 16×16, so the same rendered
-   weight is 1.75 × 16/24. */
+/* Line icons (components/Icon.astro): 24×24 viewBox, 1.75 stroke, drawn at 16, 20 or 24. */
 .i{flex:none;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
 .row{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
 .spacer{flex:1}
+/* "Skip to content", the keyboard's first stop, shown while it has the focus. */
+.skip{position:fixed;z-index:30;left:16px;top:12px;padding:8px 16px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);font-size:14px;font-weight:600;text-decoration:none}
+.skip:not(:focus){translate:0 -200px}
 
 /* type: display headings at --w-display, everything else at the body font */
 h1,h2,.display{font-family:var(--f-display);font-weight:var(--w-display);letter-spacing:-.03em}
 html[lang="zh"] :is(h1,h2,.display){letter-spacing:0}
 h3{font-weight:600}
-.eyebrow{margin-bottom:14px;font-size:13px;font-weight:600;color:var(--ink-3)}
-.lead{font-size:17px;line-height:1.75;color:var(--ink-2)}
-.fine{font-size:13px;color:var(--ink-3)}
+.eyebrow{margin-bottom:14px;font-size:14px;font-weight:600;color:var(--ink-3)}
+.lead{max-width:720px;font-size:16px;line-height:1.75;color:var(--ink-2)}
+.fine{font-size:12px;color:var(--ink-3)}
 
 /* buttons: primary (one per area, the accent), secondary and text, as in the workbench, at the site's sizes */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--h-ctl);padding:0 16px;border-radius:var(--r);border:1px solid transparent;font:inherit;font-size:14px;font-weight:600;line-height:1;text-decoration:none;white-space:nowrap;cursor:pointer;transition:background-color .15s ease,border-color .15s ease,color .15s ease,transform .08s ease}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--h-ctl);padding:0 16px;border-radius:var(--r);border:1px solid transparent;font:inherit;font-size:14px;font-weight:600;line-height:1;text-decoration:none;white-space:nowrap;cursor:pointer;transition:background-color var(--t-fast),border-color var(--t-fast),color var(--t-fast),transform var(--t-fast)}
 /* Pressed: the button sinks a little. Submitting (aria-busy): a spinner in place of the label, the width kept, and no
    more clicks until it is done. */
 .btn:active:not(:disabled){transform:translateY(1px) scale(.985)}
@@ -88,9 +97,9 @@ h3{font-weight:600}
 @keyframes btn-spin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion: reduce){.btn:active:not(:disabled){transform:none}}
 .btn:disabled{opacity:.55;cursor:default}
-.btn-sm{height:var(--h-sm);padding:0 12px;font-size:13px}
-.btn-lg{height:var(--h-lg);padding:0 22px;font-size:15px}
-.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);box-shadow:0 6px 14px -8px var(--accent)}
+.btn-sm{height:var(--h-sm);padding:0 12px}
+.btn-lg{height:var(--h-lg);padding:0 22px;font-size:16px}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
 .btn-primary:hover:not(:disabled){background:color-mix(in srgb,var(--accent) 88%,var(--ink));border-color:color-mix(in srgb,var(--accent) 88%,var(--ink))}
 .btn-primary:active:not(:disabled){background:color-mix(in srgb,var(--accent) 78%,var(--ink));border-color:color-mix(in srgb,var(--accent) 78%,var(--ink))}
 .btn-primary{--busy:var(--on-accent)}
@@ -100,7 +109,7 @@ h3{font-weight:600}
 .btn-text:hover:not(:disabled){background:var(--seg);color:var(--ink)}
 .full{width:100%}
 .linkish{border:0;background:none;padding:0;font:inherit;color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
-.linkish.fine{font-size:13px;color:var(--ink-2)}
+.linkish.fine{font-size:12px;color:var(--ink-2)}
 
 /* monthly / yearly and other two-way choices */
 .seg{display:inline-flex;gap:2px;padding:4px;border-radius:var(--r-lg);background:var(--seg)}
@@ -109,49 +118,41 @@ h3{font-weight:600}
 .seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(29,28,43,.12)}
 .seg em{font-style:normal;font-size:12px;margin-left:6px;color:var(--ink-3)}
 
-/* header: the sections in a row, the current one underlined; narrower than a tablet they fold into a menu */
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--page) 88%,transparent);-webkit-backdrop-filter:saturate(1.4) blur(12px);backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
+/* header: the sections in a row, the current one underlined; where they no longer fit, they move into a drawer that
+   the menu button opens (components/Header.astro) */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--page) 88%,transparent);-webkit-backdrop-filter:saturate(1.4) blur(12px);backdrop-filter:saturate(1.4) blur(12px);box-shadow:inset 0 -1px var(--line)}
 .top-in{display:flex;align-items:center;gap:40px;height:var(--hd)}
 .brand{display:flex;align-items:center;gap:9px;text-decoration:none}
 .seal{width:28px;height:28px;flex:none;color:var(--accent)}
+/* The word in the logo, part of the mark: it keeps its own weight and size. */
 .brand-word{font-family:var(--f-display);font-weight:700;font-size:22px;line-height:1;letter-spacing:-.02em}
-.nav{display:flex;align-items:center;gap:28px;flex:1;font-size:14.5px;color:var(--ink-2)}
+.nav{display:flex;align-items:center;gap:28px;flex:1;font-size:14px;color:var(--ink-2)}
 .nav > a{position:relative;display:flex;align-items:center;height:var(--hd);text-decoration:none}
 .nav > a:hover{color:var(--ink)}
 .nav > a[aria-current="page"]{color:var(--ink);font-weight:600}
-.nav > a[aria-current="page"]::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:2px;border-radius:2px;background:var(--accent)}
+.nav > a[aria-current="page"]::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:99px;background:var(--accent)}
 .nav-acts{display:flex;align-items:center;gap:18px;margin-left:auto}
 .quiet{text-decoration:none;color:var(--ink-2)}
 .quiet:hover{color:var(--ink)}
-.menu-btn{display:none;place-items:center;width:40px;height:40px;margin-left:auto;border:1px solid var(--line-2);border-radius:var(--r);background:var(--card);color:var(--ink);cursor:pointer}
+.menu-btn{display:none;place-items:center;width:44px;height:44px;margin-left:auto;border:1px solid var(--line-2);border-radius:var(--r);background:var(--card);color:var(--ink);cursor:pointer}
 @media (max-width:1000px){
   .menu-btn{display:grid}
-  .nav{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;align-items:stretch;gap:0;padding:4px 20px 20px;background:var(--page);border-bottom:1px solid var(--line);box-shadow:var(--shadow-pop)}
+  /* The drawer: under the header on the right, over the page, which is dimmed and doesn't scroll meanwhile. */
+  .nav{display:none;position:absolute;top:100%;right:0;width:min(360px,100% - 56px);height:calc(100dvh - var(--hd));flex-direction:column;align-items:stretch;gap:0;padding:8px 20px 24px;overflow-y:auto;background:var(--page);border-left:1px solid var(--line);box-shadow:var(--shadow-pop)}
+  html.menu-open{overflow:hidden}
   html.menu-open .nav{display:flex}
+  html.menu-open body::after{content:'';position:fixed;inset:0;z-index:19;background:var(--overlay)}
   .nav > a{height:auto;padding:14px 2px;border-bottom:1px solid var(--line);font-size:16px}
   .nav > a[aria-current="page"]::after{display:none}
   .nav-acts{margin:18px 0 0;gap:12px}
   .nav-acts .btn,.nav-acts .quiet{flex:1;justify-content:center;text-align:center}
 }
 
-/* sections */
-.sec{padding-block:104px}
-.sec-alt{background:var(--panel);border-block:1px solid var(--line)}
-.sec-head{max-width:720px;margin-bottom:48px}
-.sec-head.c{margin-inline:auto;text-align:center}
-.sec-head h2{font-size:clamp(1.9rem,3.4vw,2.5rem);line-height:1.25}
-.sec-head .lead{margin-top:16px}
-@media (max-width:720px){.sec{padding-block:64px}.sec-head{margin-bottom:36px}}
-
-/* cards, icon tiles, ticked lists and status labels (white capsules with a small icon, as in the workbench) */
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);box-shadow:var(--shadow);min-width:0}
+/* cards, icon tiles and status labels (white capsules with a small icon, as in the workbench); cards have only their
+   border */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);min-width:0}
 .tile{display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:var(--r-card);background:var(--panel);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
-.pts{list-style:none;margin:28px 0 0;padding:0;display:grid;gap:18px}
-.pts li{display:flex;gap:12px}
-.pts .tick{display:grid;place-items:center;width:22px;height:22px;margin-top:2px;flex:none;border-radius:50%;background:var(--seg);color:var(--ink)}
-.pts b{font-size:15px;font-weight:600}
-.pts p{margin-top:3px;color:var(--ink-2);line-height:1.7}
-.chip{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 11px;border-radius:99px;background:var(--card);border:1px solid var(--line);box-shadow:0 1px 1px rgba(29,28,43,.05),0 5px 12px -6px rgba(29,28,43,.25);font-size:12.5px;font-weight:600;color:var(--ink);white-space:nowrap}
+.chip{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 11px;border-radius:99px;background:var(--card);border:1px solid var(--line);font-size:12px;font-weight:600;color:var(--ink);white-space:nowrap}
 .chip .i{color:var(--ink-3)}
 .chip.ok .i,.chip.run .i{color:var(--good)}
 .chip.warn .i{color:var(--warn)}
@@ -163,15 +164,23 @@ h3{font-weight:600}
 .page-head{margin-bottom:28px}
 .page-head h1{font-size:clamp(1.9rem,4vw,2.4rem);line-height:1.25}
 .page-head p{margin-top:10px;color:var(--ink-2);max-width:720px}
-.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:26px 28px;min-width:0;box-shadow:var(--shadow)}
-.panel-t{margin-bottom:14px;font-size:13px;font-weight:600;color:var(--ink-3)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:26px 28px;min-width:0}
+.panel-t{margin-bottom:14px;font-size:14px;font-weight:600;color:var(--ink-3)}
 .form{display:grid;gap:16px}
-.field{display:grid;gap:7px;min-width:0}
-.field label{font-size:13.5px;font-weight:600}
-.field input,.field select,.field textarea{width:100%;height:var(--h-ctl);padding:0 14px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--card);color:var(--ink);font:inherit;font-size:15px}
+.field{display:grid;gap:7px;align-content:start;min-width:0}
+.field label{font-size:14px;font-weight:600}
+/* Text boxes (spec 4): a grey line on the card colour; focused, the accent line and a soft accent ring. A .box that holds
+   an icon or a button beside a borderless input (the searches) shows it while anything in it has the focus. */
+.box,.field :is(input,select,textarea){border:1px solid var(--line-2);border-radius:var(--r);background:var(--card);color:var(--ink)}
+.box:focus-within,.field :is(input,select,textarea):focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.field :is(input,select,textarea){width:100%;height:var(--h-ctl);padding:0 14px;font:inherit;font-size:14px}
 .field textarea{height:auto;min-height:120px;padding:12px 14px;resize:vertical}
-.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--ink-2);box-shadow:0 0 0 3px var(--seg)}
-.field .hint{font-size:12.5px;color:var(--ink-3)}
+/* A field's error (spec 4): the red line, and under the field the reason (scripts/session.ts). */
+.field [aria-invalid="true"],.field [aria-invalid="true"]:focus{border-color:var(--bad)}
+.field [aria-invalid="true"]:focus{box-shadow:0 0 0 3px var(--bad-soft)}
+.field-err{font-size:12px;line-height:1.5;color:var(--bad-ink)}
+label + .field-err{margin-top:-8px}
+.field .hint{font-size:12px;color:var(--ink-3)}
 .field-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
 /* A password with a show/hide button inside the box. */
 .pw{position:relative}
@@ -198,27 +207,28 @@ table.list tr:last-child td{border-bottom:0}
 
 /* sign-in pages: the simple header's links; the product on a soft accent panel on the left, centred in it with the three
    key points in a row along the walkthrough's lower edge (its pause button moves to the top corner), and the form on
-   the right. On a phone the form comes first and the panel follows, without the walkthrough. */
-.top-links{display:flex;gap:28px;margin-left:auto;font-size:14.5px}
+   the right, within the header's right edge. On a phone the form comes first and the panel follows, without the
+   walkthrough. */
+.top-links{display:flex;gap:28px;margin-left:auto;font-size:14px}
 .top-links a{color:var(--ink-2);text-decoration:none}
 .top-links a:hover{color:var(--ink)}
 .auth{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);min-height:calc(100svh - var(--hd))}
 .auth-panel{display:flex;justify-content:center;align-items:center;padding:56px 64px 72px;background:linear-gradient(165deg,var(--accent-soft),var(--page) 88%);border-right:1px solid var(--line)}
 .auth-panel-in{width:100%;max-width:620px}
 .auth-title{font-size:clamp(1.75rem,2.8vw,2.375rem);line-height:1.2}
-.auth-lead{max-width:520px;margin-top:14px;font-size:15.5px;line-height:1.75;color:var(--ink-2)}
+.auth-lead{max-width:520px;margin-top:14px;font-size:16px;line-height:1.75;color:var(--ink-2)}
 .auth-vis{position:relative;margin-top:44px}
 .auth-vis .fd-btn{top:10px;bottom:auto}
 .auth-pts{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:-30px 18px 0;padding:0;list-style:none}
-.auth-pts li{display:flex;align-items:center;gap:10px;min-width:0;padding:9px 12px 9px 9px;border-radius:14px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-pop);line-height:1.4}
+.auth-pts li{display:flex;align-items:center;gap:10px;min-width:0;padding:9px 12px 9px 9px;border-radius:var(--r-lg);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-pop);line-height:1.4}
 .auth-pts li > span:last-child{display:grid}
-.auth-pts b{font-size:13.5px;font-weight:600}
+.auth-pts b{font-size:14px;font-weight:600}
 .auth-pts small{font-size:12px;color:var(--ink-2)}
-.auth-main{display:flex;align-items:center;padding:56px max(32px,calc((100vw - 1200px) / 2 + 32px)) 80px 72px}
+.auth-main{display:flex;align-items:center;padding:56px max(32px,calc((100vw - 1200px) / 2)) 80px 72px}
 .auth-form{display:grid;gap:22px;width:100%;max-width:420px}
 .auth-form .page-head{margin-bottom:0}
 .auth-form .page-head h1{font-size:32px}
-.auth-form .page-head p{font-size:15px}
+.auth-form .page-head p{font-size:16px}
 .auth-form a:not(.btn){color:var(--accent-ink);text-decoration:none}
 .auth-form a:not(.btn):hover{text-decoration:underline}
 .auth-form .alt{text-align:center}
@@ -236,7 +246,11 @@ table.list tr:last-child td{border-bottom:0}
   .auth-pts li{box-shadow:none}
 }
 
-/* Phones: every button is a comfortable touch target. */
-@media (max-width:768px){.btn{min-height:44px}}
+/* Phones: buttons and toggles are comfortable touch targets (44px). The password's eye stays drawn at 32 inside its
+   box, its touch area grown to 44. */
+@media (max-width:768px){
+  .btn,.seg button{min-height:44px}
+  .pw button::before{content:'';position:absolute;inset:-6px}
+}
 
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}

@@ -25,7 +25,7 @@ export interface DemoOptions {
 
 // The page places the player (it must be positioned, for the pause button).
 const CSS = `
-.fd-stage{position:relative;overflow:hidden;border-radius:12px;background:#fff;box-shadow:0 0 0 1px rgba(29,28,43,.1),0 40px 80px -30px rgba(40,10,30,.55);transition:opacity .5s ease,transform .5s ease}
+.fd-stage{position:relative;overflow:hidden;border-radius:var(--r-lg);background:#fff;box-shadow:0 0 0 1px var(--line),var(--shadow-pop);transition:opacity .5s ease,transform .5s ease}
 @property --fd-z{syntax:'<number>';inherits:true;initial-value:1}
 .fd-world{position:absolute;inset:0;transform-origin:0 0;transition:transform .7s cubic-bezier(.45,0,.2,1),--fd-z .7s cubic-bezier(.45,0,.2,1)}
 .fd-world>img.fd-f{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .3s ease}
@@ -35,7 +35,7 @@ const CSS = `
 .fd-tap{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:rgba(210,68,94,.35);pointer-events:none;opacity:0;scale:calc(1 / var(--fd-z))}
 .fd-tap.go{animation:fd-tap .45s ease-out}
 @keyframes fd-tap{from{opacity:1;transform:scale(.3)}to{opacity:0;transform:scale(1.4)}}
-.fd-win{position:absolute;right:4%;bottom:5%;width:52%;border-radius:10px;overflow:hidden;background:#f1f1f4;box-shadow:0 0 0 1px rgba(29,28,43,.12),0 30px 60px -20px rgba(20,10,30,.55);opacity:0;transform:translateY(18px) scale(.96);transition:opacity .4s ease,transform .4s ease;pointer-events:none}
+.fd-win{position:absolute;right:4%;bottom:5%;width:52%;border-radius:var(--r-card);overflow:hidden;background:#f1f1f4;box-shadow:0 0 0 1px var(--line),var(--shadow-pop);opacity:0;transform:translateY(18px) scale(.96);transition:opacity .4s ease,transform .4s ease;pointer-events:none}
 .fd-win.on{opacity:1;transform:none}
 .fd-tabs{display:flex;gap:4px;padding:7px 8px 0 46px;position:relative;font:500 10.5px/1 system-ui,sans-serif;color:#3b3a4c}
 .fd-tabs::before{content:'';position:absolute;left:10px;top:12px;width:7px;height:7px;border-radius:50%;background:#ff5f57;box-shadow:11px 0 #febc2e,22px 0 #28c840}
@@ -45,12 +45,12 @@ const CSS = `
 .fd-bar{padding:5px 8px;background:#fff;border-bottom:1px solid #e6e6ec}
 .fd-bar span{display:block;padding:4px 10px;border-radius:99px;background:#f1f1f4;font:10.5px/1.2 system-ui,sans-serif;color:#55546a}
 .fd-win img{display:block;width:100%}
-.fd-btn{position:absolute;right:10px;bottom:10px;display:grid;place-items:center;width:30px;height:30px;padding:0;border:0;border-radius:50%;background:rgba(29,28,43,.62);color:#fff;cursor:pointer;opacity:.75;transition:opacity .2s ease}
+.fd-btn{position:absolute;right:10px;bottom:10px;display:grid;place-items:center;width:30px;height:30px;padding:0;border:0;border-radius:50%;background:rgba(29,28,43,.62);color:#fff;cursor:pointer;opacity:.75;transition:opacity var(--t)}
 .fd-btn:hover,.fd-btn:focus-visible{opacity:1}
-.fd-btn svg{width:12px;height:12px}
+.fd-btn svg{width:16px;height:16px}
 .fd[data-state="still"] .fd-btn{display:none}
 @media (prefers-color-scheme: dark){
-  .fd-stage{background:#1c1b23;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 40px 80px -30px rgba(0,0,0,.7)}
+  .fd-stage{background:#1c1b23}
   .fd-win{background:#26252f}.fd-tabs{color:#d8d7e3}.fd-tab:first-child,.fd-bar{background:#1c1b23;border-color:#33323d}.fd-bar span{background:#26252f;color:#a9a8b8}
 }`;
 const POINTER = '<svg viewBox="0 0 22 22"><path d="M4 2.5 18 13l-6.2 1.1 3.6 6.4-2.6 1.4-3.6-6.4L4.6 20z" fill="#fff" stroke="#1d1c2b" stroke-width="1.3" stroke-linejoin="round"/></svg>';
@@ -98,7 +98,8 @@ export function mountDemo(root: HTMLElement, o: DemoOptions): () => void {
   const show = () => {
     root.dataset.state = still.matches ? 'still' : paused() ? 'paused' : 'playing';
     btn.innerHTML = byUser ? PLAY : PAUSE;
-    btn.setAttribute('aria-label', byUser ? o.labels.play : o.labels.pause);
+    btn.title = byUser ? o.labels.play : o.labels.pause;
+    btn.setAttribute('aria-label', btn.title);
     btn.setAttribute('aria-pressed', String(byUser));
     root.getAnimations?.({ subtree: true }).forEach(a => (paused() ? a.pause() : a.play()));
   };

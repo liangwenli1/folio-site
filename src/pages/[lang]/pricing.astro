@@ -17,7 +17,7 @@ const start = { free: link(lang, 'signup/'), studio: link(lang, 'checkout/?plan=
 ---
 <Base lang={lang} path="pricing/" title={P.title} description={P.lead}>
   <PageHero lang={lang} title={P.h1} lead={P.lead}>
-    <p class="price-note"><Icon name="info" size={15} />{P.note}</p>
+    <p class="price-note"><Icon name="info" />{P.note}</p>
     <Shot slot="vis" lang={lang} name="list" alt={P.shot} zoom={1.2} origin="100% 0" eager />
   </PageHero>
 
@@ -29,7 +29,7 @@ const start = { free: link(lang, 'signup/'), studio: link(lang, 'checkout/?plan=
           <button type="button" data-period="yearly" aria-pressed="false">{P.yearly}<em>{P.save}</em></button>
         </div>
       </div>
-      <div class="plans">
+      <div class="cols plans">
         {PLANS.map(id => (
           <article class={id === 'studio' ? 'card plan featured' : 'card plan'} data-plan={id}>
             <span class="plan-tag">{P.tags[id]}</span>
@@ -41,7 +41,7 @@ const start = { free: link(lang, 'signup/'), studio: link(lang, 'checkout/?plan=
             <p class="plan-fit" data-fit hidden></p>
             <a class={id === 'studio' ? 'btn btn-primary full' : 'btn btn-secondary full'} data-cta href={start[id]}>{P.cta[id]}</a>
             {id !== 'free' && <a class="buy" data-buy href={link(lang, `checkout/?plan=${id}&period=monthly`)}>{P.buy}</a>}
-            <ul class="feat">{P.features[id].map(f => <li><Icon name="check" size={12} />{f}</li>)}</ul>
+            <ul class="feat">{P.features[id].map(f => <li><Icon name="check" />{f}</li>)}</ul>
           </article>
         ))}
       </div>

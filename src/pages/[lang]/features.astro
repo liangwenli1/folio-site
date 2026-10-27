@@ -33,13 +33,13 @@ const FLOW: IconName[] = ['profiles', 'proxies', 'team', 'play'];
     const B = F.blocks[i];
     return (
       <section class="fblock" id={b.id} aria-labelledby={`${b.id}-h`}>
-        <div class="wrap fblock-in">
+        <div class="wrap cols fblock-in">
           <div>
             <p class="fnum">{String(i + 1).padStart(2, '0')}</p>
             <h2 id={`${b.id}-h`}>{B.title}</h2>
             <p class="lead">{B.lead}</p>
             <ul class="fpts">
-              {B.points.map(([title, body], k) => <li><span class="tile acc"><Icon name={b.points[k]} size={18} /></span><div><b>{title}</b><p>{body}</p></div></li>)}
+              {B.points.map(([title, body], k) => <li><span class="tile acc"><Icon name={b.points[k]} size={20} /></span><div><b>{title}</b><p>{body}</p></div></li>)}
             </ul>
           </div>
           <Shot lang={lang} name={b.shot} alt={B.shot} zoom={b.zoom} origin={b.origin} />
@@ -53,7 +53,7 @@ const FLOW: IconName[] = ['profiles', 'proxies', 'team', 'play'];
       <div class="fflow">
         <h2>{F.flow.title}</h2>
         <ol class="fflow-steps">
-          {F.flow.steps.map(([title, body], i) => <li><span class="tile acc"><Icon name={FLOW[i]} size={18} /></span><div><b>{title}</b><p>{body}</p></div></li>)}
+          {F.flow.steps.map(([title, body], i) => <li><span class="tile acc"><Icon name={FLOW[i]} size={20} /></span><div><b>{title}</b><p>{body}</p></div></li>)}
         </ol>
         <a class="btn btn-primary btn-lg" href={link(lang, 'signup/')}>{F.flow.cta}<Icon name="chevr" /></a>
       </div>
@@ -62,25 +62,27 @@ const FLOW: IconName[] = ['profiles', 'proxies', 'team', 'play'];
 </Base>
 <style>
   .ftabs{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:32px;padding-top:20px;border-top:1px solid var(--line)}
-  .ftabs a{display:inline-flex;align-items:center;gap:7px;padding-bottom:6px;font-size:14.5px;font-weight:600;text-decoration:none;color:var(--ink-2);border-bottom:2px solid transparent}
+  .ftabs a{display:inline-flex;align-items:center;gap:7px;padding-bottom:6px;font-size:14px;font-weight:600;text-decoration:none;color:var(--ink-2);border-bottom:2px solid transparent}
   .ftabs a:hover{color:var(--accent-ink);border-bottom-color:var(--accent)}
   .ftabs :global(.i){color:var(--accent)}
   .fblock{padding-block:72px;border-bottom:1px solid var(--line)}
-  .fblock-in{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:56px;align-items:center}
-  .fnum{font:600 15px var(--f-data);color:var(--accent-ink)}
+  /* on the page grid: the copy on 5 columns, the picture on 7 */
+  .fblock-in{align-items:center}
+  @media (min-width:961px){.fblock-in > div{grid-column:span 5}.fblock-in > :global(.shot){grid-column:span 7}}
+  .fnum{font:600 16px var(--f-data);color:var(--accent-ink)}
   .fblock h2{margin-top:6px;font-size:clamp(1.75rem,3vw,2.25rem);line-height:1.25}
-  .fblock .lead{margin-top:12px;font-size:16px}
+  .fblock .lead{margin-top:12px}
   .fpts{display:grid;gap:20px;margin:28px 0 0;padding:0;list-style:none}
   .fpts li{display:flex;gap:14px}
-  .fpts b{font-size:15.5px;font-weight:600}
+  .fpts b{font-size:16px;font-weight:600}
   .fpts p{margin-top:2px;font-size:14px;line-height:1.7;color:var(--ink-2)}
-  @media (max-width:960px){.fblock{padding-block:56px}.fblock-in{grid-template-columns:minmax(0,1fr);gap:32px}}
-  .fflow{display:grid;justify-items:center;gap:28px;padding:40px;border-radius:16px;background:color-mix(in srgb,var(--accent-soft) 60%,var(--card));border:1px solid color-mix(in srgb,var(--accent) 16%,transparent);text-align:center}
+  @media (max-width:960px){.fblock{padding-block:56px}.fblock-in{row-gap:32px}}
+  .fflow{display:grid;justify-items:center;gap:28px;padding:40px;border-radius:var(--r-card);background:color-mix(in srgb,var(--accent-soft) 60%,var(--card));border:1px solid color-mix(in srgb,var(--accent) 16%,transparent);text-align:center}
   .fflow h2{font-size:clamp(1.4rem,2.4vw,1.75rem)}
   .fflow-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;width:100%;margin:0;padding:0;list-style:none;text-align:left}
   .fflow-steps li{position:relative;display:flex;gap:12px}
   .fflow-steps li + li::before{content:'→';position:absolute;left:-18px;top:8px;color:var(--ink-3)}
-  .fflow-steps b{font-size:15px;font-weight:600}
-  .fflow-steps p{margin-top:2px;font-size:13.5px;line-height:1.65;color:var(--ink-2)}
+  .fflow-steps b{font-size:16px;font-weight:600}
+  .fflow-steps p{margin-top:2px;font-size:14px;line-height:1.65;color:var(--ink-2)}
   @media (max-width:960px){.fflow{padding:28px 20px}.fflow-steps{grid-template-columns:minmax(0,1fr)}.fflow-steps li + li::before{display:none}}
 </style>

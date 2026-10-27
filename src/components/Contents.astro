@@ -1,0 +1,56 @@
+---
+// A legal page's body: its contents beside the sections (the slot; each section carries the id its entry links to).
+// The contents mark the section being read; on a phone they fold away above the sections, and picking one folds them
+// again. The privacy policy and the terms share it.
+import Icon from './Icon.astro';
+import { t, type Lang } from '../lib/i18n';
+
+interface Props { lang: Lang; sections: [string, string][] }
+const { lang, sections } = Astro.props;
+const label = t(lang).legal.toc;
+---
+<div class="wrap cols lg-grid">
+  <details class="lg-toc" open>
+    <summary>{label}<Icon name="chev" /></summary>
+    <nav aria-label={label}>{sections.map(([id, title], i) => <a href={`#${id}`} aria-current={i === 0 ? 'true' : undefined}>{title}</a>)}</nav>
+  </details>
+  <div class="lg-body"><slot /></div>
+</div>
+<script>
+  const toc = document.querySelector<HTMLDetailsElement>('.lg-toc')!;
+  const links = [...toc.querySelectorAll<HTMLAnchorElement>('a')];
+  const sections = links.map(a => document.getElementById(a.hash.slice(1))!);
+  const wide = matchMedia('(min-width: 861px)');
+  const fold = () => { toc.open = wide.matches; };
+  fold();
+  wide.addEventListener('change', fold);
+  links.forEach(a => a.addEventListener('click', () => { if (!wide.matches) toc.open = false; }));
+  const mark = () => {
+    const end = innerHeight + scrollY >= document.documentElement.scrollHeight - 4;
+    let at = 0;
+    sections.forEach((s, i) => { if (s.getBoundingClientRect().top <= 160) at = i; });
+    if (end) at = sections.length - 1;
+    links.forEach((a, i) => { if (i === at) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+  };
+  addEventListener('scroll', mark, { passive: true });
+  mark();
+</script>
+<style>
+  .lg-grid{align-items:start;padding-block:36px 88px}
+  @media (min-width:861px){.lg-toc{grid-column:span 2}.lg-body{grid-column:span 10}}
+  .lg-toc{position:sticky;top:calc(var(--hd) + 24px)}
+  .lg-toc summary{display:none}
+  .lg-toc nav{display:grid;gap:4px}
+  .lg-toc a{padding:10px 12px;border-radius:var(--r);font-size:14px;line-height:1.5;color:var(--ink-2);text-decoration:none}
+  .lg-toc a:hover{background:var(--panel);color:var(--ink)}
+  .lg-toc a[aria-current]{background:var(--accent-soft);color:var(--accent-ink);font-weight:600;box-shadow:inset 3px 0 0 var(--accent)}
+  .lg-body{display:grid;gap:20px;min-width:0}
+  @media (max-width:860px){
+    .lg-grid{row-gap:20px;padding-top:24px}
+    .lg-toc{position:static;border:1px solid var(--line);border-radius:var(--r-card);background:var(--card)}
+    .lg-toc summary{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;font-weight:600;cursor:pointer;list-style:none}
+    .lg-toc summary::-webkit-details-marker{display:none}
+    .lg-toc[open] summary :global(.i){rotate:180deg}
+    .lg-toc nav{padding:0 8px 8px}
+  }
+</style>

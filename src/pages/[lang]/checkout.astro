@@ -13,7 +13,7 @@ const c = d.checkout;
   <section class="wrap page co">
     <div class="co-head"><h1>{c.title}</h1><span class="tag" id="current"></span></div>
     <ol class="steps" id="steps">
-      {c.steps.map((label, i) => <li data-step={i + 1}><i><span>{i + 1}</span><Icon name="check" size={11} /></i>{label}</li>)}
+      {c.steps.map((label, i) => <li data-step={i + 1}><i><span>{i + 1}</span><Icon name="check" /></i>{label}</li>)}
     </ol>
     <div class="notice error" id="err" role="alert" hidden></div>
     <div class="notice" id="no-manage" hidden>{c.noManage}</div>
@@ -77,7 +77,7 @@ const c = d.checkout;
           <p class="fine" id="effect"></p>
           <p class="notice" id="soon" hidden>{c.soon}</p>
           <button class="btn btn-primary btn-lg full" type="submit" id="pay" disabled>{c.confirm}</button>
-          <p class="mock" id="mock"><Icon name="alert" size={13} /><span><b>{c.mockTitle}</b> · {c.mockBody}</span></p>
+          <p class="mock" id="mock"><Icon name="alert" /><span><b>{c.mockTitle}</b> · {c.mockBody}</span></p>
         </form>
       </div>
 

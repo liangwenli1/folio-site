@@ -214,7 +214,7 @@ test('signing up takes the code sent to the address and the terms agreed to; an 
   await page.fill('#email', email);
   await page.fill('#password', PASSWORD);
   await page.click('button[type="submit"]');
-  await expect(page.locator('#err')).toHaveText('Enter the 6-digit code.');
+  await expect(page.locator('#code-err')).toHaveText('Enter the 6-digit code.');
   await expect(page.locator('#code')).toBeFocused();
   await page.getByRole('button', { name: 'Get a code' }).click();
   await expect(page.locator('#sent')).toBeVisible();
@@ -224,11 +224,12 @@ test('signing up takes the code sent to the address and the terms agreed to; an 
   await page.fill('#code', code === '000000' ? '111111' : '000000');
   await page.check('#consent');
   await page.click('button[type="submit"]');
-  await expect(page.locator('#err')).toHaveText('Incorrect code. Check the email and try again.');
+  await expect(page.locator('#code-err')).toHaveText('Incorrect code. Check the email and try again.');
+  await expect(page.locator('#code')).toBeFocused();
   await page.fill('#code', code);
   await page.uncheck('#consent');
   await page.click('button[type="submit"]');
-  await expect(page.locator('#err')).toHaveText('Read and agree to the terms of service and privacy policy first.');
+  await expect(page.locator('#consent-err')).toHaveText('Read and agree to the terms of service and privacy policy first.');
   await expect(page.locator('#consent')).toBeFocused();
   await expect(page.locator('#form').getByRole('link', { name: 'terms of service' })).toHaveAttribute('target', '_blank');
   await page.check('#consent');
@@ -239,7 +240,42 @@ test('signing up takes the code sent to the address and the terms agreed to; an 
   await page.goto('/en/signup/');
   await page.fill('#email', email);
   await page.getByRole('button', { name: 'Get a code' }).click();
-  await expect(page.locator('#err')).toHaveText('This email is already registered. Log in instead.');
+  await expect(page.locator('#email-err')).toHaveText('This email is already registered. Log in instead.');
+  await expect(page.locator('#err')).toBeHidden();
+});
+
+test('logging in and signing up say what is wrong under each field, and focus the first such field', async ({ page }) => {
+  const email = page.locator('#email'), password = page.locator('#password');
+  await page.goto('/en/login/');
+  await page.click('button[type="submit"]');
+  await expect(email).toBeFocused();
+  await expect(email).toHaveAttribute('aria-invalid', 'true');
+  await expect(email).toHaveAccessibleDescription('Enter an email address.');
+  await expect(password).toHaveAccessibleDescription('Enter your password.');
+  await expect(page.locator('#err')).toBeHidden();
+  // Changing a field takes its reason away; the server's answer about the password goes under the password.
+  await email.fill('nobody-here@example.com');
+  await expect(page.locator('#email-err')).toBeHidden();
+  await expect(email).not.toHaveAttribute('aria-invalid');
+  await password.fill('not the password');
+  await page.click('button[type="submit"]');
+  await expect(page.locator('#password-err')).toHaveText('The email or password is incorrect. Check them and try again.');
+  await expect(password).toBeFocused();
+
+  await page.goto('/zh/signup/');
+  await email.fill('not an address');
+  await page.click('button[type="submit"]');
+  await expect(email).toBeFocused();
+  await expect(page.locator('#email-err')).toHaveText('邮箱格式不正确，请检查后重试。');
+  await expect(page.locator('#code-err')).toHaveText('请填写 6 位验证码。');
+  await expect(page.locator('#password-err')).toHaveText('密码需为 8 至 64 位。');
+  await expect(page.locator('#consent-err')).toHaveText('请先阅读并同意服务条款和隐私政策。');
+  await expect(page.locator('#consent')).toHaveAttribute('aria-describedby', 'consent-err');
+  // Getting a code checks only the address.
+  await email.fill('');
+  await page.getByRole('button', { name: '获取验证码' }).click();
+  await expect(page.locator('#email-err')).toHaveText('请填写邮箱。');
+  await expect(email).toBeFocused();
 });
 
 test('subscribing to release news takes the emailed link, and the other link unsubscribes', async ({ page }) => {
@@ -289,7 +325,7 @@ test('a forgotten password is reset in three steps; a wrong code stops the first
   const steps = page.locator('.rs-steps li');
   await page.fill('#code', code === '000000' ? '111111' : '000000');
   await page.getByRole('button', { name: '下一步' }).click();
-  await expect(page.locator('#err')).toHaveText('验证码错误，请核对邮件后重试。');
+  await expect(page.locator('#code-err')).toHaveText('验证码错误，请核对邮件后重试。');
   await expect(steps.first()).toHaveAttribute('aria-current', 'step');
   await page.fill('#code', code);
   await page.getByRole('button', { name: '下一步' }).click();
@@ -297,7 +333,8 @@ test('a forgotten password is reset in three steps; a wrong code stops the first
   await page.fill('#password', 'a brand new secret');
   await page.fill('#confirm', 'a brand new secrets');
   await page.getByRole('button', { name: '保存新密码' }).click();
-  await expect(page.locator('#err')).toHaveText('两次输入的密码不一致。');
+  await expect(page.locator('#confirm-err')).toHaveText('两次输入的密码不一致。');
+  await expect(page.locator('#confirm')).toBeFocused();
   await page.fill('#confirm', 'a brand new secret');
   await page.getByRole('button', { name: '保存新密码' }).click();
   await expect(page.getByRole('heading', { name: '密码已重置' })).toBeVisible();

@@ -39,6 +39,49 @@ test('on a phone the sections fold into a menu, with the current one marked', as
   await expect(page.getByRole('navigation', { name: 'Menu' })).toBeHidden();
 });
 
+test('on a phone the menu is a drawer: it takes the focus, holds the page still, and a click outside closes it', async ({ page }) => {
+  await page.goto('/zh/');
+  const button = page.getByRole('button', { name: '菜单' });
+  const nav = page.getByRole('navigation', { name: '菜单' });
+  await expect(button).toHaveAttribute('title', '菜单');
+  await button.click();
+  await expect(nav.getByRole('link', { name: '产品功能' })).toBeFocused();
+  // The page behind neither scrolls nor takes the keyboard.
+  await expect(page.locator('html')).toHaveCSS('overflow', 'hidden');
+  expect(await page.locator('main').evaluate(el => (el as HTMLElement).inert)).toBe(true);
+  // The drawer leaves a strip of the dimmed page on the left; a click there closes it.
+  const drawer = (await nav.boundingBox())!;
+  expect(drawer.x).toBeGreaterThanOrEqual(44);
+  await page.mouse.click(drawer.x / 2, 500);
+  await expect(nav).toBeHidden();
+  await expect(button).toBeFocused();
+  await expect(page.locator('html')).not.toHaveCSS('overflow', 'hidden');
+  expect(await page.locator('main').evaluate(el => (el as HTMLElement).inert)).toBe(false);
+});
+
+test('the header is 76px tall, on a phone and on a desktop', async ({ page }) => {
+  await page.goto('/en/');
+  expect((await page.locator('header.top').boundingBox())!.height).toBe(76);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  expect((await page.locator('header.top').boundingBox())!.height).toBe(76);
+  await page.goto('/en/login/');
+  expect((await page.locator('header.top').boundingBox())!.height).toBe(76);
+});
+
+test('on a phone the plans’ comparison scrolls sideways, its first column staying in place', async ({ page }) => {
+  await page.goto('/en/pricing/');
+  const table = page.locator('.cmp');
+  const first = table.getByRole('rowheader').first(), last = table.getByRole('columnheader').last();
+  await table.hover();
+  const x = (await first.boundingBox())!.x;
+  await expect(last).not.toBeInViewport({ ratio: 1 });
+  // Swiping sideways over the table (a wheel here) brings the last plan into view.
+  await page.mouse.wheel(600, 0);
+  await expect(last).toBeInViewport({ ratio: 1 });
+  expect((await first.boundingBox())!.x).toBe(x);
+  expect(await sideways(page)).toBe(0);
+});
+
 test('no sideways scrolling on a phone behind an account: checkout, account, invoice', async ({ page }) => {
   const email = `e2e${Date.now().toString(36)}layout@example.com`;
   await page.goto('/zh/signup/');

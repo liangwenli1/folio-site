@@ -24,7 +24,7 @@ const USES: [IconName, string][] = [['cart', 'solutions/ecommerce/'], ['chat', '
       <a class="btn btn-secondary btn-lg" href={link(lang, 'features/')}>{H.features}</a>
     </div>
     <ul class="phero-pts">
-      {H.points.map(([b, s], i) => <li><span class="tile acc"><Icon name={POINTS[i]} size={18} /></span><span><b>{b}</b><small>{s}</small></span></li>)}
+      {H.points.map(([b, s], i) => <li><span class="tile acc"><Icon name={POINTS[i]} size={20} /></span><span><b>{b}</b><small>{s}</small></span></li>)}
     </ul>
     <div slot="vis" class="home-vis"><Showcase lang={lang} label={d.demo.label} pause={d.demo.pause} play={d.demo.play} /></div>
   </PageHero>
@@ -32,7 +32,7 @@ const USES: [IconName, string][] = [['cart', 'solutions/ecommerce/'], ['chat', '
   <section class="msec alt">
     <div class="wrap">
       <div class="msec-head"><h2>{H.cardsTitle}</h2><p>{H.cardsLead}</p></div>
-      <div class="grid-4">
+      <div class="cols grid-4">
         {K.map((c, i) => (
           <article class="card hcard">
             <span class="tile acc"><Icon name={CARDS[i]} size={20} /></span>
@@ -54,18 +54,18 @@ const USES: [IconName, string][] = [['cart', 'solutions/ecommerce/'], ['chat', '
   <section class="msec">
     <div class="wrap">
       <div class="msec-head"><h2>{H.steps.title}</h2><p>{H.steps.lead}</p></div>
-      <ol class="steps-row">{H.steps.items.map(([b, s]) => <li><b>{b}</b><p>{s}</p></li>)}</ol>
+      <ol class="cols steps-row">{H.steps.items.map(([b, s]) => <li><b>{b}</b><p>{s}</p></li>)}</ol>
     </div>
   </section>
 
   <section class="msec alt">
     <div class="wrap">
       <div class="msec-head"><h2>{H.uses.title}</h2><p>{H.uses.lead}</p></div>
-      <div class="grid-3">
+      <div class="cols grid-3">
         {H.uses.items.map((u, i) => (
           <a class="card huse" href={link(lang, USES[i][1])}>
             <div><span class="tile acc"><Icon name={USES[i][0]} size={20} /></span><h3>{u.title}</h3><p>{u.body}</p></div>
-            <ul class="huse-list" aria-hidden="true">{u.list.map(x => <li><Icon name="profiles" size={12} />{x}</li>)}</ul>
+            <ul class="huse-list" aria-hidden="true">{u.list.map(x => <li><Icon name="profiles" />{x}</li>)}</ul>
           </a>
         ))}
       </div>
@@ -92,12 +92,12 @@ const USES: [IconName, string][] = [['cart', 'solutions/ecommerce/'], ['chat', '
   .hcard h3{margin-top:6px;font-size:18px}
   .hcard > p{font-size:14px;line-height:1.7;color:var(--ink-2)}
   .hcard .mini{margin-top:auto}
-  .huse{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:18px;padding:22px;text-decoration:none;color:inherit;transition:border-color .15s ease,box-shadow .15s ease}
-  .huse:hover{border-color:color-mix(in srgb,var(--accent) 40%,var(--line));box-shadow:var(--shadow-pop)}
+  .huse{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:18px;padding:22px;text-decoration:none;color:inherit;transition:border-color var(--t-fast)}
+  .huse:hover{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
   .huse h3{margin-top:12px;font-size:18px}
   .huse p{margin-top:6px;font-size:14px;line-height:1.7;color:var(--ink-2)}
   .huse-list{display:grid;gap:6px;align-content:center;margin:0;padding:12px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line);list-style:none;font-size:12px}
-  .huse-list li{display:flex;align-items:center;gap:7px;height:28px;padding:0 9px;border-radius:6px;background:var(--card);border:1px solid var(--line);white-space:nowrap;overflow:hidden}
+  .huse-list li{display:flex;align-items:center;gap:7px;height:28px;padding:0 9px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);white-space:nowrap;overflow:hidden}
   .huse-list :global(.i){color:var(--ink-3)}
   @media (max-width:560px){.huse{grid-template-columns:minmax(0,1fr)}}
 </style>

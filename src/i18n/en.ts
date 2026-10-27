@@ -6,7 +6,7 @@ export const en = {
     title: 'Folio fingerprint browser',
     description: 'A fingerprint browser for teams running multiple shops, ad accounts and social accounts: a separate browser profile for each account, with distinct fingerprints, isolated cookies and a dedicated proxy IP.'
   },
-  nav: { features: 'Features', solutions: 'Solutions', pricing: 'Pricing', download: 'Download', help: 'Help center', site: 'Back to the website', login: 'Log in', start: 'Try free', account: 'Account', menu: 'Menu', crumbs: 'Breadcrumb' },
+  nav: { features: 'Features', solutions: 'Solutions', pricing: 'Pricing', download: 'Download', help: 'Help center', site: 'Back to the website', login: 'Log in', start: 'Try free', account: 'Account', menu: 'Menu', crumbs: 'Breadcrumb', skip: 'Skip to content' },
   plans: { free: 'Free', studio: 'Studio', company: 'Company' },
   periods: { monthly: 'monthly', yearly: 'yearly' },
 
@@ -344,6 +344,7 @@ export const en = {
     message: 'What you need', messagePh: 'Your needs, how you would use Folio, or what you want to know', consent: 'I have read and agree to the', privacy: 'privacy policy',
     send: 'Send', done: 'Sent', doneText: 'Keep this reference number for any follow-up.', number: 'Reference', again: 'Send another',
     failed: 'That didn’t go through. Try again later; what you wrote is still here.',
+    nameMissing: 'Enter your name.', teamMissing: 'Choose a team size.', messageMissing: 'Describe what you need.', consentMissing: 'Read and agree to the privacy policy first.',
     more: {
       eyebrow: 'More', title: 'Other places to look', lead: 'Find out more about the product, or get help using it.',
       items: [['Help center', 'Guides, common questions and the local API reference.'], ['Pricing', 'What each plan includes and costs.'], ['Download', 'Get the app and start using Folio.']] as [string, string][]
@@ -398,7 +399,7 @@ export const en = {
       ] as [string, string][]
     },
     contactCard: { title: 'Contact us', body: 'If the answer isn’t here, our team can help.', cta: 'Send a question' },
-    home: 'Help center', searchDocs: 'Search the guides', toc: 'On this page', updated: (date: string) => `Updated ${date}`, prev: 'Previous', next: 'Next', note: 'Note',
+    home: 'Help center', searchDocs: 'Search the guides', noMatch: 'No matching articles', toc: 'On this page', updated: (date: string) => `Updated ${date}`, prev: 'Previous', next: 'Next', note: 'Note',
     feedback: { ask: 'Was this guide helpful?', yes: 'Yes', no: 'No', thanks: 'Thank you for the feedback.', failed: 'That didn’t go through. Try again later.' },
     articles: {
       install: {
@@ -557,11 +558,10 @@ export const en = {
   },
 
   legal: {
-    tbc: 'To be confirmed',
+    tbc: 'To be confirmed', toc: 'Contents',
     privacy: {
       title: 'Privacy policy',
       draft: 'Draft. This page describes how Folio handles data today; items marked “To be confirmed” are not settled yet. The final text will be published after review.',
-      toc: 'Contents',
       sections: [
         { id: 'collect', title: 'Information we collect', lead: 'The kinds of information Folio handles when you use it.',
           table: { head: ['Category', 'What it includes', 'How it is kept'],
@@ -668,7 +668,7 @@ export const en = {
     forbidden: 'Access denied.',
     not_found: 'Not found.',
     validation: 'Some fields are missing or invalid.',
-    emailMissing: 'Enter an email address.', passwordShort: 'The password must be 8 to 64 characters.',
+    emailMissing: 'Enter an email address.', emailInvalid: 'The email address is not valid. Check it and try again.', passwordMissing: 'Enter your password.', passwordShort: 'The password must be 8 to 64 characters.',
     codeMissing: 'Enter the 6-digit code.', passwordMismatch: 'The two passwords don’t match.', consentMissing: 'Read and agree to the terms of service and privacy policy first.',
     network: 'Folio cannot be reached. Check the network connection and try again.',
     wrong_account: 'This invitation was sent to a different email address.',

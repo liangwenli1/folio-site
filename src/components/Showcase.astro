@@ -17,7 +17,7 @@ const { lang, label, pause, play } = Astro.props;
 </figure>
 <style>
   .showcase{margin:0}
-  .showcase img{display:block;width:100%;height:auto;border-radius:12px}
+  .showcase img{display:block;width:100%;height:auto;border-radius:var(--r-lg)}
 </style>
 <script>
   import { mountDemo, type DemoManifest } from '../scripts/demo-player';

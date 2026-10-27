@@ -2,7 +2,8 @@
 // Signing up: the email, a code sent to it (a minute between codes), a password, and agreeing to the terms and the
 // privacy policy (they open in a new tab, so nothing typed is lost). The account it makes is already verified. An
 // invitation fills in the email (?email=), and ?next= is where it goes afterwards. A test server without email
-// verification asks for no code.
+// verification asks for no code. Each field is checked on submit, the reason under it; so is an address that already
+// has an account, or a wrong code.
 import AuthPage from '../../layouts/AuthPage.astro';
 import Password from '../../components/Password.astro';
 import { langPaths, link, t, type Lang } from '../../lib/i18n';
@@ -36,21 +37,21 @@ const A = t(lang).auth;
 </AuthPage>
 <script>
   import { api } from '../../lib/api';
-  import { $, busy, cooldown, d, lang, nextPath, onSubmit, param, showError, to, withNext } from '../../scripts/session';
+  import { $, busy, cooldown, d, emailProblem, fail, invalid, lang, nextPath, onSubmit, param, to, withNext } from '../../scripts/session';
   const err = $('err'), email = $<HTMLInputElement>('email'), code = $<HTMLInputElement>('code');
+  const password = $<HTMLInputElement>('password'), consent = $<HTMLInputElement>('consent');
   $<HTMLAnchorElement>('to-login').href = withNext(to('login/'));
   if (param('email')) email.value = param('email')!;
   let needCode = true;
   api<{ emailVerification: boolean }>('GET', '/auth/options').then(o => { needCode = o.emailVerification; $('code-field').hidden = !needCode; }).catch(() => {});
   const address = () => email.value.trim();
-  const needEmail = () => { if (!address() || !email.checkValidity()){ email.focus(); throw d.errors.emailMissing; } };
 
   $('get').addEventListener('click', async () => {
     const get = $<HTMLButtonElement>('get');
     err.hidden = true;
+    if (invalid([[email, emailProblem(email)]])) return;
+    busy(get, true);
     try {
-      needEmail();
-      busy(get, true);
       await api('POST', '/auth/signup-code', { email: address(), locale: lang });
       $('sent').hidden = false;
       busy(get, false);
@@ -58,17 +59,18 @@ const A = t(lang).auth;
       code.focus();
     } catch (e){
       busy(get, false);
-      showError(err, e);
+      fail(err, e);
     }
   });
 
   onSubmit($<HTMLFormElement>('form'), err, async () => {
-    needEmail();
-    if (needCode && !/^\d{6}$/.test(code.value.trim())){ code.focus(); throw d.errors.codeMissing; }
-    const password = $<HTMLInputElement>('password').value;
-    if (password.length < 8 || password.length > 64){ $('password').focus(); throw d.errors.passwordShort; }
-    if (!$<HTMLInputElement>('consent').checked){ $('consent').focus(); throw d.errors.consentMissing; }
-    await api('POST', '/auth/register', { email: address(), code: needCode ? code.value.trim() : undefined, password, locale: lang });
+    if (invalid([
+      [email, emailProblem(email)],
+      [code, !needCode || /^\d{6}$/.test(code.value.trim()) ? '' : d.errors.codeMissing],
+      [password, password.value.length >= 8 && password.value.length <= 64 ? '' : d.errors.passwordShort],
+      [consent, consent.checked ? '' : d.errors.consentMissing]
+    ])) return;
+    await api('POST', '/auth/register', { email: address(), code: needCode ? code.value.trim() : undefined, password: password.value, locale: lang });
     location.assign(nextPath() ?? to('account/'));
   });
 </script>

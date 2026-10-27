@@ -26,8 +26,9 @@ const d = t(lang);
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>
   <body>
+    <a class="skip" href="#main">{d.nav.skip}</a>
     <Header lang={lang} path={path} simple={simple} />
-    <main><slot /></main>
+    <main id="main"><slot /></main>
     <Footer lang={lang} path={path} />
   </body>
 </html>

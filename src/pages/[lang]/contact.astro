@@ -1,6 +1,7 @@
 ---
-// Contacting the team: what the question is about (choosing one sets the form's type), the form, and once it is sent
-// the number to refer to it by; a failure keeps what was written. Below, where else to look.
+// Contacting the team: what the question is about (choosing one sets the form's type), the form (each field checked
+// when sent, the reason under it), and once it is sent the number to refer to it by; a failure keeps what was written.
+// Below, where else to look.
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import type { IconName } from '../../lib/icons';
@@ -14,8 +15,8 @@ const MORE: [IconName, string][] = [['book', 'help/'], ['billing', 'pricing/'], 
 ---
 <Base lang={lang} path="contact/" title={C.title} description={C.lead}>
   <section class="wrap page">
-    <div class="ct-head"><p class="eyebrow">{C.title}</p><h1>{C.h1}</h1><p class="lead">{C.lead}</p></div>
-    <div class="ct">
+    <div class="ct-head"><p class="eyebrow">{C.title}</p><h1 class="hero-title">{C.h1}</h1><p class="lead">{C.lead}</p></div>
+    <div class="cols ct">
       <div class="ct-kinds" role="radiogroup" aria-label={C.kind}>
         {KINDS.map(([k, icon], i) => (
           <button type="button" class="card ct-kind" role="radio" aria-checked={i === 0 ? 'true' : 'false'} data-kind={k}>
@@ -27,7 +28,7 @@ const MORE: [IconName, string][] = [['book', 'help/'], ['billing', 'pricing/'], 
       </div>
       <div class="card ct-form">
         <div class="ct-done" id="done" hidden>
-          <span class="ct-ok"><Icon name="check" size={22} /></span>
+          <span class="ct-ok"><Icon name="check" size={24} /></span>
           <h2>{C.done}</h2>
           <p>{C.doneText}</p>
           <p class="ct-number" id="number" data-label={C.number}></p>
@@ -64,7 +65,7 @@ const MORE: [IconName, string][] = [['book', 'help/'], ['billing', 'pricing/'], 
   <section class="msec alt">
     <div class="wrap">
       <div class="ct-more-head"><p class="eyebrow">{C.more.eyebrow}</p><h2>{C.more.title}</h2><p>{C.more.lead}</p></div>
-      <div class="grid-3">
+      <div class="cols grid-3">
         {C.more.items.map(([title, body], i) => <a class="card ct-link" href={link(lang, MORE[i][1])}><span class="tile"><Icon name={MORE[i][0]} size={20} /></span><span><b>{title}</b><small>{body}</small></span><Icon name="chevr" /></a>)}
       </div>
     </div>
@@ -73,14 +74,14 @@ const MORE: [IconName, string][] = [['book', 'help/'], ['billing', 'pricing/'], 
 <style>
   .ct-head{max-width:720px;margin-bottom:36px}
   .ct-head .eyebrow{color:var(--accent-ink)}
-  .ct-head h1{font-size:clamp(2rem,4.4vw,3.25rem);line-height:1.15}
-  .ct-head .lead{margin-top:14px;font-size:16px}
-  .ct{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:24px;align-items:start}
+  .ct-head .lead{margin-top:14px}
+  .ct{align-items:start}
+  @media (min-width:901px){.ct-kinds{grid-column:span 5}.ct-form{grid-column:span 7}}
   .ct-kinds{display:grid;gap:14px}
   .ct-kind{display:flex;align-items:center;gap:14px;padding:20px;text-align:left;font:inherit;color:inherit;cursor:pointer}
   .ct-kind > span:nth-child(2){flex:1;display:grid;gap:4px}
   .ct-kind b{font-size:16px}
-  .ct-kind small{font-size:13.5px;line-height:1.6;color:var(--ink-2)}
+  .ct-kind small{font-size:14px;line-height:1.6;color:var(--ink-2)}
   .ct-kind > :global(.i){color:var(--ink-3)}
   .ct-kind[aria-checked="true"]{border-color:color-mix(in srgb,var(--accent) 45%,var(--line));background:color-mix(in srgb,var(--accent-soft) 55%,var(--card))}
   .ct-kind[aria-checked="true"] > :global(.i){color:var(--accent)}
@@ -103,42 +104,34 @@ const MORE: [IconName, string][] = [['book', 'help/'], ['billing', 'pricing/'], 
   .ct-more-head p{margin-top:8px;color:var(--ink-2)}
   .ct-link{display:flex;align-items:center;gap:14px;padding:20px;text-decoration:none;color:inherit}
   .ct-link > span:nth-child(2){flex:1;display:grid;gap:4px}
-  .ct-link small{font-size:13.5px;line-height:1.6;color:var(--ink-2)}
+  .ct-link small{font-size:14px;line-height:1.6;color:var(--ink-2)}
   .ct-link > :global(.i){color:var(--ink-3)}
   .ct-link:hover{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
-  @media (max-width:900px){.ct{grid-template-columns:minmax(0,1fr)}}
 </style>
 <script>
   import { api, type Inquiry } from '../../lib/api';
-  import { $, busy, d, lang, showError } from '../../scripts/session';
-  const form = $<HTMLFormElement>('form'), err = $('err');
-  const kind = $<HTMLSelectElement>('kind'), message = $<HTMLTextAreaElement>('message');
+  import { $, d, emailProblem, invalid, lang, onSubmit } from '../../scripts/session';
+  const C = d.contact, form = $<HTMLFormElement>('form');
+  const name = $<HTMLInputElement>('name'), email = $<HTMLInputElement>('email'), team = $<HTMLSelectElement>('team');
+  const kind = $<HTMLSelectElement>('kind'), message = $<HTMLTextAreaElement>('message'), consent = $<HTMLInputElement>('consent');
   // The cards and the type field are one choice.
   const cards = document.querySelectorAll<HTMLButtonElement>('[data-kind]');
   const pick = (k: string) => { kind.value = k; cards.forEach(c => c.setAttribute('aria-checked', String(c.dataset.kind === k))); };
   cards.forEach(c => c.addEventListener('click', () => { pick(c.dataset.kind!); kind.focus(); }));
   kind.addEventListener('change', () => pick(kind.value));
   message.addEventListener('input', () => { $('count').textContent = `${message.value.length} / 500`; });
-  // Checked when sent: the first field that is missing something takes the focus, and nothing written is lost.
-  form.addEventListener('submit', async ev => {
-    ev.preventDefault();
-    err.hidden = true;
-    const missing = ['name', 'email', 'team', 'message', 'consent'].map(id => $<HTMLInputElement>(id))
-      .find(f => (f.type === 'checkbox' ? !f.checked : !f.value.trim() || !f.checkValidity()));
-    if (missing){ showError(err, d.errors.validation); missing.focus(); return; }
-    const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
-    busy(btn, true);
-    try {
-      const { number } = await api<Inquiry>('POST', '/sales-inquiries', {
-        kind: kind.value, name: $<HTMLInputElement>('name').value.trim(), email: $<HTMLInputElement>('email').value.trim(),
-        teamSize: $<HTMLSelectElement>('team').value, message: message.value.trim(), locale: lang
-      });
-      $('number').textContent = `${$('number').dataset.label} #${String(number).padStart(6, '0')}`;
-      form.hidden = true;
-      $('done').hidden = false;
-    } catch {
-      showError(err, d.contact.failed);
-    } finally { busy(btn, false); }
+  // Checked when sent: each field's reason under it, the first such field focused; nothing written is lost.
+  onSubmit(form, $('err'), async () => {
+    if (invalid([
+      [name, name.value.trim() ? '' : C.nameMissing], [email, emailProblem(email)], [team, team.value ? '' : C.teamMissing],
+      [message, message.value.trim() ? '' : C.messageMissing], [consent, consent.checked ? '' : C.consentMissing]
+    ])) return;
+    const { number } = await api<Inquiry>('POST', '/sales-inquiries', {
+      kind: kind.value, name: name.value.trim(), email: email.value.trim(), teamSize: team.value, message: message.value.trim(), locale: lang
+    }).catch(() => { throw C.failed; });
+    $('number').textContent = `${$('number').dataset.label} #${String(number).padStart(6, '0')}`;
+    form.hidden = true;
+    $('done').hidden = false;
   });
   $('again').addEventListener('click', () => { form.reset(); message.dispatchEvent(new Event('input')); pick('product'); form.hidden = false; $('done').hidden = true; });
 </script>

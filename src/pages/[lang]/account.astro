@@ -16,7 +16,7 @@ const a = d.account;
       <button class="btn btn-text" type="button" id="logout"><Icon name="logout" />{d.auth.logout}</button>
     </div>
     <div class="notice error" id="err" role="alert" hidden></div>
-    <div class="ac-grid" id="acct" hidden>
+    <div class="cols ac-grid" id="acct" hidden>
       <div class="ac-col">
         <section class="panel ac-plan" aria-labelledby="plan-h">
           <div class="ac-plan-top">
@@ -98,7 +98,7 @@ const a = d.account;
 
   const a = d.account;
   // The status labels' icons (components/Icon.astro draws the same paths at build time).
-  const icon = (path: string) => `<svg class="i" width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="${path}"/></svg>`;
+  const icon = (path: string) => `<svg class="i" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="${path}"/></svg>`;
   const CHECK = icon(ICONS.check), ALERT = icon(ICONS.alert), UNDO = icon(ICONS.back);
   let me: Me, ws: Workspace;
   const fail = (e: unknown) => showError($('err'), e);

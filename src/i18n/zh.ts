@@ -8,7 +8,7 @@ export const zh: typeof en = {
     title: 'Folio 指纹浏览器',
     description: '面向多店铺、多广告账户与多社媒账号团队的指纹浏览器，为每个账号提供独立的浏览器环境，支持差异化指纹配置、Cookie 隔离与独立代理 IP。'
   },
-  nav: { features: '产品功能', solutions: '解决方案', pricing: '价格', download: '下载', help: '帮助中心', site: '返回官网', login: '登录', start: '免费体验', account: '账户', menu: '菜单', crumbs: '面包屑导航' },
+  nav: { features: '产品功能', solutions: '解决方案', pricing: '价格', download: '下载', help: '帮助中心', site: '返回官网', login: '登录', start: '免费体验', account: '账户', menu: '菜单', crumbs: '面包屑导航', skip: '跳到正文' },
   plans: { free: '体验版', studio: '工作室版', company: '公司版' },
   periods: { monthly: '月付', yearly: '年付' },
 
@@ -346,6 +346,7 @@ export const zh: typeof en = {
     message: '需求描述', messagePh: '请描述您的需求、使用场景或想了解的问题', consent: '我已阅读并同意', privacy: '隐私政策',
     send: '提交咨询', done: '咨询已提交', doneText: '请保留提交编号，以便后续查询。', number: '提交编号', again: '再提交一条',
     failed: '提交失败，请稍后重试。已填写的内容已保留。',
+    nameMissing: '请填写姓名。', teamMissing: '请选择团队规模。', messageMissing: '请填写需求描述。', consentMissing: '请先阅读并同意隐私政策。',
     more: {
       eyebrow: '更多资源', title: '相关帮助与信息', lead: '也可以通过以下方式了解更多产品信息，或获取使用帮助。',
       items: [['帮助中心', '查看使用指南、常见问题与本机 API 参考。'], ['价格', '了解各套餐的功能与价格。'], ['下载', '下载客户端，开始使用 Folio。']] as [string, string][]
@@ -400,7 +401,7 @@ export const zh: typeof en = {
       ] as [string, string][]
     },
     contactCard: { title: '联系我们', body: '如果没有找到需要的答案，可以联系我们的团队。', cta: '提交咨询' },
-    home: '帮助中心', searchDocs: '搜索文档', toc: '本页目录', updated: (date: string) => `更新时间：${date}`, prev: '上一篇', next: '下一篇', note: '注意',
+    home: '帮助中心', searchDocs: '搜索文档', noMatch: '无匹配文档', toc: '本页目录', updated: (date: string) => `更新时间：${date}`, prev: '上一篇', next: '下一篇', note: '注意',
     feedback: { ask: '这篇文档是否有帮助？', yes: '是', no: '否', thanks: '感谢您的反馈。', failed: '提交失败，请稍后重试。' },
     articles: {
       install: {
@@ -559,11 +560,10 @@ export const zh: typeof en = {
   },
 
   legal: {
-    tbc: '待确认',
+    tbc: '待确认', toc: '目录',
     privacy: {
       title: '隐私政策',
       draft: '本页为草稿，依据 Folio 当前的数据处理方式整理；标注「待确认」的事项尚未确定，正式文本审核后发布。',
-      toc: '目录',
       sections: [
         { id: 'collect', title: '信息收集', lead: '本节说明使用 Folio 时我们处理的信息类别。',
           table: { head: ['数据类别', '包含内容', '保存方式'],
@@ -670,7 +670,7 @@ export const zh: typeof en = {
     forbidden: '没有访问权限。',
     not_found: '未找到相关内容。',
     validation: '部分内容未填写或格式有误。',
-    emailMissing: '请填写邮箱。', passwordShort: '密码需为 8 至 64 位。',
+    emailMissing: '请填写邮箱。', emailInvalid: '邮箱格式不正确，请检查后重试。', passwordMissing: '请填写密码。', passwordShort: '密码需为 8 至 64 位。',
     codeMissing: '请填写 6 位验证码。', passwordMismatch: '两次输入的密码不一致。', consentMissing: '请先阅读并同意服务条款和隐私政策。',
     network: '无法连接 Folio，请检查网络后重试。',
     wrong_account: '该邀请发送至其他邮箱。',

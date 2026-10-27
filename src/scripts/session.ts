@@ -30,20 +30,59 @@ export function showError(box: HTMLElement, e: unknown){
   box.hidden = false;
 }
 
+type Field = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
+// Field errors (design spec 4), checked on submit: each reason goes under its field (a checkbox: under its label) and
+// is tied to it for screen readers; '' clears one, and so does changing the field. The first field with a reason takes
+// the focus. Returns whether any field has one.
+export function invalid(checks: [Field, string][]){
+  for (const [field, reason] of checks) mark(field, reason);
+  const first = checks.find(([, reason]) => reason)?.[0];
+  first?.focus();
+  return !!first;
+}
+
+function mark(field: Field, reason: string){
+  const id = `${field.id}-err`;
+  let msg = document.getElementById(id);
+  if (reason && !msg){
+    msg = Object.assign(document.createElement('p'), { id, className: 'field-err' });
+    (field.type === 'checkbox' ? field.closest('label')! : field.closest('.pw, .code-row') ?? field).after(msg);
+  }
+  if (msg){ msg.textContent = reason; msg.hidden = !reason; }
+  const described = (field.getAttribute('aria-describedby') ?? '').split(' ').filter(x => x && x !== id);
+  if (reason){
+    described.unshift(id);
+    field.setAttribute('aria-invalid', 'true');
+    field.addEventListener('input', () => mark(field, ''), { once: true });
+  } else field.removeAttribute('aria-invalid');
+  if (described.length) field.setAttribute('aria-describedby', described.join(' ')); else field.removeAttribute('aria-describedby');
+}
+
+// Why an email box won't do, or '' when it will.
+export const emailProblem = (field: HTMLInputElement) => (!field.value.trim() ? d.errors.emailMissing : field.checkValidity() ? '' : d.errors.emailInvalid);
+
+// The server's refusals that are about one field, by that field's id; they go under it. Any other goes in `box`.
+const FIELD_OF: Record<string, string> = { email_taken: 'email', invalid_credentials: 'password', code_invalid: 'code', code_expired: 'code', too_many_attempts: 'code' };
+export function fail(box: HTMLElement, e: unknown){
+  const field = e instanceof ApiFailure && FIELD_OF[e.code] ? document.getElementById(FIELD_OF[e.code]) as Field | null : null;
+  if (field) invalid([[field, errorText(d, e)]]); else showError(box, e);
+}
+
 // A button while its request runs: a spinner in place of the label (aria-busy), the width kept, no more clicks.
 export function busy(btn: HTMLButtonElement, on: boolean){
   btn.disabled = on;
   if (on) btn.setAttribute('aria-busy', 'true'); else btn.removeAttribute('aria-busy');
 }
 
-// Runs a submit handler with the button busy and errors shown in `box`.
+// Runs a submit handler with the button busy; what goes wrong is shown as `fail` does.
 export function onSubmit(form: HTMLFormElement, box: HTMLElement, run: () => Promise<void>){
   form.addEventListener('submit', async ev => {
     ev.preventDefault();
     box.hidden = true;
     const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
     if (btn) busy(btn, true);
-    try { await run(); } catch (e){ showError(box, e); } finally { if (btn) busy(btn, false); }
+    try { await run(); } catch (e){ fail(box, e); } finally { if (btn) busy(btn, false); }
   });
 }
 
