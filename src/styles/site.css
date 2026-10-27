@@ -88,7 +88,7 @@ html[lang="en"] .mini-field{grid-template-columns:66px minmax(0,1fr)}
 /* pricing: plan cards, then a table of what each includes, then the calculator */
 .price-head{display:flex;flex-wrap:wrap;justify-content:center;margin-bottom:28px}
 .price{display:flex;align-items:baseline;gap:4px;font-variant-numeric:tabular-nums}
-.price .amt{font-family:var(--f-display);font-weight:600;font-size:44px;line-height:1.1;letter-spacing:-.03em}
+.price .amt{font-weight:600;font-size:44px;line-height:1.1}
 .price .per{margin-left:6px;font-size:14px;color:var(--ink-2)}
 @media (min-width:961px){.plans > *{grid-column:span 4}}
 @media (max-width:960px){.plans{max-width:520px;margin-inline:auto}}
@@ -96,7 +96,7 @@ html[lang="en"] .mini-field{grid-template-columns:66px minmax(0,1fr)}
 .plan.featured{background:color-mix(in srgb,var(--accent-soft) 55%,var(--card));border-color:color-mix(in srgb,var(--accent) 35%,var(--line))}
 .plan.match{box-shadow:0 0 0 4px var(--seg)}
 .plan-tag{align-self:flex-start;margin-bottom:8px;padding:2px 10px;border-radius:var(--r);background:var(--accent-soft);color:var(--accent-ink);font-size:12px;font-weight:600;line-height:1.7}
-.plan h3{font-family:var(--f-display);font-weight:var(--w-display);font-size:24px}
+.plan h3{font-weight:600;font-size:24px}
 .plan-for{font-size:14px;color:var(--ink-2)}
 .plan .price{margin-top:18px;padding-top:18px;border-top:1px solid var(--line);min-height:50px}
 .plan-meta{font-size:14px;color:var(--ink-2);white-space:pre-line}
@@ -118,7 +118,7 @@ html[lang="en"] .mini-field{grid-template-columns:66px minmax(0,1fr)}
 .cmp tbody th{font-weight:500;color:var(--ink)}
 .cmp tbody tr:last-child > *{border-bottom:0}
 .cmp td{color:var(--ink-2)}
-.cmp .yes{color:var(--good)}
+.cmp .yes{color:var(--good-ink)}
 .cmp .no{color:var(--ink-3)}
 .cmp th:first-child{position:sticky;left:0;z-index:1;background:var(--card);box-shadow:inset -1px 0 var(--line)}
 .cmp thead th:first-child{background:var(--head)}
@@ -141,7 +141,7 @@ html[lang="en"] .mini-field{grid-template-columns:66px minmax(0,1fr)}
 .calc-ticks{position:relative;height:20px;margin-top:8px;font-family:var(--f-data);font-size:12px;color:var(--ink-3)}
 .calc-ticks span{position:absolute;left:calc(12px + (100% - 24px) * var(--i));translate:-50%}
 .calc-res{display:grid;justify-items:start;gap:4px;margin-top:22px;padding:18px 20px;border-radius:var(--r-card);background:var(--card);border:1px solid var(--line);min-width:0}
-.calc-plan{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-family:var(--f-display);font-weight:var(--w-display);font-size:20px;line-height:1.35}
+.calc-plan{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-weight:600;font-size:20px;line-height:1.35}
 .calc-plan em{font-family:var(--f-body);font-style:normal;font-weight:600;font-size:12px;padding:2px 9px;border-radius:99px;background:var(--seg);color:var(--ink-2)}
 .calc-res .price .amt{font-size:36px}
 .calc-detail{font-size:14px}
