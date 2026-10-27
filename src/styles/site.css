@@ -1,28 +1,26 @@
-/* The marketing pages (design delivery 6.18): a first screen on the panel grey with the copy beside a picture of the
-   real workbench, then centred sections, cards with line icons, numbered steps, questions and a closing band. The
-   accent goes to primary buttons, step numbers and icons; no background ornament. Layouts sit on the page grid
-   (global.css .cols). */
+/* The marketing pages (v2 site): a white page throughout; a first screen of title, what it is and its actions (with a
+   picture of the real workbench beside it on the home and e-commerce pages); then sections with a left-aligned head
+   over cards with a line icon, numbered steps, questions with their answers, and a closing band. The action colour goes
+   to buttons, links and card icons; no background ornament. Layouts sit on the page grid (global.css .cols). */
 
-/* first screen: breadcrumb, title, what it is, actions, and the product beside it, half and half */
-.phero{background:var(--panel);border-bottom:1px solid var(--line)}
-.phero-in{align-items:center;padding-block:64px 72px}
-@media (min-width:961px){.phero-in > *{grid-column:span 6}}
-@media (max-width:960px){.phero-in{row-gap:40px;padding-block:44px 56px}}
-/* Page titles (spec 2): 56px / 1.15 on a desktop, down to 32px / 1.2 on a phone. */
-.hero-title{font-size:clamp(2rem,4.4vw,3.5rem);line-height:1.15}
+/* first screen (v2): 68 under the header; title 56/64, what it is 20/32, actions 28 under that. With a picture the copy
+   takes 610 of the 1248 and the picture 564 on the right; without one the copy runs up to 1000 wide and the page goes on
+   right under it. */
+.phero{padding-top:68px}
+.phero.split{padding-bottom:22px}
+.phero-in{display:grid;grid-template-columns:minmax(0,1fr);gap:40px}
+.phero-copy{max-width:1000px;min-width:0}
+@media (min-width:961px){.phero.split .phero-in{grid-template-columns:minmax(0,610fr) minmax(0,564fr);column-gap:74px;align-items:start}}
+/* Page titles (spec 2): 56px / 64 on a desktop, down to 32px / 1.2 on a phone. */
+.hero-title{font-size:clamp(2rem,4.4vw,3.5rem);line-height:1.143}
 @media (max-width:768px){.hero-title{line-height:1.2}}
-.phero .lead{margin-top:20px;max-width:560px}
-.crumbs{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:18px;font-size:14px;color:var(--ink-3)}
-.crumbs a{text-decoration:none}
-.crumbs a:hover{color:var(--ink)}
-.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
-.phero-pts{display:flex;flex-wrap:wrap;gap:16px 28px;margin:36px 0 0;padding:0;list-style:none}
-.phero-pts li{display:flex;align-items:center;gap:10px;min-width:0}
-.phero-pts b{display:block;font-size:14px;font-weight:600}
-.phero-pts small{display:block;font-size:12px;color:var(--ink-2)}
+.phero .lead{max-width:none;margin-top:22px;font-size:20px;line-height:32px}
+@media (max-width:768px){.phero .lead{font-size:16px;line-height:1.75}}
+.phero-copy > .notice{max-width:1000px;margin-top:28px}
+.cta-row{display:flex;flex-wrap:wrap;gap:16px;margin-top:28px}
+.cta-row .btn-lg{min-width:160px}
 
-/* a picture of the workbench in a window, floating a little: `--z` zooms in from `--o` (the picture is the whole
-   window, sidebar and all) */
+/* a picture of the workbench in a window: `--z` zooms in from `--o` (the picture is the whole window, sidebar and all) */
 .shot{margin:0;border-radius:var(--r-lg);overflow:hidden;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-pop)}
 .shot-bar{display:flex;gap:6px;padding:10px 12px;background:var(--head);border-bottom:1px solid var(--line)}
 .shot-bar i{width:9px;height:9px;border-radius:50%;background:#EE6A5F}
@@ -31,78 +29,69 @@
 .shot-view{position:relative;aspect-ratio:var(--ar,16/10);overflow:hidden}
 .shot-view img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:0 0;transform:scale(var(--z,1));transform-origin:var(--o,0 0)}
 
-/* sections: a centred head over cards, alternating with the panel grey */
-.msec{padding-block:88px}
-.msec.alt{background:var(--panel);border-block:1px solid var(--line)}
-.msec-head{max-width:720px;margin:0 auto 44px;text-align:center}
-.msec-head h2{font-size:clamp(1.75rem,3vw,2.25rem);line-height:1.25}
-.msec-head p{margin-top:12px;font-size:16px;line-height:1.75;color:var(--ink-2)}
-@media (max-width:720px){.msec{padding-block:60px}.msec-head{margin-bottom:32px}}
-.msec:not(.alt) + .msec.cta-sec{padding-top:0}
-.tile.acc{background:var(--accent-soft);color:var(--accent-ink);box-shadow:none}
-/* three or four cards in a row; four go two by two on a tablet */
-@media (min-width:861px){.grid-3 > *{grid-column:span 4}.grid-4 > *{grid-column:span 6}}
-@media (min-width:1001px){.grid-4 > *{grid-column:span 3}}
+/* sections (v2): 112 between them; the head on the left, the title 36/48 and a line 16/28 under it, 44 above what follows */
+.msec{padding-block:56px}
+.phero:not(.split) + .msec{padding-top:32px}
+main > .msec:last-child{padding-bottom:88px}
+.msec-head{margin-bottom:44px}
+.msec-head h2{font-size:clamp(1.75rem,3vw,2.25rem);line-height:1.333}
+.msec-head p{max-width:720px;margin-top:14px;font-size:16px;line-height:28px;color:var(--ink-3)}
+.msec-head p a{color:var(--action);text-underline-offset:3px}
+.msec.cta-sec{padding-top:0}
+@media (max-width:720px){.msec{padding-block:40px}.msec-head{margin-bottom:28px}}
+/* three or two in a row */
+@media (min-width:861px){.grid-3 > *{grid-column:span 4}.grid-2 > *{grid-column:span 6}}
 
-/* a piece of the workbench, drawn small (home cards, popular guides, the e-commerce steps) */
-.mini{display:grid;gap:8px;padding:14px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line);font-size:12px}
-.mini-t{font-size:14px}
-.mini-row{display:flex;align-items:center;gap:8px;height:30px;padding:0 10px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);white-space:nowrap;overflow:hidden}
-.mini-row .i{color:var(--ink-3)}
-.mini-row em{margin-left:auto;font-style:normal;font-size:12px;color:var(--ink-3)}
-.mini-field{display:grid;grid-template-columns:62px minmax(0,1fr);align-items:center;gap:8px}
-html[lang="en"] .mini-field{grid-template-columns:66px minmax(0,1fr)}
-.mini-field small{font-size:12px;color:var(--ink-2)}
-.mini-field > span{height:28px;padding:0 9px;line-height:26px;border:1px solid var(--line);border-radius:var(--r);background:var(--card);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.mini-btn{justify-self:start;display:inline-flex;align-items:center;gap:6px;margin-top:2px;padding:5px 12px;border-radius:var(--r);background:var(--accent);color:var(--on-accent);font-weight:600;font-size:12px}
+/* a card (v2): at least 240 high, padding 24; its line icon in the action colour, the title 20/28, what it is 16/28,
+   and its link at the bottom */
+.fcard{display:flex;flex-direction:column;align-items:flex-start;min-height:240px;padding:24px;border:1px solid var(--line);border-radius:var(--r-card);background:var(--card);min-width:0}
+.fcard > .i{color:var(--action)}
+.fcard h3{margin-top:26px;font-size:20px;line-height:28px}
+.fcard p{margin-top:12px;font-size:16px;line-height:28px;color:var(--ink-3)}
+.more{display:inline-flex;align-items:center;gap:4px;font-size:16px;font-weight:500;line-height:24px;color:var(--action);text-decoration:none}
+.more:hover{color:var(--action-hover);text-decoration:underline;text-underline-offset:4px}
+.fcard .more{margin-top:auto;padding-top:20px}
 
-/* three numbered steps along a row */
+/* numbered steps along a row (v2): a grey number, the step 18/28 beside it and what it involves 14/24 under that */
 .steps-row{margin:0;padding:0;list-style:none;counter-reset:step}
-@media (min-width:861px){.steps-row > *{grid-column:span 4}}
-.steps-row > li{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;align-content:start;counter-increment:step}
-.steps-row > li::before{content:counter(step);grid-row:span 2;display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--accent);color:var(--on-accent);font:600 16px var(--f-data)}
-.steps-row b{font-size:16px;font-weight:600;line-height:36px}
-.steps-row p{font-size:14px;line-height:1.7;color:var(--ink-2)}
+@media (min-width:861px){.steps-row > *{grid-column:span 4}.steps-row.four > *{grid-column:span 3}}
+.steps-row > li{display:grid;grid-template-columns:32px minmax(0,1fr);gap:16px 16px;align-content:start;counter-increment:step}
+.steps-row > li::before{content:counter(step);grid-row:span 2;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--seg);color:var(--ink-3);font:600 14px var(--f-body)}
+.steps-row b{padding-top:2px;font-size:18px;font-weight:600;line-height:28px}
+.steps-row p{font-size:14px;line-height:24px;color:var(--ink-3)}
 
-/* questions: the title on one side (a third), the answers that open on the other */
-.faq-split{align-items:start}
-@media (min-width:861px){.faq-split > :first-child{grid-column:span 4}.faq-split > :last-child{grid-column:span 8}}
-.faq-split h2{font-size:clamp(1.75rem,3vw,2.25rem);line-height:1.25}
-.faq-split > div > p{margin-top:12px;color:var(--ink-2)}
-.faq-split > div > p a{color:var(--ink);text-underline-offset:3px}
-.faq{display:grid;gap:12px}
-.faq details{padding:0 20px;border:1px solid var(--line);border-radius:var(--r-card);background:var(--card)}
-.faq summary{display:flex;justify-content:space-between;align-items:center;gap:20px;list-style:none;padding:16px 0;font-size:16px;font-weight:600;cursor:pointer}
-.faq summary::-webkit-details-marker{display:none}
-.faq-x{display:grid;place-items:center;width:28px;height:28px;flex:none;border-radius:50%;background:var(--panel);color:var(--ink-2);transition:rotate var(--t)}
-.faq details[open] .faq-x{rotate:180deg}
-.faq details p{margin-bottom:18px;max-width:720px;color:var(--ink-2)}
+/* questions (v2): each with its answer, one card each */
+.faq-list{display:grid;gap:12px}
+.faq-item{padding:16px 20px;border:1px solid var(--line);border-radius:var(--r);background:var(--card)}
+.faq-item h3{font-size:16px;font-weight:500;line-height:24px}
+.faq-item p{margin-top:6px;font-size:14px;line-height:22px;color:var(--ink-3)}
 
-/* the closing band: what to do next, on the accent's soft tint */
-.cta-band{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px 32px;padding:40px 48px;border-radius:var(--r-card);background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 16%,transparent)}
-.cta-band h2{font-size:clamp(1.5rem,2.6vw,2rem);line-height:1.3;color:var(--accent-ink)}
-.cta-band p{margin-top:8px;color:var(--ink-2)}
+/* the closing band (v2): what to do next on the accent's soft tint, the button on the right */
+.cta-band{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px 32px;min-height:132px;padding:24px 48px 24px 32px;border-radius:var(--r-card);background:var(--accent-soft)}
+.cta-band h2{font-size:28px;line-height:40px}
+.cta-band p{margin-top:4px;font-size:16px;line-height:28px;color:var(--ink-3)}
 .cta-band .cta-row{margin-top:0}
-@media (max-width:720px){.cta-band{padding:28px 22px}}
+@media (max-width:720px){.cta-band{padding:24px 20px}}
 
-/* pricing: plan cards, then a table of what each includes, then the calculator */
-.price-head{display:flex;flex-wrap:wrap;justify-content:center;margin-bottom:28px}
+/* pricing (v2): plan cards (the amount 36/48, the button 48 high), then a table of what each includes, then the
+   calculator; the plan to pick for a team stands out by its border only */
+.price-head{display:flex;flex-wrap:wrap;margin-bottom:24px}
 .price{display:flex;align-items:baseline;gap:4px;font-variant-numeric:tabular-nums}
-.price .amt{font-weight:600;font-size:44px;line-height:1.1}
+.price .amt{font-weight:600;font-size:36px;line-height:48px}
 .price .per{margin-left:6px;font-size:14px;color:var(--ink-2)}
 @media (min-width:961px){.plans > *{grid-column:span 4}}
 @media (max-width:960px){.plans{max-width:520px;margin-inline:auto}}
-.plan{position:relative;display:flex;flex-direction:column;gap:6px;padding:28px}
-.plan.featured{background:color-mix(in srgb,var(--accent-soft) 55%,var(--card));border-color:color-mix(in srgb,var(--accent) 35%,var(--line))}
+.plan{position:relative;display:flex;flex-direction:column;gap:6px;padding:24px}
+.plan.featured{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
 .plan.match{box-shadow:0 0 0 4px var(--seg)}
 .plan-tag{align-self:flex-start;margin-bottom:8px;padding:2px 10px;border-radius:var(--r);background:var(--accent-soft);color:var(--accent-ink);font-size:12px;font-weight:600;line-height:1.7}
-.plan h3{font-weight:600;font-size:24px}
-.plan-for{font-size:14px;color:var(--ink-2)}
+.plan h3{font-weight:600;font-size:20px;line-height:28px}
+.plan-for{font-size:16px;line-height:28px;color:var(--ink-3)}
 .plan .price{margin-top:18px;padding-top:18px;border-top:1px solid var(--line);min-height:50px}
 .plan-meta{font-size:14px;color:var(--ink-2);white-space:pre-line}
 .plan-note{font-size:12px;color:var(--ink-3);min-height:1.6em}
 .plan-fit{margin-top:6px;padding:7px 12px;border-radius:var(--r-card);background:var(--seg);color:var(--ink);font-size:14px;font-weight:600}
-.plan .btn{margin-top:14px}
+.plan .btn{height:var(--h-lg);margin-top:14px}
 .plan .buy{align-self:center;margin-top:8px;font-size:14px;color:var(--ink-2)}
 .plan .buy.soon{opacity:.65}
 .feat{list-style:none;margin:16px 0 0;padding:20px 0 0;border-top:1px dashed var(--line-2);display:grid;gap:11px;font-size:14px}
@@ -122,10 +111,10 @@ html[lang="en"] .mini-field{grid-template-columns:66px minmax(0,1fr)}
 .cmp .no{color:var(--ink-3)}
 .cmp th:first-child{position:sticky;left:0;z-index:1;background:var(--card);box-shadow:inset -1px 0 var(--line)}
 .cmp thead th:first-child{background:var(--head)}
-.calc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:28px 48px;align-items:center;margin-top:40px;padding:32px 36px;background:color-mix(in srgb,var(--accent-soft) 45%,var(--card));border-color:color-mix(in srgb,var(--accent) 22%,var(--line))}
+.calc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:28px 48px;align-items:center;margin-top:40px;padding:32px}
 .calc-intro .plan-tag{margin-bottom:12px}
-.calc-intro h2{font-size:clamp(1.5rem,2.6vw,2rem);line-height:1.3}
-.calc-intro p{margin-top:10px;font-size:14px;color:var(--ink-2)}
+.calc-intro h2{font-size:28px;line-height:40px}
+.calc-intro p{margin-top:10px;font-size:16px;line-height:28px;color:var(--ink-3)}
 .calc-pick label{display:grid;gap:4px;font-size:14px;color:var(--ink-2)}
 /* the slider's thumb is 24px, so the bubble and the ticks sit on its centre line */
 .calc-track{--p:0;position:relative;margin-top:48px}

@@ -21,9 +21,9 @@ const A = t(lang).auth, R = A.reset;
   <form class="form" id="verify" novalidate>
     <div class="notice dev" id="dev" hidden>{A.devNotice}</div>
     <div class="notice ok" id="sent" role="status" hidden>{R.sent}</div>
-    <div class="field"><label for="email">{A.email}</label><input id="email" type="email" autocomplete="email" placeholder={A.emailPh} required /></div>
+    <div class="field"><label class="req" for="email">{A.email}</label><input id="email" type="email" autocomplete="email" placeholder={A.emailPh} required /></div>
     <div class="field">
-      <label for="code">{A.code}</label>
+      <label class="req" for="code">{A.code}</label>
       <div class="code-row">
         <input id="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder={A.codePh} required />
         <button class="btn btn-secondary" type="button" id="get">{A.getCode}</button>
@@ -35,11 +35,11 @@ const A = t(lang).auth, R = A.reset;
   </form>
   <form class="form" id="choose" novalidate hidden>
     <div class="field">
-      <label for="password">{R.password}</label>
+      <label class="req" for="password">{R.password}</label>
       <Password lang={lang} id="password" autocomplete="new-password" minlength={8} />
       <span class="hint">{A.passwordHint}</span>
     </div>
-    <div class="field"><label for="confirm">{R.confirm}</label><Password lang={lang} id="confirm" autocomplete="new-password" minlength={8} /></div>
+    <div class="field"><label class="req" for="confirm">{R.confirm}</label><Password lang={lang} id="confirm" autocomplete="new-password" minlength={8} /></div>
     <button class="btn btn-primary btn-lg full" type="submit">{R.save}</button>
     <p class="alt"><button class="linkish" type="button" id="back">{R.back}</button></p>
   </form>
@@ -56,7 +56,7 @@ const A = t(lang).auth, R = A.reset;
   const err = $('err'), email = $<HTMLInputElement>('email'), code = $<HTMLInputElement>('code');
   const password = $<HTMLInputElement>('password'), confirm = $<HTMLInputElement>('confirm');
   $('dev').hidden = !devBuild;
-  email.value = param('email') ?? '';
+  if (param('email')) email.value = param('email')!;
   const address = () => email.value.trim();
   // One step at a time; the steps above say which one this is and which are done.
   const go = (step: number) => {

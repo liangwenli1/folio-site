@@ -1,12 +1,11 @@
 ---
-// Plans and prices: the three plans with live prices from the server (scripts/pricing.ts), what each includes, the
-// calculator that finds the cheapest plan for a number of profiles, and questions about trying and paying.
+// Plans and prices (v2): what they are and the terms in a line, the three plans with live prices from the server
+// (scripts/pricing.ts), what each includes, the calculator that finds the cheapest plan for a number of profiles, and
+// questions about trying and paying.
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import PageHero from '../../components/PageHero.astro';
-import Shot from '../../components/Shot.astro';
 import Faq from '../../components/Faq.astro';
-import CtaBand from '../../components/CtaBand.astro';
 import { langPaths, link, t, type Lang } from '../../lib/i18n';
 
 export const getStaticPaths = langPaths;
@@ -16,10 +15,7 @@ const PLANS = ['free', 'studio', 'company'] as const;
 const start = { free: link(lang, 'signup/'), studio: link(lang, 'checkout/?plan=studio&trial=1'), company: link(lang, 'contact/') };
 ---
 <Base lang={lang} path="pricing/" title={P.title} description={P.lead}>
-  <PageHero lang={lang} title={P.h1} lead={P.lead}>
-    <p class="price-note"><Icon name="info" />{P.note}</p>
-    <Shot slot="vis" lang={lang} name="list" alt={P.shot} zoom={1.2} origin="100% 0" eager />
-  </PageHero>
+  <PageHero title={P.h1} lead={P.lead}><p class="notice">{P.note}</p></PageHero>
 
   <section class="msec">
     <div class="wrap">
@@ -39,7 +35,7 @@ const start = { free: link(lang, 'signup/'), studio: link(lang, 'checkout/?plan=
             <p class="plan-meta" data-perenv></p>
             <p class="plan-note" data-note></p>
             <p class="plan-fit" data-fit hidden></p>
-            <a class={id === 'studio' ? 'btn btn-primary full' : 'btn btn-secondary full'} data-cta href={start[id]}>{P.cta[id]}</a>
+            <a class={id === "studio" ? "btn btn-primary btn-lg full" : "btn btn-secondary btn-lg full"} data-cta href={start[id]}>{P.cta[id]}</a>
             {id !== 'free' && <a class="buy" data-buy href={link(lang, `checkout/?plan=${id}&period=monthly`)}>{P.buy}</a>}
             <ul class="feat">{P.features[id].map(f => <li><Icon name="check" />{f}</li>)}</ul>
           </article>
@@ -87,23 +83,10 @@ const start = { free: link(lang, 'signup/'), studio: link(lang, 'checkout/?plan=
     </div>
   </section>
 
-  <section class="msec alt">
+  <section class="msec">
     <div class="wrap"><Faq title={P.faq.title} lead={P.faq.lead} contact={{ label: P.faq.contact, href: link(lang, 'contact/') }} items={P.faq.items} /></div>
   </section>
-
-  <section class="msec cta-sec">
-    <div class="wrap">
-      <CtaBand title={P.band.title} body={P.band.body}>
-        <a class="btn btn-primary btn-lg" href={link(lang, 'signup/')}>{P.cta.free}<Icon name="chevr" /></a>
-        <a class="btn btn-secondary btn-lg" href={link(lang, 'contact/')}>{P.cta.company}</a>
-      </CtaBand>
-    </div>
-  </section>
 </Base>
-<style>
-  .price-note{display:flex;align-items:center;gap:8px;margin-top:28px;padding:10px 14px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);font-size:14px;color:var(--ink-2)}
-  .price-note :global(.i){color:var(--accent)}
-</style>
 <script>
   import { startPricing } from '../../scripts/pricing';
   startPricing();

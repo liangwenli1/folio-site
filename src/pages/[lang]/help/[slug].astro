@@ -1,6 +1,6 @@
 ---
-// A guide: numbered steps (some with a picture of that part of the workbench), a note, whether it helped (kept on the
-// server; saying so can fail, and then the page says that), and the previous and next guides.
+// A guide (v2): what it covers, numbered steps (some with a picture of that part of the workbench), a note, whether it
+// helped (kept on the server; saying so can fail, and then the page says that), and the previous and next guides.
 import HelpPage from '../../../layouts/HelpPage.astro';
 import Icon from '../../../components/Icon.astro';
 import Shot from '../../../components/Shot.astro';
@@ -16,16 +16,12 @@ const cat = categoryOf(d, slug);
 const pictures = PICTURES[slug] ?? {};
 ---
 <HelpPage lang={lang} path={`help/${slug}/`} title={A.title} description={A.summary}
-  crumbs={[[H.home, link(lang, 'help/')], [H.categories[cat].title, link(lang, `help/#${cat}`)], [A.title, null]]}
+  crumbs={[[H.home, link(lang, 'help/')], [H.categories[cat].title, null]]} meta={H.updated(UPDATED)}
   toc={A.sections.map((s, i): [string, string] => [`s${i + 1}`, `${i + 1}. ${s.title}`])}>
-  <header class="art-head">
-    <h1>{A.title}</h1>
-    <p class="art-meta">{H.updated(UPDATED)}</p>
-    <p class="lead">{A.lead}</p>
-  </header>
+  <p class="art-lead">{A.lead}</p>
   {A.sections.map((s, i) => (
     <section class="art-sec" id={`s${i + 1}`} aria-labelledby={`s${i + 1}-h`}>
-      <h2 id={`s${i + 1}-h`}><span class="art-n">{i + 1}</span>{s.title}</h2>
+      <h2 id={`s${i + 1}-h`}>{i + 1}. {s.title}</h2>
       {s.body.map(p => <p>{p}</p>)}
       {pictures[i] && <Shot lang={lang} name={pictures[i].name} alt={s.title} zoom={pictures[i].zoom} origin={pictures[i].origin} ratio="16/9" />}
     </section>
@@ -68,13 +64,12 @@ const pictures = PICTURES[slug] ?? {};
   }));
 </script>
 <style>
-  .art-head{display:grid;gap:10px;margin-bottom:12px}
-  .art-meta{font-size:12px;color:var(--ink-3)}
-  .art-sec{display:grid;gap:12px;padding-top:28px}
-  .art-sec h2{display:flex;align-items:center;gap:12px;font-size:20px;line-height:1.35}
-  .art-n{display:grid;place-items:center;width:30px;height:30px;flex:none;border-radius:50%;background:var(--accent);color:var(--on-accent);font:600 14px var(--f-data)}
-  .art-sec p{padding-left:42px;color:var(--ink-2);line-height:1.8}
-  .art-sec :global(.shot){margin:6px 0 0 42px;box-shadow:none}
+  /* v2: each step's heading 24/34, its text 16/28, a picture under it */
+  .art-lead{font-size:16px;line-height:28px;color:var(--ink-body)}
+  .art-sec{display:grid;gap:16px;padding-top:36px}
+  .art-sec h2{font-size:24px;line-height:34px}
+  .art-sec p{font-size:16px;line-height:28px;color:var(--ink-body)}
+  .art-sec :global(.shot){margin-top:8px;box-shadow:none}
   .art-note{display:flex;gap:10px;margin-top:32px;padding:14px 16px;border-radius:var(--r-card);background:var(--warn-soft);border:1px solid color-mix(in srgb,var(--warn) 30%,transparent);font-size:14px;line-height:1.7;color:var(--ink)}
   .art-note :global(.i){margin-top:3px;color:var(--warn-ink)}
   .art-note b{margin-right:8px}
@@ -93,5 +88,4 @@ const pictures = PICTURES[slug] ?? {};
   .art-pn b{font-size:14px;font-weight:600}
   .art-pn a:hover b{color:var(--accent-ink)}
   .art-next{text-align:right;justify-items:end}
-  @media (max-width:860px){.art-sec p,.art-sec :global(.shot){margin-left:0;padding-left:0}}
 </style>

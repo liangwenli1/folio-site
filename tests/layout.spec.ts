@@ -92,7 +92,8 @@ test('no sideways scrolling on a phone behind an account: checkout, account, inv
   await page.fill('#password', 'correct horse battery');
   await page.check('#consent');
   await page.click('button[type="submit"]');
-  await page.waitForURL(/\/account\//);
+  await expect(page.locator('#done')).toBeVisible();
+  expect(await sideways(page), 'signed up').toBe(0);
   await page.goto('/zh/checkout/');
   await expect(page.locator('#step-plan')).toBeVisible();
   expect(await sideways(page), 'checkout, choosing').toBe(0);

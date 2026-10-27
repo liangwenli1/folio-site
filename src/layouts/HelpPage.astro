@@ -1,42 +1,49 @@
 ---
-// A guide or the API reference: the guides by category on the left (with a search that narrows them and this page's
-// headings, in the browser, and says so when no guide matches), the breadcrumb and the page in the middle, the page's
-// headings on the right.
+// A guide or the API reference (v2): the title on top with where it sits in the help center (and when it was updated)
+// under it; below, on the left, the help directory — the guides by category, with a search that narrows them and this
+// page's headings, in the browser, and says so when no guide matches — then the page itself, and its headings on the
+// right.
 import Base from './Base.astro';
-import Icon from '../components/Icon.astro';
 import { CATEGORIES, inCategory } from '../lib/help';
 import { link, t, type Lang } from '../lib/i18n';
 
-interface Props { lang: Lang; path: string; title: string; description?: string; crumbs: [string, string | null][]; toc: [string, string][] }
-const { lang, path, title, description, crumbs, toc } = Astro.props;
+interface Props { lang: Lang; path: string; title: string; description?: string; crumbs: [string, string | null][]; meta?: string; toc: [string, string][] }
+const { lang, path, title, description, crumbs, meta, toc } = Astro.props;
 const d = t(lang), H = d.help;
 const here = (p: string) => (p === path ? 'page' : undefined);
 ---
 <Base lang={lang} path={path} title={title} description={description}>
-  <section class="wrap cols help-grid">
-    <nav class="help-nav" aria-label={H.title}>
-      <label class="box help-search"><Icon name="search" /><input type="search" placeholder={H.searchDocs} aria-label={H.searchDocs} data-doc-search /></label>
-      <p class="help-none" role="status" data-none hidden>{H.noMatch} <a href={link(lang, 'contact/')}>{H.contact}</a></p>
+  <section class="phero help-hero">
+    <div class="wrap">
+      <h1 class="hero-title">{title}</h1>
+      <div class="help-where">
+        <nav class="crumbs" aria-label={d.nav.crumbs}>
+          {crumbs.map(([label, href], i) => <>{i > 0 && <span aria-hidden="true">/</span>}{href ? <a href={href}>{label}</a> : <span>{label}</span>}</>)}
+        </nav>
+        {meta && <span class="help-meta">{meta}</span>}
+      </div>
+    </div>
+  </section>
+  <section class="wrap help-grid">
+    <nav class="card help-nav" aria-label={H.directory}>
+      <b class="help-nav-t">{H.directory}</b>
+      <div class="field help-search"><label for="doc-search">{H.searchDocs}</label><input id="doc-search" type="search" placeholder={H.searchDocsPh} data-doc-search /></div>
+      <p class="help-none" role="status" data-none hidden>{H.noMatch}<a href={link(lang, 'contact/')}>{H.contact}</a></p>
       {CATEGORIES.map(c => (
         <section data-group>
-          <b>{H.categories[c.id].title}</b>
+          <small>{H.categories[c.id].title}</small>
           {inCategory(d, c.id).map(s => <a class="help-item" href={link(lang, `help/${s}/`)} aria-current={here(`help/${s}/`)} data-item>{H.articles[s].title}</a>)}
         </section>
       ))}
-      <section data-group><b>{H.developers}</b><a class="help-item" href={link(lang, 'help/api/')} aria-current={here('help/api/')} data-item>{H.apiLink}</a></section>
+      <section data-group><small>{H.developers}</small><a class="help-item" href={link(lang, 'help/api/')} aria-current={here('help/api/')} data-item>{H.apiLink}</a></section>
     </nav>
-    <article class="help-page">
-      <nav class="crumbs" aria-label={d.nav.crumbs}>
-        {crumbs.map(([label, href], i) => <>{i > 0 && <span aria-hidden="true">/</span>}{href ? <a href={href}>{label}</a> : <span aria-current="page">{label}</span>}</>)}
-      </nav>
-      <slot />
-    </article>
+    <article class="help-page"><slot /></article>
     <aside class="help-toc" aria-label={H.toc}><b>{H.toc}</b>{toc.map(([id, label]) => <a href={`#${id}`} data-item>{label}</a>)}</aside>
   </section>
 </Base>
 <script>
   // The search narrows the guides and this page's headings to what matches; groups with nothing left are hidden, and
-  // with no guide left the list says so and offers the contact page.
+  // with no guide left the directory says so and offers the contact page.
   const box = document.querySelector<HTMLInputElement>('[data-doc-search]')!;
   box.addEventListener('input', () => {
     const q = box.value.trim().toLowerCase();
@@ -46,28 +53,31 @@ const here = (p: string) => (p === path ? 'page' : undefined);
   });
 </script>
 <style>
-  /* on the page grid: the guides 3 columns, the page 7 (at most 720 wide, the reading width), its headings 2 */
-  .help-grid{align-items:start;padding-block:36px 96px}
-  @media (min-width:761px){.help-nav{grid-column:span 3}.help-page{grid-column:span 9}}
-  @media (min-width:1101px){.help-page{grid-column:span 7}.help-toc{grid-column:span 2}}
-  .help-nav{position:sticky;top:calc(var(--hd) + 24px);display:grid;gap:18px;font-size:14px}
-  .help-search{display:flex;align-items:center;gap:8px;height:var(--h-ctl);padding:0 12px;color:var(--ink-3)}
-  .help-search input{flex:1;min-width:0;border:0;background:none;font:inherit;font-size:14px;color:var(--ink);outline:none}
-  .help-none{display:grid;gap:4px;padding:12px 14px;border-radius:var(--r-card);background:var(--panel);color:var(--ink-2)}
-  .help-none a{color:var(--accent-ink)}
+  /* v2: the title 56/64 and, 20/32 under it, where the page sits */
+  .help-hero{padding-bottom:40px}
+  .help-where{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 20px;margin-top:22px;font-size:20px;line-height:32px;color:var(--ink-3)}
+  .help-where .crumbs{display:flex;flex-wrap:wrap;gap:8px}
+  .help-where a{text-decoration:none}
+  .help-where a:hover{color:var(--ink)}
+  .help-meta{font-size:14px}
+  /* the directory 220 wide, the page at most 760 (v2), its headings in what is left */
+  .help-grid{display:grid;grid-template-columns:220px minmax(0,760px) minmax(0,1fr);gap:36px;align-items:start;padding-bottom:96px}
+  .help-nav{position:sticky;top:calc(var(--hd) + 24px);display:grid;gap:16px;padding:20px 8px 16px;font-size:14px}
+  .help-nav-t{padding:0 16px;font-size:16px;font-weight:600;line-height:24px}
+  .help-search{padding:0 8px}
+  .help-none{padding:0 16px;color:var(--ink-3)}
+  .help-none a{margin-left:4px;color:var(--action)}
   .help-nav section{display:grid;gap:2px}
-  .help-nav b{margin-bottom:6px;font-size:14px;color:var(--ink)}
-  .help-item{padding:7px 10px;border-radius:var(--r);color:var(--ink-2);text-decoration:none}
+  .help-nav small{padding:0 16px 4px;font-size:12px;font-weight:600;color:var(--ink-3)}
+  .help-item{display:flex;align-items:center;min-height:40px;padding:8px 16px;border-radius:var(--r);line-height:22px;color:var(--ink-2);text-decoration:none}
   .help-item:hover{background:var(--panel);color:var(--ink)}
-  .help-item[aria-current="page"]{background:var(--accent-soft);color:var(--accent-ink);font-weight:600;box-shadow:inset 3px 0 0 var(--accent)}
-  .help-page{min-width:0;max-width:720px}
-  .help-page .crumbs{margin-bottom:16px}
+  .help-item[aria-current="page"]{background:var(--action);color:var(--on-accent);font-weight:500}
+  .help-page{min-width:0}
   .help-toc{position:sticky;top:calc(var(--hd) + 24px);display:grid;gap:8px;padding-left:16px;border-left:1px solid var(--line);font-size:14px}
   .help-toc b{margin-bottom:4px;font-size:14px}
-  .help-toc a{color:var(--ink-2);text-decoration:none}
-  .help-toc a:hover{color:var(--accent-ink)}
-  .help-page :global(h1){font-size:clamp(1.75rem,3.4vw,2.25rem);line-height:1.25}
+  .help-toc a{color:var(--ink-3);text-decoration:none}
+  .help-toc a:hover{color:var(--action)}
   .help-page :global(h2){scroll-margin-top:calc(var(--hd) + 16px)}
-  @media (max-width:1100px){.help-toc{display:none}}
-  @media (max-width:760px){.help-grid{row-gap:32px;padding-block:28px 72px}.help-nav{position:static;order:2}}
+  @media (max-width:1180px){.help-grid{grid-template-columns:220px minmax(0,1fr)}.help-toc{display:none}}
+  @media (max-width:760px){.help-grid{grid-template-columns:minmax(0,1fr);row-gap:32px;padding-bottom:72px}.help-nav{position:static;order:2}.help-where{font-size:16px;line-height:1.75}}
 </style>

@@ -48,8 +48,8 @@
   }
 }
 
-/* The site's own surfaces: white pages in light mode, sections alternating with the panel colour. The header is 76px
-   (delivery tokens: height.websiteHeader). */
+/* The site's own surfaces: white pages in light mode (v2: sections don't alternate colours; only the footer sits on the
+   page grey). The header is 76px (v2 site header). */
 :root{--page:#FFFFFF; --hd:76px}
 @media (prefers-color-scheme: dark){ :root{--page:var(--bg)} }
 
@@ -68,8 +68,9 @@ a{color:inherit}
 [hidden]{display:none!important}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
 ::selection{background:var(--accent-soft)}
-/* The content is at most 1200 wide (spec 2), with the page margins outside it: 32px, 20 on a phone. */
-.wrap{box-sizing:content-box;max-width:1200px;margin-inline:auto;padding-left:max(32px,env(safe-area-inset-left,0px));padding-right:max(32px,env(safe-area-inset-right,0px))}
+/* The content is 1248 wide on a desktop, the margins 96 at 1440 and at least 32 (20 on a phone) on narrower screens
+   (v2 handoff: page margin 96, content 1248, 12 columns with 24px gutters). */
+.wrap{box-sizing:content-box;max-width:1248px;margin-inline:auto;padding-left:max(32px,env(safe-area-inset-left,0px));padding-right:max(32px,env(safe-area-inset-right,0px))}
 @media (max-width:768px){.wrap{padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}}
 /* The page grid (spec 2): 12 columns with 24px gutters. Each layout says how many columns its children span; a child
    without a span takes the whole row, which is how the layouts stack on narrow screens. */
@@ -88,12 +89,12 @@ a{color:inherit}
 h1,h2,.display{font-weight:600}
 html[lang="zh"] :is(h1,h2,.display){letter-spacing:0}
 h3{font-weight:600}
-.eyebrow{margin-bottom:14px;font-size:14px;font-weight:600;color:var(--ink-3)}
-.lead{max-width:720px;font-size:16px;line-height:1.75;color:var(--ink-2)}
+.lead{max-width:720px;font-size:16px;line-height:1.75;color:var(--ink-3)}
 .fine{font-size:12px;color:var(--ink-3)}
 
-/* buttons: primary (one per area, the accent), secondary and text, as in the workbench, at the site's sizes */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--h-ctl);padding:0 16px;border-radius:var(--r);border:1px solid transparent;font:inherit;font-size:14px;font-weight:500;line-height:1;text-decoration:none;white-space:nowrap;cursor:pointer;transition:background-color var(--t-fast),border-color var(--t-fast),color var(--t-fast),transform var(--t-fast)}
+/* buttons: primary (one per area, the accent), secondary and text, as in the workbench, at the site's sizes: the site's
+   buttons carry 16px text (v2 site), the small ones 14 */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--h-ctl);padding:0 16px;border-radius:var(--r);border:1px solid transparent;font:inherit;font-size:16px;font-weight:500;line-height:1;text-decoration:none;white-space:nowrap;cursor:pointer;transition:background-color var(--t-fast),border-color var(--t-fast),color var(--t-fast),transform var(--t-fast)}
 /* Pressed: the button sinks a little. Submitting (aria-busy): a spinner in place of the label, the width kept, and no
    more clicks until it is done. */
 .btn:active:not(:disabled){transform:translateY(1px) scale(.985)}
@@ -103,7 +104,7 @@ h3{font-weight:600}
 @keyframes btn-spin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion: reduce){.btn:active:not(:disabled){transform:none}}
 .btn:disabled{color:var(--ink-4);cursor:not-allowed}
-.btn-sm{height:var(--h-sm);padding:0 12px}
+.btn-sm{height:var(--h-sm);padding:0 12px;font-size:14px}
 .btn-lg{height:var(--h-lg);padding:0 22px;font-size:16px}
 .btn-primary{background:var(--action);border-color:var(--action);color:var(--on-accent)}
 .btn-primary:hover:not(:disabled){background:var(--action-hover);border-color:var(--action-hover)}
@@ -125,20 +126,25 @@ h3{font-weight:600}
 .seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(29,28,43,.12)}
 .seg em{font-style:normal;font-size:12px;margin-left:6px;color:var(--ink-3)}
 
-/* header: the sections in a row, the current one underlined; where they no longer fit, they move into a drawer that
-   the menu button opens (components/Header.astro) */
+/* header (v2): the brand, the sections from the page's fourth column (14px, 500), the current one underlined; on the right
+   the text link and the 48px button. Where the sections no longer fit they move into a drawer that the menu button
+   opens (components/Header.astro). */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--page) 88%,transparent);-webkit-backdrop-filter:saturate(1.4) blur(12px);backdrop-filter:saturate(1.4) blur(12px);box-shadow:inset 0 -1px var(--line)}
 .top-in{display:flex;align-items:center;gap:40px;height:var(--hd)}
 .brand{display:flex;align-items:center;gap:9px;text-decoration:none}
+@media (min-width:1240px){.top-in > .brand{min-width:294px}}
 .seal{width:28px;height:28px;flex:none;color:var(--accent)}
 /* The word in the logo, part of the mark: it keeps its own weight and size. */
 .brand-word{font-weight:600;font-size:22px;line-height:1}
-.nav{display:flex;align-items:center;gap:28px;flex:1;font-size:14px;color:var(--ink-2)}
+.nav{display:flex;align-items:center;gap:48px;flex:1;font-size:14px;font-weight:500;color:var(--ink-2)}
 .nav > a{position:relative;display:flex;align-items:center;height:var(--hd);text-decoration:none}
 .nav > a:hover{color:var(--ink)}
 .nav > a[aria-current="page"]{color:var(--ink);font-weight:600}
 .nav > a[aria-current="page"]::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:99px;background:var(--accent)}
-.nav-acts{display:flex;align-items:center;gap:18px;margin-left:auto}
+.nav-acts{display:flex;align-items:center;gap:28px;margin-left:auto}
+/* The header's text links (log in, back to the website): the action colour, as v2's link buttons. */
+.h-link{font-size:16px;font-weight:500;color:var(--action);text-decoration:none;white-space:nowrap}
+.h-link:hover{color:var(--action-hover);text-decoration:underline;text-underline-offset:4px}
 .quiet{text-decoration:none;color:var(--ink-2)}
 .quiet:hover{color:var(--ink)}
 .menu-btn{display:none;place-items:center;width:44px;height:44px;margin-left:auto;border:1px solid var(--line-2);border-radius:var(--r);background:var(--card);color:var(--ink);cursor:pointer}
@@ -152,7 +158,7 @@ h3{font-weight:600}
   .nav > a{height:auto;padding:14px 2px;border-bottom:1px solid var(--line);font-size:16px}
   .nav > a[aria-current="page"]::after{display:none}
   .nav-acts{margin:18px 0 0;gap:12px}
-  .nav-acts .btn,.nav-acts .quiet{flex:1;justify-content:center;text-align:center}
+  .nav-acts .btn,.nav-acts .h-link{flex:1;justify-content:center;text-align:center}
 }
 
 /* cards, icon tiles and status labels (white capsules with a small icon, as in the workbench); cards have only their
@@ -176,12 +182,16 @@ h3{font-weight:600}
 .form{display:grid;gap:16px}
 .field{display:grid;gap:7px;align-content:start;min-width:0}
 .field label{font-size:14px;font-weight:500;color:var(--ink-body)}
+/* A required field's label starts with a red star (v2 spec 4); the field itself carries `required` for screen readers. */
+label.req::before{content:'*' / '';margin-right:4px;color:var(--bad-ink)}
 /* Text boxes (spec 4): a grey line on the card colour; focused, the accent line and a soft accent ring. A .box that holds
    an icon or a button beside a borderless input (the searches) shows it while anything in it has the focus. */
 .box,.field :is(input,select,textarea){border:1px solid var(--line);border-radius:var(--r);background:var(--card);color:var(--ink)}
 .box:focus-within,.field :is(input,select,textarea):focus{outline:none;border-color:var(--accent)}
 .field :is(input,select,textarea){width:100%;height:var(--h-ctl);padding:0 14px;font:inherit;font-size:14px}
 .field textarea{height:auto;min-height:120px;padding:12px 14px;resize:vertical}
+/* Drop-downs (v2): the chevron drawn at the right, 16px, in the helper grey. */
+.field select{appearance:none;padding-right:40px;background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23667085' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center/16px}
 /* A field's error (spec 4): the red line, and under the field the reason (scripts/session.ts). */
 .field [aria-invalid="true"],.field [aria-invalid="true"]:focus{border-color:var(--bad-ink)}
 .field-err{font-size:12px;line-height:1.5;color:var(--bad-ink)}
@@ -195,10 +205,16 @@ label + .field-err{margin-top:-8px}
 .pw button:hover,.pw button[aria-pressed="true"]{color:var(--ink);background:var(--seg)}
 .code-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px}
 .code-row .btn{min-width:132px;height:var(--h-ctl)}
-.notice{padding:12px 14px;border-radius:var(--r);font-size:14px;line-height:22px;background:var(--head);color:var(--ink-3)}
+/* Notices (v2): an inline bar with its icon, grey for information, red for an error the form can't pin on one field,
+   green for done. */
+.notice{display:flex;gap:10px;align-items:flex-start;padding:11px 16px;border-radius:var(--r);font-size:14px;line-height:22px;background:var(--head);color:var(--ink-3)}
+.notice::before{content:'';flex:none;width:16px;height:16px;margin-top:3px;background:currentColor;-webkit-mask:var(--n-ic) center/contain no-repeat;mask:var(--n-ic) center/contain no-repeat;--n-ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0M12 11v6m0-10h.01'/%3E%3C/svg%3E")}
 .notice.error{background:var(--bad-soft);color:var(--bad-ink)}
+.notice.error::before{--n-ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0M12 7v6.5M12 16.75h.01'/%3E%3C/svg%3E")}
 .notice.ok{background:var(--good-soft);color:var(--good-ink)}
-.notice.dev{border-style:dashed;font-family:var(--f-data);font-size:12px}
+.notice.ok::before{--n-ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12l5 5L20 6'/%3E%3C/svg%3E")}
+.notice.dev{border:1px dashed var(--line-2);font-family:var(--f-data);font-size:12px}
+.notice.dev::before{display:none}
 .alt{font-size:14px;color:var(--ink-2)}
 .alt a{color:var(--ink);text-underline-offset:3px}
 .kv{display:grid;grid-template-columns:auto 1fr;gap:14px 20px;align-items:center;margin:0;font-size:14px}
@@ -211,34 +227,35 @@ table.list td{height:56px;border-bottom:1px solid var(--line);padding:6px 12px 6
 table.list tr:last-child td{border-bottom:0}
 .confirm{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line);font-size:14px}
 
-/* sign-in pages: the simple header's links; the product on a soft accent panel on the left, centred in it with the three
-   key points in a row along the walkthrough's lower edge (its pause button moves to the top corner), and the form on
-   the right, within the header's right edge. On a phone the form comes first and the panel follows, without the
-   walkthrough. */
-.top-links{display:flex;gap:28px;margin-left:auto;font-size:14px}
-.top-links a{color:var(--ink-2);text-decoration:none}
-.top-links a:hover{color:var(--ink)}
-.auth{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);min-height:calc(100svh - var(--hd))}
-.auth-panel{display:flex;justify-content:center;align-items:center;padding:56px 64px 72px;background:linear-gradient(165deg,var(--accent-soft),var(--page) 88%);border-right:1px solid var(--line)}
-.auth-panel-in{width:100%;max-width:620px}
-.auth-title{font-size:clamp(1.75rem,2.8vw,2.375rem);line-height:1.2}
-.auth-lead{max-width:520px;margin-top:14px;font-size:16px;line-height:1.75;color:var(--ink-2)}
-.auth-vis{position:relative;margin-top:44px}
-.auth-vis .fd-btn{top:10px;bottom:auto}
-.auth-pts{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:-30px 18px 0;padding:0;list-style:none}
-.auth-pts li{display:flex;align-items:center;gap:10px;min-width:0;padding:9px 12px 9px 9px;border-radius:var(--r-lg);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-pop);line-height:1.4}
-.auth-pts li > span:last-child{display:grid}
-.auth-pts b{font-size:14px;font-weight:600}
-.auth-pts small{font-size:12px;color:var(--ink-2)}
-.auth-main{display:flex;align-items:center;padding:56px max(32px,calc((100vw - 1200px) / 2)) 80px 72px}
-.auth-form{display:grid;gap:22px;width:100%;max-width:420px}
+/* sign-in pages (v2): the simple header (back to the website, the help center); on the left, from the header to the
+   bottom of the window, the product on the soft accent (what Folio is, in two lines, and a picture of the workbench);
+   on the right the form, which ends with the privacy policy, the terms and the language (these pages have no footer).
+   On a phone the form comes first and the panel follows. */
+.top-links{display:flex;align-items:center;gap:28px;margin-left:auto}
+/* on a phone the brand is the way back to the website */
+@media (max-width:560px){.top-links .h-link{display:none}}
+.auth{display:grid;grid-template-columns:minmax(0,704fr) minmax(0,736fr);min-height:calc(100svh - var(--hd))}
+.auth-panel{padding:104px 48px 72px max(32px,calc((100vw - 1248px) / 2));background:var(--accent-soft)}
+.auth-panel-in{max-width:510px}
+.auth-title{font-size:clamp(2rem,3.4vw,3rem);line-height:1.333}
+.auth-lead{margin-top:32px;font-size:18px;line-height:30px;color:var(--ink-3)}
+.auth-vis{margin-top:70px}
+.auth-main{padding:74px 32px 72px clamp(32px,9.7vw,140px)}
+.auth-form{display:grid;gap:24px;width:100%;max-width:450px}
 .auth-form .page-head{margin-bottom:0}
-.auth-form .page-head h1{font-size:32px}
-.auth-form .page-head p{font-size:16px}
-.auth-form a:not(.btn){color:var(--accent-ink);text-decoration:none}
-.auth-form a:not(.btn):hover{text-decoration:underline}
-.auth-form .alt{text-align:center}
+.auth-form .page-head h1{font-size:32px;line-height:44px}
+.auth-form .page-head p{margin-top:22px;font-size:14px;line-height:22px;color:var(--ink-3)}
+.auth-form .form{gap:24px}
+.auth-form a:not(.btn){color:var(--action);text-decoration:none}
+.auth-form a:not(.btn):hover{text-decoration:underline;text-underline-offset:3px}
+.auth-form .alt{text-align:center;font-size:16px}
+.auth-form .linkish{color:var(--action);text-decoration:none}
+.auth-form .linkish:hover{text-decoration:underline;text-underline-offset:3px}
 .auth-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 16px;font-size:14px}
+/* the privacy policy, the terms and the language, in equal thirds under the form */
+.auth-foot{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;justify-items:center;gap:8px;margin-top:8px;font-size:16px}
+.auth-foot a:not(.lang-switch){color:var(--action);text-decoration:none}
+.auth-foot a:not(.lang-switch):hover{text-decoration:underline;text-underline-offset:3px}
 .check{display:inline-flex;align-items:flex-start;gap:8px;font-size:14px;line-height:1.6;color:var(--ink-2);cursor:pointer}
 .check input{margin:3px 0 0}
 /* Check boxes as v2 draws them: a 16px square with 4px corners, filled with the action colour and a white tick. */
@@ -249,13 +266,11 @@ input[type="checkbox"]:checked::before{transform:scale(1)}
 input[type="checkbox"]:hover:not(:checked){border-color:var(--ink-3)}
 @media (max-width:960px){
   .auth{grid-template-columns:minmax(0,1fr)}
-  .auth-main{order:1;justify-content:center;padding:40px 20px 48px}
-  .auth-panel{order:2;justify-content:center;padding:40px 20px 56px;border-right:0;border-top:1px solid var(--line)}
-  .auth-panel-in{max-width:460px}
+  .auth-main{order:1;display:flex;justify-content:center;padding:40px 20px 48px}
+  .auth-panel{order:2;padding:40px 20px 56px}
+  .auth-panel-in{max-width:460px;margin-inline:auto}
+  .auth-lead{margin-top:16px}
   .auth-vis{margin-top:28px}
-  .auth-vis .showcase{display:none}
-  .auth-pts{grid-template-columns:minmax(0,1fr);gap:10px;margin:0}
-  .auth-pts li{box-shadow:none}
 }
 
 /* Phones: buttons and toggles are comfortable touch targets (44px). The password's eye stays drawn at 32 inside its

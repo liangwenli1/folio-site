@@ -1,9 +1,11 @@
 ---
-// What changed, release by release: each says which part of Folio it is (the workbench or the website) and what was
-// added, improved and fixed; tabs show one part at a time. Below, subscribing to release news: an email with a link
-// confirms it, and that email's links come back here (?confirm=, ?unsubscribe=).
+// What changed, release by release (v2): each card names the part of Folio (the workbench or the website) and the
+// version, with when it came out, and lists what was added, improved and fixed; the buttons above show one part at a
+// time. Below, subscribing to release news: an email with a link confirms it, and that email's links come back here
+// (?confirm=, ?unsubscribe=).
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
+import PageHero from '../../components/PageHero.astro';
 import type { IconName } from '../../lib/icons';
 import { langPaths, t, type Lang } from '../../lib/i18n';
 
@@ -13,9 +15,7 @@ const L = t(lang).changelog;
 const KINDS: ['added' | 'improved' | 'fixed', IconName][] = [['added', 'plus'], ['improved', 'layers'], ['fixed', 'check']];
 ---
 <Base lang={lang} path="changelog/" title={L.title} description={L.lead}>
-  <section class="phero">
-    <div class="wrap cl-hero"><p class="eyebrow">{L.title}</p><h1 class="hero-title">{L.h1}</h1><p class="lead">{L.lead}</p></div>
-  </section>
+  <PageHero title={L.h1} lead={L.lead} />
   <section class="msec">
     <div class="wrap">
       <div class="cl-tabs" role="group" aria-label={L.filter}>
@@ -23,37 +23,29 @@ const KINDS: ['added' | 'improved' | 'fixed', IconName][] = [['added', 'plus'], 
       </div>
       <ol class="cl-list">
         {L.releases.map(r => (
-          <li class="cols" data-area={r.area}>
-            <div class="cl-when"><b>{r.version}</b><span>{r.date}</span></div>
-            <article class="card cl-card">
-              <header><span class="cl-ver">{r.version}</span><span class="cl-tag">{L.areas[r.area]}</span></header>
-              <div class="cl-cols">
-                {KINDS.filter(([k]) => r[k].length).map(([k, icon]) => (
-                  <section><h3><span class={`cl-ic ${k}`}><Icon name={icon} /></span>{L.kinds[k]}</h3><ul>{r[k].map(x => <li>{x}</li>)}</ul></section>
-                ))}
-              </div>
-            </article>
+          <li class="card cl-card" data-area={r.area}>
+            <span class="cl-when">{r.date}</span>
+            <h2>{L.areas[r.area]} · {r.version}</h2>
+            <div class="cl-cols">
+              {KINDS.filter(([k]) => r[k].length).map(([k, icon]) => (
+                <section><h3><span class={`cl-ic ${k}`}><Icon name={icon} /></span>{L.kinds[k]}</h3><ul>{r[k].map(x => <li>{x}</li>)}</ul></section>
+              ))}
+            </div>
           </li>
         ))}
       </ol>
       <div class="cl-sub" id="subscribe">
-        <svg class="cl-env" viewBox="0 0 80 72" width="80" height="72" aria-hidden="true">
-          <defs>
-            <linearGradient id="cl-env-front" x1="0" y1="0" x2="0" y2="1"><stop class="hi" offset="0" /><stop class="lo" offset="1" /></linearGradient>
-          </defs>
-          <ellipse class="shade" cx="40" cy="68" rx="28" ry="3" />
-          <path class="back" d="M8 31 37 10.5a5 5 0 0 1 6 0L72 31v27a6 6 0 0 1-6 6H14a6 6 0 0 1-6-6z" />
-          <rect class="letter" x="18" y="15" width="44" height="38" rx="4" />
-          <path class="lines" d="M26 26h28M26 33h22M26 40h15" />
-          <path class="front" d="M8 33 40 53 72 33v25a6 6 0 0 1-6 6H14a6 6 0 0 1-6-6z" />
-          <path class="folds" d="M10 62 33 47.5M70 62 47 47.5" />
-        </svg>
         <div><h2>{L.subscribe.title}</h2><p>{L.subscribe.body}</p></div>
         <form class="cl-sub-form" id="sub-form" novalidate>
-          <input class="box" type="email" id="sub-email" autocomplete="email" placeholder={L.subscribe.placeholder} aria-label={L.subscribe.placeholder} required />
-          <button class="btn btn-primary btn-lg" type="submit">{L.subscribe.send}</button>
+          <div class="field">
+            <label for="sub-email">{L.subscribe.label}</label>
+            <div class="cl-sub-row">
+              <input type="email" id="sub-email" autocomplete="email" placeholder={L.subscribe.placeholder} required />
+              <button class="btn btn-primary" type="submit">{L.subscribe.send}</button>
+            </div>
+          </div>
+          <p class="cl-sub-msg" id="sub-msg" role="status" hidden></p>
         </form>
-        <p class="cl-sub-msg" id="sub-msg" role="status" hidden></p>
       </div>
     </div>
   </section>
@@ -96,58 +88,35 @@ const KINDS: ['added' | 'improved' | 'fixed', IconName][] = [['added', 'plus'], 
   }
 </script>
 <style>
-  .cl-hero{padding-block:56px 52px}
-  .cl-hero .eyebrow{color:var(--accent-ink)}
-  .cl-hero .lead{margin-top:14px}
-  .cl-tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px}
+  .cl-tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}
   .cl-tabs button{height:var(--h-ctl);padding:0 18px;border:1px solid var(--line-2);border-radius:99px;background:var(--card);font:inherit;font-size:14px;color:var(--ink-2);cursor:pointer}
   .cl-tabs button:hover{color:var(--ink);border-color:var(--ink-3)}
-  .cl-tabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
-  .cl-list{display:grid;gap:22px;margin:0;padding:0;list-style:none}
-  /* each release on the page grid: the version and date on 2 columns, what changed on 10 */
-  .cl-list > li{position:relative}
-  @media (min-width:861px){.cl-when{grid-column:span 2}.cl-card{grid-column:span 10}}
-  .cl-list > li::before{content:'';position:absolute;left:6px;top:24px;bottom:-22px;width:1px;background:color-mix(in srgb,var(--accent) 35%,var(--line))}
-  .cl-list > li:last-child::before{display:none}
-  .cl-when{position:relative;display:grid;align-content:start;gap:2px;padding:14px 0 0 24px}
-  .cl-when::before{content:'';position:absolute;left:0;top:18px;width:13px;height:13px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
-  .cl-when b{font-size:16px}
-  .cl-when span{font-size:12px;color:var(--ink-3)}
-  .cl-card{padding:20px 24px}
-  .cl-card header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
-  .cl-ver{padding:3px 12px;border-radius:99px;background:var(--accent-soft);color:var(--accent-ink);font:600 12px var(--f-data)}
-  .cl-tag{padding:3px 10px;border-radius:99px;background:var(--seg);color:var(--ink-2);font-size:12px;font-weight:600}
-  .cl-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px 0}
-  .cl-cols > section{padding-inline:0 22px}
-  .cl-cols > section + section{padding-left:22px;border-left:1px solid var(--line)}
+  .cl-tabs button[aria-pressed="true"]{background:var(--action);border-color:var(--action);color:var(--on-accent);font-weight:600}
+  /* v2: one card per release, the date in a grey label, the part and version 28/40, then what changed */
+  .cl-list{display:grid;gap:32px;margin:0;padding:0;list-style:none}
+  .cl-card{display:grid;justify-items:start;gap:12px;padding:22px 24px 26px}
+  .cl-when{display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:99px;background:var(--seg);font-size:12px;font-weight:500;color:var(--ink-3)}
+  .cl-card > h2{font-size:28px;line-height:40px}
+  .cl-cols{justify-self:stretch;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px 0;margin-top:4px}
+  .cl-cols > section{padding-inline:0 24px}
+  .cl-cols > section + section{padding-left:24px;border-left:1px solid var(--line)}
   .cl-cols h3{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:16px}
   .cl-ic{display:grid;place-items:center;width:24px;height:24px;border-radius:50%}
   .cl-ic.added{background:var(--accent-soft);color:var(--accent-ink)}
   .cl-ic.improved{background:var(--info-soft);color:var(--info-ink)}
   .cl-ic.fixed{background:var(--good-soft);color:var(--good-ink)}
-  .cl-cols ul{display:grid;gap:8px;margin:0;padding-left:18px;list-style:disc;font-size:14px;line-height:1.65;color:var(--ink-2)}
+  .cl-cols ul{display:grid;gap:8px;margin:0;padding-left:18px;list-style:disc;font-size:16px;line-height:28px;color:var(--ink-body)}
   .cl-cols li::marker{color:var(--ink-3)}
-  .cl-sub{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:28px;align-items:center;margin-top:44px;padding:26px 40px;border-radius:var(--r-card);background:color-mix(in srgb,var(--accent) 7%,var(--card));border:1px solid color-mix(in srgb,var(--accent) 14%,var(--line))}
-  .cl-env{display:block}
-  .cl-env .shade{fill:color-mix(in srgb,var(--accent) 22%,transparent)}
-  .cl-env .back{fill:color-mix(in srgb,var(--accent) 82%,#000)}
-  .cl-env .letter{fill:#fff}
-  .cl-env .lines{fill:none;stroke:color-mix(in srgb,var(--accent) 30%,#fff);stroke-width:3;stroke-linecap:round}
-  .cl-env .front{fill:url(#cl-env-front)}
-  .cl-env .hi{stop-color:color-mix(in srgb,var(--accent) 70%,#fff)}
-  .cl-env .lo{stop-color:var(--accent)}
-  .cl-env .folds{fill:none;stroke:rgba(255,255,255,.28);stroke-width:2;stroke-linecap:round}
-  .cl-sub h2{font:600 20px/1.4 var(--f-body);letter-spacing:0}
-  .cl-sub p{margin-top:6px;font-size:14px;color:var(--ink-2)}
-  .cl-sub-form{display:flex;gap:10px;width:380px}
-  .cl-sub-form input{flex:1;min-width:0;height:var(--h-lg);padding:0 14px;font:inherit;font-size:14px}
-  .cl-sub-form input::placeholder{color:var(--ink-3)}
-  .cl-sub-form .btn{min-width:96px}
-  .cl-sub-msg{grid-column:2 / -1;margin-top:-12px;font-size:14px;line-height:1.6}
+  /* subscribing: the closing band of the page (v2's band), the address with its label beside what it is */
+  .cl-sub{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,460px);gap:24px 48px;align-items:center;margin-top:48px;padding:28px 48px 28px 32px;border-radius:var(--r-card);background:var(--accent-soft)}
+  .cl-sub h2{font-size:28px;line-height:40px}
+  .cl-sub p{margin-top:4px;font-size:16px;line-height:28px;color:var(--ink-3)}
+  .cl-sub-row{display:flex;gap:12px}
+  .cl-sub-row input{flex:1;min-width:0}
+  .cl-sub-row .btn{min-width:96px}
+  .cl-sub-msg{margin-top:10px;font-size:14px;line-height:1.6}
   .cl-sub-msg.ok{color:var(--good-ink)}
   .cl-sub-msg.bad{color:var(--bad-ink)}
-  @media (max-width:980px){.cl-sub{grid-template-columns:auto minmax(0,1fr);padding:24px 28px}.cl-sub-form,.cl-sub-msg{grid-column:1 / -1;width:auto}.cl-sub-msg{margin-top:-8px}}
-  @media (max-width:860px){.cl-list > li::before{display:none}}
-  @media (max-width:560px){.cl-sub{gap:18px;padding:22px 20px}.cl-env{width:60px;height:54px}}
+  @media (max-width:900px){.cl-sub{grid-template-columns:minmax(0,1fr);padding:24px 20px}}
   @media (max-width:720px){.cl-cols > section,.cl-cols > section + section{padding:0;border:0}}
 </style>

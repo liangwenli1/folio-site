@@ -10,21 +10,16 @@ export const en = {
   plans: { free: 'Free', studio: 'Studio', company: 'Company' },
   periods: { monthly: 'monthly', yearly: 'yearly' },
 
-  demo: {
-    label: 'Workbench walkthrough: checking proxies, opening a browser profile, restoring tabs, a health check, installing an extension, batch opening, window sync and teamwork.', pause: 'Pause walkthrough', play: 'Play walkthrough'
-  },
-
   home: {
     h1: 'Separate profiles,\nmanaged as one',
     lead: 'Folio manages browser profiles, proxies and team access in one place, so multi-account work is set up centrally and shared across the team in an orderly way.',
-    features: 'See the features',
-    points: [['Kept apart', 'Each account runs on its own'], ['Proxies', 'HTTP, HTTPS and SOCKS5'], ['Teams', 'Controlled access, efficient teamwork']] as [string, string][],
+    features: 'See the features', more: 'Learn more', shot: 'The list of browser profiles in the Folio workbench',
     cardsTitle: 'Built for working with many accounts', cardsLead: 'From the first browser profile to the whole team, with everything in between.',
     cards: [
-      { title: 'Browser profiles', body: 'Set up separate browser profiles and see their status and key settings in one place.', mini: { title: 'New profile', rows: [['Name', 'US-Store-01'], ['System', 'Windows'], ['Engine', 'Chromium 150']] as [string, string][], button: 'Create profile' } },
-      { title: 'Proxies', body: 'Set up proxies in one place, with their checks and the profiles that use them.', mini: { title: 'Add proxy', rows: [['Protocol', 'SOCKS5'], ['Host', '203.0.113.24'], ['Port', '1080']] as [string, string][], button: 'Check connection' } },
-      { title: 'Groups', body: 'Organize browser profiles by business, region or project, keeping their structure clear.', mini: { title: 'Groups', rows: [['', 'US shops · 3'], ['', 'EU shops · 2'], ['', 'Social · 2']] as [string, string][], button: 'New group' } },
-      { title: 'Teams', body: 'Give members roles and the groups they can access, so everyone knows what is theirs.', mini: { title: 'Members', rows: [['Ava', 'Owner'], ['Jordan', 'Admin'], ['Riley', 'Member']] as [string, string][], button: 'Invite people' } }
+      { title: 'Browser profiles', body: 'Set up separate browser profiles and see their status and key settings in one place.', shot: 'A profile card: status, proxy exit, engine and extensions' },
+      { title: 'Proxies', body: 'Set up proxies in one place, with their checks and the profiles that use them.', shot: 'A proxy card: exit location and IP, status and latency' },
+      { title: 'Groups', body: 'Organize browser profiles by business, region or project, keeping their structure clear.', shot: 'The group directory: each group and how many profiles it holds' },
+      { title: 'Teams', body: 'Give members roles and the groups they can access, so everyone knows what is theirs.', shot: 'Team members and their roles' }
     ],
     steps: {
       title: 'Three steps to get started', lead: 'Sign up, create browser profiles and bring in your team.',
@@ -33,9 +28,9 @@ export const en = {
     uses: {
       title: 'For many kinds of work', lead: 'Browser profiles organized for the way each business works.',
       items: [
-        { title: 'Cross-border e-commerce', body: 'Shops on several marketplaces, each account kept apart, run by one team.', list: ['US-Store-01', 'UK-Shop-01', 'JP-Shop-01', 'DE-Shop-01'] },
-        { title: 'Social media', body: 'Many social accounts at once, with teamwork and access control.', list: ['Social-01', 'Social-02', 'Social-03', 'Social-04'] },
-        { title: 'Testing', body: 'Separate test environments for development and QA teams.', list: ['Test-Env-A', 'Test-Env-B', 'Staging-01', 'Staging-02'] }
+        { title: 'Cross-border e-commerce', body: 'Shops on several marketplaces, each account kept apart, run by one team.' },
+        { title: 'Social media', body: 'Many social accounts at once, with teamwork and access control.' },
+        { title: 'Testing', body: 'Separate test environments for development and QA teams.' }
       ]
     },
     faq: {
@@ -48,13 +43,12 @@ export const en = {
         ['How are the engines updated?', 'Folio uses open-source fingerprint engines and releases new versions after testing. Existing browser profiles keep their engine version and can be upgraded when convenient.']
       ] as [string, string][]
     },
-    band: { title: 'Get started with Folio', body: 'Try 5 browser profiles free, with no card required.', download: 'Download the app' }
+    band: { title: 'Get started with Folio', body: 'Try 5 browser profiles free, with no card required.' }
   },
 
   features: {
     title: 'Features', h1: 'Everything it takes to run\nbrowser profiles',
     lead: 'Folio starts from the browser profile and connects it to proxies, groups, members and activity records: creating profiles, setting up proxies, working as a team and keeping engines up to date, in one set of tools.',
-    shot: 'The list of browser profiles in the Folio workbench', tabsLabel: 'Areas',
     blocks: [
       { title: 'Browser profiles', lead: 'Set up browser profiles for each line of work, with their fingerprints and status in one place.', shot: 'The new profile form: basics, proxy, fingerprint and opening settings',
         points: [
@@ -86,32 +80,17 @@ export const en = {
           ['Flows and scheduled tasks', 'Build flows step by step and run them over a set of browser profiles a few at a time, on a schedule, with every run’s results kept.'],
           ['Local API and extensions', 'The local API works with Playwright, Puppeteer and Selenium; extensions are kept in one library and installed in many profiles at once.']
         ] as [string, string][] }
-    ],
-    flow: {
-      title: 'From the first profile to the whole team, in one place',
-      steps: [
-        ['Create profiles', 'Set up browser profiles and their fingerprints.'],
-        ['Add proxies', 'Choose the protocol and check the connection.'],
-        ['Bring in members', 'Set their roles and the groups they can access.'],
-        ['Get to work', 'Manage every browser profile from one workbench.']
-      ] as [string, string][],
-      cta: 'Try the whole workflow'
-    }
+    ]
   },
 
   solutions: {
     title: 'Solutions', h1: 'Browser profiles,\norganized for the way you work',
     lead: 'Folio organizes browser profiles, proxies and member access around how your business is structured, so people and teams have a clear way of working in each line of business.',
-    shot: 'The list of browser profiles in the Folio workbench', start: 'Try free', features: 'See the features',
-    casesTitle: 'For different lines of business', casesLead: 'Start from what the work needs and set up the browser profiles, proxies and access to match, so the team works together more efficiently.',
-    hub: 'Proxy', needs: 'What it needs', answers: 'What helps',
+    more: 'Learn more',
     cases: [
-      { title: 'Cross-border e-commerce', lead: 'Browser profiles organized by marketplace and shop, with proxies and member access managed in one place.', envs: ['Shop\nUS', 'Shop\nEU', 'Shop\nJapan'],
-        needs: ['Shops on several marketplaces at once', 'Each account’s environment kept apart', 'Work divided across the team'], answers: ['Browser profiles created in bulk', 'Proxies set up and checked', 'Roles and access by group'], cta: 'See the solution' },
-      { title: 'Social media', lead: 'Accounts grouped by project, set up and run together.', envs: ['Account\nProject A', 'Account\nProject B', 'Account\nProject C'],
-        needs: ['Many social accounts', 'Each account signed in on its own', 'Posting and day-to-day work shared'], answers: ['Separate browser profiles', 'Window sync for bulk work', 'Groups and permissions'], cta: 'See the features' },
-      { title: 'Testing', lead: 'Test environments kept apart, with activity and batch results on record.', envs: ['Dev', 'Test', 'Staging'],
-        needs: ['Several people testing at once', 'Projects kept apart', 'Environments easy to manage and clean up'], answers: ['Browser profiles in groups', 'Access by member', 'Activity log and task records'], cta: 'See the features' }
+      { title: 'Cross-border e-commerce', lead: 'Browser profiles organized by marketplace and shop, with proxies and member access managed in one place.' },
+      { title: 'Social media', lead: 'Accounts grouped by project, set up and run together.' },
+      { title: 'Testing', lead: 'Test environments kept apart, with activity and batch results on record.' }
     ],
     flow: {
       title: 'From members to proxies, in four steps', lead: 'Set up and run a team’s browser profiles.',
@@ -129,43 +108,29 @@ export const en = {
         ['How are members’ permissions managed?', 'Admins invite members and give each a role: Owner, Admin, Member and Viewer are built in, and you can create your own roles and set each permission. On Company, members can also be given access to browser profiles by group.'],
         ['Can browser profiles be created in bulk?', 'Yes. Import browser profiles from a spreadsheet, import proxies from a list, and change the group, proxy or engine version of many at once; the task center shows how each batch went.']
       ] as [string, string][]
-    },
-    band: { title: 'Find the right setup for your team', body: 'Tell us what you need and get advice on setting up browser profiles.', contact: 'Contact us' }
+    }
   },
 
   ecommerce: {
-    title: 'Cross-border e-commerce solution', crumb: 'Cross-border e-commerce', h1: 'Shops in many regions,\nrun by one team',
+    title: 'Cross-border e-commerce solution', h1: 'Shops in many regions,\nrun by one team',
     lead: 'Organize browser profiles by shop and region, and set up proxies and member access in one place.',
-    shot: 'Groups: browser profiles organized by region, and the group’s settings', features: 'See the features',
+    shot: 'Groups: browser profiles organized by region, and the group’s settings',
     pains: {
       title: 'What gets in the way', lead: 'With several marketplaces in several regions, browser profiles, proxies and people get harder to keep track of.',
       items: [
-        ['Too many setups', 'Each shop, region and way of working needs its own browser profile, and keeping them straight by hand gets messy.', 'Browser profiles in groups', 'Organized by shop and region'],
-        ['Scattered proxies', 'Proxies from several providers, set up in different ways, are hard to maintain and switch.', 'Proxies set up in the workbench', 'Checked, then assigned to profiles'],
-        ['Hard handovers', 'Access and account details sit in different places, so new people and changes take a long time to hand over.', 'Access by role and group', 'Clear about who can access what']
-      ] as [string, string, string, string][]
+        ['Too many setups', 'Each shop, region and way of working needs its own browser profile, and keeping them straight by hand gets messy.', 'Browser profiles grouped by shop and region'],
+        ['Scattered proxies', 'Proxies from several providers, set up in different ways, are hard to maintain and switch.', 'Proxies set up and checked in the workbench'],
+        ['Hard handovers', 'Access and account details sit in different places, so new people and changes take a long time to hand over.', 'Access by role and group']
+      ] as [string, string, string][]
     },
     flow: {
       title: 'How to set it up', lead: 'Four steps to a cross-border e-commerce setup the whole team can work in.',
-      steps: ['Create groups', 'Set up profiles', 'Check proxies', 'Grant access'],
-      mini: {
-        groups: { title: 'Groups', items: ['US shops', 'Japan shops'], add: 'New group' },
-        profile: { title: 'New profile', fields: [['Name', 'US-Shop-A'], ['Group', 'US shops'], ['Notes', 'Main US shop']] as [string, string][], create: 'Create profile' },
-        proxy: { title: 'Proxy check', fields: [['Protocol', 'HTTP'], ['Address', '203.0.113.24:8080']] as [string, string][], check: 'Check connection', ok: 'Responding', exit: 'Exit: Seattle, United States' },
-        access: { title: 'US shops · member access', people: [['Jordan', 'Member', true], ['Riley', 'Viewer', true], ['Sam', 'Member', false]] as [string, string, boolean][], save: 'Save settings' }
-      }
-    },
-    compare: {
-      title: 'Before and after', lead: 'From scattered and messy to one orderly place, making cross-border e-commerce more efficient to run.',
-      before: 'Before', beforeSub: 'Scattered, costly to manage', after: 'After', afterSub: 'In one place, easier to share',
-      afterShot: 'The list of browser profiles in the Folio workbench: groups, proxies and status',
-      cols: ['Shop', 'Marketplace', 'Proxy', 'Assigned to', 'Status'],
-      rows: [
-        ['US-Shop-A', 'Marketplace A', 'US IP, set up alone', 'Alex', 'Messy setup'],
-        ['US-Shop-B', 'Marketplace B', 'Proxy kept in a doc', 'Sam', 'Hard to trace'],
-        ['JP-Shop-A', 'Marketplace C', 'Japan IP, another tool', 'Jo', 'Hard to hand over'],
-        ['JP-Shop-B', 'Marketplace D', 'Proxy switched by hand', 'Lee', 'Easy to get wrong']
-      ]
+      steps: [
+        ['Create groups', 'A group for each marketplace or shop, with its browser profiles in it.'],
+        ['Set up profiles', 'A separate browser profile for each shop account.'],
+        ['Check proxies', 'Assign proxies to the browser profiles and check where they exit.'],
+        ['Grant access', 'Give members access by group; their role decides what they can do.']
+      ] as [string, string][]
     },
     note: 'Each marketplace’s own rules for accounts and verification apply.'
   },
@@ -174,7 +139,6 @@ export const en = {
     title: 'Pricing', h1: 'Plans that fit\nthe size of your work',
     lead: 'Priced by the number of browser profiles, with unlimited members on paid plans. From trying Folio on your own to several teams working together, pick the plan that fits today and change it at any time.',
     note: 'The Free plan is free forever, with no card required. Payments can be refunded within 7 days.',
-    shot: 'The list of browser profiles in the Folio workbench',
     period: 'Billing period', monthly: 'Monthly', yearly: 'Yearly', save: 'save 20%',
     perMonth: '/ month', forever: 'free forever',
     perProfile: (amount: string) => `${amount} per profile a month`,
@@ -229,16 +193,15 @@ export const en = {
         ['Are refunds and invoices available?', 'The latest payment can be refunded within 7 days, and the plan reverts to what it was before that payment. Every payment comes with an invoice, which you can view and print on the account page.']
       ] as [string, string][]
     },
-    band: { title: 'Start free, upgrade when you need to', body: 'Sign up to use 5 browser profiles, with no card required.' },
     foot: (pack: string) => `Additional browser profiles cost ${pack} a month per 100; above 2,000, a custom quote is available. Prices exclude local taxes, and an invoice is issued for every payment.`
   },
 
-  footer: { product: 'Product', resources: 'Resources', company: 'Company', api: 'API reference', changelog: 'Changelog', contact: 'Contact us', privacy: 'Privacy', terms: 'Terms', tagline: 'Separate profiles, managed as one', about: 'Folio manages browser profiles, proxies and team access in one place.', rights: '© 2026 Folio' },
+  footer: { product: 'Product', resources: 'Resources', legal: 'Legal', api: 'API reference', changelog: 'Changelog', contact: 'Contact us', privacy: 'Privacy', terms: 'Terms', tagline: 'Separate profiles, managed as one', rights: '© 2026 Folio' },
 
   auth: {
     panel: {
-      title: 'Separate profiles, managed as one', lead: 'A separate browser profile for each business, all managed in one workspace, with accounts, data and actions kept apart.',
-      points: [['Separate browser profiles', 'Each business runs on its own'], ['Managed in one place', 'Shared settings, quick switching'], ['Team collaboration', 'Access by role and group']] as [string, string][]
+      title: 'Separate profiles,\nmanaged as one', lead: 'A separate browser profile for each business, all managed in one workspace, with accounts, data and actions kept apart.',
+      shot: 'The list of browser profiles in the Folio workbench'
     },
     loginTitle: 'Log in to Folio', loginLead: 'Log in with your account to get back to your browser profiles.',
     signupTitle: 'Create a Folio account', signupLead: 'Try 5 browser profiles free. No card required.',
@@ -247,6 +210,7 @@ export const en = {
     remember: 'Remember me', forgot: 'Forgot password?',
     consent: ['I have read and agree to the', 'terms of service', 'and the', 'privacy policy'] as [string, string, string, string],
     signup: 'Create account', login: 'Log in', haveAccount: 'Already have an account?', noAccount: 'New to Folio?', toSignup: 'Sign up',
+    done: { title: 'Your account is ready', text: 'You’re signed up and logged in. Download the app and log in with this account to create browser profiles.', download: 'Download the app', account: 'Go to your account' },
     verifyTitle: 'Verify your email', verifyLead: (email: string) => `Send a code to ${email}, then enter it here. It is valid for 15 minutes.`,
     verify: 'Verify', resend: 'Send a code', resendIn: (s: number) => `Resend in ${s}s`, resent: 'A code has been sent.',
     reset: {
@@ -303,6 +267,7 @@ export const en = {
     cols: ['Date', 'Invoice', 'Amount', 'Status', ''],
     paid: 'Paid', refunded: 'Refunded', invoice: 'Invoice', refund: 'Refund',
     refundConfirm: 'Refund this payment? The plan returns to its state before this payment.', confirmRefund: 'Refund',
+    pw: { title: 'Change password', current: 'Current password', new: 'New password', confirm: 'Confirm the new password', save: 'Save new password', done: 'Password changed. This account has been logged out on other devices.' },
     download: 'Download the app', downloadBody: 'Log in to the desktop app with the same account; plan and workspace details sync automatically.',
     downloadCta: 'Download',
     invitations: 'Invitations', invitedBy: (inviter: string, role: string) => `Invited by ${inviter} as ${role}`, accept: 'Join', decline: 'Decline'
@@ -338,23 +303,19 @@ export const en = {
       support: ['Support', 'Something isn’t working, or you need help using it.'],
       partner: ['Partnerships', 'Business or channel partnerships, and anything else.']
     },
-    formTitle: 'Send a question', formLead: 'Fill in the form and we’ll get back to you as soon as we can.',
     name: 'Name', namePh: 'Your name', email: 'Work email', emailPh: 'you@company.com', kind: 'Topic',
     teamSize: 'Team size', teamPh: 'Choose a size', sizes: [['1-5', '1–5 people'], ['6-20', '6–20 people'], ['21-100', '21–100 people'], ['100+', 'More than 100']] as [string, string][],
     message: 'What you need', messagePh: 'Your needs, how you would use Folio, or what you want to know', consent: 'I have read and agree to the', privacy: 'privacy policy',
-    send: 'Send', done: 'Sent', doneText: 'Keep this reference number for any follow-up.', number: 'Reference', again: 'Send another',
-    failed: 'That didn’t go through. Try again later; what you wrote is still here.',
-    nameMissing: 'Enter your name.', teamMissing: 'Choose a team size.', messageMissing: 'Describe what you need.', consentMissing: 'Read and agree to the privacy policy first.',
-    more: {
-      eyebrow: 'More', title: 'Other places to look', lead: 'Find out more about the product, or get help using it.',
-      items: [['Help center', 'Guides, common questions and the local API reference.'], ['Pricing', 'What each plan includes and costs.'], ['Download', 'Get the app and start using Folio.']] as [string, string][]
-    }
+    send: 'Send',
+    done: 'Your question is in', doneLead: 'We’ll get back to you by email as soon as we can.', doneText: 'Your reference is {n}; keep it for any follow-up.', home: 'Back to home', again: 'Send another',
+    failedTitle: 'Your question couldn’t be sent', failedLead: 'That didn’t go through. Try again later.', failedText: 'What you wrote is still there; go back to send it again.', retry: 'Go back and retry', help: 'Visit the help center',
+    nameMissing: 'Enter your name.', teamMissing: 'Choose a team size.', messageMissing: 'Describe what you need.', consentMissing: 'Read and agree to the privacy policy first.'
   },
 
   download: {
     title: 'Download Folio', h1: 'Download Folio and\nstart running browser profiles',
     lead: 'Install the Folio app on your computer and log in with your Folio account to create and run browser profiles; your plan, team and browser profiles sync automatically.',
-    shot: 'The list of browser profiles in the Folio workbench', pending: 'Installers coming soon',
+    status: (release: string | null) => `${release ?? 'Installers coming soon'}. Get them from this page or another official Folio channel, so you know where they come from.`,
     windowsName: 'Windows', macName: 'macOS',
     windows: 'Windows 10 or later (64-bit)', mac: 'macOS 12 or later (Apple silicon, M1 or newer)',
     get: (os: string) => `Download for ${os}`, soon: 'Coming soon',
@@ -362,34 +323,34 @@ export const en = {
     notesTitle: 'First install',
     winNote: 'Folio is not code-signed yet. If SmartScreen blocks the installer, choose More info, then Run anyway.',
     macNote: 'Folio is not code-signed yet. Drag Folio into Applications. If it will not open the first time, go to System Settings › Privacy & Security and choose Open Anyway; if macOS says the app is damaged, run xattr -cr /Applications/Folio.app in Terminal and open it again.',
-    other: 'Installers for other systems are not available. If you need one,', contact: 'contact us',
+    otherName: 'Other systems', other: 'Installers for other systems are not available yet.', contact: 'Contact us',
     stepsTitle: 'Three steps to get started', stepsLead: 'Download and install the app, log in and create browser profiles.',
     steps: [
       ['Download the app', 'Pick your system: on Windows run the installer; on macOS drag Folio into Applications.'],
       ['Log in', 'Log in with your Folio account; your plan, team and browser profiles sync automatically.'],
       ['Create profiles', 'Create browser profiles and add proxies; the first time one opens, its engine downloads and is checked against the official checksum.']
     ] as [string, string][],
-    help: [
-      ['Installing', 'For installation steps and common questions, see the docs.', 'Read the docs'],
-      ['What’s new', 'New features and fixes in each version of the Folio app.', 'See the changelog'],
-      ['Stay safe', 'Get installers from this page or other official channels, so you know where they come from.', '']
-    ] as [string, string, string][]
+    guide: 'Installation guide'
   },
 
   help: {
     title: 'Help center', lead: 'Find setup guides and answers to common questions.',
-    search: 'Type a question or a keyword', searchBtn: 'Search', examplesLabel: 'For example:', examples: ['create a profile', 'proxies', 'import cookies', 'teams'],
-    shot: 'The list of browser profiles in the Folio workbench',
-    results: { one: '1 guide about “{q}”', many: '{n} guides about “{q}”', none: 'No guides about “{q}”' },
-    noneText: 'Try another keyword, for example:', noneMore: 'Still no answer?', contact: 'Contact us',
-    categories: {
-      start: { title: 'Getting started', body: 'From installing the app to your first browser profile: how Folio is used.' },
-      profiles: { title: 'Browser profiles', body: 'Creating and setting up browser profiles, their screen, window and cookies.' },
-      proxies: { title: 'Proxies', body: 'Adding and importing proxies, checking them and assigning them to profiles.' },
-      team: { title: 'Teams', body: 'Groups, access for members, and roles and permissions.' },
-      account: { title: 'Account and plans', body: 'What each plan includes, the free trial, upgrades, refunds and invoices.' }
+    searchLabel: 'Search the help center', search: 'Type a question or a keyword', searchBtn: 'Search', examplesLabel: 'For example:', examples: ['create a profile', 'proxies', 'import cookies', 'teams'],
+    results: {
+      title: 'Search results', none: 'No guides found', keyword: 'Searched for “{q}”', label: 'Keywords', again: 'Search again',
+      one: '1 guide found', many: '{n} guides found', noneText: 'Try other keywords, or ask us on the contact page.'
     },
-    popular: 'Popular guides', developers: 'Developers', apiLink: 'Local API reference',
+    contact: 'Contact us',
+    guides: { title: 'Guides and common tasks', lead: 'Find the guide for the step you are on.' }, read: 'Read the guide',
+    apiSummary: 'Open browser profiles through the local API and let Playwright, Puppeteer or Selenium take over.',
+    categories: {
+      start: { title: 'Getting started' },
+      profiles: { title: 'Browser profiles' },
+      proxies: { title: 'Proxies' },
+      team: { title: 'Teams' },
+      account: { title: 'Account and plans' }
+    },
+    developers: 'Developers', apiLink: 'Local API reference',
     faq: {
       title: 'Questions',
       items: [
@@ -398,8 +359,8 @@ export const en = {
         ['Can members’ permissions be customized?', 'Yes. Besides the built-in Owner, Admin, Member and Viewer, make roles of your own and set each of the 13 permissions; a role applies across the workspace.']
       ] as [string, string][]
     },
-    contactCard: { title: 'Contact us', body: 'If the answer isn’t here, our team can help.', cta: 'Send a question' },
-    home: 'Help center', searchDocs: 'Search the guides', noMatch: 'No matching articles', toc: 'On this page', updated: (date: string) => `Updated ${date}`, prev: 'Previous', next: 'Next', note: 'Note',
+    ask: 'Can’t find what you need?',
+    home: 'Help center', directory: 'Help directory', searchDocs: 'Search the guides', searchDocsPh: 'Type a keyword', noMatch: 'No matching guides.', toc: 'On this page', updated: (date: string) => `Updated ${date}`, prev: 'Previous', next: 'Next', note: 'Note',
     feedback: { ask: 'Was this guide helpful?', yes: 'Yes', no: 'No', thanks: 'Thank you for the feedback.', failed: 'That didn’t go through. Try again later.' },
     articles: {
       install: {
@@ -451,7 +412,7 @@ export const en = {
         sections: [
           { title: 'Add a proxy', body: ['Choose Add proxy, pick the protocol (HTTP, HTTPS or SOCKS5), and enter the host and port, with a username and password if it needs them. Add a backup line too: when the main line doesn’t respond, opening a profile uses the backup.'] },
           { title: 'Import a list', body: ['Choose Import and paste your provider’s list or pick a file, one proxy per line: host:port:user:pass, user:pass@host:port, socks5://user:pass@host:port or host:port.', 'Each line is previewed before it comes in, and lines that can’t be read say why; skip proxies already saved, and name the rest from a pattern such as US-{n}.'] },
-          { title: 'Check the connection', body: ['Choose Check all, or Check on a single proxy, to see whether it responds, its latency and its exit location. When more than 5 proxies are checked at once, progress shows at the bottom right and the task center has the results; proxies that don’t respond are flagged.'] },
+          { title: 'Check the connection', body: ['Choose Check all, or Check on a single proxy, to see whether it responds, its latency and its exit location. When more than 5 proxies are checked at once, progress shows at the bottom right and the task center has the results; proxies that don’t respond are flagged.', 'To check a proxy, the app asks Cloudflare’s public IP lookup (ipify when that is unreachable) for the exit IP through that proxy. A proxy that passes can reach the public internet; that doesn’t mean every site will accept it, since some sites restrict certain exit IPs.'] },
           { title: 'Assign to browser profiles', body: ['Pick a proxy when creating or editing a profile, or choose Change proxy from the list or the profile’s page. A proxy’s page lists the profiles using it and can unassign many at once.'] }
         ],
         note: 'A profile running on this computer can’t change its proxy; stop it first.'
@@ -463,7 +424,9 @@ export const en = {
           { title: 'Create a group', body: ['On the Groups page, choose New group and give it a name, a parent group (groups nest), a color and a description.'] },
           { title: 'Give members access', body: ['Under Member access in the group’s settings, add members; they can then access the browser profiles in that group. Giving access by group is part of the Company plan.'] },
           { title: 'Inherit the parent’s access', body: ['With Inherit parent group access on, members given access to the parent group also have access to this group’s profiles.'] },
-          { title: 'Roles and permissions', body: ['What members may do (create, open or delete profiles, import or export cookies, and so on) comes from their role, which applies across the workspace. Change the built-in roles, or make your own and set each of the 13 permissions, under Team › Roles.'] }
+          { title: 'Roles and permissions', body: ['What members may do (create, open or delete profiles, import or export cookies, and so on) comes from their role, which applies across the workspace. Change the built-in roles, or make your own and set each of the 13 permissions, under Team › Roles.'] },
+          { title: 'Invite and remove members', body: ['On the Team page choose Invite members, enter their email and pick a role. Until they accept, the invitation waits under Pending and can be withdrawn at any time; pending invitations count toward the plan’s member limit.', 'Removing a member asks who takes over the browser profiles they were responsible for; no profile is deleted, and the member’s group access ends. The owner can’t be removed.'] },
+          { title: 'Delete a group', body: ['Deleting a group removes only the group. If it holds browser profiles, choose the group they move to first; they move there before the group is deleted, and who can access them follows the new group.'] }
         ],
         note: 'Owners and admins can access every browser profile; members and viewers can access the profiles assigned to them and those in their groups.'
       },
@@ -478,13 +441,6 @@ export const en = {
         ],
         note: 'The pricing page has each plan’s current price.'
       }
-    },
-    minis: {
-      'create-profile': { title: 'New profile', rows: [['Name', 'Test profile 01'], ['Group', 'US shops']] as [string, string][], button: 'Create profile' },
-      proxies: { title: 'Proxy', rows: [['Protocol', 'HTTP'], ['Address', '203.0.113.24:8080']] as [string, string][], button: 'Check connection' },
-      'screen-and-window': { title: 'Opening', rows: [['Resolution', '1920 × 1080'], ['Window', '1280 × 800']] as [string, string][], button: 'Save' },
-      'import-cookies': { title: 'Import cookies', rows: [['', 'session=…; domain=shop.example'], ['', 'lang=en; domain=shop.example']] as [string, string][], button: 'Import' },
-      'group-access': { title: 'US shops · member access', rows: [['Jordan', 'Member'], ['Riley', 'Viewer']] as [string, string][], button: 'Save settings' }
     }
   },
 
@@ -507,7 +463,7 @@ export const en = {
         added: ['Sign-up, login and email verification', 'Plans, checkout and invoices', 'The account page and team invitations'], improved: [], fixed: [] }
     ] as { version: string; date: string; area: 'desktop' | 'site'; added: string[]; improved: string[]; fixed: string[] }[],
     subscribe: {
-      title: 'Get release news', body: 'Leave your email to hear about new releases and features.', placeholder: 'Your email address', send: 'Subscribe',
+      title: 'Get release news', body: 'Leave your email to hear about new releases and features.', label: 'Email', placeholder: 'Your email address', send: 'Subscribe',
       pending: (email: string) => `A confirmation email is on its way to ${email}. Follow its link to finish subscribing.`, subscribed: 'This email is already subscribed.',
       confirmed: 'You’re subscribed. News of Folio releases will come by email.', unsubscribed: 'You’ve unsubscribed. No more release news will be sent.', badLink: 'That link doesn’t work anymore. Subscribe again.'
     }
@@ -560,7 +516,7 @@ export const en = {
   legal: {
     tbc: 'To be confirmed', toc: 'Contents',
     privacy: {
-      title: 'Privacy policy',
+      title: 'Privacy policy', lead: 'What information Folio handles when you use it, how it is used and protected, and your rights.',
       draft: 'Draft. This page describes how Folio handles data today; items marked “To be confirmed” are not settled yet. The final text will be published after review.',
       sections: [
         { id: 'collect', title: 'Information we collect', lead: 'The kinds of information Folio handles when you use it.',
@@ -596,6 +552,7 @@ export const en = {
           items: [
             ['Selling data', 'We do not sell user data.'],
             ['Within your workspace', 'Profiles and proxies you create in a workspace can be seen and used by its members who have the permission.'],
+            ['Proxy checks', 'To check a proxy, the app asks Cloudflare’s public IP lookup (ipify when that is unreachable) for the exit IP through that proxy; these services see the proxy’s exit IP, not yours.'],
             ['Email, storage and payment providers', null],
             ['Disclosure required by law', null]
           ] as [string, string | null, string?][] },
@@ -618,7 +575,7 @@ export const en = {
     },
     terms: {
       title: 'Terms of service', lead: 'Your rights and obligations when you use Folio and its services.',
-      draft: ['Draft. The final terms will be published after review.', 'This page follows Folio’s current product rules; items marked “To be confirmed” are not settled yet.'],
+      draft: 'Draft. This page follows Folio’s current product rules; items marked “To be confirmed” are not settled yet. The final terms will be published after review.',
       sections: [
         { title: 'The service', body: ['Folio is a service for managing browser profiles: the Windows and macOS app, profile and proxy management, sign-ins synced to the cloud, team collaboration and the local API.', 'What each plan includes is set out on the pricing page.'] },
         { title: 'Your account', body: ['Sign up with a valid email address of your own and verify it. Keep your password safe: the account holder is responsible for what is done with the account.', 'Workspace owners decide members’ roles and what they can access. If something looks wrong with your account, reset your password and contact us.'] },
@@ -627,14 +584,13 @@ export const en = {
         { title: 'Changes and termination', body: ['We may change the product or these terms; how significant changes are announced, and when they take effect, is to be confirmed.', 'You can stop using Folio and cancel your subscription at any time. The rules for suspending or ending the service after a breach of these terms are to be confirmed.'] },
         { title: 'Liability and disputes', body: ['Limits of liability, the governing law and how disputes are resolved are to be confirmed.'] }
       ],
-      note: 'Draft section; the final wording is subject to review.',
       effective: 'Effective date', effectiveBody: 'The effective date will be set when the final terms are published.'
     }
   },
 
   notFound: {
     title: 'Page not found', lead: 'The page may have moved, or the link may be wrong.',
-    home: 'Back to home', help: 'Visit the help center', more: 'Popular pages', links: ['Features', 'Download the app', 'Contact us']
+    home: 'Back to home', help: 'Visit the help center'
   },
 
   errors: {
@@ -668,6 +624,7 @@ export const en = {
     forbidden: 'Access denied.',
     not_found: 'Not found.',
     validation: 'Some fields are missing or invalid.',
+    wrong_password: 'The current password is not right.',
     emailMissing: 'Enter an email address.', emailInvalid: 'The email address is not valid. Check it and try again.', passwordMissing: 'Enter your password.', passwordShort: 'The password must be 8 to 64 characters.',
     codeMissing: 'Enter the 6-digit code.', passwordMismatch: 'The two passwords don’t match.', consentMissing: 'Read and agree to the terms of service and privacy policy first.',
     network: 'Folio cannot be reached. Check the network connection and try again.',

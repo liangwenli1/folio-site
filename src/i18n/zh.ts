@@ -12,21 +12,16 @@ export const zh: typeof en = {
   plans: { free: '体验版', studio: '工作室版', company: '公司版' },
   periods: { monthly: '月付', yearly: '年付' },
 
-  demo: {
-    label: '工作台操作演示：检查代理、打开浏览器环境、恢复标签页、体检、安装扩展、批量打开、窗口同步与团队协作。', pause: '暂停演示', play: '播放演示'
-  },
-
   home: {
     h1: '独立环境，\n统一管理',
     lead: 'Folio 提供浏览器环境、代理资源与团队权限的一体化管理，支持多账号工作流程的集中配置与有序协作。',
-    features: '查看产品功能',
-    points: [['环境隔离', '多账号独立运行'], ['代理配置', '灵活接入多种代理'], ['团队协作', '权限可控，协同高效']] as [string, string][],
+    features: '查看产品功能', more: '查看详情', shot: 'Folio 工作台的浏览器环境列表',
     cardsTitle: '为多账号工作流程构建', cardsLead: '从环境创建到团队协作，提供完整的功能支持。',
     cards: [
-      { title: '环境管理', body: '配置独立的浏览器环境，集中查看运行状态与关键参数。', mini: { title: '创建环境', rows: [['环境名称', 'US-Store-01'], ['操作系统', 'Windows'], ['浏览器内核', 'Chromium 150']] as [string, string][], button: '创建环境' } },
-      { title: '代理管理', body: '统一配置代理连接，查询检测结果与环境绑定关系。', mini: { title: '配置代理', rows: [['代理类型', 'SOCKS5'], ['代理主机', '203.0.113.24'], ['端口', '1080']] as [string, string][], button: '检测连接' } },
-      { title: '分组管理', body: '按业务、地区或项目组织浏览器环境，保持资源结构清晰。', mini: { title: '分组', rows: [['', '美区店铺 · 3'], ['', '欧洲店铺 · 2'], ['', '社媒 · 2']] as [string, string][], button: '新建分组' } },
-      { title: '团队协作', body: '配置成员角色与资源范围，明确操作职责。', mini: { title: '团队成员', rows: [['林晓', '所有者'], ['周航', '管理员'], ['许诺', '成员']] as [string, string][], button: '邀请成员' } }
+      { title: '环境管理', body: '配置独立的浏览器环境，集中查看运行状态与关键参数。', shot: '环境卡片：运行状态、代理出口、内核与扩展' },
+      { title: '代理管理', body: '统一配置代理连接，查询检测结果与环境绑定关系。', shot: '代理卡片：出口地区与 IP、连接状态与延迟' },
+      { title: '分组管理', body: '按业务、地区或项目组织浏览器环境，保持资源结构清晰。', shot: '分组目录：各分组及其中的浏览器环境数量' },
+      { title: '团队协作', body: '配置成员角色与资源范围，明确操作职责。', shot: '团队成员：成员与各自的角色' }
     ],
     steps: {
       title: '三个步骤，开始使用', lead: '注册后即可创建浏览器环境，并邀请团队成员一起使用。',
@@ -35,9 +30,9 @@ export const zh: typeof en = {
     uses: {
       title: '适用于多种业务场景', lead: '灵活的浏览器环境管理方案，满足不同业务的多账号管理需求。',
       items: [
-        { title: '跨境电商', body: '管理多个平台店铺账号，实现账号环境隔离与团队协作。', list: ['US-Store-01', 'UK-Shop-01', 'JP-Shop-01', 'DE-Shop-01'] },
-        { title: '社媒运营', body: '同时管理多个社媒账号，支持团队协作与权限控制。', list: ['Social-01', 'Social-02', 'Social-03', 'Social-04'] },
-        { title: '团队测试', body: '为开发与测试团队提供相互独立的测试环境。', list: ['Test-Env-A', 'Test-Env-B', 'Staging-01', 'Staging-02'] }
+        { title: '跨境电商', body: '管理多个平台店铺账号，实现账号环境隔离与团队协作。' },
+        { title: '社媒运营', body: '同时管理多个社媒账号，支持团队协作与权限控制。' },
+        { title: '团队测试', body: '为开发与测试团队提供相互独立的测试环境。' }
       ]
     },
     faq: {
@@ -50,13 +45,12 @@ export const zh: typeof en = {
         ['内核如何更新？', 'Folio 采用开源指纹内核，新版本经测试后发布。现有浏览器环境保持原内核版本，支持按需升级。']
       ] as [string, string][]
     },
-    band: { title: '开始使用 Folio', body: '免费体验 5 个浏览器环境，无需绑定银行卡。', download: '下载客户端' }
+    band: { title: '开始使用 Folio', body: '免费体验 5 个浏览器环境，无需绑定银行卡。' }
   },
 
   features: {
     title: '产品功能', h1: '构建完整的\n浏览器环境管理流程',
     lead: 'Folio 以浏览器环境为基础，连接代理、分组、成员与执行记录，从环境创建、代理配置、团队协作到内核管理，提供完整的工具链。',
-    shot: 'Folio 工作台的浏览器环境列表', tabsLabel: '功能分区',
     blocks: [
       { title: '环境管理', lead: '按业务配置浏览器环境，集中管理指纹参数与运行状态。', shot: '新建浏览器环境的表单：基础信息、代理配置、指纹配置与启动设置',
         points: [
@@ -88,32 +82,17 @@ export const zh: typeof en = {
           ['流程与定时任务', '以步骤编排流程，在一组浏览器环境上分批运行，支持定时执行并保留每次的结果。'],
           ['本机 API 与扩展', '本机 API 支持 Playwright、Puppeteer、Selenium 接入；扩展统一管理，批量安装到浏览器环境。']
         ] as [string, string][] }
-    ],
-    flow: {
-      title: '从创建到协作，统一管理多账号的完整流程',
-      steps: [
-        ['创建环境', '配置独立的浏览器环境与指纹参数。'],
-        ['配置代理', '选择代理协议并进行连接检测。'],
-        ['分配成员', '设置成员权限并授权相应分组。'],
-        ['开始使用', '在统一的工作台中管理所有浏览器环境。']
-      ] as [string, string][],
-      cta: '体验完整工作流程'
-    }
+    ]
   },
 
   solutions: {
     title: '解决方案', h1: '面向多场景的\n环境管理方案',
     lead: 'Folio 根据业务结构组织浏览器环境、代理与成员权限，帮助个人与团队在不同业务场景下建立清晰的日常工作流程。',
-    shot: 'Folio 工作台的浏览器环境列表', start: '免费体验', features: '了解产品功能',
-    casesTitle: '针对不同业务场景的环境管理方案', casesLead: '从业务需求出发，配置合适的浏览器环境、代理与权限，提升团队协作效率。',
-    hub: '代理连接', needs: '实际需求', answers: '相关功能',
+    more: '查看详情',
     cases: [
-      { title: '跨境电商', lead: '按站点与店铺组织浏览器环境，管理代理与成员授权。', envs: ['店铺环境\n美国站', '店铺环境\n欧洲站', '店铺环境\n日本站'],
-        needs: ['同时管理多个平台店铺', '保持账号环境相互独立', '团队成员分工协作'], answers: ['浏览器环境批量创建', '代理灵活配置与检测', '成员角色与分组授权'], cta: '查看方案' },
-      { title: '社媒运营', lead: '按项目与账号分组，协同完成环境配置与日常操作。', envs: ['账号环境\n项目 A', '账号环境\n项目 B', '账号环境\n项目 C'],
-        needs: ['管理多个社媒账号', '保持各账号登录环境独立', '支持内容发布与运营协作'], answers: ['独立的浏览器环境', '窗口同步批量操作', '分组与权限管理'], cta: '查看相关功能' },
-      { title: '团队测试', lead: '维护不同测试环境，查询操作记录与批量执行结果。', envs: ['开发\n环境', '测试\n环境', '预发布\n环境'],
-        needs: ['多人同时进行功能测试', '不同项目环境相互隔离', '便于环境管理与回收'], answers: ['浏览器环境分组管理', '成员授权使用', '操作日志与任务记录'], cta: '查看相关功能' }
+      { title: '跨境电商', lead: '按站点与店铺组织浏览器环境，管理代理与成员授权。' },
+      { title: '社媒运营', lead: '按项目与账号分组，协同完成环境配置与日常操作。' },
+      { title: '团队测试', lead: '维护不同测试环境，查询操作记录与批量执行结果。' }
     ],
     flow: {
       title: '从成员到代理，快速搭建有序的工作流程', lead: '四个步骤，完成团队浏览器环境的配置与管理。',
@@ -131,43 +110,29 @@ export const zh: typeof en = {
         ['如何管理团队成员的权限？', '管理员可邀请成员并为其设置角色：内置所有者、管理员、成员、仅查看四种角色，也可自建角色并逐项设置权限；公司版还可按分组授权成员可访问的浏览器环境。'],
         ['是否支持批量创建浏览器环境？', '支持。可通过表格批量导入浏览器环境，也可批量导入代理，批量调整分组、代理与内核版本；批量操作的结果可在任务中心查看。']
       ] as [string, string][]
-    },
-    band: { title: '了解适合您的配置', body: '根据业务需求，获取浏览器环境管理建议。', contact: '联系我们' }
+    }
   },
 
   ecommerce: {
-    title: '跨境电商解决方案', crumb: '跨境电商', h1: '跨站点环境管理，\n协作有序',
+    title: '跨境电商解决方案', h1: '跨站点环境管理，\n协作有序',
     lead: '按店铺与地区组织浏览器环境，集中配置代理与成员权限。',
-    shot: '分组管理：按站点组织的浏览器环境与分组设置', features: '查看功能',
+    shot: '分组管理：按站点组织的浏览器环境与分组设置',
     pains: {
       title: '跨境电商运营的常见挑战', lead: '多平台、多地区的业务布局下，浏览器环境、代理与成员管理更加复杂。',
       items: [
-        ['场景复杂', '不同店铺、地区与运营场景需要独立的浏览器环境，手动管理容易混乱。', '通过分组管理浏览器环境', '按店铺与地区清晰组织'],
-        ['代理分散', '代理来源多、配置方式不统一，难以集中维护与切换。', '在工作台内统一配置代理', '检测后应用到各浏览器环境'],
-        ['交接繁琐', '成员权限与环境信息分散，新成员加入或人员变动时交接成本高。', '按角色与分组授权成员', '明确可访问的浏览器环境']
-      ] as [string, string, string, string][]
+        ['场景复杂', '不同店铺、地区与运营场景需要独立的浏览器环境，手动管理容易混乱。', '按店铺与地区分组管理浏览器环境'],
+        ['代理分散', '代理来源多、配置方式不统一，难以集中维护与切换。', '在工作台内统一配置并检测代理'],
+        ['交接繁琐', '成员权限与环境信息分散，新成员加入或人员变动时交接成本高。', '按角色与分组授权成员']
+      ] as [string, string, string][]
     },
     flow: {
       title: '推荐工作流程', lead: '四个步骤，搭建可协作的跨境电商运营环境。',
-      steps: ['创建分组', '配置环境', '检测代理', '授权成员'],
-      mini: {
-        groups: { title: '分组', items: ['美国站点', '日本站点'], add: '新建分组' },
-        profile: { title: '创建环境', fields: [['环境名称', 'US-Shop-A'], ['所属分组', '美国站点'], ['备注', '美国站点主店']] as [string, string][], create: '创建环境' },
-        proxy: { title: '代理检测', fields: [['代理类型', 'HTTP'], ['代理地址', '203.0.113.24:8080']] as [string, string][], check: '检测连接', ok: '连接正常', exit: '出口地区：美国 · 西雅图' },
-        access: { title: '美国站点 · 成员访问', people: [['周航', '成员', true], ['许诺', '仅查看', true], ['陈一', '成员', false]] as [string, string, boolean][], save: '保存设置' }
-      }
-    },
-    compare: {
-      title: '使用前后对比', lead: '从分散混乱到统一有序，提升跨境电商的运营效率。',
-      before: '使用前', beforeSub: '信息分散，管理成本高', after: '使用后', afterSub: '统一管理，协作更高效',
-      afterShot: 'Folio 工作台的浏览器环境列表：分组、代理与运行状态',
-      cols: ['店铺', '平台', '代理信息', '负责人', '状态'],
-      rows: [
-        ['US-Shop-A', '平台 A', '美国 IP（单独配置）', '张三', '配置混乱'],
-        ['US-Shop-B', '平台 B', '代理记录在文档中', '李四', '难以追溯'],
-        ['JP-Shop-A', '平台 C', '日本 IP（不同工具）', '王五', '交接繁琐'],
-        ['JP-Shop-B', '平台 D', '手动切换代理', '赵六', '容易出错']
-      ]
+      steps: [
+        ['创建分组', '按站点或店铺建立分组，浏览器环境归入对应分组。'],
+        ['配置环境', '为每个店铺账号创建独立的浏览器环境。'],
+        ['检测代理', '为浏览器环境绑定代理并检测连接，确认出口地区。'],
+        ['授权成员', '按分组授权成员，由角色决定可执行的操作。']
+      ] as [string, string][]
     },
     note: '账号规则与验证要求以各平台规定为准。'
   },
@@ -176,7 +141,6 @@ export const zh: typeof en = {
     title: '价格与套餐', h1: '按业务规模\n选择配置',
     lead: '按浏览器环境数量计费，付费套餐成员数量不限。从个人体验到多团队协作，选择适合当前业务规模的套餐，并可随时调整。',
     note: '体验版永久免费，无需绑定银行卡；付款后 7 天内可申请退款。',
-    shot: 'Folio 工作台的浏览器环境列表',
     period: '付费周期', monthly: '月付', yearly: '年付', save: '省 20%',
     perMonth: '/ 月', forever: '永久免费',
     perProfile: (amount: string) => `折合每个环境 ${amount}/月`,
@@ -231,16 +195,15 @@ export const zh: typeof en = {
         ['是否支持退款与发票？', '付款后 7 天内可申请退还最近一笔付款，套餐恢复至该笔付款之前的状态。每笔付款均提供发票，可在账户页查看与打印。']
       ] as [string, string][]
     },
-    band: { title: '先免费体验，再按需选购', body: '注册即可使用 5 个浏览器环境，无需绑定银行卡。' },
     foot: (pack: string) => `如需更多浏览器环境，每增加 100 个 ${pack}/月；超过 2000 个可单独报价。价格不含当地税费，每笔付款均提供发票。`
   },
 
-  footer: { product: '产品', resources: '资源', company: '公司', api: 'API 参考', changelog: '更新日志', contact: '联系我们', privacy: '隐私政策', terms: '服务条款', tagline: '独立环境，统一管理', about: 'Folio 提供浏览器环境、代理资源与团队权限的一体化管理。', rights: '© 2026 Folio' },
+  footer: { product: '产品', resources: '资源', legal: '法律', api: 'API 参考', changelog: '更新日志', contact: '联系我们', privacy: '隐私政策', terms: '服务条款', tagline: '独立环境，统一管理', rights: '© 2026 Folio' },
 
   auth: {
     panel: {
-      title: '独立环境，统一管理', lead: '为不同业务创建独立的浏览器环境，在一个工作空间中集中管理，账号、数据与操作清晰隔离。',
-      points: [['独立浏览器环境', '每个业务独立运行'], ['集中管理', '统一配置，快速切换'], ['团队协作', '按角色与分组授权']] as [string, string][]
+      title: '独立环境，\n统一管理', lead: '为不同业务创建独立的浏览器环境，在一个工作空间中集中管理，账号、数据与操作清晰隔离。',
+      shot: 'Folio 工作台的浏览器环境列表'
     },
     loginTitle: '登录 Folio', loginLead: '使用您的账号登录，继续管理浏览器环境。',
     signupTitle: '创建 Folio 账号', signupLead: '免费体验 5 个浏览器环境，无需绑定银行卡。',
@@ -249,6 +212,7 @@ export const zh: typeof en = {
     remember: '记住登录', forgot: '忘记密码？',
     consent: ['我已阅读并同意', '服务条款', '和', '隐私政策'] as [string, string, string, string],
     signup: '注册账号', login: '登录', haveAccount: '已有账号？', noAccount: '没有账号？', toSignup: '注册',
+    done: { title: '账号注册完成', text: '账号已创建并登录。下载客户端，使用此账号登录后即可创建浏览器环境。', download: '下载客户端', account: '前往账户' },
     verifyTitle: '验证邮箱', verifyLead: (email: string) => `点击「发送验证码」，验证码将发送至 ${email}，15 分钟内有效。`,
     verify: '验证', resend: '发送验证码', resendIn: (s: number) => `${s} 秒后可重发`, resent: '验证码已发送。',
     reset: {
@@ -305,6 +269,7 @@ export const zh: typeof en = {
     cols: ['日期', '发票', '金额', '状态', ''],
     paid: '已付款', refunded: '已退款', invoice: '发票', refund: '退款',
     refundConfirm: '确定退款？套餐将恢复至该笔付款之前的状态。', confirmRefund: '确定退款',
+    pw: { title: '修改密码', current: '当前密码', new: '新密码', confirm: '确认新密码', save: '保存新密码', done: '密码已修改，此账号在其他设备上的登录已退出。' },
     download: '下载客户端', downloadBody: '使用同一账号登录客户端，套餐与团队信息自动同步。',
     downloadCta: '下载',
     invitations: '邀请', invitedBy: (inviter: string, role: string) => `${inviter} 邀请您成为${role}`, accept: '加入', decline: '拒绝'
@@ -340,23 +305,19 @@ export const zh: typeof en = {
       support: ['技术支持', '使用中遇到问题，获取技术支持与使用指导。'],
       partner: ['合作沟通', '商务合作、渠道合作或其他相关事宜。']
     },
-    formTitle: '提交咨询', formLead: '请填写以下信息，我们会尽快与您联系。',
     name: '姓名', namePh: '请输入姓名', email: '工作邮箱', emailPh: '请输入工作邮箱', kind: '咨询类型',
     teamSize: '团队规模', teamPh: '请选择团队规模', sizes: [['1-5', '1–5 人'], ['6-20', '6–20 人'], ['21-100', '21–100 人'], ['100+', '100 人以上']] as [string, string][],
     message: '需求描述', messagePh: '请描述您的需求、使用场景或想了解的问题', consent: '我已阅读并同意', privacy: '隐私政策',
-    send: '提交咨询', done: '咨询已提交', doneText: '请保留提交编号，以便后续查询。', number: '提交编号', again: '再提交一条',
-    failed: '提交失败，请稍后重试。已填写的内容已保留。',
-    nameMissing: '请填写姓名。', teamMissing: '请选择团队规模。', messageMissing: '请填写需求描述。', consentMissing: '请先阅读并同意隐私政策。',
-    more: {
-      eyebrow: '更多资源', title: '相关帮助与信息', lead: '也可以通过以下方式了解更多产品信息，或获取使用帮助。',
-      items: [['帮助中心', '查看使用指南、常见问题与本机 API 参考。'], ['价格', '了解各套餐的功能与价格。'], ['下载', '下载客户端，开始使用 Folio。']] as [string, string][]
-    }
+    send: '提交咨询',
+    done: '咨询已提交', doneLead: '我们会尽快通过邮件与您联系。', doneText: '提交编号 {n}，请保留以便后续查询。', home: '返回首页', again: '再提交一条',
+    failedTitle: '暂时无法提交咨询', failedLead: '提交未成功，请稍后重试。', failedText: '已填写的内容已保留，返回后可直接重新提交。', retry: '返回并重试', help: '访问帮助中心',
+    nameMissing: '请填写姓名。', teamMissing: '请选择团队规模。', messageMissing: '请填写需求描述。', consentMissing: '请先阅读并同意隐私政策。'
   },
 
   download: {
     title: '下载 Folio', h1: '下载 Folio，\n开始管理浏览器环境',
     lead: '在电脑上安装 Folio 客户端，使用 Folio 账号登录后，即可创建并管理多个浏览器环境；套餐、团队与浏览器环境自动同步。',
-    shot: 'Folio 工作台的浏览器环境列表', pending: '安装包即将提供',
+    status: (release: string | null) => `${release ?? '安装包即将提供'}。请通过本页或其他官方渠道获取安装包，以确保文件来源可靠。`,
     windowsName: 'Windows 版', macName: 'macOS 版',
     windows: 'Windows 10 及以上（64 位）', mac: 'macOS 12 及以上（Apple 芯片，M1 及更新）',
     get: (os: string) => `下载 ${os}`, soon: '即将推出',
@@ -364,34 +325,34 @@ export const zh: typeof en = {
     notesTitle: '首次安装提示',
     winNote: 'Folio 暂未进行代码签名。如 SmartScreen 拦截安装程序，请点击「更多信息」，再点击「仍要运行」。',
     macNote: 'Folio 暂未进行代码签名。请将 Folio 拖入「应用程序」。首次无法打开时，前往「系统设置 › 隐私与安全性」点击「仍要打开」；如提示应用已损坏，请在终端执行 xattr -cr /Applications/Folio.app 后重新打开。',
-    other: '其他操作系统暂不提供安装包，如有需要，请', contact: '联系我们',
+    otherName: '其他系统', other: '暂不提供其他操作系统的安装包。', contact: '联系我们',
     stepsTitle: '三个步骤，开始使用', stepsLead: '下载并安装客户端，登录账号后即可创建浏览器环境。',
     steps: [
       ['下载客户端', '按电脑系统选择对应版本：Windows 运行安装程序，macOS 将 Folio 拖入「应用程序」。'],
       ['登录账号', '使用 Folio 账号登录客户端，套餐、团队与浏览器环境自动同步。'],
       ['创建环境', '创建浏览器环境并配置代理；首次打开时自动下载所需内核，并核对官方公布的校验值。']
     ] as [string, string][],
-    help: [
-      ['安装帮助', '安装步骤与常见问题，请查看使用文档。', '查看使用文档'],
-      ['更新日志', '查看 Folio 客户端各版本的新增功能与修复内容。', '查看更新日志'],
-      ['安全提示', '请通过本页或其他官方渠道获取安装包，以确保文件来源可靠。', '']
-    ] as [string, string, string][]
+    guide: '安装与配置帮助'
   },
 
   help: {
     title: '帮助中心', lead: '快速查找配置指南与常见问题。',
-    search: '输入问题或关键词', searchBtn: '搜索', examplesLabel: '例如：', examples: ['创建环境', '代理配置', '导入 Cookie', '团队协作'],
-    shot: 'Folio 工作台的浏览器环境列表',
-    results: { one: '找到 1 篇与「{q}」相关的文档', many: '找到 {n} 篇与「{q}」相关的文档', none: '未找到与「{q}」相关的文档' },
-    noneText: '请尝试其他关键词，例如：', noneMore: '仍未找到答案？', contact: '联系我们',
-    categories: {
-      start: { title: '快速入门', body: '从安装客户端到创建第一个浏览器环境，了解 Folio 的基本使用流程。' },
-      profiles: { title: '环境管理', body: '创建与配置浏览器环境，管理屏幕、窗口与 Cookie。' },
-      proxies: { title: '代理配置', body: '添加与导入代理并检测连接，绑定到浏览器环境。' },
-      team: { title: '团队协作', body: '分组、成员授权与角色权限的设置方法。' },
-      account: { title: '账户与套餐', body: '套餐额度、免费体验、升级、退款与发票。' }
+    searchLabel: '搜索帮助文档', search: '输入问题或关键词', searchBtn: '搜索', examplesLabel: '例如：', examples: ['创建环境', '代理配置', '导入 Cookie', '团队协作'],
+    results: {
+      title: '帮助搜索结果', none: '未找到相关文档', keyword: '关键词：{q}', label: '搜索关键词', again: '重新搜索',
+      one: '找到 1 篇相关文档', many: '找到 {n} 篇相关文档', noneText: '请尝试其他关键词，或通过咨询页面提交使用问题。'
     },
-    popular: '热门指南', developers: '开发者', apiLink: '本机 API 参考',
+    contact: '联系我们',
+    guides: { title: '配置指南与常见操作', lead: '按工作流程查找相关文档。' }, read: '阅读文档',
+    apiSummary: '通过本机 API 打开浏览器环境，交由 Playwright、Puppeteer 或 Selenium 接管。',
+    categories: {
+      start: { title: '快速入门' },
+      profiles: { title: '环境管理' },
+      proxies: { title: '代理配置' },
+      team: { title: '团队协作' },
+      account: { title: '账户与套餐' }
+    },
+    developers: '开发者', apiLink: '本机 API 参考',
     faq: {
       title: '常见问题',
       items: [
@@ -400,8 +361,8 @@ export const zh: typeof en = {
         ['团队成员的权限可以自定义吗？', '可以。除所有者、管理员、成员、仅查看四种内置角色外，还可新建角色并逐项设置 13 项权限；角色在整个工作空间内生效。']
       ] as [string, string][]
     },
-    contactCard: { title: '联系我们', body: '如果没有找到需要的答案，可以联系我们的团队。', cta: '提交咨询' },
-    home: '帮助中心', searchDocs: '搜索文档', noMatch: '无匹配文档', toc: '本页目录', updated: (date: string) => `更新时间：${date}`, prev: '上一篇', next: '下一篇', note: '注意',
+    ask: '未找到所需内容？',
+    home: '帮助中心', directory: '帮助目录', searchDocs: '搜索文档', searchDocsPh: '输入关键词', noMatch: '无匹配文档。', toc: '本页目录', updated: (date: string) => `更新时间：${date}`, prev: '上一篇', next: '下一篇', note: '注意',
     feedback: { ask: '这篇文档是否有帮助？', yes: '是', no: '否', thanks: '感谢您的反馈。', failed: '提交失败，请稍后重试。' },
     articles: {
       install: {
@@ -453,7 +414,7 @@ export const zh: typeof en = {
         sections: [
           { title: '添加代理', body: ['点击「添加代理」，选择协议（HTTP、HTTPS 或 SOCKS5），填写主机与端口，需要认证时填写用户名与密码。可添加备用线路：主线路无响应时，启动环境会改用备用线路。'] },
           { title: '批量导入', body: ['点击「导入」，粘贴代理商提供的列表或选择文件，每行一条，支持 host:port:用户名:密码、用户名:密码@host:port、socks5://用户名:密码@host:port 与 host:port 等写法。', '导入前逐行预览解析结果，无法解析的行会说明原因；可跳过已保存的代理，并按命名规则（如 US-{n}）自动命名。'] },
-          { title: '检测连接', body: ['点击「全部检测」或单个代理的「检测」，查看连通性、延迟与出口地区。一次检测超过 5 个代理时，右下角显示进度，结果可在任务中心查看；无响应的代理在列表中标出。'] },
+          { title: '检测连接', body: ['点击「全部检测」或单个代理的「检测」，查看连通性、延迟与出口地区。一次检测超过 5 个代理时，右下角显示进度，结果可在任务中心查看；无响应的代理在列表中标出。', '检测时，客户端经该代理访问 Cloudflare 的公共 IP 查询服务（不可用时改用 ipify）获得出口 IP。检测正常说明代理可以连通并访问公共网络，不代表所有网站都可访问：个别网站可能限制该出口 IP。'] },
           { title: '绑定到浏览器环境', body: ['创建或编辑浏览器环境时选择代理，或在环境列表、详情页中选择「更换代理」。在代理详情页可查看绑定的环境，也可批量解除绑定。'] }
         ],
         note: '浏览器环境在本机运行时不能更换代理，请先停止该环境。'
@@ -465,7 +426,9 @@ export const zh: typeof en = {
           { title: '创建分组', body: ['在「分组管理」页点击「新建分组」，填写名称，选择上级分组（支持多级）、颜色与说明。'] },
           { title: '授权成员', body: ['在分组设置的「成员权限」中添加成员，被授权的成员即可访问该分组内的浏览器环境。按分组授权成员是公司版功能。'] },
           { title: '继承上级分组权限', body: ['开启「继承上级分组权限」后，上级分组授权的成员也可访问本分组的浏览器环境。'] },
-          { title: '角色与权限', body: ['成员可执行的操作（如创建、启动、删除环境，导入、导出 Cookie）由角色决定。角色在整个工作空间内生效：可在「团队成员 › 角色权限」中调整内置角色，或新建角色并逐项设置 13 项权限。'] }
+          { title: '角色与权限', body: ['成员可执行的操作（如创建、启动、删除环境，导入、导出 Cookie）由角色决定。角色在整个工作空间内生效：可在「团队成员 › 角色权限」中调整内置角色，或新建角色并逐项设置 13 项权限。'] },
+          { title: '邀请与移除成员', body: ['在「团队成员」页点击「邀请成员」，填写邮箱并选择角色。对方接受前，邀请显示在「待接受」中，可随时撤回；待接受的邀请也计入成员名额。', '移除成员时，需选择由谁接管其负责的浏览器环境；环境不会被删除，该成员的分组授权随之取消。所有者不能被移除。'] },
+          { title: '删除分组', body: ['删除分组只删除分组结构。分组内有浏览器环境时，需先选择迁移到的分组，环境移入该分组后再删除；成员可访问的范围按新的分组重新计算。'] }
         ],
         note: '所有者与管理员可访问全部浏览器环境；成员与仅查看可访问分配给自己的环境，以及所在分组的环境。'
       },
@@ -480,13 +443,6 @@ export const zh: typeof en = {
         ],
         note: '各套餐的价格以价格页为准。'
       }
-    },
-    minis: {
-      'create-profile': { title: '创建环境', rows: [['环境名称', '测试环境 01'], ['所属分组', '美区店铺']] as [string, string][], button: '创建环境' },
-      proxies: { title: '代理配置', rows: [['代理类型', 'HTTP'], ['代理地址', '203.0.113.24:8080']] as [string, string][], button: '检测连接' },
-      'screen-and-window': { title: '启动设置', rows: [['屏幕分辨率', '1920 × 1080'], ['窗口尺寸', '1280 × 800']] as [string, string][], button: '保存' },
-      'import-cookies': { title: '导入 Cookie', rows: [['', 'session=…; domain=shop.example'], ['', 'lang=en; domain=shop.example']] as [string, string][], button: '导入' },
-      'group-access': { title: '美区店铺 · 成员访问', rows: [['周航', '成员'], ['许诺', '仅查看']] as [string, string][], button: '保存设置' }
     }
   },
 
@@ -509,7 +465,7 @@ export const zh: typeof en = {
         added: ['注册、登录与邮箱验证', '套餐、结账与发票', '账户与团队邀请'], improved: [], fixed: [] }
     ] as { version: string; date: string; area: 'desktop' | 'site'; added: string[]; improved: string[]; fixed: string[] }[],
     subscribe: {
-      title: '订阅更新通知', body: '输入邮箱，获取 Folio 的版本更新与功能动态。', placeholder: '请输入邮箱地址', send: '订阅',
+      title: '订阅更新通知', body: '输入邮箱，获取 Folio 的版本更新与功能动态。', label: '邮箱', placeholder: '请输入邮箱地址', send: '订阅',
       pending: (email: string) => `确认邮件已发送至 ${email}，请点击邮件中的链接完成订阅。`, subscribed: '该邮箱已订阅更新通知。',
       confirmed: '订阅成功，您将收到 Folio 的版本更新通知。', unsubscribed: '已退订，之后不再发送更新通知。', badLink: '链接无效或已失效，请重新订阅。'
     }
@@ -560,9 +516,9 @@ export const zh: typeof en = {
   },
 
   legal: {
-    tbc: '待确认', toc: '目录',
+    tbc: '待确认', toc: '内容目录',
     privacy: {
-      title: '隐私政策',
+      title: '隐私政策', lead: '本政策说明使用 Folio 时我们处理哪些信息、如何使用与保护，以及您享有的权利。',
       draft: '本页为草稿，依据 Folio 当前的数据处理方式整理；标注「待确认」的事项尚未确定，正式文本审核后发布。',
       sections: [
         { id: 'collect', title: '信息收集', lead: '本节说明使用 Folio 时我们处理的信息类别。',
@@ -598,6 +554,7 @@ export const zh: typeof en = {
           items: [
             ['对外出售', '我们不出售用户数据。'],
             ['团队内共享', '您在团队中创建的浏览器环境与代理，团队中有相应权限的成员可以查看和使用。'],
+            ['代理检测', '检测代理时，客户端经该代理访问 Cloudflare 的公共 IP 查询服务（不可用时改用 ipify）获得出口 IP；这两项服务看到的是代理的出口 IP，而不是您的 IP。'],
             ['邮件、存储与支付服务商', null],
             ['依法披露', null]
           ] as [string, string | null, string?][] },
@@ -620,7 +577,7 @@ export const zh: typeof en = {
     },
     terms: {
       title: '服务条款', lead: '本条款说明您使用 Folio 产品与服务时的权利与义务。',
-      draft: ['本页为草稿，正式条款审核后发布。', '以下内容依据 Folio 当前的产品规则整理；标注「待确认」的事项尚未确定。'],
+      draft: '本页为草稿，依据 Folio 当前的产品规则整理；标注「待确认」的事项尚未确定，正式条款审核后发布。',
       sections: [
         { title: '服务范围', body: ['Folio 提供浏览器环境管理服务，包括 Windows 与 macOS 客户端、浏览器环境与代理管理、登录状态云端同步、团队协作与本机 API。', '各套餐包含的功能与额度以价格页为准。'] },
         { title: '账号管理', body: ['注册须使用本人有效的邮箱并完成验证。请妥善保管密码，账号下发生的操作由账号持有人负责。', '团队所有者负责管理成员的角色与授权范围。发现账号异常时，请及时重置密码并联系我们。'] },
@@ -629,14 +586,13 @@ export const zh: typeof en = {
         { title: '服务变更与终止', body: ['我们可能调整产品功能或本条款；重大变更的通知方式与生效安排待确认。', '您可以随时停止使用 Folio 并取消订阅。违反本条款时暂停或终止服务的规则待确认。'] },
         { title: '责任与争议', body: ['责任限制、适用法律与争议解决方式待确认。'] }
       ],
-      note: '本节为草稿，正式表述待审核。',
       effective: '生效日期', effectiveBody: '正式条款发布时确定生效日期。'
     }
   },
 
   notFound: {
     title: '页面未找到', lead: '您访问的页面可能已迁移，或链接地址有误。',
-    home: '返回首页', help: '访问帮助中心', more: '常用页面', links: ['产品功能', '下载客户端', '联系我们']
+    home: '返回首页', help: '访问帮助中心'
   },
 
   errors: {
@@ -670,6 +626,7 @@ export const zh: typeof en = {
     forbidden: '没有访问权限。',
     not_found: '未找到相关内容。',
     validation: '部分内容未填写或格式有误。',
+    wrong_password: '当前密码不正确。',
     emailMissing: '请填写邮箱。', emailInvalid: '邮箱格式不正确，请检查后重试。', passwordMissing: '请填写密码。', passwordShort: '密码需为 8 至 64 位。',
     codeMissing: '请填写 6 位验证码。', passwordMismatch: '两次输入的密码不一致。', consentMissing: '请先阅读并同意服务条款和隐私政策。',
     network: '无法连接 Folio，请检查网络后重试。',

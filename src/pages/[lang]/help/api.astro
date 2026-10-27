@@ -46,8 +46,8 @@ await page.goto('https://seller.example.com');`]
 ];
 ---
 <HelpPage lang={lang} path="help/api/" title={d.docs.apiTitle} description={d.docs.apiLead} toc={sections}
-  crumbs={[[d.help.home, link(lang, 'help/')], [d.help.developers, null], [d.docs.apiTitle, null]]}>
-  <header class="api-head"><h1>{d.docs.apiTitle}</h1><p class="lead">{d.docs.apiLead}</p></header>
+  crumbs={[[d.help.home, link(lang, 'help/')], [d.help.developers, null]]}>
+  <p class="doc-body">{d.docs.apiLead}</p>
   <h2 id="setup">{A.setupTitle}</h2>
   <ol class="steps-list">{A.setup.map(p => <li>{p}</li>)}</ol>
 
@@ -88,13 +88,12 @@ await page.goto('https://seller.example.com');`]
   })));
 </script>
 <style>
-  .api-head{display:grid;gap:10px}
-  h2{margin:40px 0 12px;font-size:22px;line-height:1.3}
-  .doc-body{color:var(--ink-2);line-height:1.8}
+  h2{margin:36px 0 16px;font-size:24px;line-height:34px}
+  .doc-body{font-size:16px;line-height:28px;color:var(--ink-body)}
   .entries{display:grid;gap:18px;margin:0}
   .entries dt{font-family:var(--f-data);font-size:12px;color:var(--ink-3)}
-  .entries dd{margin:4px 0 0;color:var(--ink-2);line-height:1.75}
-  .steps-list{margin:0;padding-left:20px;display:grid;gap:10px;line-height:1.8;color:var(--ink-2)}
+  .entries dd{margin:4px 0 0;font-size:16px;line-height:28px;color:var(--ink-body)}
+  .steps-list{margin:0;padding-left:20px;display:grid;gap:10px;font-size:16px;line-height:28px;color:var(--ink-body)}
   .ref{width:100%;border-collapse:separate;border-spacing:0;font-size:14px;margin-top:12px;border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden}
   .ref td{padding:12px 16px;border-top:1px solid var(--line);vertical-align:top;color:var(--ink-2)}
   .ref tr:first-child td{border-top:0}

@@ -1,0 +1,22 @@
+---
+// The language switch: it names the language the page is in, and opens the same page in the other one, keeping the
+// query string so checkout and invoice links survive. In the footer, and under the sign-in forms (which have none).
+import Icon from './Icon.astro';
+import { otherLang, type Lang } from '../lib/i18n';
+
+interface Props { lang: Lang; path: string }
+const { lang, path } = Astro.props;
+const other = otherLang(lang);
+const names: Record<Lang, string> = { en: 'English', zh: '简体中文' };
+---
+<a class="lang-switch" href={`/${other}/${path}`} hreflang={other} title={other === 'zh' ? 'Switch to Chinese' : 'Switch to English'} data-lang-switch><Icon name="globe" />{names[lang]}</a>
+<script>
+  document.querySelectorAll<HTMLAnchorElement>('[data-lang-switch]').forEach(a => {
+    a.addEventListener('click', () => { a.href = a.href.split(/[?#]/)[0] + location.search + location.hash; });
+  });
+</script>
+<style>
+  .lang-switch{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 12px;white-space:nowrap;border:1px solid var(--line-2);border-radius:99px;background:var(--card);font-size:14px;text-decoration:none;color:var(--ink-2)}
+  .lang-switch:hover{color:var(--ink);border-color:var(--ink-3)}
+  @media (max-width:768px){.lang-switch{min-height:44px;padding:0 16px}}
+</style>

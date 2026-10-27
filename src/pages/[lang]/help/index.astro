@@ -1,181 +1,145 @@
 ---
-// The help center: a search over the guides (in the browser; nothing found suggests other words and a way to ask),
-// the five categories, the popular guides, questions, and a way to reach the team.
+// The help center (v2): a search over the guides, then every guide by what it is about, the API reference for
+// developers, and questions. A search goes in the address (?q=), so going back or reloading keeps it; the page then
+// shows what it found instead (v2 17), or that nothing matched with other words to try and a way to ask (v2 28). The
+// search runs in the browser.
 import Base from '../../../layouts/Base.astro';
 import Icon from '../../../components/Icon.astro';
-import PageHero from '../../../components/PageHero.astro';
-import Shot from '../../../components/Shot.astro';
 import Faq from '../../../components/Faq.astro';
-import { CATEGORIES, ORDER, POPULAR, categoryOf, inCategory } from '../../../lib/help';
+import { CATEGORIES, ORDER, categoryOf } from '../../../lib/help';
 import { langPaths, link, t, type Lang } from '../../../lib/i18n';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
-const d = t(lang), H = d.help;
+const d = t(lang), H = d.help, R = H.results;
+const icon = (slug: (typeof ORDER)[number]) => CATEGORIES.find(c => c.id === categoryOf(d, slug))!.icon;
 const index = ORDER.map(s => {
   const a = H.articles[s];
   return { href: link(lang, `help/${s}/`), title: a.title, summary: a.summary, cat: H.categories[categoryOf(d, s)].title, text: [a.lead, ...a.sections.flatMap(x => [x.title, ...x.body])].join(' ') };
 });
+const here = link(lang, 'help/');
 ---
 <Base lang={lang} path="help/" title={H.title} description={H.lead}>
-  <PageHero lang={lang} title={H.title} lead={H.lead}>
-    <form class="box hsearch" role="search" data-help-search>
-      <Icon name="search" size={20} />
-      <input type="search" name="q" placeholder={H.search} aria-label={H.search} autocomplete="off" />
-      <button class="btn btn-primary" type="submit" aria-label={H.searchBtn} title={H.searchBtn}><Icon name="search" size={20} /></button>
-    </form>
-    <p class="hexamples">{H.examplesLabel}{H.examples.map(e => <button type="button" class="linkish" data-example={e}>{e}</button>)}</p>
-    <Shot slot="vis" lang={lang} name="list" alt={H.shot} zoom={1.2} origin="100% 0" eager />
-  </PageHero>
-
-  <section class="msec hresults" id="results" hidden aria-live="polite">
+  <script is:inline>if (new URLSearchParams(location.search).get('q')?.trim()) document.documentElement.classList.add('hq');</script>
+  <section class="phero">
     <div class="wrap">
-      <h2 data-results-title data-one={H.results.one} data-many={H.results.many} data-zero={H.results.none}></h2>
-      <ul class="hlist" data-results></ul>
+      <h1 class="hero-title" data-title data-found={R.title} data-empty={R.none}>{H.title}</h1>
+      <p class="lead" data-lead={R.keyword}>{H.lead}</p>
+      <form class="form hsearch" role="search" action={here} method="get">
+        <div class="field">
+          <label for="q" data-label={R.label}>{H.searchLabel}</label>
+          <div class="hsearch-row">
+            <input id="q" type="search" name="q" placeholder={H.search} autocomplete="off" />
+            <button class="btn btn-primary" type="submit" data-again={R.again}>{H.searchBtn}</button>
+          </div>
+        </div>
+      </form>
+      <p class="hexamples">{H.examplesLabel}{H.examples.map(e => <a href={`${here}?q=${encodeURIComponent(e)}`}>{e}</a>)}</p>
+    </div>
+  </section>
+
+  <section class="msec" data-search aria-live="polite">
+    <div class="wrap">
+      <p class="hcount" data-count data-one={R.one} data-many={R.many}></p>
+      <ul class="hlist" data-results data-read={H.read}></ul>
       <div class="hnone" data-none hidden>
-        <p>{H.noneText}{H.examples.map(e => <button type="button" class="linkish" data-example={e}>{e}</button>)}</p>
-        <p>{H.noneMore} <a href={link(lang, 'contact/')}>{H.contact}</a></p>
+        <Icon name="search" size={48} />
+        <p>{R.noneText}</p>
+        <div class="cta-row">
+          <button class="btn btn-primary btn-lg" type="button" data-retry>{R.again}</button>
+          <a class="btn btn-secondary btn-lg" href={link(lang, 'contact/')}>{H.contact}</a>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="msec">
+  <section class="msec" data-normal>
     <div class="wrap">
-      <div class="hcats">
-        {CATEGORIES.map(c => (
-          <a class="card hcat" id={c.id} href={link(lang, `help/${inCategory(d, c.id)[0]}/`)}>
-            <span class="tile acc"><Icon name={c.icon} size={24} /></span>
-            <h2>{H.categories[c.id].title}</h2>
-            <p>{H.categories[c.id].body}</p>
-            <Icon name="chevr" />
-          </a>
+      <div class="msec-head"><h2>{H.guides.title}</h2><p>{H.guides.lead}</p></div>
+      <div class="cols grid-3">
+        {ORDER.map(s => (
+          <article class="fcard"><Icon name={icon(s)} size={24} /><h3>{H.articles[s].title}</h3><p>{H.articles[s].summary}</p><a class="more" href={link(lang, `help/${s}/`)}>{H.read}</a></article>
         ))}
+        <article class="fcard"><Icon name="code" size={24} /><h3>{H.apiLink}</h3><p>{H.apiSummary}</p><a class="more" href={link(lang, 'help/api/')}>{H.read}</a></article>
       </div>
-      <p class="hapi"><Icon name="code" /><span>{H.developers}</span><a href={link(lang, 'help/api/')}>{H.apiLink}</a></p>
     </div>
   </section>
 
-  <section class="msec alt">
+  <section class="msec" data-normal>
     <div class="wrap">
-      <h2 class="hpop-title">{H.popular}</h2>
-      <div class="hpop">
-        {POPULAR.map(s => {
-          const m = H.minis[s];
-          return (
-            <a class="card hguide" href={link(lang, `help/${s}/`)}>
-              <div class="mini" aria-hidden="true">
-                <b class="mini-t">{m.title}</b>
-                {m.rows.map(([k, v]) => k ? <span class="mini-field"><small>{k}</small><span>{v}</span></span> : <span class="mini-row mono">{v}</span>)}
-                <span class="mini-btn">{m.button}</span>
-              </div>
-              <h3>{H.articles[s].title}</h3>
-              <p>{H.articles[s].summary}</p>
-              <Icon name="chevr" />
-            </a>
-          );
-        })}
-      </div>
-    </div>
-  </section>
-
-  <section class="msec">
-    <div class="wrap cols hbottom">
       <Faq title={H.faq.title} items={H.faq.items} />
-      <div class="card hcontact">
-        <span class="tile acc"><Icon name="chat" size={24} /></span>
-        <h2>{H.contactCard.title}</h2>
-        <p>{H.contactCard.body}</p>
-        <a class="btn btn-primary" href={link(lang, 'contact/')}><Icon name="mail" />{H.contactCard.cta}</a>
-      </div>
+      <p class="notice hask">{H.ask}<a href={link(lang, 'contact/')}>{H.contact}</a></p>
     </div>
   </section>
 </Base>
 <script type="application/json" id="help-index" set:html={JSON.stringify(index)}></script>
 <script>
-  // The search over the guides, listed by how well they match; nothing found suggests other words.
+  // A search (?q=): the guides with every word somewhere in them, those with it in the title first, then the
+  // category, the summary, the text. The first screen says what was searched for.
   type Item = { href: string; title: string; summary: string; cat: string; text: string };
-  const items = JSON.parse(document.getElementById('help-index')!.textContent!) as Item[];
-  const form = document.querySelector<HTMLFormElement>('[data-help-search]')!;
-  const input = form.querySelector('input')!;
-  const box = document.getElementById('results')!;
-  const title = box.querySelector<HTMLElement>('[data-results-title]')!;
-  const list = box.querySelector<HTMLElement>('[data-results]')!;
-  const none = box.querySelector<HTMLElement>('[data-none]')!;
-  function search(q: string){
-    q = q.trim();
-    box.hidden = !q;
-    if (!q) return;
-    // Every word somewhere in a guide; those with it in the title come first, then the category, the summary, the text.
+  const q = new URLSearchParams(location.search).get('q')?.trim() ?? '';
+  const input = document.querySelector<HTMLInputElement>('#q')!;
+  if (q){
+    const items = JSON.parse(document.getElementById('help-index')!.textContent!) as Item[];
     const words = q.toLowerCase().split(/\s+/);
     const has = (text: string, w: string) => text.toLowerCase().includes(w);
     const score = (i: Item) => words.reduce((n, w) => n + (has(i.title, w) ? 8 : 0) + (has(i.cat, w) ? 4 : 0) + (has(i.summary, w) ? 2 : 0) + (has(i.text, w) ? 1 : 0), 0);
     const found = items.filter(i => words.every(w => has(`${i.title} ${i.cat} ${i.summary} ${i.text}`, w)))
       .map(i => ({ i, n: score(i) })).sort((a, b) => b.n - a.n).map(x => x.i);
-    const said = found.length === 0 ? title.dataset.zero! : found.length === 1 ? title.dataset.one! : title.dataset.many!;
-    title.textContent = said.replace('{n}', String(found.length)).replace('{q}', q);
+    const title = document.querySelector<HTMLElement>('[data-title]')!;
+    const lead = document.querySelector<HTMLElement>('[data-lead]')!;
+    const list = document.querySelector<HTMLElement>('[data-results]')!;
+    title.textContent = found.length ? title.dataset.found! : title.dataset.empty!;
+    lead.textContent = lead.dataset.lead!.replace('{q}', q);
+    document.title = `${title.textContent} · Folio`;
+    input.value = q;
+    const label = document.querySelector<HTMLElement>('label[for="q"]')!;
+    label.textContent = label.dataset.label!;
+    const go = document.querySelector<HTMLButtonElement>('.hsearch [type="submit"]')!;
+    go.textContent = go.dataset.again!;
+    const count = document.querySelector<HTMLElement>('[data-count]')!;
+    count.textContent = found.length ? (found.length === 1 ? count.dataset.one! : count.dataset.many!).replace('{n}', String(found.length)) : '';
+    count.hidden = !found.length;
     list.replaceChildren(...found.map(i => {
       const li = document.createElement('li');
-      const a = document.createElement('a');
+      li.className = 'card';
+      li.innerHTML = '<div><small></small><h2></h2><p></p></div><a class="btn btn-secondary"></a>';
+      li.querySelector('small')!.textContent = i.cat;
+      li.querySelector('h2')!.textContent = i.title;
+      li.querySelector('p')!.textContent = i.summary;
+      const a = li.querySelector('a')!;
       a.href = i.href;
-      a.innerHTML = '<small></small><b></b><span></span>';
-      a.querySelector('small')!.textContent = i.cat;
-      a.querySelector('b')!.textContent = i.title;
-      a.querySelector('span')!.textContent = i.summary;
-      li.append(a);
+      a.textContent = list.dataset.read!;
       return li;
     }));
-    none.hidden = found.length > 0;
-    box.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    document.querySelector<HTMLElement>('[data-none]')!.hidden = found.length > 0;
   }
-  form.addEventListener('submit', e => { e.preventDefault(); search(input.value); });
-  document.querySelectorAll<HTMLButtonElement>('[data-example]').forEach(b => b.addEventListener('click', () => { input.value = b.dataset.example!; search(input.value); }));
+  document.querySelector('[data-retry]')?.addEventListener('click', () => { input.focus(); input.select(); });
 </script>
 <style>
-  .hsearch{position:relative;display:flex;align-items:center;max-width:540px;margin-top:28px}
-  .hsearch > :global(.i){position:absolute;left:16px;color:var(--ink-3)}
-  .hsearch input{flex:1;min-width:0;height:var(--h-lg);padding:0 12px 0 46px;border:0;background:none;font:inherit;font-size:16px;color:var(--ink);outline:none}
-  .hsearch .btn{height:var(--h-lg);border-radius:0 var(--r) var(--r) 0;padding:0 18px}
-  .hexamples{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:14px;font-size:14px;color:var(--ink-3)}
-  .hexamples .linkish,.hnone .linkish{color:var(--ink-2);text-decoration:none}
-  .hexamples .linkish:hover,.hnone .linkish:hover{color:var(--accent-ink)}
-  .hresults{padding-bottom:0}
-  .hresults h2{font-size:20px}
-  .hlist{display:grid;gap:10px;margin:18px 0 0;padding:0;list-style:none}
-  .hlist a{display:grid;gap:2px;padding:14px 18px;border:1px solid var(--line);border-radius:var(--r-card);background:var(--card);text-decoration:none}
-  .hlist a:hover{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
-  .hlist small{font-size:12px;color:var(--accent-ink)}
-  .hlist b{font-size:16px}
-  .hlist span{font-size:14px;color:var(--ink-2)}
-  .hnone{display:grid;gap:8px;margin-top:14px;padding:18px 20px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line);color:var(--ink-2)}
-  .hnone p{display:flex;flex-wrap:wrap;gap:6px 12px}
-  .hnone a{color:var(--accent-ink)}
-  /* five categories, and five popular guides, in a row (as in the design): a row of five can't sit on the 12 columns, so
-     it keeps their 24px gutter */
-  .hcats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:24px}
-  .hcat{display:grid;gap:10px;align-content:start;padding:22px;text-decoration:none;color:inherit;scroll-margin-top:calc(var(--hd) + 16px);transition:border-color var(--t-fast)}
-  .hcat:hover{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
-  .hcat h2{margin-top:6px;font-size:18px}
-  .hcat p{font-size:14px;line-height:1.7;color:var(--ink-2)}
-  .hcat > :global(.i),.hguide > :global(.i){color:var(--accent)}
-  .hapi{display:flex;align-items:center;gap:6px;margin-top:18px;font-size:14px;color:var(--ink-2)}
-  .hapi a{color:var(--accent-ink)}
-  .hpop-title{margin-bottom:24px;font-size:clamp(1.5rem,2.6vw,2rem)}
-  .hpop{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:24px}
-  .hguide{display:flex;flex-direction:column;gap:10px;padding:16px;text-decoration:none;color:inherit;transition:border-color var(--t-fast)}
-  .hguide:hover{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
-  .hguide .mini{margin:0 0 6px}
-  .hguide .mini-field{grid-template-columns:minmax(0,1fr);gap:4px}
-  .hguide h3{font-size:16px}
-  .hguide p{font-size:14px;line-height:1.65;color:var(--ink-2)}
-  /* the questions on two thirds, the way to the team on one; the questions' title goes above them here */
-  .hbottom{align-items:start}
-  @media (min-width:861px){.hbottom > :global(.faq-split){grid-column:span 8}.hcontact{grid-column:span 4}}
-  .hbottom :global(.faq-split){row-gap:20px}
-  .hbottom :global(.faq-split > *){grid-column:1 / -1}
-  .hcontact{display:grid;gap:10px;justify-items:start;padding:26px;background:color-mix(in srgb,var(--accent-soft) 55%,var(--card))}
-  .hcontact h2{margin-top:6px;font-size:20px}
-  .hcontact p{font-size:14px;line-height:1.7;color:var(--ink-2)}
-  .hcontact .btn{margin-top:6px}
-  @media (max-width:1100px){.hcats,.hpop{grid-template-columns:repeat(3,minmax(0,1fr))}}
-  @media (max-width:640px){.hcats,.hpop{grid-template-columns:minmax(0,1fr)}}
+  /* the search (v2): the label above, the box 760 wide and the button beside it */
+  .hsearch{margin-top:28px}
+  .hsearch-row{display:flex;gap:20px;max-width:900px}
+  .hsearch-row input{flex:1;min-width:0;max-width:760px}
+  .hsearch-row .btn{min-width:120px}
+  .hexamples{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:14px;font-size:14px;color:var(--ink-3)}
+  .hexamples a{color:var(--ink-2);text-decoration:none}
+  .hexamples a:hover{color:var(--action);text-decoration:underline;text-underline-offset:3px}
+  /* a search shows what it found instead of the guides; the inline script marks the page before it is drawn */
+  :global(html.hq) [data-normal],:global(html:not(.hq)) [data-search]{display:none}
+  .hcount{margin-bottom:24px;font-size:16px;color:var(--ink-3)}
+  .hlist{display:grid;gap:24px;margin:0;padding:0;list-style:none}
+  .hlist :global(li){display:flex;align-items:center;gap:24px;padding:22px 32px 22px 24px}
+  .hlist :global(li > div){flex:1;min-width:0;display:grid;gap:4px}
+  .hlist :global(small){font-size:12px;color:var(--ink-3)}
+  .hlist :global(h2){font-size:20px;line-height:28px}
+  .hlist :global(p){font-size:16px;line-height:28px;color:var(--ink-3)}
+  .hlist :global(.btn){min-width:132px}
+  .hnone{display:grid;justify-items:start}
+  .hnone > :global(.i){color:var(--ink-3)}
+  .hnone > p{margin-top:28px;font-size:20px;line-height:32px;color:var(--ink-3)}
+  .hnone .cta-row{margin-top:48px}
+  .hask{margin-top:24px}
+  .hask a{color:var(--action)}
+  @media (max-width:640px){.hsearch-row{flex-direction:column;gap:12px}.hlist :global(li){flex-direction:column;align-items:stretch;padding:20px}}
 </style>

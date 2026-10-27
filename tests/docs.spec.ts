@@ -33,26 +33,36 @@ test('the guides’ search narrows the list and the page’s headings, without a
   await expect(toc.getByRole('link', { name: 'Security' })).toBeHidden();
   // No guide matches: the list says so and offers the contact page.
   await page.fill('[data-doc-search]', 'zzzz');
-  await expect(nav.getByText('No matching articles')).toBeVisible();
+  await expect(nav.getByText('No matching guides.')).toBeVisible();
   await expect(nav.getByRole('link', { name: 'Contact us' })).toHaveAttribute('href', '/en/contact/');
   await page.fill('[data-doc-search]', '');
   await expect(nav.getByRole('link', { name: 'Install the Folio app' })).toBeVisible();
-  await expect(nav.getByText('No matching articles')).toBeHidden();
+  await expect(nav.getByText('No matching guides.')).toBeHidden();
 });
 
-test('the help center finds guides by a word, and suggests others when nothing matches', async ({ page }) => {
+test('the help center’s search goes in the address, finds guides by a word, and says so when nothing matches', async ({ page }) => {
   await page.goto('/zh/help/');
-  const box = page.getByRole('searchbox', { name: '输入问题或关键词' });
-  const results = page.locator('[data-results] a');
-  await box.fill('Cookie');
-  await page.getByRole('button', { name: '搜索' }).click();
+  const results = page.locator('[data-results] li'), title = page.getByRole('heading', { level: 1 });
+  await page.getByRole('searchbox', { name: '搜索帮助文档' }).fill('Cookie');
+  await page.getByRole('button', { name: '搜索', exact: true }).click();
+  await expect(page).toHaveURL(/\/zh\/help\/\?q=Cookie$/);
+  await expect(title).toHaveText('帮助搜索结果');
+  await expect(results.first()).toContainText('导入 Cookie');
+  // Reloading keeps the search; the box holds what was searched for.
+  await page.reload();
+  const box = page.getByRole('searchbox', { name: '搜索关键词' });
+  await expect(box).toHaveValue('Cookie');
   await expect(results.first()).toContainText('导入 Cookie');
   await box.fill('zzzz');
-  await page.getByRole('button', { name: '搜索' }).click();
-  await expect(page.getByRole('heading', { name: '未找到与「zzzz」相关的文档' })).toBeVisible();
+  await page.getByRole('button', { name: '重新搜索' }).first().click();
+  await expect(title).toHaveText('未找到相关文档');
+  await expect(page.getByText('关键词：zzzz')).toBeVisible();
   await expect(results).toHaveCount(0);
-  await page.locator('[data-none]').getByRole('button', { name: '代理配置' }).click();
+  await page.locator('.hexamples').getByRole('link', { name: '代理配置' }).click();
   await expect(results.first()).toContainText('配置与检测代理');
+  // Going back returns to the search before.
+  await page.goBack();
+  await expect(title).toHaveText('未找到相关文档');
   // The old address of the docs leads here.
   await page.goto('/zh/docs/');
   await expect(page).toHaveURL(/\/zh\/help\/$/);
@@ -114,8 +124,8 @@ test('the page for an address that leads nowhere offers the way on, in that lang
   await page.goto('/zh/404/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('页面未找到');
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
-  await page.getByRole('navigation', { name: '常用页面' }).getByRole('link', { name: '下载客户端' }).click();
-  await expect(page).toHaveURL(/\/zh\/download\/$/);
+  await page.getByRole('link', { name: '访问帮助中心' }).click();
+  await expect(page).toHaveURL(/\/zh\/help\/$/);
 });
 
 test('behind nginx, an address that leads nowhere gets that page with a 404, in the language of the address', async ({ page }) => {

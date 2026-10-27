@@ -1,10 +1,11 @@
 ---
-// The home page: what Folio is beside the walkthrough of the real workbench, the four things it manages (each with a
-// small piece of the workbench), three steps to start, the kinds of work it suits, questions, and a way to start.
+// The home page (v2): what Folio is beside a picture of the real workbench; the four things it manages, each card with
+// the part of the workbench it is about (recorded by folio-desktop's demo/capture.spec.ts, as the other pictures) and
+// a link to its details; three steps to start; the kinds of work it suits; questions; and a way to start.
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import PageHero from '../../components/PageHero.astro';
-import Showcase from '../../components/Showcase.astro';
+import Shot from '../../components/Shot.astro';
 import Faq from '../../components/Faq.astro';
 import CtaBand from '../../components/CtaBand.astro';
 import type { IconName } from '../../lib/icons';
@@ -12,39 +13,39 @@ import { langPaths, link, t, type Lang } from '../../lib/i18n';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
-const d = t(lang), H = d.home, K = H.cards;
-const POINTS: IconName[] = ['lock', 'proxies', 'team'];
-const CARDS: IconName[] = ['profiles', 'proxies', 'folder', 'team'];
+const d = t(lang), H = d.home;
+// Each card: its icon, its picture, and where its details are.
+const CARDS: [IconName, string, string][] = [
+  ['profiles', 'card-profiles', 'features/#profiles'], ['proxies', 'card-proxies', 'features/#proxies'],
+  ['folder', 'card-groups', 'features/#team'], ['team', 'card-team', 'features/#team']
+];
 const USES: [IconName, string][] = [['cart', 'solutions/ecommerce/'], ['chat', 'solutions/'], ['code', 'solutions/']];
 ---
 <Base lang={lang} path="">
-  <PageHero lang={lang} title={H.h1} lead={H.lead}>
+  <PageHero title={H.h1} lead={H.lead}>
     <div class="cta-row">
-      <a class="btn btn-primary btn-lg" href={link(lang, 'signup/')}>{d.nav.start}<Icon name="chevr" /></a>
+      <a class="btn btn-primary btn-lg" href={link(lang, 'signup/')}>{d.nav.start}</a>
       <a class="btn btn-secondary btn-lg" href={link(lang, 'features/')}>{H.features}</a>
     </div>
-    <ul class="phero-pts">
-      {H.points.map(([b, s], i) => <li><span class="tile acc"><Icon name={POINTS[i]} size={20} /></span><span><b>{b}</b><small>{s}</small></span></li>)}
-    </ul>
-    <div slot="vis" class="home-vis"><Showcase lang={lang} label={d.demo.label} pause={d.demo.pause} play={d.demo.play} /></div>
+    <Shot slot="vis" lang={lang} name="list" alt={H.shot} zoom={1.2} origin="100% 0" eager />
   </PageHero>
 
-  <section class="msec alt">
+  <section class="msec">
     <div class="wrap">
       <div class="msec-head"><h2>{H.cardsTitle}</h2><p>{H.cardsLead}</p></div>
-      <div class="cols grid-4">
-        {K.map((c, i) => (
-          <article class="card hcard">
-            <span class="tile acc"><Icon name={CARDS[i]} size={20} /></span>
-            <h3>{c.title}</h3>
-            <p>{c.body}</p>
-            <div class="mini" aria-hidden="true">
-              <b class="mini-t">{c.mini.title}</b>
-              {c.mini.rows.map(([k, v]) => k
-                ? <span class="mini-field"><small>{k}</small><span>{v}</span></span>
-                : <span class="mini-row">{v}</span>)}
-              <span class="mini-btn">{c.mini.button}</span>
+      <div class="cols grid-2">
+        {H.cards.map((c, i) => (
+          <article class="hcard">
+            <div class="hcard-copy">
+              <Icon name={CARDS[i][0]} size={24} />
+              <h3>{c.title}</h3>
+              <p>{c.body}</p>
+              <a class="more" href={link(lang, CARDS[i][2])}>{H.more}</a>
             </div>
+            <picture class="hcard-pic">
+              <source srcset={`/shots/${lang}-dark/${CARDS[i][1]}.webp`} media="(prefers-color-scheme: dark)" />
+              <img src={`/shots/${lang}-light/${CARDS[i][1]}.webp`} alt={c.shot} loading="lazy" />
+            </picture>
           </article>
         ))}
       </div>
@@ -58,15 +59,12 @@ const USES: [IconName, string][] = [['cart', 'solutions/ecommerce/'], ['chat', '
     </div>
   </section>
 
-  <section class="msec alt">
+  <section class="msec">
     <div class="wrap">
       <div class="msec-head"><h2>{H.uses.title}</h2><p>{H.uses.lead}</p></div>
       <div class="cols grid-3">
         {H.uses.items.map((u, i) => (
-          <a class="card huse" href={link(lang, USES[i][1])}>
-            <div><span class="tile acc"><Icon name={USES[i][0]} size={20} /></span><h3>{u.title}</h3><p>{u.body}</p></div>
-            <ul class="huse-list" aria-hidden="true">{u.list.map(x => <li><Icon name="profiles" />{x}</li>)}</ul>
-          </a>
+          <article class="fcard"><Icon name={USES[i][0]} size={24} /><h3>{u.title}</h3><p>{u.body}</p><a class="more" href={link(lang, USES[i][1])}>{H.more}</a></article>
         ))}
       </div>
     </div>
@@ -78,26 +76,19 @@ const USES: [IconName, string][] = [['cart', 'solutions/ecommerce/'], ['chat', '
 
   <section class="msec cta-sec">
     <div class="wrap">
-      <CtaBand title={H.band.title} body={H.band.body}>
-        <a class="btn btn-primary btn-lg" href={link(lang, 'signup/')}>{d.nav.start}<Icon name="chevr" /></a>
-        <a class="btn btn-secondary btn-lg" href={link(lang, 'download/')}><Icon name="download" />{H.band.download}</a>
-      </CtaBand>
+      <CtaBand title={H.band.title} body={H.band.body}><a class="btn btn-primary btn-lg" href={link(lang, 'signup/')}>{d.nav.start}</a></CtaBand>
     </div>
   </section>
 </Base>
 <style>
-  .home-vis{position:relative}
-  .home-vis :global(.showcase){position:relative;width:100%}
-  .hcard{display:flex;flex-direction:column;gap:10px;padding:24px}
-  .hcard h3{margin-top:6px;font-size:18px}
-  .hcard > p{font-size:14px;line-height:1.7;color:var(--ink-2)}
-  .hcard .mini{margin-top:auto}
-  .huse{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:18px;padding:22px;text-decoration:none;color:inherit;transition:border-color var(--t-fast)}
-  .huse:hover{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
-  .huse h3{margin-top:12px;font-size:18px}
-  .huse p{margin-top:6px;font-size:14px;line-height:1.7;color:var(--ink-2)}
-  .huse-list{display:grid;gap:6px;align-content:center;margin:0;padding:12px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line);list-style:none;font-size:12px}
-  .huse-list li{display:flex;align-items:center;gap:7px;height:28px;padding:0 9px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);white-space:nowrap;overflow:hidden}
-  .huse-list :global(.i){color:var(--ink-3)}
-  @media (max-width:560px){.huse{grid-template-columns:minmax(0,1fr)}}
+  /* the four cards two by two (v2's 240-high card, with the picture of that part of the workbench on its right) */
+  .hcard{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,320px);min-height:240px;border:1px solid var(--line);border-radius:var(--r-card);background:var(--card);overflow:hidden}
+  .hcard-copy{display:flex;flex-direction:column;align-items:flex-start;padding:24px}
+  .hcard-copy > :global(.i){color:var(--action)}
+  .hcard h3{margin-top:26px;font-size:20px;line-height:28px}
+  .hcard p{margin-top:12px;font-size:16px;line-height:28px;color:var(--ink-3)}
+  .hcard .more{margin-top:auto;padding-top:16px}
+  .hcard-pic{display:grid;place-items:center;padding:18px;background:var(--bg);border-left:1px solid var(--line)}
+  .hcard-pic img{display:block;width:auto;height:auto;max-width:100%;max-height:200px;border-radius:var(--r);box-shadow:var(--shadow-pop)}
+  @media (max-width:560px){.hcard{grid-template-columns:minmax(0,1fr)}.hcard-pic{border-left:0;border-top:1px solid var(--line)}}
 </style>

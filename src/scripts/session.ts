@@ -62,8 +62,9 @@ function mark(field: Field, reason: string){
 // Why an email box won't do, or '' when it will.
 export const emailProblem = (field: HTMLInputElement) => (!field.value.trim() ? d.errors.emailMissing : field.checkValidity() ? '' : d.errors.emailInvalid);
 
-// The server's refusals that are about one field, by that field's id; they go under it. Any other goes in `box`.
-const FIELD_OF: Record<string, string> = { email_taken: 'email', invalid_credentials: 'password', code_invalid: 'code', code_expired: 'code', too_many_attempts: 'code' };
+// The server's refusals that are about one field, by that field's id; they go under it. Any other goes in `box`, at the
+// top of the form — among them a wrong email or password, which can't say which of the two is wrong (v2 23).
+const FIELD_OF: Record<string, string> = { email_taken: 'email', code_invalid: 'code', code_expired: 'code', too_many_attempts: 'code', wrong_password: 'pw-current' };
 export function fail(box: HTMLElement, e: unknown){
   const field = e instanceof ApiFailure && FIELD_OF[e.code] ? document.getElementById(FIELD_OF[e.code]) as Field | null : null;
   if (field) invalid([[field, errorText(d, e)]]); else showError(box, e);

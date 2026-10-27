@@ -1,32 +1,30 @@
 ---
-// Page not found, in each language: back home or to the help center, or on to a page people often look for. nginx
-// shows it for addresses that lead nowhere: the Chinese one under /zh/, the English one anywhere else (deploy/nginx.conf).
+// Page not found, in each language (v2 16): 404 and what it means, then back home or to the help center. nginx shows
+// it for addresses that lead nowhere: the Chinese one under /zh/, the English one anywhere else (deploy/nginx.conf).
 import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
 import { langPaths, link, t, type Lang } from '../../lib/i18n';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
 const N = t(lang).notFound;
-const LINKS = ['features/', 'download/', 'contact/'];
 ---
 <Base lang={lang} path="" title={N.title} noindex>
   <section class="wrap nf">
     <p class="nf-code" aria-hidden="true">404</p>
     <h1>{N.title}</h1>
-    <p class="lead">{N.lead}</p>
-    <div class="nf-acts"><a class="btn btn-primary btn-lg" href={link(lang)}>{N.home}</a><a class="btn btn-secondary btn-lg" href={link(lang, 'help/')}>{N.help}</a></div>
-    <nav class="nf-links" aria-label={N.more}>{N.links.map((label, i) => <a href={link(lang, LINKS[i])}>{label}</a>)}</nav>
+    <Icon name="search" size={48} />
+    <p class="nf-msg">{N.lead}</p>
+    <div class="cta-row"><a class="btn btn-primary btn-lg" href={link(lang)}>{N.home}</a><a class="btn btn-secondary btn-lg" href={link(lang, 'help/')}>{N.help}</a></div>
   </section>
 </Base>
 <style>
-  .nf{display:grid;justify-items:center;padding-block:80px 104px;text-align:center}
-  .nf-code{font:600 clamp(7rem,18vw,12.5rem)/1 var(--f-body);letter-spacing:-.02em;color:transparent;-webkit-text-stroke:2px color-mix(in srgb,var(--accent) 35%,transparent)}
-  .nf h1{margin-top:12px;font-size:clamp(2rem,4vw,2.75rem)}
-  .nf .lead{margin-top:14px}
-  .nf-acts{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:36px}
-  .nf-acts .btn{min-width:180px}
-  .nf-links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 0;margin-top:48px;font-size:14px}
-  .nf-links a{padding:0 22px;color:var(--ink-2);text-decoration:none}
-  .nf-links a + a{border-left:1px solid var(--line-2)}
-  .nf-links a:hover{color:var(--accent-ink)}
+  /* v2: 404 at 72, what it means 20/32 under it; the search icon, the explanation, and the ways out */
+  .nf{display:grid;justify-items:start;padding-block:68px 120px}
+  .nf-code{font-size:72px;font-weight:600;line-height:80px}
+  .nf h1{margin-top:22px;font-size:20px;font-weight:400;line-height:32px;color:var(--ink-3)}
+  .nf > :global(.i){margin-top:28px;color:var(--ink-3)}
+  .nf-msg{margin-top:28px;font-size:20px;line-height:32px;color:var(--ink-3)}
+  .nf .cta-row{margin-top:48px}
+  .nf .btn{min-width:180px}
 </style>

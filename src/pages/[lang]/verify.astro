@@ -16,7 +16,7 @@ const A = t(lang).auth;
     <div class="notice ok" id="ok" role="status" hidden></div>
     <div class="notice error" id="err" role="alert" hidden></div>
     <div class="field">
-      <label for="code">{A.code}</label>
+      <label class="req" for="code">{A.code}</label>
       <div class="code-row">
         <input id="code" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder={A.codePh} required />
         <button class="btn btn-secondary" type="button" id="resend">{A.resend}</button>

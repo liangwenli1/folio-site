@@ -1,9 +1,10 @@
 ---
-// The terms of service, still a draft: a numbered card per clause, from what the service covers to liability and
-// disputes, and when they take effect, with the contents beside them as on the privacy policy (following the reading,
-// folding on a phone). Items not settled yet say so.
+// The terms of service, still a draft (v2): the clauses from what the service covers to liability and disputes, and
+// when they take effect, with the contents beside them as on the privacy policy (following the reading, folding on a
+// phone). Items not settled yet say so.
 import Base from '../../layouts/Base.astro';
 import Contents from '../../components/Contents.astro';
+import PageHero from '../../components/PageHero.astro';
 import Icon from '../../components/Icon.astro';
 import { langPaths, t, type Lang } from '../../lib/i18n';
 
@@ -13,42 +14,22 @@ const L = t(lang).legal, T = L.terms;
 const id = (i: number) => `s${i + 1}`;
 ---
 <Base lang={lang} path="terms/" title={T.title} description={T.lead}>
-  <section class="wrap lt">
-    <header class="lt-head"><h1 class="hero-title">{T.title}</h1><p class="lead">{T.lead}</p></header>
-    <div class="lt-draft" role="note"><span class="lt-ic"><Icon name="alert" size={24} /></span><div><b>{T.draft[0]}</b><p>{T.draft[1]}</p></div></div>
-  </section>
+  <PageHero title={T.title} lead={T.lead}><p class="notice">{T.draft}</p></PageHero>
   <Contents lang={lang} sections={T.sections.map((s, i): [string, string] => [id(i), s.title])}>
-    <ol class="lt-list">
-      {T.sections.map((s, i) => (
-        <li class="card lt-sec" id={id(i)}>
-          <div class="lt-title"><span class="lt-n">{String(i + 1).padStart(2, '0')}</span><h2>{s.title}</h2></div>
-          <div class="lt-body">{s.body.map(p => <p>{p}</p>)}<p class="lt-note">{T.note}</p></div>
-        </li>
-      ))}
-    </ol>
-    <div class="lt-eff"><Icon name="calendar" size={24} /><div><b>{T.effective}<span class="tbc">{L.tbc}</span></b><p>{T.effectiveBody}</p></div></div>
+    {T.sections.map((s, i) => (
+      <section class="lt-sec" id={id(i)} aria-labelledby={`${id(i)}-h`}>
+        <h2 id={`${id(i)}-h`}>{s.title}</h2>
+        {s.body.map(p => <p>{p}</p>)}
+      </section>
+    ))}
+    <p class="lt-eff"><Icon name="calendar" /><span>{T.effective}<span class="tbc">{L.tbc}</span></span><span>{T.effectiveBody}</span></p>
   </Contents>
 </Base>
 <style>
-  .lt{padding-top:56px}
-  .lt-head .lead{max-width:640px;margin-top:14px}
-  .lt-draft{display:flex;align-items:center;gap:16px;margin-top:28px;padding:18px 22px;border-radius:var(--r-card);background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 16%,transparent)}
-  .lt-ic{display:grid;place-items:center;flex:none;color:var(--accent)}
-  .lt-draft b{font-size:16px}
-  .lt-draft p{margin-top:2px;font-size:14px;color:var(--ink-2)}
-  .lt-list{display:grid;gap:16px;margin:0;padding:0;list-style:none}
-  .lt-sec{display:grid;grid-template-columns:260px minmax(0,1fr);gap:28px;padding:26px 28px}
-  .lt-title{display:flex;align-items:flex-start;gap:18px}
-  .lt-n{display:grid;place-items:center;width:44px;height:44px;flex:none;border-radius:var(--r-card);background:var(--accent-soft);color:var(--accent-ink);font:600 16px var(--f-data)}
-  .lt-title h2{padding-top:7px;font-size:20px;line-height:1.4}
-  /* the clauses are long-form: 16 / 1.8 */
-  .lt-body{display:grid;gap:8px;padding-left:28px;border-left:1px solid var(--line);font-size:16px;line-height:1.8;color:var(--ink-2)}
-  .lt-note{margin-top:4px;font-size:12px;color:var(--ink-3)}
-  .lt-eff{display:flex;align-items:center;gap:16px;padding:18px 24px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line)}
-  .lt-eff > :global(.i){flex:none;color:var(--ink-2)}
-  .lt-eff b{display:flex;align-items:center;font-size:16px}
-  .lt-eff p{margin-top:2px;font-size:14px;color:var(--ink-2)}
-  /* beside the contents the cards are narrower: below 1100 the title goes above the clause */
-  @media (max-width:1100px){.lt-sec{grid-template-columns:minmax(0,1fr);gap:14px}.lt-body{padding-left:0;border-left:0}}
-  @media (max-width:760px){.lt{padding-top:36px}.lt-sec{padding:20px 18px}}
+  /* v2: each clause's title 24/34 and its text 16/28 */
+  .lt-sec{display:grid;gap:12px}
+  .lt-sec h2{margin-bottom:8px;font-size:24px;line-height:34px}
+  .lt-sec p{max-width:820px;font-size:16px;line-height:28px;color:var(--ink-body)}
+  .lt-eff{display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;padding:14px 20px;border-radius:var(--r-card);background:var(--panel);font-size:14px;color:var(--ink-3)}
+  .lt-eff :global(.i){color:var(--ink-3)}
 </style>

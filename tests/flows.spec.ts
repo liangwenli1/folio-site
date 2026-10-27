@@ -57,11 +57,13 @@ async function fillSignUp(page: Page, email: string){
   await page.check('#consent');
 }
 
+// Signed up, it goes on to `next`; without one the page says the account is ready, and this goes on to the account.
 async function signUp(page: Page, lang: 'en' | 'zh', next = ''){
   const email = uniqueEmail();
   await page.goto(`/${lang}/signup/${next ? `?next=${encodeURIComponent(next)}` : ''}`);
   await fillSignUp(page, email);
   await page.click('button[type="submit"]');
+  if (!next) await page.locator('#done a[href$="/account/"]').click();
   await page.waitForURL(next ? new RegExp(next.replace(/[?]/g, '\\?')) : /\/account\//);
   return email;
 }
@@ -234,7 +236,10 @@ test('signing up takes the code sent to the address and the terms agreed to; an 
   await expect(page.locator('#form').getByRole('link', { name: 'terms of service' })).toHaveAttribute('target', '_blank');
   await page.check('#consent');
   await page.click('button[type="submit"]');
-  await page.waitForURL(/\/account\//);
+  // Done: the page says so and points to the app (v2 22).
+  await expect(page.getByRole('heading', { name: 'Your account is ready' })).toBeFocused();
+  await expect(page.locator('#form')).toBeHidden();
+  await expect(page.getByRole('link', { name: 'Download the app' })).toHaveAttribute('href', '/en/download/');
 
   await context.clearCookies();
   await page.goto('/en/signup/');
@@ -253,14 +258,15 @@ test('logging in and signing up say what is wrong under each field, and focus th
   await expect(email).toHaveAccessibleDescription('Enter an email address.');
   await expect(password).toHaveAccessibleDescription('Enter your password.');
   await expect(page.locator('#err')).toBeHidden();
-  // Changing a field takes its reason away; the server's answer about the password goes under the password.
+  // Changing a field takes its reason away. A wrong email or password can't say which of the two is wrong, so it is said
+  // at the top of the form (v2 23).
   await email.fill('nobody-here@example.com');
   await expect(page.locator('#email-err')).toBeHidden();
   await expect(email).not.toHaveAttribute('aria-invalid');
   await password.fill('not the password');
   await page.click('button[type="submit"]');
-  await expect(page.locator('#password-err')).toHaveText('The email or password is incorrect. Check them and try again.');
-  await expect(password).toBeFocused();
+  await expect(page.locator('#err')).toHaveText('The email or password is incorrect. Check them and try again.');
+  await expect(password).not.toHaveAttribute('aria-invalid');
 
   await page.goto('/zh/signup/');
   await email.fill('not an address');
@@ -363,10 +369,17 @@ test('the contact form gives a reference number, and keeps what was written when
   await page.check('#consent');
   await page.route('**/sales-inquiries', r => r.abort(), { times: 1 });
   await page.click('button[type="submit"]');
-  await expect(page.locator('#err')).toHaveText('That didn’t go through. Try again later; what you wrote is still here.');
+  // Not sent (v2 19): going back finds everything as it was written.
+  await expect(page.getByRole('heading', { level: 1, name: 'Your question couldn’t be sent' })).toBeVisible();
+  await page.getByRole('button', { name: 'Go back and retry' }).click();
   await expect(page.locator('#message')).toHaveValue('We run 1,200 profiles across three teams.');
+  await expect(page.locator('#kind')).toHaveValue('support');
   await page.click('button[type="submit"]');
-  await expect(page.locator('#number')).toHaveText(/^Reference #\d{6}$/);
+  // Sent (v2 18).
+  await expect(page.getByRole('heading', { level: 1, name: 'Your question is in' })).toBeVisible();
+  await expect(page.locator('#number')).toHaveText(/^Your reference is #\d{6}; keep it for any follow-up\.$/);
+  await page.getByRole('button', { name: 'Send another' }).click();
+  await expect(page.locator('#message')).toHaveValue('');
 });
 
 test('an emailed invitation leads a new person through sign-up into the workspace', async ({ page }) => {
@@ -404,4 +417,34 @@ test('pending invitations show on the account page in Chinese and can be joined 
   await invite.getByRole('button', { name: '加入' }).click();
   await expect(page.locator('#ws-list li.current')).toContainText('Larkspur Trading');
   await expect(page.locator('#inv-panel')).toBeHidden();
+});
+
+test('the account page changes the password: the current one first, and every other sign-in ends', async ({ page }) => {
+  const email = await signUp(page, 'en');
+  // Another sign-in of the same account, elsewhere.
+  const elsewhere = await request.newContext({ baseURL: `${process.env.API_URL ?? 'http://localhost:47110'}/`, extraHTTPHeaders: { origin: new URL(process.env.SITE_URL ?? 'http://localhost:47120').origin } });
+  expect((await elsewhere.post('auth/login', { data: { email, password: PASSWORD } })).ok()).toBe(true);
+  expect((await elsewhere.get('me')).ok()).toBe(true);
+
+  const form = page.locator('#pw-form');
+  await form.getByRole('button', { name: 'Save new password' }).click();
+  await expect(page.locator('#pw-current')).toBeFocused();
+  await page.fill('#pw-current', 'not the password');
+  await page.fill('#pw-new', 'a brand new secret');
+  await page.fill('#pw-confirm', 'a brand new secrets');
+  await form.getByRole('button', { name: 'Save new password' }).click();
+  await expect(page.locator('#pw-confirm-err')).toHaveText('The two passwords don’t match.');
+  await page.fill('#pw-confirm', 'a brand new secret');
+  await form.getByRole('button', { name: 'Save new password' }).click();
+  await expect(page.locator('#pw-current-err')).toHaveText('The current password is not right.');
+  await page.fill('#pw-current', PASSWORD);
+  await form.getByRole('button', { name: 'Save new password' }).click();
+  await expect(page.locator('#pw-ok')).toHaveText('Password changed. This account has been logged out on other devices.');
+  await expect(page.locator('#pw-current')).toHaveValue('');
+
+  // This sign-in stays; the other one has ended; the new password logs in.
+  await page.reload();
+  await expect(page.locator('#me-email')).toHaveText(email);
+  expect((await elsewhere.get('me')).status()).toBe(401);
+  expect((await elsewhere.post('auth/login', { data: { email, password: 'a brand new secret' } })).ok()).toBe(true);
 });

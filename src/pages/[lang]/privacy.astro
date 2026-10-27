@@ -1,9 +1,10 @@
 ---
-// The privacy policy, still a draft: what Folio keeps and why, how it is protected, who else sees it, what you can do
-// about it and how to reach us. Items not settled yet say so. The contents beside it follow the reading (and fold on a
-// phone).
+// The privacy policy, still a draft (v2): what Folio keeps and why, how it is protected, who else sees it, what you
+// can do about it and how to reach us. Items not settled yet say so. The contents beside it follow the reading (and fold
+// on a phone).
 import Base from '../../layouts/Base.astro';
 import Contents from '../../components/Contents.astro';
+import PageHero from '../../components/PageHero.astro';
 import Icon from '../../components/Icon.astro';
 import { langPaths, link, t, type Lang } from '../../lib/i18n';
 
@@ -11,14 +12,12 @@ export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
 const L = t(lang).legal, P = L.privacy;
 ---
-<Base lang={lang} path="privacy/" title={P.title} description={P.sections[0].lead}>
-  <section class="lg-hero">
-    <div class="wrap"><h1 class="hero-title">{P.title}</h1><p class="lg-draft"><Icon name="info" />{P.draft}</p></div>
-  </section>
+<Base lang={lang} path="privacy/" title={P.title} description={P.lead}>
+  <PageHero title={P.title} lead={P.lead}><p class="notice">{P.draft}</p></PageHero>
   <Contents lang={lang} sections={P.sections.map((s): [string, string] => [s.id, s.title])}>
-    {P.sections.map((s, i) => (
-      <section class="card lg-sec" id={s.id} aria-labelledby={`${s.id}-h`}>
-        <h2 id={`${s.id}-h`}><span class="lg-n">{i + 1}</span>{s.title}</h2>
+    {P.sections.map(s => (
+      <section class="lg-sec" id={s.id} aria-labelledby={`${s.id}-h`}>
+        <h2 id={`${s.id}-h`}>{s.title}</h2>
         <p class="lg-lead">{s.lead}</p>
         {s.table && (
           <table class="lg-table">
@@ -39,34 +38,28 @@ const L = t(lang).legal, P = L.privacy;
   </Contents>
 </Base>
 <style>
-  .lg-hero{padding-block:52px 44px;background:var(--panel);border-bottom:1px solid var(--line)}
-  .lg-draft{display:flex;gap:10px;max-width:720px;margin-top:22px;padding:13px 16px;border-radius:var(--r-card);background:var(--seg);font-size:14px;line-height:1.7;color:var(--ink-2)}
-  .lg-draft :global(.i){flex:none;margin-top:4px;color:var(--ink-3)}
-  .lg-sec{padding:22px 24px 24px}
-  .lg-sec h2{display:flex;align-items:center;gap:12px;font-size:20px;line-height:1.35}
-  .lg-n{display:grid;place-items:center;width:28px;height:28px;flex:none;border-radius:50%;background:var(--accent);color:var(--on-accent);font:600 14px var(--f-data)}
-  /* the text itself is long-form: 16 / 1.8, at most 720 wide */
-  .lg-lead{max-width:720px;margin:8px 0 16px 40px;font-size:16px;line-height:1.8;color:var(--ink-2)}
-  .lg-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden;font-size:16px;line-height:1.8}
-  .lg-table :is(th,td){padding:11px 16px;border-top:1px solid var(--line);text-align:left;vertical-align:top}
-  .lg-table thead th{border-top:0;background:var(--panel);font-size:14px;font-weight:600;color:var(--ink-2)}
+  /* v2: each section's title 24/34 and its text 16/28, the long-form reading width */
+  .lg-sec{display:grid;gap:16px}
+  .lg-sec h2{font-size:24px;line-height:34px}
+  .lg-lead{max-width:720px;font-size:16px;line-height:28px;color:var(--ink-body)}
+  .lg-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden;font-size:16px;line-height:28px}
+  .lg-table :is(th,td){padding:14px 16px;border-top:1px solid var(--line);text-align:left;vertical-align:top}
+  .lg-table thead th{height:44px;padding-block:0;border-top:0;background:var(--head);font-size:14px;font-weight:500;color:var(--ink-2);vertical-align:middle}
   .lg-table tbody th{width:150px;font-weight:600;color:var(--ink)}
-  .lg-table td{color:var(--ink-2)}
+  .lg-table td{color:var(--ink-body)}
   .lg-table :is(th,td) + :is(th,td){border-left:1px solid var(--line)}
-  .lg-list{display:grid;gap:10px;margin:0;padding:16px 20px;border-radius:var(--r-card);background:var(--panel);list-style:none;font-size:16px;line-height:1.8;color:var(--ink-2)}
+  .lg-list{display:grid;gap:10px;margin:0;padding:0 0 0 2px;list-style:none;font-size:16px;line-height:28px;color:var(--ink-body)}
   .lg-list li{position:relative;padding-left:18px}
-  .lg-list li::before{content:'';position:absolute;left:2px;top:.72em;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+  .lg-list li::before{content:'';position:absolute;left:2px;top:11px;width:6px;height:6px;border-radius:50%;background:var(--ink-4)}
   .lg-list b{font-weight:600;color:var(--ink)}
   .lg-list b::after{content:'：'}
   html[lang="en"] .lg-list b{margin-right:6px}
   html[lang="en"] .lg-list b::after{content:':'}
-  .lg-list a{color:var(--accent-ink)}
+  .lg-list a{color:var(--action)}
   .lg-list b + .tbc{margin-left:0}
-  .lg-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;padding:14px 20px;border-radius:var(--r-card);background:var(--panel);font-size:14px;color:var(--ink-2)}
+  .lg-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;padding:14px 20px;border-radius:var(--r-card);background:var(--panel);font-size:14px;color:var(--ink-3)}
   .lg-meta :global(.i){color:var(--ink-3)}
   @media (max-width:700px){
-    .lg-sec{padding:18px 16px 20px}
-    .lg-lead{margin-left:0}
     .lg-table thead{display:none}
     .lg-table :is(tr,th,td){display:block}
     .lg-table tr + tr{border-top:1px solid var(--line)}

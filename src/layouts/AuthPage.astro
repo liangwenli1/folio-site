@@ -1,41 +1,35 @@
 ---
-// The sign-in pages (log in, sign up, verify the email, reset the password): the simple header, then the product on
-// the left — what Folio is, the workbench walkthrough and three things it does — and the form on the right. On a phone
-// the form comes first, and the walkthrough stays out.
+// The sign-in pages (log in, sign up, verify the email, reset the password), as v2 draws them: the simple header; on the
+// left what Folio is and a picture of the real workbench, on the soft accent; on the right the form (the slot), ending
+// with the privacy policy, the terms and the language switch, since these pages have no footer. On a phone the form
+// comes first.
 import Base from './Base.astro';
-import Icon from '../components/Icon.astro';
-import Showcase from '../components/Showcase.astro';
-import type { IconName } from '../lib/icons';
-import { t, type Lang } from '../lib/i18n';
+import Shot from '../components/Shot.astro';
+import LangSwitch from '../components/LangSwitch.astro';
+import { link, t, type Lang } from '../lib/i18n';
 
 interface Props { lang: Lang; path: string; title: string }
 const { lang, path, title } = Astro.props;
 const d = t(lang), P = d.auth.panel;
-const ICONS: IconName[] = ['globe', 'layers', 'team'];
 ---
 <Base lang={lang} path={path} title={title} noindex simple>
   <section class="auth">
     <div class="auth-panel">
       <div class="auth-panel-in">
-        <p class="auth-title display">{P.title}</p>
+        <p class="auth-title display">{P.title.split('\n').map((line, i) => <>{i > 0 && <> <br /></>}{line}</>)}</p>
         <p class="auth-lead">{P.lead}</p>
-        <div class="auth-vis">
-          <Showcase lang={lang} label={d.demo.label} pause={d.demo.pause} play={d.demo.play} />
-          <ul class="auth-pts">
-            {P.points.map(([title, text], i) => <li><span class="tile acc"><Icon name={ICONS[i]} size={20} /></span><span><b>{title}</b><small>{text}</small></span></li>)}
-          </ul>
-        </div>
+        <div class="auth-vis"><Shot lang={lang} name="list" alt={P.shot} zoom={1.2} origin="100% 0" eager /></div>
       </div>
     </div>
-    <div class="auth-main"><div class="auth-form"><slot /></div></div>
+    <div class="auth-main">
+      <div class="auth-form">
+        <slot />
+        <nav class="auth-foot" aria-label={d.footer.legal}>
+          <a href={link(lang, 'privacy/')}>{d.footer.privacy}</a>
+          <a href={link(lang, 'terms/')}>{d.footer.terms}</a>
+          <LangSwitch lang={lang} path={path} />
+        </nav>
+      </div>
+    </div>
   </section>
 </Base>
-<script>
-  // Show / hide the password: the eye button inside the box switches the field's type.
-  document.querySelectorAll<HTMLButtonElement>('.pw button').forEach(b => b.addEventListener('click', () => {
-    const input = b.parentElement!.querySelector('input')!;
-    const shown = input.type === 'password';
-    input.type = shown ? 'text' : 'password';
-    b.setAttribute('aria-pressed', String(shown));
-  }));
-</script>

@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
+import Password from '../../components/Password.astro';
 import '../../styles/app.css';
 import { langPaths, link, t, type Lang } from '../../lib/i18n';
 
@@ -81,6 +82,21 @@ const a = d.account;
             </div></dd>
           </dl>
         </section>
+        <section class="panel" aria-labelledby="pw-h">
+          <h2 class="panel-t" id="pw-h">{a.pw.title}</h2>
+          <form class="form" id="pw-form" novalidate>
+            <div class="notice ok" id="pw-ok" role="status" hidden>{a.pw.done}</div>
+            <div class="notice error" id="pw-err" role="alert" hidden></div>
+            <div class="field"><label class="req" for="pw-current">{a.pw.current}</label><Password lang={lang} id="pw-current" autocomplete="current-password" /></div>
+            <div class="field">
+              <label class="req" for="pw-new">{a.pw.new}</label>
+              <Password lang={lang} id="pw-new" autocomplete="new-password" minlength={8} />
+              <span class="hint">{d.auth.passwordHint}</span>
+            </div>
+            <div class="field"><label class="req" for="pw-confirm">{a.pw.confirm}</label><Password lang={lang} id="pw-confirm" autocomplete="new-password" minlength={8} /></div>
+            <div><button class="btn btn-primary" type="submit">{a.pw.save}</button></div>
+          </form>
+        </section>
         <section class="panel ac-dl" aria-labelledby="dl-h">
           <h2 class="panel-t" id="dl-h">{a.download}</h2>
           <p class="fine">{a.downloadBody}</p>
@@ -94,7 +110,7 @@ const a = d.account;
   import { api, canManage, roleLabel, type Me, type Payment, type Workspace } from '../../lib/api';
   import { day, money } from '../../lib/format';
   import { ICONS } from '../../lib/icons';
-  import { $, busy, d, esc, lang, param, requireMe, showError, to } from '../../scripts/session';
+  import { $, busy, d, esc, invalid, lang, onSubmit, param, requireMe, showError, to } from '../../scripts/session';
 
   const a = d.account;
   // The status labels' icons (components/Icon.astro draws the same paths at build time).
@@ -249,6 +265,20 @@ const a = d.account;
     const locale = (ev.target as HTMLElement).closest<HTMLButtonElement>('[data-locale]')?.dataset.locale;
     if (!locale || locale === me.user.locale) return;
     try { await api('PATCH', '/me', { locale }); location.assign(`/${locale}/account/${location.search}`); } catch (e){ fail(e); }
+  });
+
+  // Changing the password: the current one first; done, every other sign-in of this account ends (the server's rule).
+  const current = $<HTMLInputElement>('pw-current'), next = $<HTMLInputElement>('pw-new'), again = $<HTMLInputElement>('pw-confirm');
+  onSubmit($<HTMLFormElement>('pw-form'), $('pw-err'), async () => {
+    $('pw-ok').hidden = true;
+    if (invalid([
+      [current, current.value ? '' : d.errors.passwordMissing],
+      [next, next.value.length >= 8 && next.value.length <= 64 ? '' : d.errors.passwordShort],
+      [again, again.value === next.value ? '' : d.errors.passwordMismatch]
+    ])) return;
+    await api('POST', '/auth/password/change', { current: current.value, password: next.value });
+    $<HTMLFormElement>('pw-form').reset();
+    $('pw-ok').hidden = false;
   });
 
   $('logout').addEventListener('click', async () => {
