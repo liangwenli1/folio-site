@@ -179,12 +179,11 @@ h3{font-weight:600}
 /* Text boxes (spec 4): a grey line on the card colour; focused, the accent line and a soft accent ring. A .box that holds
    an icon or a button beside a borderless input (the searches) shows it while anything in it has the focus. */
 .box,.field :is(input,select,textarea){border:1px solid var(--line);border-radius:var(--r);background:var(--card);color:var(--ink)}
-.box:focus-within,.field :is(input,select,textarea):focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.box:focus-within,.field :is(input,select,textarea):focus{outline:none;border-color:var(--accent)}
 .field :is(input,select,textarea){width:100%;height:var(--h-ctl);padding:0 14px;font:inherit;font-size:14px}
 .field textarea{height:auto;min-height:120px;padding:12px 14px;resize:vertical}
 /* A field's error (spec 4): the red line, and under the field the reason (scripts/session.ts). */
 .field [aria-invalid="true"],.field [aria-invalid="true"]:focus{border-color:var(--bad-ink)}
-.field [aria-invalid="true"]:focus{box-shadow:0 0 0 3px var(--bad-soft)}
 .field-err{font-size:12px;line-height:1.5;color:var(--bad-ink)}
 label + .field-err{margin-top:-8px}
 .field .hint{font-size:12px;color:var(--ink-3)}
