@@ -68,6 +68,24 @@ test('the header is 76px tall, on a phone and on a desktop', async ({ page }) =>
   expect((await page.locator('header.top').boundingBox())!.height).toBe(76);
 });
 
+test('on a desktop the sign-in pages mirror about the middle: as wide, as far from it, level, under the header’s ends', async ({ page }) => {
+  for (const width of [1440, 1920]){
+    await page.setViewportSize({ width, height: 900 });
+    for (const path of ['en/login/', 'zh/login/', 'en/signup/', 'zh/signup/', 'en/forgot/']){
+      await page.goto(`/${path}`);
+      const mid = await page.evaluate(() => document.documentElement.clientWidth / 2);
+      const [left, right, logo, help] = await Promise.all(['.auth-panel-in', '.auth-form', 'header .brand', 'header .top-links .btn'].map(async s => (await page.locator(s).boundingBox())!));
+      const at = `/${path} at ${width}`;
+      expect(left.width, at).toBe(480);
+      expect(Math.abs(right.width - left.width), at).toBeLessThanOrEqual(1);
+      expect(Math.abs((mid - (left.x + left.width)) - (right.x - mid)), at).toBeLessThanOrEqual(1);
+      expect(Math.abs(right.y - left.y), at).toBeLessThanOrEqual(1);
+      expect(Math.abs(left.x - logo.x), at).toBeLessThanOrEqual(1);
+      expect(Math.abs(right.x + right.width - (help.x + help.width)), at).toBeLessThanOrEqual(1);
+    }
+  }
+});
+
 test('on a phone the plans’ comparison scrolls sideways, its first column staying in place', async ({ page }) => {
   await page.goto('/en/pricing/');
   const table = page.locator('.cmp');
