@@ -22,7 +22,7 @@ const A = t(lang).auth;
     </div>
     <button class="btn btn-primary btn-lg full" type="submit">{A.login}</button>
   </form>
-  <p class="alt">{A.noAccount} <a id="to-signup" href={link(lang, 'signup/')}>{A.toSignup}</a></p>
+  <p class="alt" slot="after">{A.noAccount} <a id="to-signup" href={link(lang, 'signup/')}>{A.toSignup}</a></p>
 </AuthPage>
 <script>
   import { api } from '../../lib/api';

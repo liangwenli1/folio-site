@@ -1,9 +1,10 @@
 ---
-// The sign-in pages (log in, sign up, verify the email, reset the password), as G1 draws them (PLAN 6.23 1.1): the
-// simple header; on the left the form (the slot), ending with the privacy policy, the terms and the language switch,
-// since these pages have no footer; on the right the brand panel, as on the workbench's sign-in: three browser profiles
-// as the workbench lists them, still, on its gradient. The panel only decorates, so screen readers skip it; below 1100
-// wide there is only the form.
+// The sign-in pages (log in, sign up, verify the email, reset the password), as G1 draws them (PLAN 6.23 1.1), with the
+// sides swapped (the user, 10-28): the simple header; on the left the brand panel, as on the workbench's sign-in: three
+// browser profiles as the workbench lists them, still, on its gradient; on the right the form. Its own part (the slot,
+// from the title to the button) sits level with the middle of the panel, and what follows it hangs below: the way to
+// the other page (the "after" slot), then the privacy policy, the terms and the language switch, since these pages have
+// no footer. The panel only decorates, so screen readers skip it; below 1100 wide there is only the form.
 import Base from './Base.astro';
 import Icon from '../components/Icon.astro';
 import LangSwitch from '../components/LangSwitch.astro';
@@ -24,16 +25,6 @@ const profiles = d.auth.profiles.map(([name, city, state], i) => ({ name, city, 
 ---
 <Base lang={lang} path={path} title={title} noindex simple>
   <section class="auth">
-    <div class="auth-main">
-      <div class="auth-form">
-        <slot />
-        <nav class="auth-foot" aria-label={d.footer.legal}>
-          <a href={link(lang, 'privacy/')}>{d.footer.privacy}</a>
-          <a href={link(lang, 'terms/')}>{d.footer.terms}</a>
-          <LangSwitch lang={lang} path={path} />
-        </nav>
-      </div>
-    </div>
     <div class="auth-brand" aria-hidden="true">
       {profiles.map(p => (
         <div class="auth-pc">
@@ -42,6 +33,19 @@ const profiles = d.auth.profiles.map(([name, city, state], i) => ({ name, city, 
           <span class={`auth-st ${p.tone}`}>{p.icon ? <Icon name={p.icon} /> : <i></i>}{p.state}{p.count && <span class="mono">{p.count}</span>}</span>
         </div>
       ))}
+    </div>
+    <div class="auth-main">
+      <div class="auth-form">
+        <div class="auth-core"><slot /></div>
+        <div class="auth-tail">
+          <slot name="after" />
+          <nav class="auth-foot" aria-label={d.footer.legal}>
+            <a href={link(lang, 'privacy/')}>{d.footer.privacy}</a>
+            <a href={link(lang, 'terms/')}>{d.footer.terms}</a>
+            <LangSwitch lang={lang} path={path} />
+          </nav>
+        </div>
+      </div>
     </div>
   </section>
 </Base>

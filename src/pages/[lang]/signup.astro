@@ -35,7 +35,7 @@ const A = t(lang).auth;
     <label class="check"><input type="checkbox" id="consent" required /><span>{A.consent[0]} <a href={link(lang, 'terms/')} target="_blank">{A.consent[1]}</a> {A.consent[2]} <a href={link(lang, 'privacy/')} target="_blank">{A.consent[3]}</a></span></label>
     <button class="btn btn-primary btn-lg full" type="submit">{A.signup}</button>
   </form>
-  <p class="alt" id="have">{A.haveAccount} <a id="to-login" href={link(lang, 'login/')}>{A.login}</a></p>
+  <p class="alt" id="have" slot="after">{A.haveAccount} <a id="to-login" href={link(lang, 'login/')}>{A.login}</a></p>
   <div class="auth-done" id="done" hidden>
     <h1 tabindex="-1">{A.done.title}</h1>
     <span class="auth-ok"><Icon name="check" size={32} /></span>

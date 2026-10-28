@@ -68,24 +68,27 @@ test('the header is 76px tall, on a phone and on a desktop', async ({ page }) =>
   expect((await page.locator('header.top').boundingBox())!.height).toBe(76);
 });
 
-test('on a desktop the sign-in pages have the form under the logo and the brand panel on the right half; below 1100 only the form', async ({ page }) => {
+test('on a desktop the sign-in pages have the brand panel on the left half and the form on the right, its own part level with the panel; below 1100 only the form', async ({ page }) => {
   for (const width of [1440, 1920]){
     await page.setViewportSize({ width, height: 900 });
     for (const path of ['en/login/', 'zh/login/', 'en/signup/', 'zh/signup/', 'en/forgot/']){
       await page.goto(`/${path}`);
       const right = await page.evaluate(() => document.documentElement.clientWidth), mid = right / 2;
-      const [form, logo, auth, panel] = await Promise.all(['.auth-form', 'header .brand', '.auth', '.auth-brand'].map(async s => (await page.locator(s).boundingBox())!));
+      const [form, core, help, auth, panel] = await Promise.all(['.auth-form', '.auth-core', 'header .top-links .btn', '.auth', '.auth-brand'].map(async s => (await page.locator(s).boundingBox())!));
       const at = `/${path} at ${width}`;
-      // The form in the left half, starting where the logo does.
-      expect(form.x + form.width, at).toBeLessThanOrEqual(mid);
-      expect(Math.abs(form.x - logo.x), at).toBeLessThanOrEqual(1);
-      // The panel from the middle to 16 short of the right edge, and 16 in from the header and the bottom, however
-      // long the form.
-      expect(Math.abs(panel.x - mid), at).toBeLessThanOrEqual(1);
-      expect(Math.abs(right - (panel.x + panel.width) - 16), at).toBeLessThanOrEqual(1);
+      // The panel from 16 in from the left edge to the middle, and 16 in from the header and the bottom, however long
+      // the form.
+      expect(Math.abs(panel.x - 16), at).toBeLessThanOrEqual(1);
+      expect(Math.abs(panel.x + panel.width - mid), at).toBeLessThanOrEqual(1);
       expect(Math.abs(panel.y - auth.y - 16), at).toBeLessThanOrEqual(1);
       expect(Math.abs(auth.y + auth.height - (panel.y + panel.height) - 16), at).toBeLessThanOrEqual(1);
-      // Three profiles on it, and nothing to read besides.
+      // The form in the right half, ending where the help center button does.
+      expect(form.x, at).toBeGreaterThanOrEqual(mid);
+      expect(Math.abs(form.x + form.width - (help.x + help.width)), at).toBeLessThanOrEqual(1);
+      // Where the form fits, its own part (the title to the button) is level with the middle of the panel; the rest
+      // hangs below it.
+      if (!path.includes('signup')) expect(Math.abs(core.y + core.height / 2 - (panel.y + panel.height / 2)), at).toBeLessThanOrEqual(1);
+      // Three profiles on the panel, and nothing to read besides.
       await expect(page.locator('.auth-brand .auth-pc'), at).toHaveCount(3);
       await expect(page.locator('.auth-brand :is(h1,h2,h3,h4,h5,h6,p)'), at).toHaveCount(0);
     }
