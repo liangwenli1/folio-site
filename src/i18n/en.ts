@@ -406,6 +406,20 @@ export const en = {
         ],
         note: 'Importing needs the Import cookies permission; seeing or exporting values needs Export cookies, and every read is recorded in the activity log.'
       },
+      'window-sync': {
+        cat: 'profiles', title: 'Window sync', summary: 'Work in a leader window while the other windows follow.',
+        lead: 'Window sync repeats what you do in a leader window in other browser profiles’ windows as you work: do something once and it is done in every profile, such as opening the same page or filling in the same form for several shops.',
+        sections: [
+          { title: 'Which plans have it', body: ['Window sync comes with the Studio and Company plans, and with the free Studio trial. On Free, the Window sync page describes it, and owners and admins can upgrade from there.'] },
+          { title: 'Start a sync', body: ['On the Window sync page, tick at least two browser profiles, make one of them the leader and choose Sync N windows; profiles that aren’t open yet open first.', 'Or tick several profiles on the Profiles page and choose Sync windows under More in the bulk actions; the one highest in the list leads.'] },
+          { title: 'What is repeated', body: ['Clicks, typing (including text from an input method), keys (Enter, the arrow keys and other single keys, and shortcuts), scrolling, opening an address, going back or forward, and opening or closing tabs in the leader window are repeated in the other windows. Tabs are matched by position: when you work in another tab, the other windows switch to the matching tab.', 'A click goes to the same element in the other windows; where that element can’t be found, it goes to the same place in the window, and that window is flagged. Clicks, typing and scrolling can each be turned off under Repeat.', 'Before repeating each action, the other windows wait a random pause: 0.1 to 0.5 seconds by default, adjustable from 0 to 5 seconds.'] },
+          { title: 'While syncing', body: ['The Window sync page shows a live picture of each window, the leader outlined in green and a window with a problem in red, saying what. Choose Make leader to change the leader, or enter an address above the windows and choose Open to open it in every window.', 'Choose Stop sync to end it. A profile that stops leaves the sync; when the leader stops, or only the leader is left, the sync ends.'] },
+          { title: 'Tile the windows', body: ['Tile windows lays the synced windows out in a grid filling the screen, the leader top left.', 'On macOS, moving Firefox windows needs Folio allowed under System Settings › Privacy & Security › Accessibility, and under Automation when macOS asks.'] },
+          { title: 'The sync log', body: ['Recent sync lists the last 50 actions in the leader window, newest first, each with how many windows repeated it and which ones couldn’t. Typing or scrolling in quick succession counts as one action; changing the leader or starting a new sync starts a new log.'] },
+          { title: 'Questions', body: ['Why didn’t a window click the same button? Where its page is laid out differently, the same element may not be found; the click then goes to the same place in the window and the window is marked Couldn’t find, so check it. Positions scale with the window, so windows of different sizes sync too.', 'Can profiles on different engines sync together? Yes: the leader and the other windows can use different engines.', 'Can websites tell? The script that records the leader window runs where the page’s own scripts can’t reach it, and the other windows click and type with the browser’s trusted events.'] }
+        ],
+        note: 'Window sync works with browser profiles running on this computer; a profile in use on another computer can’t open here, so it doesn’t join.'
+      },
       proxies: {
         cat: 'proxies', title: 'Set up and check proxies', summary: 'Add proxies or import a list, check them and assign them to browser profiles.',
         lead: 'Add proxies on the Proxies page, check that they respond, and assign them to browser profiles.',
