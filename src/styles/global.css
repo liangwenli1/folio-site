@@ -15,6 +15,8 @@
   --warn:#F79009; --warn-ink:#B54708; --warn-soft:#FFFAEB;
   --bad:#F04438; --bad-ink:#B42318; --bad-soft:#FEF3F2;
   --info:#2E90FA; --info-ink:#175CD3; --info-soft:#EFF8FF;
+  /* A stopped profile (the user, 10-28): orange, apart from the grey of things not started or not checked. */
+  --stop:#EF6820; --stop-ink:#B93815; --stop-soft:#FEF6EE;
   --overlay:rgba(16,24,40,.38);
   /* Delivery spec: cards have only their border; what floats over the page (popovers, dialogs, the menu drawer) has
      this one shadow. */
@@ -41,6 +43,7 @@
     --warn:#FDB022; --warn-ink:#FEC84B; --warn-soft:rgba(253,176,34,.14);
     --bad:#F97066; --bad-ink:#FDA29B; --bad-soft:rgba(249,112,102,.14);
     --info:#53B1FD; --info-ink:#84CAFF; --info-soft:rgba(83,177,253,.14);
+    --stop:#F38744; --stop-ink:#F7B27A; --stop-soft:rgba(239,104,32,.16);
     --overlay:rgba(0,0,0,.55);
     --shadow-pop:0 12px 32px rgba(0,0,0,.5);
     --code-bg:#0B0F18; --code-ink:#E4E7EC;
@@ -227,28 +230,19 @@ table.list td{height:56px;border-bottom:1px solid var(--line);padding:6px 12px 6
 table.list tr:last-child td{border-bottom:0}
 .confirm{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line);font-size:14px}
 
-/* sign-in pages (v2): the simple header (back to the website, the help center); under it the window in two halves, from
-   the header to the bottom of the window: the product on the soft accent on the left (what Folio is, in two lines, and
-   a picture of the workbench), the form on the right, which ends with the privacy policy, the terms and the language
-   (these pages have no footer). The two mirror each other about the middle of the window: the same width (480, less on
-   narrower screens), the left one starting under the logo and the right one ending under the help center, their tops
-   level. On a phone the form comes first and the panel follows. */
+/* sign-in pages (G1): the simple header (back to the website, the help center); under it the window in two halves, from
+   the header to the bottom of the window, or of the form where that is longer. On the left the form on the page,
+   starting under the logo and ending with the privacy policy, the terms and the language (these pages have no footer);
+   on the right the brand panel, as on the workbench's sign-in: a card 16 in from the header and the window's edges.
+   Below 1100 wide only the form. */
 .top-links{display:flex;align-items:center;gap:28px;margin-left:auto}
 /* on a phone the brand is the way back to the website */
 @media (max-width:560px){.top-links .h-link{display:none}}
 .auth{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));min-height:calc(100svh - var(--hd))}
-/* Each half's outer padding is the header's margin (.wrap: the content 1248 wide in the middle, at least 32 beside it),
+/* The form's outer padding is the header's margin (.wrap: the content 1248 wide in the middle, at least 32 beside it),
    so a half 624 wide or less keeps 32; the inner one is at least 48. */
-.auth-panel,.auth-main{display:flex;align-items:flex-start;padding-block:104px 72px}
-.auth-panel{padding-inline:max(32px,100% - 624px) 48px;background:var(--accent-soft)}
-.auth-main{justify-content:flex-end;padding-inline:48px max(32px,100% - 624px)}
-.auth-panel-in,.auth-form{width:min(480px,100%)}
-.auth-title{font-size:clamp(2rem,3.4vw,3rem);line-height:1.333}
-/* The two titles differ in size; trimmed to their capitals, they start on the same line. */
-.auth-title,.auth-form .page-head h1{text-box:trim-start cap alphabetic}
-.auth-lead{margin-top:32px;font-size:18px;line-height:30px;color:var(--ink-3)}
-.auth-vis{margin-top:70px}
-.auth-form{display:grid;gap:24px}
+.auth-main{display:flex;align-items:flex-start;padding-block:104px 72px;padding-inline:max(32px,100% - 624px) 48px}
+.auth-form{display:grid;gap:24px;width:min(480px,100%)}
 .auth-form .page-head{margin-bottom:0}
 .auth-form .page-head h1{font-size:32px;line-height:44px}
 .auth-form .page-head p{margin-top:22px;font-size:14px;line-height:22px;color:var(--ink-3)}
@@ -263,6 +257,30 @@ table.list tr:last-child td{border-bottom:0}
 .auth-foot{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;justify-items:center;gap:8px;margin-top:8px;font-size:16px}
 .auth-foot a:not(.lang-switch){color:var(--action);text-decoration:none}
 .auth-foot a:not(.lang-switch):hover{text-decoration:underline;text-underline-offset:3px}
+/* The brand panel: the workbench's gradient, and on it three profiles as its list shows them, each turned a little
+   (which also sets it over the gradient): a white card (in the dark, the card colour) with the flag of where it exits,
+   its engine's logo in the flag's corner, its name over its city and engine, and its state in the state's colours.
+   The cards keep the workbench's line height, so they are the same size there and here. */
+.auth-brand{position:relative;display:grid;align-content:center;justify-items:center;gap:22px;margin:16px 16px 16px 0;padding:24px;border-radius:16px;overflow:hidden;background:#2A1520}
+.auth-brand::before{content:'';position:absolute;inset:-40px;background:radial-gradient(60% 50% at 20% 20%,#F0806A,transparent 70%),radial-gradient(60% 60% at 80% 30%,#D2445E,transparent 70%),radial-gradient(70% 60% at 50% 100%,#7C2348,transparent 70%)}
+.auth-pc{display:flex;align-items:center;gap:12px;width:min(430px,88%);padding:14px 16px;border-radius:var(--r-lg);background:var(--card);box-shadow:0 24px 40px -18px rgba(0,0,0,.55);line-height:1.5}
+.auth-pc:nth-child(1){transform:translateX(-36px) rotate(-3deg)}
+.auth-pc:nth-child(2){transform:translateX(44px) rotate(2deg)}
+.auth-pc:nth-child(3){transform:translateX(-12px) rotate(-1.5deg)}
+.auth-pc > span:nth-child(2){display:grid;flex:1;min-width:0}
+.auth-pc b{font-size:14px;font-weight:600}
+.auth-pc small{font-size:12px;color:var(--ink-2)}
+.auth-flag{position:relative;display:grid;flex:none;width:30px;height:30px;border-radius:50%;box-shadow:0 0 0 1px var(--line)}
+.auth-flag > img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+.auth-flag > span{position:absolute;right:-4px;bottom:-4px;display:grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--card);box-shadow:0 0 0 1px var(--line)}
+.auth-st{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 12px;border-radius:99px;font-size:12px;font-weight:500;line-height:1;white-space:nowrap}
+.auth-st > .i{margin-left:-2px}
+/* restoring the sign-ins: the workbench's spinner, standing still, open at the top right (open at the side, it reads as
+   a C) */
+.auth-st > i{width:12px;height:12px;border:2px solid;border-right-color:transparent;border-radius:50%;rotate:-45deg}
+.auth-st.good{background:var(--good-soft);color:var(--good-ink)}
+.auth-st.info{background:var(--info-soft);color:var(--info-ink)}
+.auth-st.stop{background:var(--stop-soft);color:var(--stop-ink)}
 .check{display:inline-flex;align-items:flex-start;gap:8px;font-size:14px;line-height:1.6;color:var(--ink-2);cursor:pointer}
 .check input{margin:3px 0 0}
 /* Check boxes as v2 draws them: a 16px square with 4px corners, filled with the action colour and a white tick. */
@@ -271,13 +289,11 @@ input[type="checkbox"]::before{content:'';width:10px;height:10px;background:var(
 input[type="checkbox"]:checked{background:var(--action);border-color:var(--action)}
 input[type="checkbox"]:checked::before{transform:scale(1)}
 input[type="checkbox"]:hover:not(:checked){border-color:var(--ink-3)}
-@media (max-width:960px){
+/* Narrower than the workbench shows its panel (1100), only the form, in the middle. */
+@media (max-width:1100px){
   .auth{grid-template-columns:minmax(0,1fr)}
-  .auth-panel,.auth-main{justify-content:center;padding-inline:20px}
-  .auth-main{order:1;padding-block:40px 48px}
-  .auth-panel{order:2;padding-block:40px 56px}
-  .auth-lead{margin-top:16px}
-  .auth-vis{margin-top:28px}
+  .auth-main{justify-content:center;padding:40px 20px 48px}
+  .auth-brand{display:none}
 }
 
 /* Phones: buttons and toggles are comfortable touch targets (44px). The password's eye stays drawn at 32 inside its

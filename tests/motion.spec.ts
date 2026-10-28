@@ -1,11 +1,11 @@
-// Nothing on the site moves on its own: the home page and the sign-in pages show a still picture of the workbench
-// (PLAN 6.21, 1.1). With reduced motion not even hover transitions run.
+// Nothing on the site moves on its own: the home page shows a still picture of the workbench (PLAN 6.21, 1.1), and the
+// sign-in pages their profiles, standing still (PLAN 6.23, 1.1). With reduced motion not even hover transitions run.
 import { expect, test } from '@playwright/test';
 
-for (const path of ['', 'login/', 'signup/', 'forgot/']){
+for (const [path, still] of [['', '.shot img'], ['login/', '.auth-pc'], ['signup/', '.auth-pc'], ['forgot/', '.auth-pc']]){
   test(`nothing moves on /${path}`, async ({ page }) => {
     await page.goto(`/en/${path}`);
-    await expect(page.locator('.shot img').first()).toBeVisible();
+    await expect(page.locator(still).first()).toBeVisible();
     await page.mouse.wheel(0, 1600);
     await page.waitForTimeout(500);
     expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);

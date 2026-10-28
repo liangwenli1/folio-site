@@ -201,10 +201,7 @@ export const zh: typeof en = {
   footer: { product: '产品', resources: '资源', legal: '法律', api: 'API 参考', changelog: '更新日志', contact: '联系我们', privacy: '隐私政策', terms: '服务条款', tagline: '独立环境，统一管理', rights: '© 2026 Folio' },
 
   auth: {
-    panel: {
-      title: '独立环境，\n统一管理', lead: '为不同业务创建独立的浏览器环境，在一个工作空间中集中管理，账号、数据与操作清晰隔离。',
-      shot: 'Folio 工作台的浏览器环境列表'
-    },
+    profiles: [['US-Store-01', '西雅图', '运行中'], ['UK-Shop-01', '伦敦', '恢复登录…'], ['JP-Social-01', '东京', '已停止']] as [string, string, string][],
     loginTitle: '登录 Folio', loginLead: '使用您的账号登录，继续管理浏览器环境。',
     signupTitle: '创建 Folio 账号', signupLead: '免费体验 5 个浏览器环境，无需绑定银行卡。',
     email: '邮箱', emailPh: 'name@example.com', password: '密码', setPassword: '设置密码', passwordPh: '请输入密码', passwordHint: '8 至 64 位，建议包含字母、数字和符号',

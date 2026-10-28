@@ -199,10 +199,7 @@ export const en = {
   footer: { product: 'Product', resources: 'Resources', legal: 'Legal', api: 'API reference', changelog: 'Changelog', contact: 'Contact us', privacy: 'Privacy', terms: 'Terms', tagline: 'Separate profiles, managed as one', rights: '© 2026 Folio' },
 
   auth: {
-    panel: {
-      title: 'Separate profiles,\nmanaged as one', lead: 'A separate browser profile for each business, all managed in one workspace, with accounts, data and actions kept apart.',
-      shot: 'The list of browser profiles in the Folio workbench'
-    },
+    profiles: [['US-Store-01', 'Seattle', 'Running'], ['UK-Shop-01', 'London', 'Restoring sign-ins…'], ['JP-Social-01', 'Tokyo', 'Not running']] as [string, string, string][],
     loginTitle: 'Log in to Folio', loginLead: 'Log in with your account to get back to your browser profiles.',
     signupTitle: 'Create a Folio account', signupLead: 'Try 5 browser profiles free. No card required.',
     email: 'Email', emailPh: 'name@example.com', password: 'Password', setPassword: 'Choose a password', passwordPh: 'Your password', passwordHint: '8 to 64 characters; a mix of letters, numbers and symbols is recommended',

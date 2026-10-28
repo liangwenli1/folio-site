@@ -1,26 +1,29 @@
 ---
-// The sign-in pages (log in, sign up, verify the email, reset the password), as v2 draws them: the simple header; on the
-// left what Folio is and a picture of the real workbench, on the soft accent; on the right the form (the slot), ending
-// with the privacy policy, the terms and the language switch, since these pages have no footer. On a phone the form
-// comes first.
+// The sign-in pages (log in, sign up, verify the email, reset the password), as G1 draws them (PLAN 6.23 1.1): the
+// simple header; on the left the form (the slot), ending with the privacy policy, the terms and the language switch,
+// since these pages have no footer; on the right the brand panel, as on the workbench's sign-in: three browser profiles
+// as the workbench lists them, still, on its gradient. The panel only decorates, so screen readers skip it; below 1100
+// wide there is only the form.
 import Base from './Base.astro';
-import Shot from '../components/Shot.astro';
+import Icon from '../components/Icon.astro';
 import LangSwitch from '../components/LangSwitch.astro';
 import { link, t, type Lang } from '../lib/i18n';
 
 interface Props { lang: Lang; path: string; title: string }
 const { lang, path, title } = Astro.props;
-const d = t(lang), P = d.auth.panel;
+const d = t(lang);
+// Each profile's flag (where it exits), engine and state; the second is restoring its sign-ins, so it has the
+// workbench's spinner, standing still. Their names, cities and states are in auth.profiles. The engine logos
+// (public/logos, from svgl as in the workbench) are their owners' trademarks, there only to say which engine it is.
+const LOOKS = [
+  { flag: 'us', engine: 'chromium', version: 'Chromium 150', tone: 'good', icon: 'play', count: '1:42:10' },
+  { flag: 'gb', engine: 'firefox', version: 'Firefox 156', tone: 'info', icon: null, count: '3 / 4' },
+  { flag: 'jp', engine: 'chromium', version: 'Chromium 150', tone: 'stop', icon: 'pause', count: null }
+] as const;
+const profiles = d.auth.profiles.map(([name, city, state], i) => ({ name, city, state, ...LOOKS[i] }));
 ---
 <Base lang={lang} path={path} title={title} noindex simple>
   <section class="auth">
-    <div class="auth-panel">
-      <div class="auth-panel-in">
-        <p class="auth-title display">{P.title.split('\n').map((line, i) => <>{i > 0 && <> <br /></>}{line}</>)}</p>
-        <p class="auth-lead">{P.lead}</p>
-        <div class="auth-vis"><Shot lang={lang} name="list" alt={P.shot} zoom={1.2} origin="100% 0" eager /></div>
-      </div>
-    </div>
     <div class="auth-main">
       <div class="auth-form">
         <slot />
@@ -30,6 +33,15 @@ const d = t(lang), P = d.auth.panel;
           <LangSwitch lang={lang} path={path} />
         </nav>
       </div>
+    </div>
+    <div class="auth-brand" aria-hidden="true">
+      {profiles.map(p => (
+        <div class="auth-pc">
+          <span class="auth-flag"><img src={`/flags/${p.flag}.svg`} alt="" width="30" height="30" /><span><img src={`/logos/${p.engine}.svg`} alt="" width="12" height="12" /></span></span>
+          <span><b>{p.name}</b><small>{p.city} · {p.version}</small></span>
+          <span class={`auth-st ${p.tone}`}>{p.icon ? <Icon name={p.icon} /> : <i></i>}{p.state}{p.count && <span class="mono">{p.count}</span>}</span>
+        </div>
+      ))}
     </div>
   </section>
 </Base>
