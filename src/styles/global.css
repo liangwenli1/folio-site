@@ -230,27 +230,24 @@ table.list td{height:56px;border-bottom:1px solid var(--line);padding:6px 12px 6
 table.list tr:last-child td{border-bottom:0}
 .confirm{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line);font-size:14px}
 
-/* sign-in pages (G1, the sides swapped 10-28): the simple header (back to the website, the help center); under it the
-   window in two halves, from the header to the bottom of the window, or of the form where that is longer. On the left
-   the brand panel, as on the workbench's sign-in: a card 16 in from the header and the window's edges. On the right the
-   form, ending under the help center: its own part, from the title to the button, level with the middle of the panel
-   (the user, 10-28), and below it the way to the other page, the privacy policy, the terms and the language (these
-   pages have no footer). Below 1100 wide only the form. */
-.top-links{display:flex;align-items:center;gap:28px;margin-left:auto}
-/* on a phone the brand is the way back to the website */
-@media (max-width:560px){.top-links .h-link{display:none}}
-.auth{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));min-height:calc(100svh - var(--hd))}
-/* The form's outer padding is the header's margin (.wrap: the content 1248 wide in the middle, at least 32 beside it),
-   so a half 624 wide or less keeps 32; the inner one is at least 48. Its height is the panel's, and the space above its
-   own part matches the space below, where the rest hangs. */
-.auth-main{display:flex;justify-content:flex-end;padding-block:16px;padding-inline:48px max(32px,100% - 624px)}
+/* sign-in pages (G1, the sides swapped 10-28, no header 6.27): the window in two halves, from its top to its bottom, or
+   to the bottom of the form where that is longer. On the left the brand panel, as on the workbench's sign-in: a card 16
+   in from the window's edges. On the right the form, in the middle of its half: its own part, from the title (the mark
+   beside it, both centred) to the button, level with the middle of the panel (the user, 10-28), and below it the way
+   to the other page and one row of links alike (these pages have neither header nor footer). Below 1100 wide only the
+   form. */
+.auth{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));min-height:100svh}
+/* The form is as tall as the panel, and the space above its own part matches the space below, where the rest hangs. */
+.auth-main{display:flex;justify-content:center;padding:16px 48px}
 .auth-form{display:flex;flex-direction:column;width:min(480px,100%)}
 .auth-form::before{content:'';flex:1 1 0;padding-top:24px}
 .auth-core,.auth-tail{display:grid;gap:24px}
 .auth-tail{flex:1 1 0;align-content:start;padding-top:24px}
-.auth-form .page-head{margin-bottom:0}
-.auth-form .page-head h1{font-size:32px;line-height:44px}
-.auth-form .page-head p{margin-top:22px;font-size:14px;line-height:22px;color:var(--ink-3)}
+.auth-head{text-align:center}
+.auth-head h1{display:flex;align-items:center;justify-content:center;gap:12px;font-size:32px;line-height:44px}
+.auth-head .seal{width:40px;height:40px}
+.auth-head p{margin-top:22px;font-size:14px;line-height:22px;color:var(--ink-3)}
+.auth-head p:empty{display:none}
 .auth-form .form{gap:24px}
 .auth-form a:not(.btn){color:var(--action);text-decoration:none}
 .auth-form a:not(.btn):hover{text-decoration:underline;text-underline-offset:3px}
@@ -258,10 +255,12 @@ table.list tr:last-child td{border-bottom:0}
 .auth-form .linkish{color:var(--action);text-decoration:none}
 .auth-form .linkish:hover{text-decoration:underline;text-underline-offset:3px}
 .auth-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 16px;font-size:14px}
-/* the privacy policy, the terms and the language, in equal thirds under the form */
-.auth-foot{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;justify-items:center;gap:8px;margin-top:8px;font-size:16px}
-.auth-foot a:not(.lang-switch){color:var(--action);text-decoration:none}
-.auth-foot a:not(.lang-switch):hover{text-decoration:underline;text-underline-offset:3px}
+/* back to the website, the help center, the privacy policy, the terms and the language: one row of grey links alike
+   (the user, 10-29); the language without the pill it has in the footer */
+.auth-foot{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px 28px;margin-top:8px;font-size:14px}
+.auth-form .auth-foot a{color:var(--ink-3)}
+.auth-form .auth-foot a:hover{color:var(--ink)}
+.auth-form .auth-foot .lang-switch{min-height:0;padding:0;border:0;background:none}
 /* The brand panel: the workbench's gradient, and on it three profiles as its list shows them, each turned a little
    (which also sets it over the gradient): a white card (in the dark, the card colour) with the flag of where it exits,
    its engine's logo in the flag's corner, its name over its city and engine, and its state in the state's colours.

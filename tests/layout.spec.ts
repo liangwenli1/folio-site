@@ -64,30 +64,44 @@ test('the header is 76px tall, on a phone and on a desktop', async ({ page }) =>
   expect((await page.locator('header.top').boundingBox())!.height).toBe(76);
   await page.setViewportSize({ width: 1440, height: 900 });
   expect((await page.locator('header.top').boundingBox())!.height).toBe(76);
-  await page.goto('/en/login/');
-  expect((await page.locator('header.top').boundingBox())!.height).toBe(76);
 });
 
-test('on a desktop the sign-in pages have the brand panel on the left half and the form on the right, its own part level with the panel; below 1100 only the form', async ({ page }) => {
+test('on a desktop the sign-in pages have no header: the brand panel on the left half from top to bottom, the form in the middle of the right, its own part level with the panel; below 1100 only the form', async ({ page }) => {
   for (const width of [1440, 1920]){
     await page.setViewportSize({ width, height: 900 });
     for (const path of ['en/login/', 'zh/login/', 'en/signup/', 'zh/signup/', 'en/forgot/']){
       await page.goto(`/${path}`);
-      const right = await page.evaluate(() => document.documentElement.clientWidth), mid = right / 2;
-      const [form, core, help, auth, panel] = await Promise.all(['.auth-form', '.auth-core', 'header .top-links .btn', '.auth', '.auth-brand'].map(async s => (await page.locator(s).boundingBox())!));
       const at = `/${path} at ${width}`;
-      // The panel from 16 in from the left edge to the middle, and 16 in from the header and the bottom, however long
-      // the form.
+      await expect(page.locator('header'), at).toHaveCount(0);
+      const right = await page.evaluate(() => document.documentElement.clientWidth), mid = right / 2;
+      const [form, core, auth, panel] = await Promise.all(['.auth-form', '.auth-core', '.auth', '.auth-brand'].map(async s => (await page.locator(s).boundingBox())!));
+      // The panel 16 in from the left edge, the top and the bottom, however long the form, to the middle.
       expect(Math.abs(panel.x - 16), at).toBeLessThanOrEqual(1);
+      expect(Math.abs(panel.y - 16), at).toBeLessThanOrEqual(1);
       expect(Math.abs(panel.x + panel.width - mid), at).toBeLessThanOrEqual(1);
-      expect(Math.abs(panel.y - auth.y - 16), at).toBeLessThanOrEqual(1);
       expect(Math.abs(auth.y + auth.height - (panel.y + panel.height) - 16), at).toBeLessThanOrEqual(1);
-      // The form in the right half, ending where the help center button does.
-      expect(form.x, at).toBeGreaterThanOrEqual(mid);
-      expect(Math.abs(form.x + form.width - (help.x + help.width)), at).toBeLessThanOrEqual(1);
+      // The form in the middle of the right half.
+      expect(Math.abs(form.x + form.width / 2 - (mid + right) / 2), at).toBeLessThanOrEqual(1);
       // Where the form fits, its own part (the title to the button) is level with the middle of the panel; the rest
       // hangs below it.
       if (!path.includes('signup')) expect(Math.abs(core.y + core.height / 2 - (panel.y + panel.height / 2)), at).toBeLessThanOrEqual(1);
+      // The mark left of the title, the two in the middle of the form.
+      const [mark, title] = await page.evaluate(() => {
+        const h1 = document.querySelector('.auth-head h1')!, r = document.createRange();
+        r.selectNodeContents(h1);
+        const box = (b: DOMRect) => ({ x: b.x, right: b.right });
+        return [box(h1.querySelector('.seal')!.getBoundingClientRect()), box(r.getBoundingClientRect())];
+      });
+      expect(Math.abs(mark.x - title.x), at).toBeLessThanOrEqual(1);
+      expect(Math.abs((title.x + title.right) / 2 - (form.x + form.width / 2)), at).toBeLessThanOrEqual(1);
+      // Under the form one row of links alike: back to the website, the help center, privacy, terms, the language.
+      const links = page.locator('.auth-foot a');
+      await expect(links, at).toHaveCount(5);
+      const lang = path.slice(0, 2);
+      expect(await links.evaluateAll(as => as.map(a => new URL((a as HTMLAnchorElement).href).pathname)), at)
+        .toEqual([`/${lang}/`, `/${lang}/help/`, `/${lang}/privacy/`, `/${lang}/terms/`, `/${lang === 'en' ? 'zh' : 'en'}/${path.slice(3)}`]);
+      const looks = await links.evaluateAll(as => as.map(a => { const s = getComputedStyle(a); return [Math.round(a.getBoundingClientRect().y), s.color, s.borderTopWidth].join(' '); }));
+      expect(new Set(looks).size, at).toBe(1);
       // Three profiles on the panel, and nothing to read besides.
       await expect(page.locator('.auth-brand .auth-pc'), at).toHaveCount(3);
       await expect(page.locator('.auth-brand :is(h1,h2,h3,h4,h5,h6,p)'), at).toHaveCount(0);
@@ -97,6 +111,7 @@ test('on a desktop the sign-in pages have the brand panel on the left half and t
     await page.setViewportSize({ width, height });
     for (const path of ['en/login/', 'zh/signup/']){
       await page.goto(`/${path}`);
+      await expect(page.locator('.auth-head .seal'), `${path} at ${width}`).toBeVisible();
       await expect(page.locator('.auth-form'), `${path} at ${width}`).toBeVisible();
       await expect(page.locator('.auth-brand'), `${path} at ${width}`).toBeHidden();
       expect(await sideways(page), `${path} at ${width}`).toBe(0);

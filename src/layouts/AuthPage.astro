@@ -1,17 +1,20 @@
 ---
 // The sign-in pages (log in, sign up, verify the email, reset the password), as G1 draws them (PLAN 6.23 1.1), with the
-// sides swapped (the user, 10-28): the simple header; on the left the brand panel, as on the workbench's sign-in: three
-// browser profiles as the workbench lists them, still, on its gradient; on the right the form. Its own part (the slot,
-// from the title to the button) sits level with the middle of the panel, and what follows it hangs below: the way to
-// the other page (the "after" slot), then the privacy policy, the terms and the language switch, since these pages have
-// no footer. The panel only decorates, so screen readers skip it; below 1100 wide there is only the form.
+// sides swapped (10-28) and no header (6.27): on the left the brand panel from the top of the window to the bottom, as
+// on the workbench's sign-in: three browser profiles as the workbench lists them, still, on its gradient; on the right
+// the form. Its own part (the mark beside the centred title, the lead, then the slot down to the button) sits level with
+// the middle of the panel, and what follows it hangs below: the way to the other page (the "after" slot), then one row
+// of links alike: back to the website, the help center, the privacy policy, the terms and the language. The panel only
+// decorates, so screen readers skip it; below 1100 wide there is only the form. A page can hide the title (#head) or
+// fill the lead (#lead) itself.
 import Base from './Base.astro';
 import Icon from '../components/Icon.astro';
+import Mark from '../components/Mark.astro';
 import LangSwitch from '../components/LangSwitch.astro';
 import { link, t, type Lang } from '../lib/i18n';
 
-interface Props { lang: Lang; path: string; title: string }
-const { lang, path, title } = Astro.props;
+interface Props { lang: Lang; path: string; title: string; lead?: string }
+const { lang, path, title, lead } = Astro.props;
 const d = t(lang);
 // Each profile's flag (where it exits), engine and state; the second is restoring its sign-ins, so it has the
 // workbench's spinner, standing still. Their names, cities and states are in auth.profiles. The engine logos
@@ -23,7 +26,7 @@ const LOOKS = [
 ] as const;
 const profiles = d.auth.profiles.map(([name, city, state], i) => ({ name, city, state, ...LOOKS[i] }));
 ---
-<Base lang={lang} path={path} title={title} noindex simple>
+<Base lang={lang} path={path} title={title} noindex bare>
   <section class="auth">
     <div class="auth-brand" aria-hidden="true">
       {profiles.map(p => (
@@ -36,10 +39,15 @@ const profiles = d.auth.profiles.map(([name, city, state], i) => ({ name, city, 
     </div>
     <div class="auth-main">
       <div class="auth-form">
-        <div class="auth-core"><slot /></div>
+        <div class="auth-core">
+          <div class="auth-head" id="head"><h1><Mark />{title}</h1><p id="lead">{lead}</p></div>
+          <slot />
+        </div>
         <div class="auth-tail">
           <slot name="after" />
-          <nav class="auth-foot" aria-label={d.footer.legal}>
+          <nav class="auth-foot" aria-label={d.auth.links}>
+            <a href={link(lang)}>{d.nav.site}</a>
+            <a href={link(lang, 'help/')}>{d.nav.help}</a>
             <a href={link(lang, 'privacy/')}>{d.footer.privacy}</a>
             <a href={link(lang, 'terms/')}>{d.footer.terms}</a>
             <LangSwitch lang={lang} path={path} />

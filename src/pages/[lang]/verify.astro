@@ -10,7 +10,6 @@ const lang = Astro.params.lang as Lang;
 const A = t(lang).auth;
 ---
 <AuthPage lang={lang} path="verify/" title={A.verifyTitle}>
-  <div class="page-head"><h1>{A.verifyTitle}</h1><p id="lead"></p></div>
   <form class="form" id="form" novalidate>
     <div class="notice dev" id="dev" hidden>{A.devNotice}</div>
     <div class="notice ok" id="ok" role="status" hidden></div>

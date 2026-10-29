@@ -7,10 +7,9 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { t, type Lang } from '../lib/i18n';
 
-// `simple`: the sign-in pages, with their own header (components/Header.astro) and no footer (layouts/AuthPage.astro
-// ends the form with the footer's links instead).
-interface Props { lang: Lang; path: string; title?: string; description?: string; noindex?: boolean; simple?: boolean }
-const { lang, path, title, description, noindex = false, simple = false } = Astro.props;
+// `bare`: the sign-in pages, with neither header nor footer (layouts/AuthPage.astro ends the form with their links).
+interface Props { lang: Lang; path: string; title?: string; description?: string; noindex?: boolean; bare?: boolean }
+const { lang, path, title, description, noindex = false, bare = false } = Astro.props;
 const d = t(lang);
 ---
 <!doctype html>
@@ -27,8 +26,8 @@ const d = t(lang);
   </head>
   <body>
     <a class="skip" href="#main">{d.nav.skip}</a>
-    <Header lang={lang} path={path} simple={simple} />
+    {!bare && <Header lang={lang} path={path} />}
     <main id="main"><slot /></main>
-    {!simple && <Footer lang={lang} path={path} />}
+    {!bare && <Footer lang={lang} path={path} />}
   </body>
 </html>

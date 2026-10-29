@@ -218,7 +218,7 @@ export const en = {
       noCode: 'No code? Check your spam folder, or', contact: 'contact us'
     },
     devNotice: 'Development build: emails go to the local test inbox at http://127.0.0.1:47125.',
-    logout: 'Log out',
+    logout: 'Log out', links: 'More links',
     showPassword: 'Show password'
   },
 

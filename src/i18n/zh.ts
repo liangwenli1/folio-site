@@ -220,7 +220,7 @@ export const zh: typeof en = {
       noCode: '未收到验证码？请检查垃圾邮件，或', contact: '联系我们'
     },
     devNotice: '开发版本：邮件发送至本机测试收件箱 http://127.0.0.1:47125。',
-    logout: '退出登录',
+    logout: '退出登录', links: '相关链接',
     showPassword: '显示密码'
   },
 

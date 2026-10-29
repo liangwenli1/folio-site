@@ -12,8 +12,7 @@ export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
 const A = t(lang).auth, R = A.reset;
 ---
-<AuthPage lang={lang} path="forgot/" title={R.title}>
-  <div class="page-head"><h1>{R.title}</h1><p>{R.lead}</p></div>
+<AuthPage lang={lang} path="forgot/" title={R.title} lead={R.lead}>
   <ol class="rs-steps">
     {R.steps.map((s, i) => <li aria-current={i === 0 ? 'step' : undefined}><span class="rs-n"><b>{i + 1}</b><Icon name="check" /></span>{s}</li>)}
   </ol>

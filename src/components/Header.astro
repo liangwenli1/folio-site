@@ -1,14 +1,13 @@
 ---
 // The site's header (v2): the brand, the five sections (the one this page is in marked), the link to log in and the
 // button to try Folio — or the account for someone signed in. Where the sections no longer fit they move into a drawer
-// the menu button opens. The sign-in pages have a simple one instead: the brand, the way back to the website and the
-// help center.
+// the menu button opens. The sign-in pages have none (layouts/AuthPage.astro).
 import Mark from './Mark.astro';
 import Icon from './Icon.astro';
 import { link, t, type Lang } from '../lib/i18n';
 
-interface Props { lang: Lang; path: string; simple?: boolean }
-const { lang, path, simple = false } = Astro.props;
+interface Props { lang: Lang; path: string }
+const { lang, path } = Astro.props;
 const d = t(lang), n = d.nav;
 const SECTIONS: [string, string][] = [[n.features, 'features/'], [n.solutions, 'solutions/'], [n.pricing, 'pricing/'], [n.download, 'download/'], [n.help, 'help/']];
 const here = (p: string) => path.startsWith(p);
@@ -16,47 +15,38 @@ const here = (p: string) => path.startsWith(p);
 <header class="top">
   <div class="wrap top-in">
     <a class="brand" href={link(lang)} aria-label="Folio"><Mark /><span class="brand-word">Folio</span></a>
-    {simple ? (
-      <nav class="top-links" aria-label={n.menu}><a class="h-link" href={link(lang)}>{n.site}</a><a class="btn btn-secondary btn-lg" href={link(lang, 'help/')}>{n.help}</a></nav>
-    ) : (
-      <>
-        <nav class="nav" id="site-nav" aria-label={n.menu}>
-          {SECTIONS.map(([label, p]) => <a href={link(lang, p)} aria-current={here(p) ? 'page' : undefined}>{label}</a>)}
-          <span class="nav-acts" data-auth="out">
-            <a class="h-link" href={link(lang, 'login/')}>{n.login}</a>
-            <a class="btn btn-primary btn-lg" href={link(lang, 'signup/')}>{n.start}</a>
-          </span>
-          <span class="nav-acts" data-auth="in" hidden><a class="btn btn-secondary btn-lg" href={link(lang, 'account/')}>{n.account}</a></span>
-        </nav>
-        <button class="menu-btn" type="button" aria-label={n.menu} title={n.menu} aria-expanded="false" aria-controls="site-nav"><Icon name="menu" size={20} /></button>
-      </>
-    )}
+    <nav class="nav" id="site-nav" aria-label={n.menu}>
+      {SECTIONS.map(([label, p]) => <a href={link(lang, p)} aria-current={here(p) ? 'page' : undefined}>{label}</a>)}
+      <span class="nav-acts" data-auth="out">
+        <a class="h-link" href={link(lang, 'login/')}>{n.login}</a>
+        <a class="btn btn-primary btn-lg" href={link(lang, 'signup/')}>{n.start}</a>
+      </span>
+      <span class="nav-acts" data-auth="in" hidden><a class="btn btn-secondary btn-lg" href={link(lang, 'account/')}>{n.account}</a></span>
+    </nav>
+    <button class="menu-btn" type="button" aria-label={n.menu} title={n.menu} aria-expanded="false" aria-controls="site-nav"><Icon name="menu" size={20} /></button>
   </div>
 </header>
 <script>
   import { api } from '../lib/api';
-  // The full header only (the simple one has no menu and no account).
-  const btn = document.querySelector<HTMLButtonElement>('.menu-btn');
-  if (btn){
-    api('GET', '/me').then(() => {
-      document.querySelectorAll('[data-auth="out"]').forEach(e => e.setAttribute('hidden', ''));
-      document.querySelectorAll('[data-auth="in"]').forEach(e => e.removeAttribute('hidden'));
-    }).catch(() => {});
-    // The drawer (global.css): opening it takes the focus to its first link, and the page behind takes neither the
-    // keyboard nor scrolling meanwhile. The button, a link, Escape, a click outside or the screen growing wide enough
-    // for the sections closes it, and the focus goes back to the button.
-    const nav = document.getElementById('site-nav')!;
-    const open = () => btn.getAttribute('aria-expanded') === 'true';
-    const set = (on: boolean) => {
-      btn.setAttribute('aria-expanded', String(on));
-      document.documentElement.classList.toggle('menu-open', on);
-      document.querySelectorAll<HTMLElement>('body > main, body > footer').forEach(el => { el.inert = on; });
-      (on ? nav.querySelector('a')! : btn).focus();
-    };
-    btn.addEventListener('click', () => set(!open()));
-    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => set(false)));
-    addEventListener('keydown', e => { if (e.key === 'Escape' && open()) set(false); });
-    addEventListener('click', e => { if (open() && !nav.contains(e.target as Node) && !btn.contains(e.target as Node)) set(false); });
-    matchMedia('(max-width: 1000px)').addEventListener('change', () => { if (open()) set(false); });
-  }
+  const btn = document.querySelector<HTMLButtonElement>('.menu-btn')!;
+  api('GET', '/me').then(() => {
+    document.querySelectorAll('[data-auth="out"]').forEach(e => e.setAttribute('hidden', ''));
+    document.querySelectorAll('[data-auth="in"]').forEach(e => e.removeAttribute('hidden'));
+  }).catch(() => {});
+  // The drawer (global.css): opening it takes the focus to its first link, and the page behind takes neither the
+  // keyboard nor scrolling meanwhile. The button, a link, Escape, a click outside or the screen growing wide enough
+  // for the sections closes it, and the focus goes back to the button.
+  const nav = document.getElementById('site-nav')!;
+  const open = () => btn.getAttribute('aria-expanded') === 'true';
+  const set = (on: boolean) => {
+    btn.setAttribute('aria-expanded', String(on));
+    document.documentElement.classList.toggle('menu-open', on);
+    document.querySelectorAll<HTMLElement>('body > main, body > footer').forEach(el => { el.inert = on; });
+    (on ? nav.querySelector('a')! : btn).focus();
+  };
+  btn.addEventListener('click', () => set(!open()));
+  nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => set(false)));
+  addEventListener('keydown', e => { if (e.key === 'Escape' && open()) set(false); });
+  addEventListener('click', e => { if (open() && !nav.contains(e.target as Node) && !btn.contains(e.target as Node)) set(false); });
+  matchMedia('(max-width: 1000px)').addEventListener('change', () => { if (open()) set(false); });
 </script>

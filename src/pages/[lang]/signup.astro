@@ -14,8 +14,7 @@ export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
 const A = t(lang).auth;
 ---
-<AuthPage lang={lang} path="signup/" title={A.signupTitle}>
-  <div class="page-head" id="head"><h1>{A.signupTitle}</h1><p>{A.signupLead}</p></div>
+<AuthPage lang={lang} path="signup/" title={A.signupTitle} lead={A.signupLead}>
   <form class="form" id="form" novalidate>
     <div class="notice error" id="err" role="alert" hidden></div>
     <div class="notice ok" id="sent" role="status" hidden>{A.codeSent}</div>
