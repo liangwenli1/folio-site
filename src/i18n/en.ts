@@ -187,7 +187,7 @@ export const en = {
       title: 'Questions', lead: 'About trying Folio, billing and plans. For anything else,', contact: 'contact us',
       items: [
         ['What does Free include?', 'Five browser profiles, free forever: both engines, full fingerprint settings, proxy checks and the local API. No card is required and there is no time limit, so a whole way of working can be tried out.'],
-        ['Can I try Studio first?', 'Yes. Each workspace can try Studio free for 7 days, with members and window sync; afterwards, buy it or carry on with Free.'],
+        ['Can I try Studio first?', 'Yes. Each account can try Studio free once, for 7 days, with members and window sync; afterwards, buy it or carry on with Free.'],
         ['How do I upgrade or change plans?', 'From the account page. An upgrade starts the same day, and the time left on the current plan is credited; a downgrade starts when the current period ends.'],
         ['What if I need more browser profiles?', 'Paid plans take add-on packs of 100 browser profiles each, up to 2,000 in total; above that, contact us for a quote.'],
         ['Are refunds and invoices available?', 'The latest payment can be refunded within 7 days, and the plan reverts to what it was before that payment. Every payment comes with an invoice, which you can view and print on the account page.']
@@ -248,14 +248,15 @@ export const en = {
   },
 
   account: {
-    title: 'Account', profile: 'Your details', language: 'Language', langs: { zh: 'Chinese', en: 'English' }, emailStatus: 'Email verification',
+    title: 'Account', language: 'Language', langs: { zh: 'Chinese', en: 'English' },
+    tabs: { plan: 'Plan and billing', workspaces: 'Workspaces', info: 'Account details', password: 'Change password', download: 'Download the app' },
     verified: 'Verified', unverified: 'Not verified', verifyNow: 'Verify now',
-    workspaces: 'Workspaces', newWorkspace: 'New workspace', create: 'Create', rename: 'Rename', save: 'Save', cancel: 'Cancel', current: 'Current',
+    workspaces: 'Workspaces', workspace: 'Workspace', newWorkspace: 'New workspace', workspaceName: 'Workspace name',
+    create: 'Create', rename: 'Rename', save: 'Save', cancel: 'Cancel', planOf: 'Plan',
     roles: { owner: 'Owner', admin: 'Admin', member: 'Member', viewer: 'Viewer' } as Record<string, string>,
-    plan: 'Plan', usage: (used: number, limit: number) => `${used} of ${limit} profiles used`,
-    unlimited: 'Unlimited members',
+    plan: 'Plan and usage', profiles: 'Profiles', members: 'Members', logs: 'Activity log kept', days: 'days', unlimited: 'Unlimited', trialing: 'Trial',
     renews: (date: string) => `Renews on ${date}`, ends: (date: string) => `Ends on ${date}`,
-    trialEnds: (date: string) => `Trial ends on ${date}`,
+    trialEnds: (date: string) => `Trial ends on ${date}, then Free.`,
     scheduled: (plan: string, date: string) => `Changes to ${plan} on ${date}`,
     changePlan: 'Change plan', addProfiles: 'Add profiles', startTrial: 'Try Studio free for 7 days',
     cancelPlan: 'Cancel at period end', resume: 'Resume renewal',
@@ -265,9 +266,8 @@ export const en = {
     paid: 'Paid', refunded: 'Refunded', invoice: 'Invoice', refund: 'Refund',
     refundConfirm: 'Refund this payment? The plan returns to its state before this payment.', confirmRefund: 'Refund',
     pw: { title: 'Change password', current: 'Current password', new: 'New password', confirm: 'Confirm the new password', save: 'Save new password', done: 'Password changed. This account has been logged out on other devices.' },
-    download: 'Download the app', downloadBody: 'Log in to the desktop app with the same account; plan and workspace details sync automatically.',
-    downloadCta: 'Download',
-    invitations: 'Invitations', invitedBy: (inviter: string, role: string) => `Invited by ${inviter} as ${role}`, accept: 'Join', decline: 'Decline'
+    downloadBody: 'Log in to the desktop app with the same account; plans and workspaces sync automatically.',
+    invitations: 'Invitations waiting', invitedBy: (inviter: string, role: string) => `Invited by ${inviter} as ${role}`, accept: 'Join', decline: 'Decline'
   },
   invite: {
     title: 'Workspace invitation', checking: 'Checking the invitation…',
@@ -366,7 +366,7 @@ export const en = {
         sections: [
           { title: 'Download the installer', body: ['On the download page, pick the installer for your system: Windows 10 or later (64-bit), or macOS 12 or later (Apple silicon, M1 or newer). Get installers only from the website or other official channels.'] },
           { title: 'Install the app', body: ['Windows: run the installer and follow its steps. Folio is not code-signed yet; if SmartScreen blocks the installer, choose More info, then Run anyway.', 'macOS: open the disk image and drag Folio into Applications. If it will not open the first time, go to System Settings › Privacy & Security and choose Open Anyway; if macOS says the app is damaged, run xattr -cr /Applications/Folio.app in Terminal and open it again.'] },
-          { title: 'Log in', body: ['Log in with the Folio account you made on the website; your plan, team and browser profiles sync automatically. If the account is in several workspaces, switch workspace at the top of the sidebar.'] },
+          { title: 'Log in', body: ['Log in with the Folio account you made on the website; your plan, workspaces and browser profiles sync automatically. If the account is in several workspaces, switch between them in the workspace menu at the top right.'] },
           { title: 'Engines download when needed', body: ['The first time a profile on an engine version opens, Folio downloads that version and checks it against the official checksum; versions can also be downloaded ahead of time on the Engines page.'] }
         ],
         note: 'When a new version is out, the app says so and links to the new installer.'
@@ -446,7 +446,7 @@ export const en = {
         lead: 'What each plan includes, and how trying, upgrading, refunds and invoices work.',
         sections: [
           { title: 'Plans and limits', body: ['Free has 5 browser profiles; Studio includes 100 and Company 500. Paid plans have unlimited members and take add-on packs of 100 browser profiles each, up to 2,000 in total.'] },
-          { title: 'Try Studio free', body: ['Each workspace can try Studio free for 7 days; afterwards, buy it or carry on with Free.'] },
+          { title: 'Try Studio free', body: ['Each account can try Studio free once, for 7 days; afterwards, buy it or carry on with Free.'] },
           { title: 'Upgrade or change plans', body: ['Go to checkout from the account page on the website or Plan & billing in the app. An upgrade starts the same day, with the time left on the current plan credited; a downgrade starts when the current period ends. Only owners and admins can change a workspace’s plan.'] },
           { title: 'Refunds and invoices', body: ['The latest payment can be refunded within 7 days, and the plan reverts to what it was before that payment. Every payment comes with an invoice, which you can view and print on the account page.'] }
         ],
@@ -591,7 +591,7 @@ export const en = {
         { title: 'The service', body: ['Folio is a service for managing browser profiles: the Windows and macOS app, profile and proxy management, sign-ins synced to the cloud, team collaboration and the local API.', 'What each plan includes is set out on the pricing page.'] },
         { title: 'Your account', body: ['Sign up with a valid email address of your own and verify it. Keep your password safe: the account holder is responsible for what is done with the account.', 'Workspace owners decide members’ roles and what they can access. If something looks wrong with your account, reset your password and contact us.'] },
         { title: 'Acceptable use', body: ['When you use Folio to visit other websites and platforms, follow the applicable laws and those platforms’ rules.', 'Do not use Folio for anything unlawful, to infringe the rights of others, or to disrupt the service.'] },
-        { title: 'Plans and fees', body: ['Free costs nothing. Paid plans are billed monthly or yearly and renew until canceled; once canceled, the plan stops renewing at the end of the current period.', 'Each workspace can try Studio free for 7 days. The most recent payment can be refunded within 7 days of payment, and the plan goes back to what it was before that payment.', 'Prices are those on the pricing page and exclude local taxes.'] },
+        { title: 'Plans and fees', body: ['Free costs nothing. Paid plans are billed monthly or yearly and renew until canceled; once canceled, the plan stops renewing at the end of the current period.', 'Each account can try Studio free once, for 7 days. The most recent payment can be refunded within 7 days of payment, and the plan goes back to what it was before that payment.', 'Prices are those on the pricing page and exclude local taxes.'] },
         { title: 'Changes and termination', body: ['We may change the product or these terms; how significant changes are announced, and when they take effect, is to be confirmed.', 'You can stop using Folio and cancel your subscription at any time. The rules for suspending or ending the service after a breach of these terms are to be confirmed.'] },
         { title: 'Liability and disputes', body: ['Limits of liability, the governing law and how disputes are resolved are to be confirmed.'] }
       ],
@@ -623,7 +623,7 @@ export const en = {
     no_change: 'This is already the current plan.',
     change_packs_separately: 'Change add-on packs and the plan in two separate steps.',
     profile_cap: 'Plans support up to 2,000 browser profiles. Contact sales for more.',
-    trial_used: 'This workspace has already used its free trial.',
+    trial_used: 'This account has already used its free trial.',
     already_subscribed: 'This workspace already has a plan.',
     not_subscribed: 'This workspace has no paid plan.',
     refund_window_passed: 'Refunds are available only within 7 days of payment.',

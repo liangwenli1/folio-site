@@ -1,41 +1,57 @@
 ---
+// The account (option A, the user 10-29, like the workbench's Account): a menu card on the left (the login email, the
+// five parts, logging out) and one part on the right, kept in the address (?tab=) so a reload or a link comes back to
+// it. The plan and payments are the shown workspace's (?ws=, picked at the top of that part); workspaces are made,
+// renamed and joined in their own part.
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import Password from '../../components/Password.astro';
 import '../../styles/app.css';
-import { langPaths, link, t, type Lang } from '../../lib/i18n';
+import type { IconName } from '../../lib/icons';
+import { INSTALLERS } from '../../lib/installers';
+import { langPaths, t, type Lang } from '../../lib/i18n';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
 const d = t(lang);
 const a = d.account;
+const TABS: [keyof typeof a.tabs, IconName][] = [['plan', 'billing'], ['workspaces', 'layers'], ['info', 'user'], ['password', 'lock'], ['download', 'download']];
+const SYSTEMS: [string, IconName, string | null][] = [['Windows', 'windows', INSTALLERS.windows], ['macOS', 'apple', INSTALLERS.mac]];
 ---
 <Base lang={lang} path="account/" title={a.title} noindex>
   <section class="wrap page">
-    <div class="ac-head">
-      <div class="page-head"><h1>{a.title}</h1><p id="me-email"></p></div>
-      <button class="btn btn-text" type="button" id="logout"><Icon name="logout" />{d.auth.logout}</button>
-    </div>
+    <div class="page-head"><h1>{a.title}</h1></div>
     <div class="notice error" id="err" role="alert" hidden></div>
-    <div class="cols ac-grid" id="acct" hidden>
-      <div class="ac-col">
-        <section class="panel ac-plan" aria-labelledby="plan-h">
-          <div class="ac-plan-top">
+    <div class="ac" id="acct" hidden>
+      <nav class="panel ac-nav" aria-label={a.title}>
+        <div class="ac-me"><span class="ac-av" id="me-av" aria-hidden="true"></span><span><b id="me-email"></b><small id="me-verified"></small></span></div>
+        {TABS.map(([key, icon]) => <a href={`?tab=${key}`} data-tab={key}><Icon name={icon} />{a.tabs[key]}</a>)}
+        <hr />
+        <button type="button" id="logout"><Icon name="logout" />{d.auth.logout}</button>
+      </nav>
+
+      <div class="ac-part" data-part="plan" hidden>
+        <section class="panel ac-card" aria-labelledby="plan-h">
+          <div class="ac-h">
+            <h2 id="plan-h">{a.plan}</h2>
+            <div class="field ac-ws" id="ws-pick" hidden><label for="ws-select">{a.workspace}</label><select id="ws-select"></select></div>
+          </div>
+          <div class="ac-plan">
             <div>
-              <p class="panel-t" id="plan-h">{a.plan} · <span id="plan-ws"></span></p>
-              <b class="ac-plan-name" id="plan-name"></b>
-              <p class="fine" id="plan-status"></p>
+              <div class="row"><b class="ac-plan-name" id="plan-name"></b><span class="chip run" id="plan-trial" hidden><Icon name="clock" />{a.trialing}</span></div>
+              <p id="plan-status"></p>
             </div>
             <div class="row" id="plan-actions">
-              <a class="btn btn-secondary btn-sm" id="add-profiles" href="#" hidden>{a.addProfiles}</a>
-              <button class="btn btn-secondary btn-sm" type="button" id="start-trial" hidden>{a.startTrial}</button>
-              <button class="btn btn-secondary btn-sm" type="button" id="resume" hidden>{a.resume}</button>
-              <a class="btn btn-primary btn-sm" id="change-plan" href="#">{a.changePlan}</a>
+              <a class="btn btn-secondary" id="add-profiles" href="#" hidden>{a.addProfiles}</a>
+              <button class="btn btn-secondary" type="button" id="start-trial" hidden>{a.startTrial}</button>
+              <button class="btn btn-secondary" type="button" id="resume" hidden>{a.resume}</button>
+              <a class="btn btn-primary" id="change-plan" href="#">{a.changePlan}</a>
             </div>
           </div>
-          <div class="ac-use">
-            <div class="row"><span id="plan-usage"></span><span class="spacer"></span><span class="fine" id="plan-members"></span></div>
-            <span class="meter"><i id="plan-meter"></i></span>
+          <div class="ac-stats">
+            <div><span>{a.profiles}</span><b id="plan-usage"></b><span class="meter"><i id="plan-meter"></i></span></div>
+            <div><span>{a.members}</span><b id="plan-members"></b></div>
+            <div><span>{a.logs}</span><b id="plan-logs"></b></div>
           </div>
           <button class="linkish fine ac-cancel" type="button" id="cancel" hidden>{a.cancelPlan}</button>
           <div class="confirm" id="cancel-confirm" hidden>
@@ -44,10 +60,9 @@ const a = d.account;
             <button class="linkish fine" type="button" id="cancel-no">{a.cancel}</button>
           </div>
         </section>
-
-        <section class="panel" id="pay-panel" aria-labelledby="pay-h">
-          <h2 class="panel-t" id="pay-h">{a.payments}</h2>
-          <p class="fine" id="no-pay" hidden>{a.noPayments}</p>
+        <section class="panel ac-card" id="pay-panel" aria-labelledby="pay-h">
+          <div class="ac-h"><h2 id="pay-h">{a.payments}</h2></div>
+          <p class="ac-empty" id="no-pay" hidden>{a.noPayments}</p>
           <div class="tbl-scroll">
             <table class="list" id="pay-table" hidden>
               <thead><tr>{a.cols.map(col => <th scope="col">{col}</th>)}</tr></thead>
@@ -57,52 +72,54 @@ const a = d.account;
         </section>
       </div>
 
-      <div class="ac-col">
-        <section class="panel" id="inv-panel" aria-labelledby="inv-h" hidden>
-          <h2 class="panel-t" id="inv-h">{a.invitations}</h2>
+      <section class="panel ac-card" data-part="workspaces" aria-labelledby="ws-h" hidden>
+        <div class="ac-h"><h2 id="ws-h">{a.workspaces}</h2><button class="btn btn-secondary btn-sm" type="button" id="ws-new"><Icon name="plus" />{a.newWorkspace}</button></div>
+        <form class="row ac-new" id="ws-form" hidden>
+          <div class="field"><input id="ws-name" maxlength="80" aria-label={a.workspaceName} placeholder={a.workspaceName} /></div>
+          <button class="btn btn-primary btn-sm" type="submit">{a.create}</button>
+          <button class="btn btn-text btn-sm" type="button" id="ws-cancel">{a.cancel}</button>
+        </form>
+        <ul class="ac-list" id="ws-list"></ul>
+        <div id="inv-panel" hidden>
+          <h3 class="ac-sub">{a.invitations}</h3>
           <ul class="ac-list" id="inv-list"></ul>
-        </section>
-        <section class="panel" aria-labelledby="ws-h">
-          <h2 class="panel-t" id="ws-h">{a.workspaces}</h2>
-          <ul class="ac-list" id="ws-list"></ul>
-          <form class="row ac-new" id="ws-form">
-            <div class="field"><label for="ws-name" hidden>{a.newWorkspace}</label><input id="ws-name" maxlength="80" placeholder={a.newWorkspace} /></div>
-            <button class="btn btn-secondary" type="submit">{a.create}</button>
-          </form>
-        </section>
-        <section class="panel" aria-labelledby="profile-h">
-          <h2 class="panel-t" id="profile-h">{a.profile}</h2>
-          <dl class="kv">
-            <dt>{d.auth.email}</dt><dd id="email"></dd>
-            <dt>{a.emailStatus}</dt><dd id="verified"></dd>
-            <dt>{a.language}</dt>
-            <dd><div class="seg" role="group" aria-label={a.language} id="locale">
-              <button type="button" data-locale="zh" aria-pressed="false">{a.langs.zh}</button>
-              <button type="button" data-locale="en" aria-pressed="false">{a.langs.en}</button>
-            </div></dd>
-          </dl>
-        </section>
-        <section class="panel" aria-labelledby="pw-h">
-          <h2 class="panel-t" id="pw-h">{a.pw.title}</h2>
-          <form class="form" id="pw-form" novalidate>
-            <div class="notice ok" id="pw-ok" role="status" hidden>{a.pw.done}</div>
-            <div class="notice error" id="pw-err" role="alert" hidden></div>
-            <div class="field"><label class="req" for="pw-current">{a.pw.current}</label><Password lang={lang} id="pw-current" autocomplete="current-password" /></div>
-            <div class="field">
-              <label class="req" for="pw-new">{a.pw.new}</label>
-              <Password lang={lang} id="pw-new" autocomplete="new-password" minlength={8} />
-              <span class="hint">{d.auth.passwordHint}</span>
-            </div>
-            <div class="field"><label class="req" for="pw-confirm">{a.pw.confirm}</label><Password lang={lang} id="pw-confirm" autocomplete="new-password" minlength={8} /></div>
-            <div><button class="btn btn-primary" type="submit">{a.pw.save}</button></div>
-          </form>
-        </section>
-        <section class="panel ac-dl" aria-labelledby="dl-h">
-          <h2 class="panel-t" id="dl-h">{a.download}</h2>
-          <p class="fine">{a.downloadBody}</p>
-          <a class="btn btn-secondary" href={link(lang, 'download/')}><Icon name="download" />{a.downloadCta}</a>
-        </section>
-      </div>
+        </div>
+      </section>
+
+      <section class="panel ac-card" data-part="info" aria-labelledby="info-h" hidden>
+        <div class="ac-h"><h2 id="info-h">{a.tabs.info}</h2></div>
+        <dl class="kv ac-kv">
+          <dt>{d.auth.email}</dt><dd><span id="email"></span><span id="verified"></span></dd>
+          <dt>{a.language}</dt>
+          <dd><div class="seg" role="group" aria-label={a.language} id="locale">
+            <button type="button" data-locale="zh" aria-pressed="false">{a.langs.zh}</button>
+            <button type="button" data-locale="en" aria-pressed="false">{a.langs.en}</button>
+          </div></dd>
+        </dl>
+      </section>
+
+      <section class="panel ac-card" data-part="password" aria-labelledby="pw-h" hidden>
+        <div class="ac-h"><h2 id="pw-h">{a.tabs.password}</h2></div>
+        <form class="form ac-pw" id="pw-form" novalidate>
+          <div class="notice ok" id="pw-ok" role="status" hidden>{a.pw.done}</div>
+          <div class="notice error" id="pw-err" role="alert" hidden></div>
+          <div class="field"><label class="req" for="pw-current">{a.pw.current}</label><Password lang={lang} id="pw-current" autocomplete="current-password" /></div>
+          <div class="field">
+            <label class="req" for="pw-new">{a.pw.new}</label>
+            <Password lang={lang} id="pw-new" autocomplete="new-password" minlength={8} />
+            <span class="hint">{d.auth.passwordHint}</span>
+          </div>
+          <div class="field"><label class="req" for="pw-confirm">{a.pw.confirm}</label><Password lang={lang} id="pw-confirm" autocomplete="new-password" minlength={8} /></div>
+          <div><button class="btn btn-primary" type="submit">{a.pw.save}</button></div>
+        </form>
+      </section>
+
+      <section class="panel ac-card ac-dl" data-part="download" aria-labelledby="dl-h" hidden>
+        <div><h2 id="dl-h">{a.tabs.download}</h2><p>{a.downloadBody}</p></div>
+        {SYSTEMS.map(([name, icon, href]) => (href
+          ? <a class="btn btn-secondary" href={href}><Icon name={icon} />{name}</a>
+          : <button class="btn btn-secondary" type="button" title={d.download.soon} disabled><Icon name={icon} />{name}</button>))}
+      </section>
     </div>
   </section>
 </Base>
@@ -116,8 +133,26 @@ const a = d.account;
   // The status labels' icons (components/Icon.astro draws the same paths at build time).
   const icon = (path: string) => `<svg class="i" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="${path}"/></svg>`;
   const CHECK = icon(ICONS.check), ALERT = icon(ICONS.alert), UNDO = icon(ICONS.back);
+  // A letter on a coloured square, its colour from the name as in the workbench (ui.tsx Avatar), so a workspace looks
+  // the same in both.
+  const hue = (text: string) => [...text].reduce((n, c) => n + c.charCodeAt(0), 0) % 6;
+  const letter = (text: string) => [...text.trim()][0]?.toUpperCase() ?? '?';
+  const avatar = (text: string) => `<span class="ac-av c${hue(text)}" aria-hidden="true">${esc(letter(text))}</span>`;
   let me: Me, ws: Workspace;
   const fail = (e: unknown) => showError($('err'), e);
+
+  // The part on show, in the address; ?ws= stays as it is.
+  const TABS = ['plan', 'workspaces', 'info', 'password', 'download'];
+  function show(tab: string){
+    const part = TABS.includes(tab) ? tab : 'plan';
+    document.querySelectorAll<HTMLElement>('[data-part]').forEach(p => { p.hidden = p.dataset.part !== part; });
+    document.querySelectorAll('[data-tab]').forEach(n => { if (n.getAttribute('data-tab') === part) n.setAttribute('aria-current', 'page'); else n.removeAttribute('aria-current'); });
+    const url = new URL(location.href);
+    url.searchParams.set('tab', part);
+    history.replaceState(null, '', url);
+  }
+  document.querySelectorAll<HTMLAnchorElement>('[data-tab]').forEach(n => n.addEventListener('click', ev => { ev.preventDefault(); show(n.dataset.tab!); }));
+  const go = (tab: string, wsId: string) => location.assign(`?tab=${tab}&ws=${wsId}`);
 
   async function load(){
     me = await requireMe();
@@ -125,12 +160,17 @@ const a = d.account;
     ws = await api<Workspace>('GET', `/workspaces/${current.id}`);
     renderProfile(); renderWorkspaces(); renderPlan();
     await Promise.all([renderPayments(), renderInvitations()]);
+    show(param('tab') ?? 'plan');
     $('acct').hidden = false;
   }
 
   function renderProfile(){
-    $('email').textContent = $('me-email').textContent = me.user.email;
-    $('verified').innerHTML = me.user.emailVerified
+    const verified = me.user.emailVerified;
+    $('me-av').className = `ac-av c${hue(me.user.email)}`;
+    $('me-av').textContent = letter(me.user.email);
+    $('me-email').textContent = $('email').textContent = me.user.email;
+    $('me-verified').textContent = verified ? a.verified : a.unverified;
+    $('verified').innerHTML = verified
       ? `<span class="chip ok">${CHECK}${a.verified}</span>`
       : `<span class="chip warn">${ALERT}${a.unverified}</span> <a href="${to('verify/')}?next=${encodeURIComponent(location.pathname + location.search)}">${a.verifyNow}</a>`;
     document.querySelectorAll('[data-locale]').forEach(b => b.setAttribute('aria-pressed', String(b.getAttribute('data-locale') === me.user.locale)));
@@ -138,13 +178,18 @@ const a = d.account;
 
   function renderWorkspaces(){
     $('ws-list').innerHTML = me.workspaces.map(w => `
-      <li class="${w.id === ws.id ? 'current' : ''}" data-id="${w.id}">
-        <span class="ac-letter" aria-hidden="true">${esc([...w.name][0] ?? '')}</span>
-        <span class="ac-name"><a href="?ws=${w.id}">${esc(w.name)}</a><small>${roleLabel(w.role, a.roles)} · ${d.plans[w.plan]}</small></span>
-        ${w.id === ws.id ? `<span class="tag">${a.current}</span>` : ''}
+      <li data-id="${w.id}">
+        ${avatar(w.name)}
+        <span class="ac-name"><b>${esc(w.name)}</b><small>${d.plans[w.plan]} · ${roleLabel(w.role, a.roles)}</small></span>
+        <a class="btn btn-secondary btn-sm" href="?tab=plan&ws=${w.id}">${a.planOf}</a>
         ${canManage(w.role) ? `<button class="btn btn-text btn-sm" type="button" data-rename="${w.id}">${a.rename}</button>` : ''}
       </li>`).join('');
+    const pick = $<HTMLSelectElement>('ws-select');
+    pick.innerHTML = me.workspaces.map(w => `<option value="${w.id}">${esc(w.name)}</option>`).join('');
+    pick.value = ws.id;
+    $('ws-pick').hidden = me.workspaces.length < 2;
   }
+  $('ws-select').addEventListener('change', ev => go('plan', (ev.target as HTMLSelectElement).value));
 
   // Invitations sent to this address, joined or declined right here.
   async function renderInvitations(){
@@ -152,7 +197,7 @@ const a = d.account;
     $('inv-panel').hidden = !invitations.length;
     $('inv-list').innerHTML = invitations.map(i => `
       <li data-inv="${i.id}">
-        <span class="ac-letter" aria-hidden="true">${esc([...i.workspaceName][0] ?? '')}</span>
+        ${avatar(i.workspaceName)}
         <span class="ac-name"><b>${esc(i.workspaceName)}</b><small>${esc(a.invitedBy(i.inviter ?? 'Folio', roleLabel(i.role, a.roles)))}</small></span>
         <button class="btn btn-text btn-sm" type="button" data-decline="${i.id}">${a.decline}</button>
         <button class="btn btn-primary btn-sm" type="button" data-accept="${i.id}">${a.accept}</button>
@@ -164,8 +209,8 @@ const a = d.account;
     busy(b, true);
     try {
       if (b.dataset.accept){
-        const ws = await api<{ id: string }>('POST', `/invitations/${b.dataset.accept}/accept`);
-        location.assign(`?ws=${ws.id}`);
+        const joined = await api<{ id: string }>('POST', `/invitations/${b.dataset.accept}/accept`);
+        go('workspaces', joined.id);
       } else {
         await api('POST', `/invitations/${b.dataset.decline}/decline`);
         await renderInvitations();
@@ -176,16 +221,18 @@ const a = d.account;
   function renderPlan(){
     const s = ws.subscription, manager = canManage(ws.role);
     const paid = s.status === 'active' && s.plan !== 'free';
-    $('plan-ws').textContent = ws.name;
     $('plan-name').textContent = s.addonPacks ? d.pricing.calc.withPacks(d.plans[s.plan], s.addonPacks) : d.plans[s.plan];
+    $('plan-trial').hidden = s.status !== 'trialing';
     $('plan-status').textContent =
       s.status === 'trialing' ? a.trialEnds(day(s.trialEndsAt!, lang)) :
       paid && s.cancelAtPeriodEnd ? a.ends(day(s.currentPeriodEnd!, lang)) :
       paid && s.scheduledPlan ? a.scheduled(d.plans[s.scheduledPlan], day(s.currentPeriodEnd!, lang)) :
       paid ? `${a.renews(day(s.currentPeriodEnd!, lang))} · ${d.periods[s.period!]}` : '';
-    $('plan-usage').textContent = a.usage(ws.usage.profiles, s.entitlements.profiles);
+    const of = (used: number, limit: string | number) => `${used}<small> / ${limit}</small>`;
+    $('plan-usage').innerHTML = of(ws.usage.profiles, s.entitlements.profiles);
     $<HTMLElement>('plan-meter').style.width = `${Math.min(100, (ws.usage.profiles / s.entitlements.profiles) * 100)}%`;
-    $('plan-members').textContent = s.entitlements.members === null ? a.unlimited : d.pricing.oneMember;
+    $('plan-members').innerHTML = of(ws.usage.members, s.entitlements.members ?? a.unlimited);
+    $('plan-logs').innerHTML = `${s.entitlements.logDays}<small> ${a.days}</small>`;
     const checkout = `${to('checkout/')}?ws=${ws.id}`;
     $<HTMLAnchorElement>('change-plan').href = checkout;
     $<HTMLAnchorElement>('add-profiles').href = checkout;
@@ -242,8 +289,9 @@ const a = d.account;
     if (!id) return;
     const li = $('ws-list').querySelector<HTMLElement>(`li[data-id="${id}"]`)!;
     const w = me.workspaces.find(x => x.id === id)!;
-    li.innerHTML = `<form class="row ac-new"><div class="field"><input maxlength="80" value="${esc(w.name)}" aria-label="${a.rename}" /></div><button class="btn btn-secondary btn-sm" type="submit">${a.save}</button><button class="linkish fine" type="button" data-no>${a.cancel}</button></form>`;
+    li.innerHTML = `${avatar(w.name)}<form class="row ac-new"><div class="field"><input maxlength="80" value="${esc(w.name)}" aria-label="${a.rename}" /></div><button class="btn btn-primary btn-sm" type="submit">${a.save}</button><button class="btn btn-text btn-sm" type="button" data-no>${a.cancel}</button></form>`;
     const form = li.querySelector('form')!;
+    form.querySelector('input')!.focus();
     form.querySelector('[data-no]')!.addEventListener('click', renderWorkspaces);
     form.addEventListener('submit', async e => {
       e.preventDefault();
@@ -251,13 +299,18 @@ const a = d.account;
     });
   });
 
-  $('ws-form').addEventListener('submit', async ev => {
+  // A new workspace: the button opens the name's row; made, it is shown, on the Free plan.
+  const wsForm = $<HTMLFormElement>('ws-form');
+  const toggleNew = (open: boolean) => { wsForm.hidden = !open; $('ws-new').hidden = open; if (open) $('ws-name').focus(); };
+  $('ws-new').addEventListener('click', () => toggleNew(true));
+  $('ws-cancel').addEventListener('click', () => { wsForm.reset(); toggleNew(false); });
+  wsForm.addEventListener('submit', async ev => {
     ev.preventDefault();
     const name = $<HTMLInputElement>('ws-name').value.trim();
     if (!name) return;
     try {
       const w = await api<{ id: string }>('POST', '/workspaces', { name });
-      location.assign(`?ws=${w.id}`);
+      go('workspaces', w.id);
     } catch (e){ fail(e); }
   });
 

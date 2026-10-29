@@ -7,20 +7,19 @@ import Icon from '../../components/Icon.astro';
 import PageHero from '../../components/PageHero.astro';
 import { day } from '../../lib/format';
 import type { IconName } from '../../lib/icons';
+import { INSTALLERS } from '../../lib/installers';
 import { langPaths, link, t, type Lang } from '../../lib/i18n';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
 const d = t(lang).download;
-// The installers are on the public desktop repository's latest release, under names that don't change between versions.
-// That release's version and date come with the build (README); without them the page says the installers are coming.
-const repo = import.meta.env.PUBLIC_DESKTOP_REPO;
+// The latest release's version and date come with the build (README); without them the page says the installers are
+// coming.
 const version = import.meta.env.PUBLIC_DESKTOP_VERSION;
 const released = import.meta.env.PUBLIC_DESKTOP_RELEASED;
-const latest = (file: string) => (repo ? `https://github.com/${repo}/releases/latest/download/${file}` : null);
 const systems: { os: string; icon: IconName; req: string; note: string; href: string | null; primary: boolean }[] = [
-  { os: d.windowsName, icon: 'windows', req: d.windows, note: d.winNote, href: latest('Folio-Setup-x64.exe'), primary: true },
-  { os: d.macName, icon: 'apple', req: d.mac, note: d.macNote, href: latest('Folio-arm64.dmg'), primary: false }
+  { os: d.windowsName, icon: 'windows', req: d.windows, note: d.winNote, href: INSTALLERS.windows, primary: true },
+  { os: d.macName, icon: 'apple', req: d.mac, note: d.macNote, href: INSTALLERS.mac, primary: false }
 ];
 ---
 <Base lang={lang} path="download/" title={d.title} description={d.lead}>

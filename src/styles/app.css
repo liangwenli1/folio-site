@@ -1,4 +1,4 @@
-/* Checkout (in steps), account (one page), invitation and invoice. */
+/* Checkout (in steps), account (a menu and its parts), invitation and invoice. */
 
 /* checkout: choose a plan → pay → done, one narrow column */
 .co{max-width:688px}
@@ -52,31 +52,66 @@
 .done .tile{background:var(--good-soft);color:var(--good-ink);box-shadow:none}
 .done p{font-size:16px;font-weight:600}
 
-/* account: plan and payments on the left; invitations, workspaces, profile and download on the right */
-.ac-head{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:12px}
-.ac-head .page-head p{margin-top:4px}
-.ac-grid{align-items:start}
-@media (min-width:901px){.ac-grid > :first-child{grid-column:span 7}.ac-grid > :last-child{grid-column:span 5}}
-.ac-col{display:grid;gap:20px;min-width:0}
-.ac-plan{display:grid;gap:18px}
-.ac-plan-top{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:14px}
-.ac-plan .panel-t{margin-bottom:4px}
-.ac-plan-name{display:block;margin-bottom:2px;font-size:24px;font-weight:600}
-.ac-use{display:grid;gap:8px;font-size:14px}
-.meter{display:block;height:8px;border-radius:99px;background:var(--seg);overflow:hidden}
+/* account (option A, the user 10-29, like the workbench's Account): a menu card on the left (the email, the parts, logging
+   out) and one part on the right, its cards titled 18/28 */
+.ac{display:grid;grid-template-columns:260px minmax(0,1fr);gap:24px;align-items:start}
+.ac-nav{display:grid;gap:2px;padding:12px}
+.ac-me{display:flex;align-items:center;gap:10px;margin-bottom:6px;padding:8px 10px 14px;border-bottom:1px solid var(--line)}
+.ac-me > span:last-child{display:grid;min-width:0}
+.ac-me b{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ac-me small{font-size:12px;color:var(--ink-3)}
+.ac-nav :is(a,button){display:flex;align-items:center;gap:10px;height:40px;padding:0 12px;border:0;border-radius:var(--r);background:none;font:inherit;font-size:14px;font-weight:500;color:var(--ink-body);text-decoration:none;cursor:pointer}
+.ac-nav :is(a,button):hover{background:var(--hover)}
+.ac-nav .i{color:var(--ink-3)}
+.ac-nav a[aria-current]{background:var(--sel);color:var(--action)}
+.ac-nav a[aria-current] .i{color:var(--action)}
+.ac-nav hr{width:100%;margin:6px 0;border:0;border-top:1px solid var(--line)}
+.ac-part{display:grid;gap:24px;min-width:0}
+.ac-card{display:grid;gap:20px;padding:24px 28px}
+.ac-h{display:flex;flex-wrap:wrap;align-items:center;gap:12px;min-height:32px}
+.ac-h h2,.ac-dl h2{flex:1 1 auto;font-size:18px;line-height:28px;font-weight:600;color:var(--ink);white-space:nowrap}
+.field.ac-ws{display:flex;align-items:center;gap:10px}
+.field.ac-ws label{font-weight:400;color:var(--ink-3)}
+.field.ac-ws select{width:auto;min-width:160px}
+/* the plan, its state and the ways to change it in a grey box; under it the profiles, members and log days */
+.ac-plan{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding:20px;border:1px solid var(--line);border-radius:var(--r-card);background:var(--panel)}
+.ac-plan-name{font-size:24px;line-height:32px;font-weight:600}
+.ac-plan p{margin-top:4px;font-size:14px;color:var(--ink-3)}
+.ac-plan p:empty{display:none}
+.ac-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.ac-stats > div{display:grid;gap:6px;align-content:start}
+.ac-stats > div > span:first-child{font-size:14px;color:var(--ink-3)}
+.ac-stats b{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
+.ac-stats small{font-size:14px;font-weight:400;color:var(--ink-3)}
+.meter{display:block;height:8px;margin-top:4px;border-radius:99px;background:var(--seg);overflow:hidden}
 .meter i{display:block;height:100%;border-radius:99px;background:var(--accent)}
 .ac-cancel{justify-self:start}
-.ac-list{list-style:none;margin:0;padding:0;display:grid;gap:4px}
-.ac-list li{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--r-card)}
-.ac-list li.current{background:var(--panel)}
-.ac-letter{display:grid;place-items:center;width:34px;height:34px;flex:none;border-radius:var(--r-card);background:var(--seg);font-weight:600}
+.ac-empty{padding:20px;border-radius:var(--r-card);background:var(--panel);font-size:14px;color:var(--ink-3);text-align:center}
+/* workspaces and invitations: a letter on a coloured square (the workbench's colours), the name over its plan and role */
+.ac-list{display:grid;margin:0;padding:0;list-style:none}
+.ac-list li{display:flex;align-items:center;gap:12px;padding:14px 4px;border-top:1px solid var(--line)}
+.ac-list li:first-child{padding-top:4px;border-top:0}
+.ac-av{display:grid;place-items:center;width:36px;height:36px;flex:none;border-radius:var(--r);color:#fff;font-weight:600}
+.ac-av.c0{background:#D2445E}.ac-av.c1{background:#2F6FD6}.ac-av.c2{background:#1E8A63}.ac-av.c3{background:#C98A12}.ac-av.c4{background:#7A4FC4}.ac-av.c5{background:#1F8A97}
 .ac-name{display:grid;flex:1;min-width:0;line-height:1.45}
-.ac-name a,.ac-name b{font-size:14px;font-weight:600;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ac-name b{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ac-name small{font-size:12px;color:var(--ink-2)}
-.ac-new{flex-wrap:nowrap;margin-top:10px}
+.ac-new{flex-wrap:nowrap}
 .ac-new .field{flex:1}
-.ac-list li .ac-new{flex:1;margin-top:0}
-.ac-dl{display:grid;gap:12px;justify-items:start}
+.ac-sub{margin-bottom:-8px;font-family:var(--f-body);font-size:14px;font-weight:600;color:var(--ink-2)}
+#inv-panel{display:grid;gap:20px}
+#inv-panel[hidden]{display:none}
+.ac-kv{gap:18px 32px}
+.ac-kv dd{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.ac-pw{max-width:480px}
+.ac-dl{grid-template-columns:minmax(0,1fr) auto auto;align-items:center}
+.ac-dl p{margin-top:4px;font-size:14px;color:var(--ink-3)}
+@media (max-width:900px){
+  .ac{grid-template-columns:minmax(0,1fr)}
+  .ac-card{padding:20px}
+  .ac-stats,.ac-dl{grid-template-columns:minmax(0,1fr)}
+  .ac-list li{flex-wrap:wrap}
+}
 td.act{text-align:right}
 
 /* invitation: one card in the middle */

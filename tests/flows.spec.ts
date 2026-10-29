@@ -139,7 +139,7 @@ test('sign up, buy Studio and open the invoice', async ({ page }) => {
 
   await page.goto('/en/account/');
   await expect(page.locator('#plan-name')).toHaveText('Studio');
-  await expect(page.locator('#plan-usage')).toHaveText('0 of 100 profiles used');
+  await expect(page.locator('#plan-usage')).toHaveText('0 / 100');
   const row = page.locator('#pay-rows tr').first();
   await expect(row).toContainText('$29');
   await row.locator('a').click();
@@ -196,6 +196,49 @@ test('the latest payment can be refunded from the account page', async ({ page }
   await page.click('[data-yes]');
   await expect(page.locator('#plan-name')).toHaveText('Free');
   await expect(page.locator('#pay-rows tr').first()).toContainText('Refunded');
+});
+
+test('the account page: its parts from the menu, kept in the address; a new workspace, renamed; the trial once per account; logging out', async ({ page }) => {
+  await signUp(page, 'en');
+  const menu = page.getByRole('navigation', { name: 'Account' });
+  await expect(menu.getByRole('link', { name: 'Plan and billing' })).toHaveAttribute('aria-current', 'page');
+  await expect(page.locator('#plan-name')).toHaveText('Free');
+  await expect(page.locator('#ws-pick')).toBeHidden();
+  await page.click('#start-trial');
+  await expect(page.locator('#plan-trial')).toBeVisible();
+  await expect(page.locator('#start-trial')).toBeHidden();
+
+  await menu.getByRole('link', { name: 'Workspaces' }).click();
+  await expect(page).toHaveURL(/[?&]tab=workspaces/);
+  await page.reload();
+  await expect(page.locator('[data-part="workspaces"]')).toBeVisible();
+  await expect(page.locator('[data-part="plan"]')).toBeHidden();
+  await expect(page.locator('#ws-form')).toBeHidden();
+  await page.getByRole('button', { name: 'New workspace' }).click();
+  await expect(page.locator('#ws-name')).toBeFocused();
+  await page.fill('#ws-name', 'Second shop');
+  await page.locator('#ws-form').getByRole('button', { name: 'Create' }).click();
+  await expect(page.locator('#ws-list li')).toHaveCount(2);
+  const row = page.locator('#ws-list li', { hasText: 'Second shop' });
+  await expect(row).toContainText('Free · Owner');
+  await row.getByRole('button', { name: 'Rename' }).click();
+  await page.locator('#ws-list li input').fill('EU shop');
+  await page.locator('#ws-list li').getByRole('button', { name: 'Save' }).click();
+  const renamed = page.locator('#ws-list li', { hasText: 'EU shop' });
+  await expect(renamed).toBeVisible();
+
+  // The new workspace's plan: Free, without a trial, since this account has had it.
+  await renamed.getByRole('link', { name: 'Plan' }).click();
+  await expect(page.locator('#plan-name')).toHaveText('Free');
+  await expect(page.locator('#start-trial')).toBeHidden();
+  await expect(page.locator('#plan-actions')).toBeVisible();
+  // The other one, picked at the top of the part.
+  await page.selectOption('#ws-select', { index: 0 });
+  await expect(page.locator('#plan-name')).toHaveText('Studio');
+  await expect(page.locator('#plan-logs')).toHaveText('30 days');
+
+  await menu.getByRole('button', { name: 'Log out' }).click();
+  await page.waitForURL(/\/en\/$/);
 });
 
 test('logging in from checkout brings you back to checkout', async ({ page, context }) => {
@@ -402,7 +445,7 @@ test('an emailed invitation leads a new person through sign-up into the workspac
   await page.getByRole('button', { name: 'Join Larkspur Trading' }).click();
   await expect(page.locator('#lead')).toHaveText('Joined Larkspur Trading.');
   await page.getByRole('link', { name: 'Go to account' }).click();
-  await expect(page.locator('#ws-list')).toContainText('Larkspur Trading');
+  await page.getByRole('navigation', { name: 'Account' }).getByRole('link', { name: 'Workspaces' }).click();
   await expect(page.locator('#ws-list li', { hasText: 'Larkspur Trading' })).toContainText('Member');
 });
 
@@ -410,13 +453,17 @@ test('pending invitations show on the account page in Chinese and can be joined 
   const host = await owner();
   const email = await signUp(page, 'zh');
   await host.api.post(`workspaces/${host.workspaceId}/invitations`, { data: { email, roleId: await host.roleId('admin') } });
-  await page.reload();
+  await page.goto('/zh/account/?tab=workspaces');
   const invite = page.locator('#inv-list li');
+  await expect(page.getByRole('heading', { name: '待接受的邀请' })).toBeVisible();
   await expect(invite).toContainText('Larkspur Trading');
   await expect(invite).toContainText(`${host.email} 邀请您成为管理员`);
   await invite.getByRole('button', { name: '加入' }).click();
-  await expect(page.locator('#ws-list li.current')).toContainText('Larkspur Trading');
+  // Joined, the workspace is in the list, and its plan is the one the plan part shows.
+  await expect(page).toHaveURL(/tab=workspaces/);
+  await expect(page.locator('#ws-list li', { hasText: 'Larkspur Trading' })).toContainText('管理员');
   await expect(page.locator('#inv-panel')).toBeHidden();
+  await expect(page.locator('#ws-select option:checked')).toHaveText('Larkspur Trading');
 });
 
 test('the account page changes the password: the current one first, and every other sign-in ends', async ({ page }) => {
@@ -426,6 +473,7 @@ test('the account page changes the password: the current one first, and every ot
   expect((await elsewhere.post('auth/login', { data: { email, password: PASSWORD } })).ok()).toBe(true);
   expect((await elsewhere.get('me')).ok()).toBe(true);
 
+  await page.getByRole('navigation', { name: 'Account' }).getByRole('link', { name: 'Change password' }).click();
   const form = page.locator('#pw-form');
   await form.getByRole('button', { name: 'Save new password' }).click();
   await expect(page.locator('#pw-current')).toBeFocused();
@@ -442,9 +490,10 @@ test('the account page changes the password: the current one first, and every ot
   await expect(page.locator('#pw-ok')).toHaveText('Password changed. This account has been logged out on other devices.');
   await expect(page.locator('#pw-current')).toHaveValue('');
 
-  // This sign-in stays; the other one has ended; the new password logs in.
+  // This sign-in stays, on the same part; the other one has ended; the new password logs in.
   await page.reload();
   await expect(page.locator('#me-email')).toHaveText(email);
+  await expect(form).toBeVisible();
   expect((await elsewhere.get('me')).status()).toBe(401);
   expect((await elsewhere.post('auth/login', { data: { email, password: 'a brand new secret' } })).ok()).toBe(true);
 });

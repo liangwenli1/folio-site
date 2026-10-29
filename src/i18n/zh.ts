@@ -189,7 +189,7 @@ export const zh: typeof en = {
       title: '常见问题', lead: '关于体验、计费与套餐。其他问题，请', contact: '联系我们',
       items: [
         ['体验版包含哪些内容？', '5 个浏览器环境永久免费，包含双内核、完整指纹配置、代理检测与本机 API。无需绑定银行卡，不限使用期限，可用于完整业务流程验证。'],
-        ['可以先体验工作室版吗？', '可以。每个团队可免费体验工作室版 7 天，期间可邀请成员、使用窗口同步等功能；体验结束后可选择购买，或继续使用体验版。'],
+        ['可以先体验工作室版吗？', '可以。每个账号可免费体验一次工作室版，为期 7 天，期间可邀请成员、使用窗口同步等功能；体验结束后可选择购买，或继续使用体验版。'],
         ['如何升级或更换套餐？', '在账户页即可更换。升级即日生效，当前套餐剩余时长折算抵扣；降级在当前周期结束后生效。'],
         ['浏览器环境不够用怎么办？', '付费套餐可购买加量包，每包 100 个浏览器环境，总数最多 2000 个；超过 2000 个可联系我们单独报价。'],
         ['是否支持退款与发票？', '付款后 7 天内可申请退还最近一笔付款，套餐恢复至该笔付款之前的状态。每笔付款均提供发票，可在账户页查看与打印。']
@@ -225,7 +225,7 @@ export const zh: typeof en = {
   },
 
   checkout: {
-    title: '选择套餐', workspace: '团队', plan: '套餐', billing: '付费周期',
+    title: '选择套餐', workspace: '工作空间', plan: '套餐', billing: '付费周期',
     packs: '加量包', packsHint: '每包 100 个环境', total: '本次应付',
     steps: ['选择套餐', '付款', '完成'], chosen: '已选', edit: '修改', next: '下一步',
     current: (plan: string) => `当前套餐：${plan}`,
@@ -246,18 +246,19 @@ export const zh: typeof en = {
     trial: '也可免费体验工作室版 7 天', trialCta: '开始体验',
     mockTitle: '测试支付', mockBody: '当前不会实际扣款。卡号请使用 4242 4242 4242 4242，有效期填写任意未来日期；4000 0000 0000 0002 将被拒绝。',
     success: '支付成功，套餐已生效。', applied: '变更已保存。', trialStarted: '体验已开始，可使用工作室版 7 天。',
-    toAccount: '前往账户', noManage: '仅所有者和管理员可修改团队套餐。'
+    toAccount: '前往账户', noManage: '仅所有者和管理员可修改工作空间的套餐。'
   },
 
   account: {
-    title: '账户', profile: '个人信息', language: '语言', langs: { zh: '简体中文', en: 'English' }, emailStatus: '邮箱验证',
+    title: '账户', language: '语言', langs: { zh: '简体中文', en: 'English' },
+    tabs: { plan: '套餐与账单', workspaces: '工作空间', info: '账号信息', password: '修改密码', download: '下载客户端' },
     verified: '已验证', unverified: '未验证', verifyNow: '立即验证',
-    workspaces: '团队', newWorkspace: '新建团队', create: '创建', rename: '重命名', save: '保存', cancel: '取消', current: '当前',
+    workspaces: '工作空间', workspace: '工作空间', newWorkspace: '新建工作空间', workspaceName: '工作空间名称',
+    create: '创建', rename: '重命名', save: '保存', cancel: '取消', planOf: '套餐',
     roles: { owner: '所有者', admin: '管理员', member: '成员', viewer: '仅查看' } as Record<string, string>,
-    plan: '套餐', usage: (used: number, limit: number) => `已用 ${used} / ${limit} 个环境`,
-    unlimited: '成员不限',
+    plan: '套餐与用量', profiles: '环境', members: '成员', logs: '操作日志保留', days: '天', unlimited: '不限', trialing: '体验中',
     renews: (date: string) => `${date} 自动续费`, ends: (date: string) => `${date} 到期`,
-    trialEnds: (date: string) => `体验于 ${date} 结束`,
+    trialEnds: (date: string) => `体验于 ${date} 结束，之后转为体验版。`,
     scheduled: (plan: string, date: string) => `${date} 起变更为${plan}`,
     changePlan: '更换套餐', addProfiles: '增加环境', startTrial: '免费体验工作室版 7 天',
     cancelPlan: '到期后取消', resume: '恢复续费',
@@ -267,15 +268,14 @@ export const zh: typeof en = {
     paid: '已付款', refunded: '已退款', invoice: '发票', refund: '退款',
     refundConfirm: '确定退款？套餐将恢复至该笔付款之前的状态。', confirmRefund: '确定退款',
     pw: { title: '修改密码', current: '当前密码', new: '新密码', confirm: '确认新密码', save: '保存新密码', done: '密码已修改，此账号在其他设备上的登录已退出。' },
-    download: '下载客户端', downloadBody: '使用同一账号登录客户端，套餐与团队信息自动同步。',
-    downloadCta: '下载',
-    invitations: '邀请', invitedBy: (inviter: string, role: string) => `${inviter} 邀请您成为${role}`, accept: '加入', decline: '拒绝'
+    downloadBody: '使用同一账号登录客户端，套餐与工作空间自动同步。',
+    invitations: '待接受的邀请', invitedBy: (inviter: string, role: string) => `${inviter} 邀请您成为${role}`, accept: '加入', decline: '拒绝'
   },
   invite: {
-    title: '团队邀请', checking: '正在核对邀请…',
+    title: '工作空间邀请', checking: '正在核对邀请…',
     missing: '链接中缺少邀请信息，请重新打开邮件中的链接。',
     gone: '该邀请已失效：已被接受、撤回或被新的邀请替代。',
-    lead: (inviter: string, workspace: string, role: string) => `${inviter} 邀请您以${role}身份加入 Folio 团队「${workspace}」。`,
+    lead: (inviter: string, workspace: string, role: string) => `${inviter} 邀请您以${role}身份加入 Folio 工作空间「${workspace}」。`,
     roles: { admin: '管理员', member: '成员', viewer: '仅查看' }, forEmail: (email: string) => `受邀邮箱：${email}`,
     expires: (date: string) => `${date} 过期`,
     expired: '该邀请已过期，请联系邀请人重新发送。',
@@ -284,12 +284,12 @@ export const zh: typeof en = {
     verify: '请先验证邮箱，完成后将返回此页。', verifyCta: '验证邮箱',
     accept: (workspace: string) => `加入「${workspace}」`, decline: '拒绝',
     joined: (workspace: string) => `已加入「${workspace}」。`,
-    joinedLead: '使用该账号登录 Folio 客户端，即可在团队菜单中查看该团队。',
+    joinedLead: '使用该账号登录 Folio 客户端，即可在右上角的工作空间菜单中切换到该工作空间。',
     download: '下载客户端', account: '前往账户', declined: '已拒绝该邀请。'
   },
 
   invoice: {
-    title: '发票', number: '发票编号', date: '日期', billedTo: '付款人', workspace: '团队',
+    title: '发票', number: '发票编号', date: '日期', billedTo: '付款人', workspace: '工作空间',
     period: '服务周期', item: '项目', amount: '金额', total: '合计', paidWith: (brand: string, last4: string) => `已使用 ${brand} 尾号 ${last4} 支付`,
     refunded: (date: string) => `已于 ${date} 退款`, print: '打印或保存为 PDF', back: '返回账户',
     seller: 'Folio', sellerNote: '测试发票，未发生实际付款。'
@@ -313,7 +313,7 @@ export const zh: typeof en = {
 
   download: {
     title: '下载 Folio', h1: '下载 Folio，\n开始管理浏览器环境',
-    lead: '在电脑上安装 Folio 客户端，使用 Folio 账号登录后，即可创建并管理多个浏览器环境；套餐、团队与浏览器环境自动同步。',
+    lead: '在电脑上安装 Folio 客户端，使用 Folio 账号登录后，即可创建并管理多个浏览器环境；套餐、工作空间与浏览器环境自动同步。',
     status: (release: string | null) => `${release ?? '安装包即将提供'}。请通过本页或其他官方渠道获取安装包，以确保文件来源可靠。`,
     windowsName: 'Windows 版', macName: 'macOS 版',
     windows: 'Windows 10 及以上（64 位）', mac: 'macOS 12 及以上（Apple 芯片，M1 及更新）',
@@ -326,7 +326,7 @@ export const zh: typeof en = {
     stepsTitle: '三个步骤，开始使用', stepsLead: '下载并安装客户端，登录账号后即可创建浏览器环境。',
     steps: [
       ['下载客户端', '按电脑系统选择对应版本：Windows 运行安装程序，macOS 将 Folio 拖入「应用程序」。'],
-      ['登录账号', '使用 Folio 账号登录客户端，套餐、团队与浏览器环境自动同步。'],
+      ['登录账号', '使用 Folio 账号登录客户端，套餐、工作空间与浏览器环境自动同步。'],
       ['创建环境', '创建浏览器环境并配置代理；首次打开时自动下载所需内核，并核对官方公布的校验值。']
     ] as [string, string][],
     guide: '安装与配置帮助'
@@ -368,7 +368,7 @@ export const zh: typeof en = {
         sections: [
           { title: '下载安装包', body: ['在官网「下载」页选择对应系统的安装包：Windows 10 及以上（64 位），或 macOS 12 及以上（Apple 芯片，M1 及更新）。请通过官网或其他官方渠道获取安装包。'] },
           { title: '安装客户端', body: ['Windows：运行安装程序，按提示完成安装。Folio 暂未进行代码签名，如 SmartScreen 拦截安装程序，请点击「更多信息」，再点击「仍要运行」。', 'macOS：打开安装包，将 Folio 拖入「应用程序」。首次无法打开时，前往「系统设置 › 隐私与安全性」点击「仍要打开」；如提示应用已损坏，请在终端执行 xattr -cr /Applications/Folio.app 后重新打开。'] },
-          { title: '登录账号', body: ['使用在官网注册的 Folio 账号登录客户端，套餐、团队与浏览器环境会自动同步。账号加入了多个团队时，可在侧栏顶部切换工作空间。'] },
+          { title: '登录账号', body: ['使用在官网注册的 Folio 账号登录客户端，套餐、工作空间与浏览器环境会自动同步。账号加入了多个工作空间时，可在右上角的工作空间菜单中切换。'] },
           { title: '下载内核', body: ['内核按需下载：首次打开某个内核版本的浏览器环境时，Folio 会自动下载该版本，并核对官方公布的校验值；也可以在「内核管理」页提前下载。'] }
         ],
         note: '有新版本时，客户端会提示前往下载新的安装包。'
@@ -448,8 +448,8 @@ export const zh: typeof en = {
         lead: '了解套餐额度，以及体验、升级、退款与发票的规则。',
         sections: [
           { title: '套餐与额度', body: ['体验版免费提供 5 个浏览器环境；工作室版含 100 个、公司版含 500 个浏览器环境。付费套餐成员数量不限，可购买加量包（每包 100 个浏览器环境），总数最多 2000 个。'] },
-          { title: '免费体验工作室版', body: ['每个团队可免费体验工作室版 7 天，体验结束后可选择购买，或继续使用体验版。'] },
-          { title: '升级与更换', body: ['在官网账户页或客户端「账号与计费」页进入结账。升级即日生效，当前套餐剩余时长折算抵扣；降级在当前周期结束后生效。仅所有者与管理员可修改团队套餐。'] },
+          { title: '免费体验工作室版', body: ['每个账号可免费体验一次工作室版，为期 7 天，体验结束后可选择购买，或继续使用体验版。'] },
+          { title: '升级与更换', body: ['在官网账户页或客户端「账号与计费」页进入结账。升级即日生效，当前套餐剩余时长折算抵扣；降级在当前周期结束后生效。仅所有者与管理员可修改工作空间的套餐。'] },
           { title: '退款与发票', body: ['付款后 7 天内可申请退还最近一笔付款，套餐恢复至该笔付款之前的状态。每笔付款均提供发票，可在账户页查看与打印。'] }
         ],
         note: '各套餐的价格以价格页为准。'
@@ -473,7 +473,7 @@ export const zh: typeof en = {
       { version: '0.1', date: '2026 年 10 月', area: 'desktop',
         added: ['Chromium 与 Firefox 双内核，每个浏览器环境独立的指纹', '代理管理与连接检测', '登录状态加密后同步至云端', '自动化流程、定时任务与窗口同步', '扩展库与本机 API'], improved: [], fixed: [] },
       { version: '0.1', date: '2026 年 10 月', area: 'site',
-        added: ['注册、登录与邮箱验证', '套餐、结账与发票', '账户与团队邀请'], improved: [], fixed: [] }
+        added: ['注册、登录与邮箱验证', '套餐、结账与发票', '账户与工作空间邀请'], improved: [], fixed: [] }
     ] as { version: string; date: string; area: 'desktop' | 'site'; added: string[]; improved: string[]; fixed: string[] }[],
     subscribe: {
       title: '订阅更新通知', body: '输入邮箱，获取 Folio 的版本更新与功能动态。', label: '邮箱', placeholder: '请输入邮箱地址', send: '订阅',
@@ -488,7 +488,7 @@ export const zh: typeof en = {
       setupTitle: '启用',
       setup: [
         '在 Folio 客户端打开「API 与脚本」，启用本机 API 并生成令牌。令牌仅显示一次，请立即复制保存。',
-        '请求地址为 http://127.0.0.1:47210（端口可在同一页面修改），请求头需携带 Authorization: Bearer <令牌>。令牌归属于生成者及其所在团队，仅在生成它的电脑上有效，权限与生成者一致：成员仅可操作分配给自己的环境。'
+        '请求地址为 http://127.0.0.1:47210（端口可在同一页面修改），请求头需携带 Authorization: Bearer <令牌>。令牌归属于生成者及其所在工作空间，仅在生成它的电脑上有效，权限与生成者一致：成员仅可操作分配给自己的环境。'
       ],
       limitsTitle: '限速',
       limits: '体验版与工作室版每分钟最多 60 次请求（含打开、关闭与查询），公司版不限速。脚本通过调试地址直接发送给浏览器的指令不计入限额。超出限额时返回 429，并在 Retry-After 响应头中给出可重试的秒数。',
@@ -504,7 +504,7 @@ export const zh: typeof en = {
         ['POST', '/api/v1/profiles/{编号}/start', '按客户端标准流程打开环境（占用锁、恢复登录状态、连接代理），返回 protocol、wsEndpoint；Chromium 环境另返回 debuggerAddress。已通过 API 打开的环境返回相同地址。默认只打开一个空白页；加参数 ?restoreTabs=1 可恢复上次关闭时的标签页。'],
         ['GET', '/api/v1/profiles/{编号}', '运行状态；通过 API 打开的环境附带调试地址。'],
         ['POST', '/api/v1/profiles/{编号}/stop', '关闭环境，并照常保存登录状态。'],
-        ['GET', '/api/v1/tasks', '团队任务列表，各附最近一次运行记录。'],
+        ['GET', '/api/v1/tasks', '工作空间的任务列表，各附最近一次运行记录。'],
         ['POST', '/api/v1/tasks/{id}/run', '在本机运行指定任务，返回 runId。'],
         ['GET', '/api/v1/runs/{id}', '运行状态与统计，以及各环境的结果与提取的数据。']
       ] as [string, string, string][],
@@ -537,9 +537,9 @@ export const zh: typeof en = {
           rows: [
             ['账号信息', '注册邮箱、密码、界面语言与邮箱验证状态。', '密码仅保存不可逆的哈希值。'],
             ['登录设备', '客户端类型、设备名称与最近使用时间。', '登录凭证仅保存摘要，退出登录后失效。'],
-            ['团队与套餐', '团队名称、成员与角色、分组授权、套餐与付款记录。', '付款记录仅保存卡组织与卡号末四位。'],
+            ['工作空间与套餐', '工作空间名称、成员与角色、分组授权、套餐与付款记录。', '付款记录仅保存卡组织与卡号末四位。'],
             ['浏览器环境与代理', '环境名称、指纹参数、标签与备注；代理地址、账号密码与检测结果（出口 IP 与所在地区）；启用云端同步的环境，另含登录状态（Cookie、本地存储等）。', '代理密码与登录状态加密后存储。'],
-            ['操作日志', '成员在团队内的操作及所用设备名称。', '按套餐保留：体验版 7 天、工作室版 30 天、公司版 1 年。'],
+            ['操作日志', '成员在工作空间内的操作及所用设备名称。', '按套餐保留：体验版 7 天、工作室版 30 天、公司版 1 年。'],
             ['官网 Cookie', '保持官网登录状态的会话 Cookie。', '勾选「记住登录」时保留 30 天，否则关闭浏览器后失效。'],
             ['更新订阅', '订阅更新通知时填写的邮箱与界面语言。', '经邮件确认后才发送通知；退订即删除。'],
             ['联系与反馈', '联系表单中的姓名、邮箱、团队规模与需求描述；帮助文档的「是否有帮助」评价。', '文档评价不关联账号。']
@@ -547,9 +547,9 @@ export const zh: typeof en = {
         { id: 'use', title: '使用目的', lead: '本节说明上述信息的用途。上述信息不用于广告投放。',
           table: { head: ['数据类别', '使用目的'],
           rows: [
-            ['账号信息', '注册与登录、验证邮箱、重置密码，以及发送验证码与团队邀请邮件。'],
+            ['账号信息', '注册与登录、验证邮箱、重置密码，以及发送验证码与工作空间邀请邮件。'],
             ['登录设备', '显示环境正在哪台电脑上使用，并让定时任务在指定的电脑上运行。'],
-            ['团队与套餐', '按角色与分组控制访问范围、计算套餐额度、开具发票与处理退款。'],
+            ['工作空间与套餐', '按角色与分组控制访问范围、计算套餐额度、开具发票与处理退款。'],
             ['浏览器环境与代理', '在您的电脑上按配置打开浏览器环境、在团队成员之间同步登录状态，以及检测代理连接。'],
             ['操作日志', '供有相应权限的成员查看操作记录、排查问题。'],
             ['更新订阅', '发送 Folio 的版本更新与功能动态。'],
@@ -564,16 +564,16 @@ export const zh: typeof en = {
         { id: 'share', title: '共享情况', lead: '本节说明信息是否会提供给第三方。',
           items: [
             ['对外出售', '我们不出售用户数据。'],
-            ['团队内共享', '您在团队中创建的浏览器环境与代理，团队中有相应权限的成员可以查看和使用。'],
+            ['工作空间内共享', '您在工作空间中创建的浏览器环境与代理，工作空间中有相应权限的成员可以查看和使用。'],
             ['代理检测', '检测代理时，客户端经该代理访问 Cloudflare 的公共 IP 查询服务（不可用时改用 ipify）获得出口 IP；这两项服务看到的是代理的出口 IP，而不是您的 IP。'],
             ['邮件、存储与支付服务商', null],
             ['依法披露', null]
           ] as [string, string | null, string?][] },
         { id: 'rights', title: '您的权利', lead: '本节说明您如何查看、更正、导出与删除自己的信息。',
           items: [
-            ['查看', '在账户页查看注册邮箱、所在团队与付款记录；有相应权限的成员可在工作台查看操作日志。'],
-            ['更正', '在工作台修改浏览器环境、代理与团队信息；忘记密码时可通过邮箱验证重新设置。'],
-            ['导出', '有导出权限的成员可将团队的浏览器环境导出为加密文件。'],
+            ['查看', '在账户页查看注册邮箱、所在工作空间与付款记录；有相应权限的成员可在工作台查看操作日志。'],
+            ['更正', '在工作台修改浏览器环境、代理与工作空间信息；忘记密码时可通过邮箱验证重新设置。'],
+            ['导出', '有导出权限的成员可将工作空间的浏览器环境导出为加密文件。'],
             ['删除', '浏览器环境与代理可随时删除；注销账号请通过「联系我们」提交申请，处理时限待确认。'],
             ['退订', '订阅确认邮件中附有退订链接，打开即可退订更新通知。']
           ] as [string, string | null, string?][] },
@@ -591,9 +591,9 @@ export const zh: typeof en = {
       draft: '本页为草稿，依据 Folio 当前的产品规则整理；标注「待确认」的事项尚未确定，正式条款审核后发布。',
       sections: [
         { title: '服务范围', body: ['Folio 提供浏览器环境管理服务，包括 Windows 与 macOS 客户端、浏览器环境与代理管理、登录状态云端同步、团队协作与本机 API。', '各套餐包含的功能与额度以价格页为准。'] },
-        { title: '账号管理', body: ['注册须使用本人有效的邮箱并完成验证。请妥善保管密码，账号下发生的操作由账号持有人负责。', '团队所有者负责管理成员的角色与授权范围。发现账号异常时，请及时重置密码并联系我们。'] },
+        { title: '账号管理', body: ['注册须使用本人有效的邮箱并完成验证。请妥善保管密码，账号下发生的操作由账号持有人负责。', '工作空间所有者负责管理成员的角色与授权范围。发现账号异常时，请及时重置密码并联系我们。'] },
         { title: '使用规范', body: ['使用 Folio 访问第三方网站与平台时，须遵守适用的法律法规及相关平台的规则。', '不得利用 Folio 从事违法活动、侵害他人合法权益，或干扰 Folio 服务的正常运行。'] },
-        { title: '套餐与费用', body: ['体验版免费使用。付费套餐按月或按年计费，到期自动续费，直至取消；取消后，套餐在当前计费周期结束时停止续费。', '每个团队可免费体验工作室版 7 天。最近一笔付款可在付款后 7 天内申请退款，套餐恢复至该笔付款之前的状态。', '价格以价格页为准，不含当地税费。'] },
+        { title: '套餐与费用', body: ['体验版免费使用。付费套餐按月或按年计费，到期自动续费，直至取消；取消后，套餐在当前计费周期结束时停止续费。', '每个账号可免费体验一次工作室版，为期 7 天。最近一笔付款可在付款后 7 天内申请退款，套餐恢复至该笔付款之前的状态。', '价格以价格页为准，不含当地税费。'] },
         { title: '服务变更与终止', body: ['我们可能调整产品功能或本条款；重大变更的通知方式与生效安排待确认。', '您可以随时停止使用 Folio 并取消订阅。违反本条款时暂停或终止服务的规则待确认。'] },
         { title: '责任与争议', body: ['责任限制、适用法律与争议解决方式待确认。'] }
       ],
@@ -625,9 +625,9 @@ export const zh: typeof en = {
     no_change: '已是当前套餐。',
     change_packs_separately: '加量包与套餐请分两步修改。',
     profile_cap: '套餐最多支持 2000 个浏览器环境，如需更多请联系销售。',
-    trial_used: '该团队已使用过免费体验。',
-    already_subscribed: '该团队已有套餐。',
-    not_subscribed: '该团队没有付费套餐。',
+    trial_used: '此账号已使用过免费体验。',
+    already_subscribed: '该工作空间已有套餐。',
+    not_subscribed: '该工作空间没有付费套餐。',
     refund_window_passed: '仅可在付款后 7 天内申请退款。',
     refund_latest_only: '仅可退还最近一笔付款。',
     already_refunded: '该笔付款已退款。',
@@ -644,7 +644,7 @@ export const zh: typeof en = {
     wrong_account: '该邀请发送至其他邮箱。',
     email_unverified: '请先验证邮箱。',
     invitation_expired: '该邀请已过期，请联系邀请人重新发送。',
-    seat_limit: '团队席位已满，请联系所有者升级套餐。',
+    seat_limit: '该工作空间的成员已满，请联系所有者升级套餐。',
     mail_unavailable: '邮件发送失败，请稍后重试。',
     internal: '服务暂时异常，请稍后重试。'
   }
